@@ -33,6 +33,12 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
+        Route::get('atom', ['uses' => 'AtomComment@list']);
+        Route::post('atom', ['uses' => 'AtomComment@post']);
+        Route::get('atom/{id}', ['uses' => 'AtomComment@get']);
+        Route::put('atom/{id}', ['uses' => 'AtomComment@put']);
+        Route::delete('atom/{id}', ['uses' => 'AtomComment@delete']);
+
         Route::post('atom/{atomId}/comment', ['uses' => 'AtomComment@post']);
         Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomComment@delete']);
     });
