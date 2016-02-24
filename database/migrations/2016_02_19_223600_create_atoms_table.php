@@ -14,7 +14,10 @@ class CreateAtomsTable extends Migration
     {
         Schema::create('atoms', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('atomId');
             $table->timestamps();
+
+            $table->index('atomId');
         });
     }
 
@@ -25,6 +28,6 @@ class CreateAtomsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('comments');
+        Schema::drop('atoms');
     }
 }
