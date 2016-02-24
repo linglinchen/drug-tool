@@ -29,3 +29,11 @@ Route::get('/', function () {
 Route::group(['middleware' => ['web']], function () {
     //
 });
+
+
+Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'v1'], function () {
+        Route::post('atom/{atomId}/comment', ['uses' => 'AtomComment@post']);
+        Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomComment@delete']);
+    });
+});
