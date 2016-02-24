@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class Atom extends Controller
+class AtomController extends Controller
 {
     public function list() {
         //
