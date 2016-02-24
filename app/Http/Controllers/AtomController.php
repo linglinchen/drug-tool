@@ -17,15 +17,15 @@ class AtomController extends Controller
         //
     }
 
-    public function get($id) {
+    public function get($atomId) {
         //
     }
 
-    public function put($id) {
+    public function put($atomId) {
         //
     }
 
-    public function delete($id) {
+    public function delete($atomId) {
         //
     }
 }
