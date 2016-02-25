@@ -17,10 +17,20 @@ class AtomCommentController extends Controller
             //TODO: Atom not found
         }
 
+        if(!isset($_POST['parentId'])) {
+            //TODO: throw exception
+        }
+
+        if(!isset($_POST['text'])) {
+            //TODO: throw exception
+        }
+
         $comment = Comment::create([
             'atomId' => $atomId,
-            'userId' => 1,		//TODO: make this use the user's actual id
-            'text' => $_POST['text']
+            'userId' => 1,        //TODO: make this use the user's actual id
+            'parentId' => (int)$_POST['parentId'],
+            'text' => $_POST['text'],
+            'deleted' => false
         ]);
 
         return $comment;
@@ -31,15 +41,19 @@ class AtomCommentController extends Controller
             //TODO: Atom not found
         }
 
-        $comment = Comment::where([
-				'id', '=', $commentId,
-				'atomId', '=', $atomId
-			]);
+        $conditions = [
+                ['id', '=', $commentId],
+                ['atomId', '=', $atomId]
+            ];
+        $comment = Comment::where($conditions)->first();
 
         if(!$comment) {
-        	//TODO: comment not found
+            //TODO: comment not found
         }
 
-        $comment->deleted(true)->save();
+        $comment->deleted = true;
+        $comment->save();
+
+        return $comment;
     }
 }
