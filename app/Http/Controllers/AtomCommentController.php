@@ -41,11 +41,11 @@ class AtomCommentController extends Controller
             //TODO: Atom not found
         }
 
-        $conditions = [
+        $comment = Comment::where([
                 ['id', '=', $commentId],
                 ['atomId', '=', $atomId]
-            ];
-        $comment = Comment::where($conditions)->first();
+            ])
+        	->first();
 
         if(!$comment) {
             //TODO: comment not found
