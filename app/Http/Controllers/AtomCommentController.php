@@ -29,8 +29,7 @@ class AtomCommentController extends Controller
             'atomId' => $atomId,
             'userId' => 1,        //TODO: make this use the user's actual id
             'parentId' => (int)$_POST['parentId'],
-            'text' => $_POST['text'],
-            'deleted' => false
+            'text' => $_POST['text']
         ]);
 
         return $comment;
@@ -51,8 +50,7 @@ class AtomCommentController extends Controller
             //TODO: comment not found
         }
 
-        $comment->deleted = true;
-        $comment->save();
+        $comment->delete();
 
         return $comment;
     }

@@ -15,11 +15,11 @@ class CreateAtomsTable extends Migration
         Schema::create('atoms', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('atomId');
-            $table->boolean('deleted')->default(false);
             $table->timestamps();
 
             $table->index('atomId');
-            $table->index('deleted');
+
+            $table->softDeletes();
         });
     }
 

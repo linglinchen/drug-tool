@@ -20,6 +20,6 @@ $id = $I->grabDataFromResponseByJsonPath('$.id')[0];
 $I->sendDELETE('/atom/1/comment/' . $id);
 $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
-$I->seeResponseContainsJson([
-	'deleted' => true
+$I->seeResponseMatchesJsonType([
+	'deleted_at' => 'string'
 ]);
