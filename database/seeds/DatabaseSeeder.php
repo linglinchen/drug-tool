@@ -14,9 +14,11 @@ class DatabaseSeeder extends Seeder
     {
     	Model::unguard();
 
-        $this->call(UserSeeder::class);
-        $this->call(AtomSeeder::class);
-        $this->call(CommentSeeder::class);
+        DB::transaction(function() {
+            $this->call(UserSeeder::class);
+            $this->call(AtomSeeder::class);
+            $this->call(CommentSeeder::class);
+        });
 
         Model::reguard();
     }
