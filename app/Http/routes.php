@@ -31,7 +31,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 
-Route::group(['prefix' => 'api'], function () {
+Route::group(['domain' => env('API_DOMAIN')], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::get('atom', ['uses' => 'AtomController@list']);
         Route::post('atom', ['uses' => 'AtomController@post']);

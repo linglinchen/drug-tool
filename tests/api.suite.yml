@@ -3,6 +3,6 @@ modules:
     enabled:
         - REST:
             part: Json
-            url: http://drugtool.localhost.com/api/v1
+            url: https://api.drugtool.localhost.com/v1
             depends: PhpBrowser
         - \Helper\Api
