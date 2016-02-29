@@ -13,8 +13,8 @@ $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
 $I->seeResponseMatchesJsonType([
 	'id' => 'integer'
-], '$');
-$id = $I->grabDataFromResponseByJsonPath('$.id')[0];
+], '$.data');
+$id = $I->grabDataFromResponseByJsonPath('$.data.id')[0];
 
 //now delete it
 $I->sendDELETE('/atom/1/comment/' . $id);
@@ -22,4 +22,4 @@ $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
 $I->seeResponseMatchesJsonType([
 	'deleted_at' => 'string'
-]);
+], '$.data');

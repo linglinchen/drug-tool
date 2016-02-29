@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+use App\ApiError;
+use App\ApiPayload;
 use App\Atom;
 use App\Comment;
 
@@ -14,15 +17,15 @@ class AtomCommentController extends Controller
 {
     public function post($atomId) {
         if(!Atom::findNewestIfNotDeleted($atomId)) {
-            //TODO: Atom not found
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
         if(!isset($_POST['parentId'])) {
-            //TODO: throw exception
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing parentId field.');
         }
 
         if(!isset($_POST['text'])) {
-            //TODO: throw exception
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing text field.');
         }
 
         $comment = Comment::create([
@@ -32,12 +35,12 @@ class AtomCommentController extends Controller
             'text' => $_POST['text']
         ]);
 
-        return $comment;
+        return new ApiPayload($comment);
     }
 
     public function delete($atomId, $commentId) {
         if(!Atom::findNewestIfNotDeleted($atomId)) {
-            //TODO: Atom not found
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
         $comment = Comment::where([
@@ -47,11 +50,11 @@ class AtomCommentController extends Controller
         	->first();
 
         if(!$comment) {
-            //TODO: comment not found
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested comment could not be found. It might have been deleted.');
         }
 
         $comment->delete();
 
-        return $comment;
+        return new ApiPayload($comment);
     }
 }

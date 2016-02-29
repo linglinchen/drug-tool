@@ -11,4 +11,4 @@ $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
 $I->seeResponseMatchesJsonType([
 	'id' => 'integer'
-], '$');
+], '$.data');
