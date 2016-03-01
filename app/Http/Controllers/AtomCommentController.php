@@ -15,7 +15,7 @@ use App\Comment;
 
 class AtomCommentController extends Controller
 {
-    public function post($atomId) {
+    public function postAction($atomId) {
         if(!Atom::findNewestIfNotDeleted($atomId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
@@ -38,7 +38,7 @@ class AtomCommentController extends Controller
         return new ApiPayload($comment);
     }
 
-    public function delete($atomId, $commentId) {
+    public function deleteAction($atomId, $commentId) {
         if(!Atom::findNewestIfNotDeleted($atomId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }

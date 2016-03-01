@@ -33,13 +33,13 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['domain' => env('API_DOMAIN')], function () {
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('atom', ['uses' => 'AtomController@list']);
-        Route::post('atom', ['uses' => 'AtomController@post']);
-        Route::get('atom/{atomId}', ['uses' => 'AtomController@get']);
-        Route::put('atom/{atomId}', ['uses' => 'AtomController@put']);
-        Route::delete('atom/{atomId}', ['uses' => 'AtomController@delete']);
+        Route::get('atom', ['uses' => 'AtomController@listAction']);
+        Route::post('atom', ['uses' => 'AtomController@postAction']);
+        Route::get('atom/{atomId}', ['uses' => 'AtomController@geAction']);
+        Route::put('atom/{atomId}', ['uses' => 'AtomController@putAction']);
+        Route::delete('atom/{atomId}', ['uses' => 'AtomController@deleteAction']);
 
-        Route::post('atom/{atomId}/comment', ['uses' => 'AtomCommentController@post']);
-        Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomCommentController@delete']);
+        Route::post('atom/{atomId}/comment', ['uses' => 'AtomCommentController@postAction']);
+        Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
     });
 });

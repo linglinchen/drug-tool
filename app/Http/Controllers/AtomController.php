@@ -13,23 +13,23 @@ use App\ApiPayload;
 
 class AtomController extends Controller
 {
-    public function list() {
+    public function listAction() {
         //
     }
 
-    public function post() {
+    public function postAction() {
         //
     }
 
-    public function get($atomId) {
+    public function getAction($atomId) {
         //
     }
 
-    public function put($atomId) {
+    public function putAction($atomId) {
         //
     }
 
-    public function delete($atomId) {
+    public function deleteAction($atomId) {
         //
     }
 }
