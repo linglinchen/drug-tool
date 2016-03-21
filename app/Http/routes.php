@@ -34,9 +34,11 @@ Route::group(['middleware' => ['web']], function () {
 Route::group(['domain' => env('API_DOMAIN')], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group([], function () {		//unsecured endpoints
+            Route::post('login', ['uses' => 'UserController@loginAction']);
+            Route::get('logout', ['uses' => 'UserController@logoutAction']);
         });
 
-        Route::group(['middleware' => 'oauth'], function () {		//secured endpoints
+        Route::group(['middleware' => 'auth.basic'], function () {		//secured endpoints
             Route::get('atom', ['uses' => 'AtomController@listAction']);
             Route::post('atom', ['uses' => 'AtomController@postAction']);
             Route::get('atom/{atomId}', ['uses' => 'AtomController@geAction']);
@@ -45,9 +47,6 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::post('atom/{atomId}/comment', ['uses' => 'AtomCommentController@postAction']);
             Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
-
-            Route::post('login', ['uses' => 'UserController@loginAction']);
-            Route::get('logout', ['uses' => 'UserController@logoutAction']);
         });
     });
 });
