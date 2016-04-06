@@ -12,8 +12,12 @@ class AtomSeeder extends Seeder
     public function run()
     {
         for($i = 0; $i < 100; ++$i) {
+            $title = str_random(10);
+
             DB::table('atoms')->insert([
                 'atomId' => $i % 5 + 1,
+                'title' => $title,
+                'strippedTitle' => $title
             ]);
         }
     }

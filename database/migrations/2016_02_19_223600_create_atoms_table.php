@@ -15,6 +15,8 @@ class CreateAtomsTable extends Migration
         Schema::create('atoms', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('atomId');
+            $table->string('title');
+            $table->string('strippedTitle');
             $table->timestamps();
 
             $table->index('atomId');
