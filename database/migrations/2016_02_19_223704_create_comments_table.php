@@ -22,9 +22,6 @@ class CreateCommentsTable extends Migration
 
             $table->index('parentId');
 
-            $table->foreign('atomId')->references('id')->on('atoms');
-            $table->foreign('userId')->references('id')->on('users');
-
             $table->softDeletes();
         });
     }

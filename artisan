@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+include('app/Dbug.php');
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

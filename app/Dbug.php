@@ -126,7 +126,7 @@ class D {
 	 * @param bool $showArgs Show function/method arguments
 	 * @param bool $exit
 	 */
-	public function backtrace($exit = true, $showArgs = false) {
+	public static function backtrace($exit = true, $showArgs = false) {
 		if(!self::isAuthorized()) {
 			return;
 		}
@@ -142,7 +142,7 @@ class D {
 	 *
 	 * @param bool $exit
 	 */
-	public function includes($exit = true) {
+	public static function includes($exit = true) {
 		if(!self::isAuthorized()) {
 			return;
 		}
