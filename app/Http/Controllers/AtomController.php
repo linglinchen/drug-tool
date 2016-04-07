@@ -33,7 +33,7 @@ class AtomController extends Controller
     }
 
     public function getAction($atomId) {
-        //
+        return Atom::find($atomId);
     }
 
     public function putAction($atomId) {
