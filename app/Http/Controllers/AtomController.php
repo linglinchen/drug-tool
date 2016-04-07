@@ -19,7 +19,7 @@ class AtomController extends Controller
         $list = [];
         $atoms = Atom::orderBy('strippedTitle', 'asc')->get();
         foreach($atoms as $atom) {
-            $firstChar = $atom['strippedTitle'][0];
+            $firstChar = strtoupper($atom['strippedTitle'][0]);
             if(!isset($list[$firstChar])) {
                 $list[$firstChar] = [];
             }
