@@ -61,6 +61,7 @@ class AtomController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
 
+        $atom = $atom->replicate();
         foreach($this->_allowedProperties as $allowed) {
             if(isset($request->$allowed)) {
                 $atom->$allowed = $request->$allowed;
