@@ -33,8 +33,22 @@ class AtomController extends Controller
         return $list;
     }
 
-    public function postAction() {
-        //
+    public function postAction(Request $request) {
+        $allowedProperties = ['title'];
+
+        $atom = new Atom();
+        $atom->atomId = Atom::makeUID();
+        foreach($allowedProperties as $allowed) {
+            if(isset($request->$allowed)) {
+                $atom->$allowed = $request->$allowed;
+            }
+        }
+        if(!isset($request->strippedTitle)) {
+            $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
+        }
+        $atom->save();
+
+        return $atom;
     }
 
     public function getAction($atomId) {

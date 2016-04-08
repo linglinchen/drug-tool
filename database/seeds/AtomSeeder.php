@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Atom;
+
 class AtomSeeder extends Seeder
 {
     /**
@@ -15,7 +17,7 @@ class AtomSeeder extends Seeder
             $title = str_random(10);
 
             DB::table('atoms')->insert([
-                'atomId' => $i % 5 + 1,
+                'atomId' => Atom::makeUID(),
                 'title' => $title,
                 'strippedTitle' => $title
             ]);

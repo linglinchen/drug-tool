@@ -13,6 +13,10 @@ class Atom extends Model
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    public static function makeUID() {
+        return uniqid('atom_', true);
+    }
+
     public static function findNewestIfNotDeleted($atomId) {
         $atom = self::withTrashed()
                 ->where('atomId', '=', $atomId)
