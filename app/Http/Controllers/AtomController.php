@@ -19,7 +19,9 @@ class AtomController extends Controller
 
     public function listAction() {
         $list = [];
-        $atoms = Atom::orderBy('strippedTitle', 'asc')->get();
+        $atoms = Atom::whereIn('id', Atom::latestIDs())
+            ->orderBy('strippedTitle', 'asc')
+            ->get();
         foreach($atoms as $atom) {
             $firstChar = strtoupper($atom['strippedTitle'][0]);
             if(!isset($list[$firstChar])) {

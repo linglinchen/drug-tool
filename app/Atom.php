@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use DB;
+
 class Atom extends Model
 {
     use SoftDeletes;
@@ -15,6 +17,24 @@ class Atom extends Model
 
     public static function makeUID() {
         return uniqid('', true);
+    }
+
+    public static function latestIDs() {
+        $results = DB::select(
+            'select id
+            from atoms
+            where id in (
+                select max(id)
+                from atoms
+                group by "atomId"
+            )');
+
+        $list = [];
+        foreach($results as $row) {
+            $list[] = $row->id;
+        }
+
+        return $list;
     }
 
     public static function findNewest($atomId) {
