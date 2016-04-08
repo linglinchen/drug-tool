@@ -14,7 +14,16 @@ class Atom extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public static function makeUID() {
-        return uniqid('atom_', true);
+        return uniqid('', true);
+    }
+
+    public static function findNewest($atomId) {
+        $atom = self::withTrashed()
+                ->where('atomId', '=', $atomId)
+                ->orderBy('id', 'desc')
+                ->first();
+
+        return $atom;
     }
 
     public static function findNewestIfNotDeleted($atomId) {

@@ -15,6 +15,8 @@ use App\ApiPayload;
 
 class AtomController extends Controller
 {
+    protected $_allowedProperties = ['title'];
+
     public function listAction() {
         $list = [];
         $atoms = Atom::orderBy('strippedTitle', 'asc')->get();
@@ -25,7 +27,7 @@ class AtomController extends Controller
             }
 
             $list[$firstChar][] = [
-                'id' => $atom->id,
+                'id' => $atom->atomId,
                 'title' => $atom->title
             ];
         }
@@ -34,11 +36,9 @@ class AtomController extends Controller
     }
 
     public function postAction(Request $request) {
-        $allowedProperties = ['title'];
-
         $atom = new Atom();
         $atom->atomId = Atom::makeUID();
-        foreach($allowedProperties as $allowed) {
+        foreach($this->_allowedProperties as $allowed) {
             if(isset($request->$allowed)) {
                 $atom->$allowed = $request->$allowed;
             }
@@ -52,11 +52,26 @@ class AtomController extends Controller
     }
 
     public function getAction($atomId) {
-        return Atom::find($atomId);
+        return Atom::findNewestIfNotDeleted($atomId);
     }
 
-    public function putAction($atomId) {
-        //
+    public function putAction($atomId, Request $request) {
+        $atom = Atom::findNewest($atomId);
+        if(!$atom) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
+        }
+
+        foreach($this->_allowedProperties as $allowed) {
+            if(isset($request->$allowed)) {
+                $atom->$allowed = $request->$allowed;
+            }
+        }
+        if(!isset($request->strippedTitle)) {
+            $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
+        }
+        $atom->save();
+
+        return $atom;
     }
 
     public function deleteAction($atomId) {
