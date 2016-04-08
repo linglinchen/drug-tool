@@ -14,7 +14,7 @@ use App\ApiPayload;
 class UserController extends Controller
 {
     public function loginAction() {
-    	return \Auth::user();
+    	return new ApiPayload(\Auth::user());
     }
 
     public function logoutAction() {

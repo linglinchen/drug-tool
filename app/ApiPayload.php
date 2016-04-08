@@ -7,7 +7,7 @@ class ApiPayload {
 
 	public function __construct($data = null) {
 		if($data !== null) {
-			$this->data = $data;
+			$this->payload = $data;
 		}
 	}
 

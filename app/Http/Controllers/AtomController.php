@@ -34,7 +34,7 @@ class AtomController extends Controller
             ];
         }
 
-        return $list;
+        return new ApiPayload($list);
     }
 
     public function postAction(Request $request) {
@@ -50,11 +50,11 @@ class AtomController extends Controller
         }
         $atom->save();
 
-        return $atom;
+        return new ApiPayload($atom);
     }
 
     public function getAction($atomId) {
-        return Atom::findNewestIfNotDeleted($atomId);
+        return new ApiPayload(Atom::findNewestIfNotDeleted($atomId));
     }
 
     public function putAction($atomId, Request $request) {
@@ -74,7 +74,7 @@ class AtomController extends Controller
         }
         $atom->save();
 
-        return $atom;
+        return new ApiPayload($atom);
     }
 
     public function deleteAction($atomId) {
