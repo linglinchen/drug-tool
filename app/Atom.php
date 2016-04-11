@@ -23,10 +23,11 @@ class Atom extends Model
         $sql = 'select id
                 from atoms
                 where id in (
-                    select max(id)
-                    from atoms
-                    group by "atomId"
-                )';
+                        select max(id)
+                        from atoms
+                        group by "atomId"
+                    )
+                    and deleted_at is null';
         $results = DB::select($sql);
 
         $list = [];
@@ -38,9 +39,17 @@ class Atom extends Model
     }
 
     public static function search($query) {
+        $queryTitleConditions = [];
+        $queryStrippedTitleConditions = [];
+        $explodedQuery = preg_split('/\s+/', trim($query));
+        foreach($explodedQuery as $queryPart) {
+            $queryTitleConditions[] = [DB::raw('lower(title)'), 'like', '%' . $queryPart . '%'];
+            $queryStrippedTitleConditions[] = [DB::raw('lower("strippedTitle")'), 'like', '%' . $queryPart . '%'];
+        }
+
         return self::whereIn('id', self::latestIDs())
-                ->where(DB::raw('lower(title)'), 'like', '%' . $query . '%')
-                ->orWhere(DB::raw('lower("strippedTitle")'), 'like', '%' . $query . '%');
+                ->where($queryTitleConditions)
+                ->orWhere($queryStrippedTitleConditions);
     }
 
     public static function findNewest($atomId) {
