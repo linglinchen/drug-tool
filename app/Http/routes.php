@@ -40,6 +40,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
         Route::group(['middleware' => 'auth.basic'], function () {		//secured endpoints
             Route::get('atom', ['uses' => 'AtomController@listAction']);
             Route::post('atom', ['uses' => 'AtomController@postAction']);
+            Route::get('atom/search', ['uses' => 'AtomController@searchAction']);
             Route::get('atom/{atomId}', ['uses' => 'AtomController@getAction']);
             Route::put('atom/{atomId}', ['uses' => 'AtomController@putAction']);
             Route::delete('atom/{atomId}', ['uses' => 'AtomController@deleteAction']);

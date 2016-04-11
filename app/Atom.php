@@ -20,14 +20,14 @@ class Atom extends Model
     }
 
     public static function latestIDs() {
-        $results = DB::select(
-            'select id
-            from atoms
-            where id in (
-                select max(id)
+        $sql = 'select id
                 from atoms
-                group by "atomId"
-            )');
+                where id in (
+                    select max(id)
+                    from atoms
+                    group by "atomId"
+                )';
+        $results = DB::select($sql);
 
         $list = [];
         foreach($results as $row) {
@@ -35,6 +35,25 @@ class Atom extends Model
         }
 
         return $list;
+    }
+
+    public static function search($query) {
+        $sql = 'select id
+                from atoms
+                where id in (
+                        select max(id)
+                        from atoms
+                        group by "atomId"
+                    )
+                    and lower(title) like \'' . $query . '%\'';
+        $results = DB::select($sql);
+
+        $list = [];
+        foreach($results as $row) {
+            $list[] = $row->id;
+        };
+
+        return self::whereIn('id', $list);
     }
 
     public static function findNewest($atomId) {

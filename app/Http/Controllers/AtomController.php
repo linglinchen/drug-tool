@@ -41,12 +41,12 @@ class AtomController extends Controller
         $atom = new Atom();
         $atom->atomId = Atom::makeUID();
         foreach($this->_allowedProperties as $allowed) {
-            if(isset($request->$allowed)) {
-                $atom->$allowed = $request->$allowed;
+            if($request->input($allowed)) {
+                $atom->$allowed = $request->input($allowed);
             }
         }
-        if(!property_exists($request, 'strippedTitle')) {
-            $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
+        if(!$request->input('strippedTitle')) {
+            $atom->strippedTitle = mb_convert_encoding($request->input('title'), 'ASCII');
         }
         $atom->save();
 
@@ -65,12 +65,12 @@ class AtomController extends Controller
 
         $atom = $atom->replicate();
         foreach($this->_allowedProperties as $allowed) {
-            if(isset($request->$allowed)) {
-                $atom->$allowed = $request->$allowed;
+            if($request->input($allowed)) {
+                $atom->$allowed = $request->input($allowed);
             }
         }
-        if(!property_exists($request, 'strippedTitle')) {
-            $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
+        if(!$request->input('strippedTitle')) {
+            $atom->strippedTitle = mb_convert_encoding($request->input('title'), 'ASCII');
         }
         $atom->save();
 
@@ -79,5 +79,28 @@ class AtomController extends Controller
 
     public function deleteAction($atomId) {
         //
+    }
+
+    public function searchAction(Request $request) {
+        $q = strtolower($request->input('q', ''));
+        $page = max((int)$request->input('page', 1), 1);
+        $pageSize = max((int)$request->input('pageSize', 10), 1);
+
+        if(strlen($q) > 2) {
+            $atoms = Atom::search($q)->get();
+        }
+        else {
+            $atoms = [];
+        }
+
+        $list = [];
+        foreach($atoms as $atom) {
+            $list[] = [
+                'id' => $atom->atomId,
+                'title' => $atom->title
+            ];
+        }
+
+        return new ApiPayload($list);
     }
 }
