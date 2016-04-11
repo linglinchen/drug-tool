@@ -39,7 +39,8 @@ class Atom extends Model
 
     public static function search($query) {
         return self::whereIn('id', self::latestIDs())
-                ->where(DB::raw('lower(title)'), 'like', '%' . $query . '%');
+                ->where(DB::raw('lower(title)'), 'like', '%' . $query . '%')
+                ->orWhere(DB::raw('lower(strippedTitle)'), 'like', '%' . $query . '%');
     }
 
     public static function findNewest($atomId) {
