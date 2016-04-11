@@ -157,7 +157,7 @@ class D {
 	 *
 	 * @param bool $exit
 	 */
-	public function ini($exit = true) {
+	public static function ini($exit = true) {
 		if(!self::isAuthorized()) {
 			return;
 		}
@@ -211,7 +211,7 @@ class D {
 
 		$ancestors = self::_getAncestors($object);
 		foreach($ancestors as $ancestor) {
-			echo "\n", str_repeat("\t", $depth), self::_bugDeclaration($ancestor);
+			echo "\n", str_repeat("\t", $depth), self::_bugDeclaration($ancestor['reflection']);
 		}
 		echo "\n";
 
@@ -307,9 +307,10 @@ class D {
 					"\n";
 
 				foreach($ancestors as $ancestor) {
-					if($ancestor->hasMethod($name)) {
-						$ancestorMethod = $ancestor->getMethod($name);
-						if($ancestorMethod->class == $ancestor->getName()) {
+					$reflection = $ancestor['reflection'];
+					if($reflection->hasMethod($name)) {
+						$ancestorMethod = $reflection->getMethod($name);
+						if($ancestorMethod->class == $reflection->getName()) {
 							echo str_repeat("\t", $depth + 1), self::_bugDeclaration($ancestorMethod), "\n";
 						}
 					}
@@ -329,11 +330,24 @@ class D {
 	 * @return string
 	 */
 	protected static function _bugDeclaration($reflection) {
-		$name = get_class($reflection) == 'ReflectionMethod' ? $reflection->class : $reflection->getName();
+		$isMethod = get_class($reflection) == 'ReflectionMethod';
+		$name = $isMethod ? $reflection->class : $reflection->getName();
 		$file = $reflection->getFileName();
 		$line = $reflection->getStartLine();
 		if($file !== false) {
-			return $file . ':' . $line . ' (' . self::_styleClassName($name) . ')';
+			ob_start();
+			$isTrait = (method_exists($reflection, 'isTrait') && $reflection->isTrait()) || 
+					($isMethod && method_exists($reflection->getDeclaringClass(), 'isTrait') && $reflection->getDeclaringClass()->isTrait());
+			if($isTrait) {
+				echo "\t";
+			}
+			echo $file, ':', $line, ' (';
+			if($isTrait) {
+				echo self::_style('Trait', 'trait'), ' ';
+			}
+			echo self::_styleClassName($name) . ')';
+
+			return ob_get_clean();
 		}
 		else {
 			return 'Built-in (' . self::_style($name, 'className') . ')';
@@ -352,16 +366,49 @@ class D {
 			$reflection = new ReflectionClass($reflection->getName());
 		}
 		$class = $reflection->name;
-		$ancestors = array($reflection);
+		$ancestors[] = array(
+				'isTrait'		=> false,
+				'reflection'	=> $reflection
+			);
 		$ancestor = $reflection;
+		$traits = self::_getTraits($ancestor);
+		foreach($traits as $trait) {
+			$ancestors[] = array(
+					'isTrait'		=> true,
+					'reflection'	=> $trait
+				);
+		}
 		while($ancestor) {
 			$ancestor = $ancestor->getParentClass();
 			if($ancestor) {
-				$ancestors[] = $ancestor;
+				$ancestors[] = array(
+						'isTrait'		=> false,
+						'reflection'	=> $ancestor
+					);
+				
+				$traits = self::_getTraits($ancestor);
+				foreach($traits as $trait) {
+					$ancestors[] = array(
+							'isTrait'		=> true,
+							'reflection'	=> $trait
+						);
+				}
 			}
 		}
 
 		return $ancestors;
+	}
+
+
+	/**
+	 * Get the traits (if supported) the supplied class or method.
+	 *
+	 * @param ReflectionClass|ReflectionMethod $reflection
+	 *
+	 * @return array
+	 */
+	protected static function _getTraits($reflection) {
+		return method_exists($reflection, 'getTraits') ? $reflection->getTraits() : array();
 	}
 
 	/**
@@ -499,7 +546,8 @@ class D {
 			'function'		=> array("\033[1;35m", 'color: darkmagenta; font-weight: bold;'),
 			'type'			=> array("\033[1;32m", 'color: green; font-weight: bold;'),
 			'namespace'		=> array("\033[0;36m", 'color: darkcyan;'),
-			'caller'		=> array("\033[1;39m", 'font-weight: bold;')
+			'caller'		=> array("\033[1;39m", 'font-weight: bold;'),
+			'trait'			=> array("\033[1;34m", 'color: blue; font-weight: bold;')
 		);
 		$style = isset($styles[$name]) ? $styles[$name] : $styles['default'];
 
