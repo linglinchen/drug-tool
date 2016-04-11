@@ -29,7 +29,7 @@ class AtomController extends Controller
             }
 
             $list[$firstChar][] = [
-                'id' => $atom->atomId,
+                'atomId' => $atom->atomId,
                 'title' => $atom->title
             ];
         }
@@ -96,7 +96,7 @@ class AtomController extends Controller
         $list = [];
         foreach($atoms as $atom) {
             $list[] = [
-                'id' => $atom->atomId,
+                'atomId' => $atom->atomId,
                 'title' => $atom->title
             ];
         }
