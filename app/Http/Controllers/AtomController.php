@@ -45,7 +45,7 @@ class AtomController extends Controller
                 $atom->$allowed = $request->$allowed;
             }
         }
-        if(!isset($request->strippedTitle)) {
+        if(!property_exists($request, 'strippedTitle')) {
             $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
         }
         $atom->save();
@@ -69,7 +69,7 @@ class AtomController extends Controller
                 $atom->$allowed = $request->$allowed;
             }
         }
-        if(!isset($request->strippedTitle)) {
+        if(!property_exists($request, 'strippedTitle')) {
             $atom->strippedTitle = mb_convert_encoding($request->title, 'ASCII');
         }
         $atom->save();
