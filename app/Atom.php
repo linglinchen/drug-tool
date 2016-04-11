@@ -38,22 +38,8 @@ class Atom extends Model
     }
 
     public static function search($query) {
-        $sql = 'select id
-                from atoms
-                where id in (
-                        select max(id)
-                        from atoms
-                        group by "atomId"
-                    )
-                    and lower(title) like \'' . $query . '%\'';
-        $results = DB::select($sql);
-
-        $list = [];
-        foreach($results as $row) {
-            $list[] = $row->id;
-        };
-
-        return self::whereIn('id', $list);
+        return self::whereIn('id', self::latestIDs())
+                ->where(DB::raw('lower(title)'), 'like', '%' . $query . '%');
     }
 
     public static function findNewest($atomId) {
