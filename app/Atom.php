@@ -25,7 +25,7 @@ class Atom extends Model
                 where id in (
                         select max(id)
                         from atoms
-                        group by "atomId"
+                        group by "entityId"
                     )
                     and deleted_at is null';
         $results = DB::select($sql);
@@ -52,18 +52,18 @@ class Atom extends Model
                 ->orWhere($queryalphaTitleConditions);
     }
 
-    public static function findNewest($atomId) {
+    public static function findNewest($entityId) {
         $atom = self::withTrashed()
-                ->where('atomId', '=', $atomId)
+                ->where('entityId', '=', $entityId)
                 ->orderBy('id', 'desc')
                 ->first();
 
         return $atom;
     }
 
-    public static function findNewestIfNotDeleted($atomId) {
+    public static function findNewestIfNotDeleted($entityId) {
         $atom = self::withTrashed()
-                ->where('atomId', '=', $atomId)
+                ->where('entityId', '=', $entityId)
                 ->orderBy('id', 'desc')
                 ->first();
 

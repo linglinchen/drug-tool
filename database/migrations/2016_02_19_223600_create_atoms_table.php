@@ -14,12 +14,12 @@ class CreateAtomsTable extends Migration
     {
         Schema::create('atoms', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('atomId');
+            $table->string('entityId');
             $table->string('title');
             $table->string('alphaTitle');
             $table->timestamps();
 
-            $table->index('atomId');
+            $table->index('entityId');
 
             $table->softDeletes();
         });

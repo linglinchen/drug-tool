@@ -41,12 +41,12 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('atom', ['uses' => 'AtomController@listAction']);
             Route::post('atom', ['uses' => 'AtomController@postAction']);
             Route::get('atom/search', ['uses' => 'AtomController@searchAction']);
-            Route::get('atom/{atomId}', ['uses' => 'AtomController@getAction']);
-            Route::put('atom/{atomId}', ['uses' => 'AtomController@putAction']);
-            Route::delete('atom/{atomId}', ['uses' => 'AtomController@deleteAction']);
+            Route::get('atom/{entityId}', ['uses' => 'AtomController@getAction']);
+            Route::put('atom/{entityId}', ['uses' => 'AtomController@putAction']);
+            Route::delete('atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
 
-            Route::post('atom/{atomId}/comment', ['uses' => 'AtomCommentController@postAction']);
-            Route::delete('atom/{atomId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
+            Route::post('atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
+            Route::delete('atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
 
             Route::post('login', ['uses' => 'UserController@loginAction']);
         });

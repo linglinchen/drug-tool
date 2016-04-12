@@ -29,7 +29,7 @@ class AtomController extends Controller
             }
 
             $list[$firstChar][] = [
-                'atomId' => $atom->atomId,
+                'entityId' => $atom->entityId,
                 'title' => $atom->title
             ];
         }
@@ -39,7 +39,7 @@ class AtomController extends Controller
 
     public function postAction(Request $request) {
         $atom = new Atom();
-        $atom->atomId = Atom::makeUID();
+        $atom->entityId = Atom::makeUID();
         foreach($this->_allowedProperties as $allowed) {
             if($request->input($allowed)) {
                 $atom->$allowed = $request->input($allowed);
@@ -53,12 +53,12 @@ class AtomController extends Controller
         return new ApiPayload($atom);
     }
 
-    public function getAction($atomId) {
-        return new ApiPayload(Atom::findNewestIfNotDeleted($atomId));
+    public function getAction($entityId) {
+        return new ApiPayload(Atom::findNewestIfNotDeleted($entityId));
     }
 
-    public function putAction($atomId, Request $request) {
-        $atom = Atom::findNewest($atomId);
+    public function putAction($entityId, Request $request) {
+        $atom = Atom::findNewest($entityId);
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
@@ -75,7 +75,7 @@ class AtomController extends Controller
         return new ApiPayload($atom);
     }
 
-    public function deleteAction($atomId) {
+    public function deleteAction($entityId) {
         //
     }
 
@@ -94,7 +94,7 @@ class AtomController extends Controller
         $list = [];
         foreach($atoms as $atom) {
             $list[] = [
-                'atomId' => $atom->atomId,
+                'entityId' => $atom->entityId,
                 'title' => $atom->title
             ];
         }

@@ -17,7 +17,7 @@ class AtomSeeder extends Seeder
             $title = str_random(10);
 
             DB::table('atoms')->insert([
-                'atomId' => Atom::makeUID(),
+                'entityId' => Atom::makeUID(),
                 'title' => $title,
                 'alphaTitle' => $title
             ]);
