@@ -16,7 +16,7 @@ class CreateAtomsTable extends Migration
             $table->increments('id');
             $table->string('atomId');
             $table->string('title');
-            $table->string('strippedTitle');
+            $table->string('alphaTitle');
             $table->timestamps();
 
             $table->index('atomId');

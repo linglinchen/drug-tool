@@ -20,10 +20,10 @@ class AtomController extends Controller
     public function listAction() {
         $list = [];
         $atoms = Atom::whereIn('id', Atom::latestIDs())
-            ->orderBy('strippedTitle', 'asc')
+            ->orderBy('alphaTitle', 'asc')
             ->get();
         foreach($atoms as $atom) {
-            $firstChar = strtoupper($atom['strippedTitle'][0]);
+            $firstChar = strtoupper($atom['alphaTitle'][0]);
             if(!isset($list[$firstChar])) {
                 $list[$firstChar] = [];
             }
@@ -45,8 +45,8 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        if(!$request->input('strippedTitle')) {
-            $atom->strippedTitle = mb_convert_encoding($request->input('title'), 'ASCII');
+        if(!$request->input('alphaTitle')) {
+            $atom->alphaTitle = mb_convert_encoding($request->input('title'), 'ASCII');
         }
         $atom->save();
 
@@ -69,7 +69,7 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        $atom->strippedTitle = mb_convert_encoding($request->input('strippedTitle'), 'ASCII');
+        $atom->alphaTitle = mb_convert_encoding($request->input('alphaTitle'), 'ASCII');
         $atom->save();
 
         return new ApiPayload($atom);

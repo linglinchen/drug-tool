@@ -40,16 +40,16 @@ class Atom extends Model
 
     public static function search($query) {
         $queryTitleConditions = [];
-        $queryStrippedTitleConditions = [];
+        $queryalphaTitleConditions = [];
         $explodedQuery = preg_split('/\s+/', trim($query));
         foreach($explodedQuery as $queryPart) {
             $queryTitleConditions[] = [DB::raw('lower(title)'), 'like', '%' . $queryPart . '%'];
-            $queryStrippedTitleConditions[] = [DB::raw('lower("strippedTitle")'), 'like', '%' . $queryPart . '%'];
+            $queryalphaTitleConditions[] = [DB::raw('lower("alphaTitle")'), 'like', '%' . $queryPart . '%'];
         }
 
         return self::whereIn('id', self::latestIDs())
                 ->where($queryTitleConditions)
-                ->orWhere($queryStrippedTitleConditions);
+                ->orWhere($queryalphaTitleConditions);
     }
 
     public static function findNewest($atomId) {

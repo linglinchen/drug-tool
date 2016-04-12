@@ -19,7 +19,7 @@ class AtomSeeder extends Seeder
             DB::table('atoms')->insert([
                 'atomId' => Atom::makeUID(),
                 'title' => $title,
-                'strippedTitle' => $title
+                'alphaTitle' => $title
             ]);
         }
     }
