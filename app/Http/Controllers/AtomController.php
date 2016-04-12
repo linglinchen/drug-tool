@@ -69,9 +69,7 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        if(!$request->input('strippedTitle')) {
-            $atom->strippedTitle = mb_convert_encoding($request->input('title'), 'ASCII');
-        }
+        $atom->strippedTitle = mb_convert_encoding($request->input('strippedTitle'), 'ASCII');
         $atom->save();
 
         return new ApiPayload($atom);
