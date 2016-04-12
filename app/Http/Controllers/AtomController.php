@@ -45,9 +45,9 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        if(!$request->input('alphaTitle')) {
-            $atom->alphaTitle = mb_convert_encoding($request->input('title'), 'ASCII');
-        }
+        $atom->alphaTitle = $request->input('alphaTitle') ?
+                $request->input('alphaTitle') :
+                mb_convert_encoding($request->input('title'), 'ASCII');     //TODO: do more sanitization here
         $atom->save();
 
         return new ApiPayload($atom);
