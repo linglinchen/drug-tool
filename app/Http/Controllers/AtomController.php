@@ -15,7 +15,7 @@ use App\ApiPayload;
 
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['title'];
+    protected $_allowedProperties = ['title', 'xml'];
 
     public function listAction() {
         $list = [];
