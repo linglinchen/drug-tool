@@ -10,10 +10,25 @@ use DB;
 class Atom extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'atoms';
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function save(array $options = []) {
+        $this->updateTitle();
+        parent::save($options);
+    }
+
+    public function updateTitle() {
+        preg_match('/<mono_name>(.*)<\/mono_name>/i', $this->xml, $match);
+        if($match) {
+            $this->title = $match[1];
+        }
+
+        $this->title = trim($this->title);
+        $this->alphaTitle = strip_tags($this->title);
+    }
 
     public static function makeUID() {
         return uniqid('', true);
