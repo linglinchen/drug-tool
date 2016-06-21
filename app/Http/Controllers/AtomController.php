@@ -84,7 +84,7 @@ class AtomController extends Controller
         $page = max((int)$request->input('page', 1), 1);
         $pageSize = max((int)$request->input('pageSize', 10), 1);
 
-        if(strlen($q) > 2) {
+        if($q) {
             $atoms = Atom::search($q)->get();
         }
         else {
