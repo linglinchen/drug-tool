@@ -63,8 +63,10 @@ class Atom extends Model
         }
 
         return self::whereIn('id', self::latestIDs())
-                ->where($queryTitleConditions)
-                ->orWhere($queryalphaTitleConditions);
+                ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
+                    $query->where($queryTitleConditions)
+                            ->orWhere($queryalphaTitleConditions);
+                });
     }
 
     public static function findNewest($entityId) {
