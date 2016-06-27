@@ -53,7 +53,7 @@ class Atom extends Model
         return $list;
     }
 
-    public static function search($query) {
+    public static function search($query, $limit = 10) {
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
         $explodedQuery = preg_split('/\s+/', trim($query));
@@ -66,7 +66,8 @@ class Atom extends Model
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-                });
+                })
+                ->paginate($limit);
     }
 
     public static function findNewest($entityId) {

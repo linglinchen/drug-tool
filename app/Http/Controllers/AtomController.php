@@ -81,19 +81,13 @@ class AtomController extends Controller
 
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
-        $page = max((int)$request->input('page', 1), 1);
-        $pageSize = max((int)$request->input('pageSize', 10), 1);
+        $limit = max((int)$request->input('limit', 10), 1);
 
-        $atoms = Atom::search($q)->get();
+        $results = Atom::search($q, $limit);
 
-        $list = [];
-        foreach($atoms as $atom) {
-            $list[] = [
-                'entityId' => $atom->entityId,
-                'title' => $atom->title
-            ];
-        }
-
-        return new ApiPayload($list);
+        return new ApiPayload([
+            'atoms' => $results->getCollection(),
+            'count' => $results->total()
+        ]);
     }
 }
