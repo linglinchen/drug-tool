@@ -5,4 +5,8 @@ Homestead.yaml
 Homestead.json
 .env
 
-tests/_output/*
+/tests/_output/*
+
+/data/*
+!/data/
+!/data/empty
