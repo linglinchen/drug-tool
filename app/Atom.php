@@ -42,7 +42,8 @@ class Atom extends Model
                         from atoms
                         group by "entityId"
                     )
-                    and deleted_at is null';
+                    and deleted_at is null
+                order by "alphaTitle"';
         $results = DB::select($sql);
 
         $list = [];

@@ -44,6 +44,8 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('atom/{entityId}', ['uses' => 'AtomController@getAction']);
             Route::put('atom/{entityId}', ['uses' => 'AtomController@putAction']);
             Route::delete('atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
+            Route::get('atom/previous/{entityId}', ['uses' => 'AtomController@previousAction']);
+            Route::get('atom/next/{entityId}', ['uses' => 'AtomController@nextAction']);
 
             Route::post('atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
             Route::delete('atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);

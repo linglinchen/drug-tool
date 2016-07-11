@@ -79,6 +79,32 @@ class AtomController extends Controller
         //
     }
 
+    public function previousAction($entityId) {
+        $ids = Atom::latestIDs();
+        $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
+        $currentLocation = array_search($currentId, $ids);
+        end($ids);
+        $targetLocation = $currentLocation ? $currentLocation - 1 : key($ids);
+        $atom = Atom::find($ids[$targetLocation]);
+
+        return new ApiPayload([
+            'entityId'      => $atom['entityId']
+        ]);
+    }
+
+    public function nextAction($entityId) {
+        $ids = Atom::latestIDs();
+        $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
+        $currentLocation = array_search($currentId, $ids);
+        reset($ids);
+        $targetLocation = $currentLocation < sizeof($ids) - 1 ? $currentLocation + 1 : key($ids);
+        $atom = Atom::find($ids[$targetLocation]);
+
+        return new ApiPayload([
+            'entityId'    => $atom['entityId']
+        ]);
+    }
+
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
         $limit = max((int)$request->input('limit', 10), 1);
