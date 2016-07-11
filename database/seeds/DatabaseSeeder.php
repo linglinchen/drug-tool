@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             $this->call(UserSeeder::class);
             $this->call(AtomSeeder::class);
             $this->call(CommentSeeder::class);
+            $this->call(GroupSeeder::class);
         });
 
         Model::reguard();

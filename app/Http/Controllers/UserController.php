@@ -10,14 +10,22 @@ use App\Http\Controllers\Controller;
 
 use App\ApiError;
 use App\ApiPayload;
+use App\AccessControl;
 
 class UserController extends Controller
 {
-    public function loginAction() {
-    	return new ApiPayload(\Auth::user());
-    }
+	public function loginAction() {
+		$user = \Auth::user();
+		$accessControl = new AccessControl();
+		$permissions = $accessControl->loadPermissions($user);
 
-    public function logoutAction() {
-        //
-    }
+		return new ApiPayload([
+			'user'			=> $user,
+			'permissions'	=> $permissions
+		]);
+	}
+
+	public function logoutAction() {
+		//
+	}
 }
