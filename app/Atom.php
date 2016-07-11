@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
 
+use App\FuzzyRank;
+
 class Atom extends Model
 {
     use SoftDeletes;
@@ -54,21 +56,36 @@ class Atom extends Model
         return $list;
     }
 
-    public static function search($query, $limit = 10) {
+    public static function search($query, $limit = 10, $page = 1) {
+        $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
-        $explodedQuery = preg_split('/\s+/', trim($query));
+
+        $query = trim(preg_replace($sanitizer, ' ', $query));
+        $explodedQuery = preg_split('/\s+/', $query);
         foreach($explodedQuery as $queryPart) {
             $queryTitleConditions[] = [DB::raw('lower(title)'), 'like', '%' . $queryPart . '%'];
             $queryalphaTitleConditions[] = [DB::raw('lower("alphaTitle")'), 'like', '%' . $queryPart . '%'];
         }
 
-        return self::whereIn('id', self::latestIDs())
+        //need to get the unranked list of candidates first
+        $candidates = self::whereIn('id', self::latestIDs())
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
                 })
-                ->paginate($limit);
+                ->lists('alphaTitle', 'id')
+                ->all();
+
+        $candidates = FuzzyRank::rank($candidates, $query);
+        $count = sizeof($candidates);
+        $candidates = array_keys($candidates);
+        $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
+
+        return [
+            'count' => $count,
+            'atoms' => self::whereIn('id', $candidates)->get()
+        ];
     }
 
     public static function findNewest($entityId) {

@@ -108,12 +108,10 @@ class AtomController extends Controller
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
         $limit = max((int)$request->input('limit', 10), 1);
+        $page = max((int)$request->input('page', 1), 1);
 
-        $results = Atom::search($q, $limit);
+        $results = Atom::search($q, $limit, $page);
 
-        return new ApiPayload([
-            'atoms' => $results->getCollection(),
-            'count' => $results->total()
-        ]);
+        return new ApiPayload($results);
     }
 }
