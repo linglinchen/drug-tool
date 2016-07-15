@@ -45,9 +45,6 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        $atom->alphaTitle = $request->input('alphaTitle') ?
-                $request->input('alphaTitle') :
-                mb_convert_encoding($request->input('title'), 'ASCII');     //TODO: do more sanitization here
         $atom->save();
 
         return new ApiPayload($atom);
@@ -69,7 +66,6 @@ class AtomController extends Controller
                 $atom->$allowed = $request->input($allowed);
             }
         }
-        $atom->alphaTitle = mb_convert_encoding($request->input('alphaTitle'), 'ASCII');
         $atom->save();
 
         return new ApiPayload($atom);

@@ -9,8 +9,7 @@ use DB;
 
 use App\FuzzyRank;
 
-class Atom extends Model
-{
+class Atom extends Model {
     use SoftDeletes;
 
     protected $table = 'atoms';
@@ -23,13 +22,23 @@ class Atom extends Model
     }
 
     public function updateTitle() {
-        preg_match('/<mono_name>(.*)<\/mono_name>/i', $this->xml, $match);
-        if($match) {
-            $this->title = $match[1];
+        $titleElements = ['group_title', 'mono_name'];      //must be in order of priority
+
+        foreach($titleElements as $titleElement) {
+            preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/i', $this->xml, $match);
+
+            if($match) {
+                $this->title = $match[1];
+                break;
+            }
+        }
+
+        if(!$match) {
+            return;
         }
 
         $this->title = trim($this->title);
-        $this->alphaTitle = strip_tags($this->title);
+        $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
     public static function makeUID() {

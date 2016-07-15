@@ -32,7 +32,7 @@ class ImportXml extends Command
     {
         $atom = new Atom();
 
-        //atom types must be in order, or your data will be mangled
+        //atom types must be in order of priority, or your data will be mangled
         $atomTypes = [
             [
                 'elementName' => 'group',
