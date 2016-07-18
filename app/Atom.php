@@ -125,6 +125,6 @@ class Atom extends Model {
                 ->orderBy('id', 'desc')
                 ->first();
 
-        return $atom->trashed() ? null : $atom;
+        return ($atom && $atom->trashed()) ? null : $atom;
     }
 }

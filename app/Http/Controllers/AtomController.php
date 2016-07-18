@@ -51,13 +51,18 @@ class AtomController extends Controller
     }
 
     public function getAction($entityId) {
-        return new ApiPayload(Atom::findNewestIfNotDeleted($entityId));
+        $atom = Atom::findNewestIfNotDeleted($entityId);
+
+        if(!$atom) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
+        }
+
+        return new ApiPayload($atom);
     }
 
     public function putAction($entityId, Request $request) {
         $atom = Atom::findNewest($entityId);
         if(!$atom) {
-            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
 
         $atom = $atom->replicate();
