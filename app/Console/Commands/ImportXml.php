@@ -28,8 +28,36 @@ class ImportXml extends Command
      *
      * @return mixed
      */
-    public function handle()
-    {
+    public function handle() {
+        $dataPath = base_path() . '/data/';
+        $files = scandir($dataPath);
+        $files = array_slice($files, 2);
+        foreach($files as $file) {
+            if(!preg_match('/\.xml$/i', $file)) {
+                continue;       //skip non-xml file
+            }
+
+            echo 'Loading ', $file, "\n";
+
+            $xml = file_get_contents($dataPath . $file);
+            preg_match_all('/<alpha\b.*?<\/alpha>/Sis', $xml, $alphas);
+            $alphas = $alphas ? $alphas[0] : [];
+
+            if($alphas) {
+                foreach($alphas as $alpha) {
+                    $letter = preg_replace('/<alpha letter="(.*?)".*/Sis', '$1', $alpha);
+                    self::importXMLChunk($alpha, $letter);
+                }
+            }
+            else {
+                self::importXMLChunk($xml);
+            }
+        }
+
+        echo "Done\n";
+    }
+
+    public function importXMLChunk($xml, $letter = null) {
         $atom = new Atom();
 
         //atom types must be in order of priority, or your data will be mangled
@@ -44,43 +72,30 @@ class ImportXml extends Command
             ]
         ];
 
-        $dataPath = base_path() . '/data/';
-        $files = scandir($dataPath);
-        $files = array_slice($files, 2);
-        foreach($files as $file) {
-            if(!preg_match('/\.xml$/i', $file)) {
-                continue;       //skip non-xml file
-            }
+        foreach($atomTypes as $atomType) {
+            $elementName = $atomType['elementName'];
+            $titleElement = $atomType['titleElement'];
+            $atomRegex = '/<' . $elementName . '\b.*?<\/' . $elementName . '>/Sis';
 
-            echo 'Loading ', $file, "\n";
+            preg_match_all($atomRegex, $xml, $atoms);
+            $xml = preg_replace($atomRegex, '', $xml);      //clean up before the next round
+            $atoms = $atoms[0];
+            foreach($atoms as $atomString) {
+                preg_match('/<' . $titleElement . '>(.*?)<\/' . $titleElement . '>/i', $atomString, $match);
+                $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
+                $alphaTitle = strip_tags($title);
+                $timestamp = $atom->freshTimestampString();
 
-            $xml = file_get_contents($dataPath . $file);
-            foreach($atomTypes as $atomType) {
-                $elementName = $atomType['elementName'];
-                $titleElement = $atomType['titleElement'];
-                $atomRegex = '/<' . $elementName . '\b.*?<\/' . $elementName . '>/Sis';
-
-                preg_match_all($atomRegex, $xml, $atoms);
-                $xml = preg_replace($atomRegex, '', $xml);      //clean up before the next round
-                $atoms = $atoms[0];
-                foreach($atoms as $atomString) {
-                    preg_match('/<' . $titleElement . '>(.*?)<\/' . $titleElement . '>/i', $atomString, $match);
-                    $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
-                    $alphaTitle = strip_tags($title);
-                    $timestamp = $atom->freshTimestampString();
-
-                    DB::table('atoms')->insert([
-                        'entityId' => Atom::makeUID(),
-                        'title' => $title,
-                        'alphaTitle' => $alphaTitle,
-                        'xml' => trim($atomString),
-                        'created_at' => $timestamp,
-                        'updated_at' => $timestamp
-                    ]);
-                }
+                DB::table('atoms')->insert([
+                    'entityId' => Atom::makeUID(),
+                    'title' => $title,
+                    'alphaTitle' => $alphaTitle,
+                    'letter' => $letter,
+                    'xml' => trim($atomString),
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp
+                ]);
             }
         }
-
-        echo "Done\n";
     }
 }
