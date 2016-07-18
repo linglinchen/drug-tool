@@ -17,6 +17,7 @@ class CreateAtomsTable extends Migration
             $table->string('entityId');
             $table->string('title');
             $table->string('alphaTitle');
+            $table->char('letter', 1)->nullable();
             $table->text('xml');
             $table->timestamps();
 
