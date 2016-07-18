@@ -23,7 +23,7 @@ class AtomController extends Controller
             ->orderBy('alphaTitle', 'asc')
             ->get();
         foreach($atoms as $atom) {
-            $firstChar = strtoupper($atom['alphaTitle'][0]);
+            $firstChar = strtoupper($atom['letter']);
             if(!isset($list[$firstChar])) {
                 $list[$firstChar] = [];
             }
