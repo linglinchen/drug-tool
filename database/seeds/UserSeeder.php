@@ -19,8 +19,7 @@ class UserSeeder extends Seeder
             'firstname' => 'Testy',
             'lastname' => 'Testerson',
             'email' => 'test@domain.com',
-            'password' => Hash::make('test'),
-            'role' => 'user'
+            'password' => Hash::make('test')
         ]);
     }
 }
