@@ -40,12 +40,13 @@ class ImportXml extends Command
             echo 'Loading ', $file, "\n";
 
             $xml = file_get_contents($dataPath . $file);
-            preg_match_all('/<alpha\b.*?<\/alpha>/Sis', $xml, $alphas);
+            preg_match_all('/<alpha\b.*?<\/alpha>/SUis', $xml, $alphas);
             $alphas = $alphas ? $alphas[0] : [];
 
             if($alphas) {
                 foreach($alphas as $alpha) {
-                    $letter = preg_replace('/<alpha letter="(.*?)".*/Sis', '$1', $alpha);
+                    preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $letter);
+                    $letter = $letter ? $letter[1] : null;
                     self::importXMLChunk($alpha, $letter);
                 }
             }
@@ -72,16 +73,18 @@ class ImportXml extends Command
             ]
         ];
 
+        $letter = $letter ? $letter[0] : null;      //make sure the letter is sane
+
         foreach($atomTypes as $atomType) {
             $elementName = $atomType['elementName'];
             $titleElement = $atomType['titleElement'];
-            $atomRegex = '/<' . $elementName . '\b.*?<\/' . $elementName . '>/Sis';
+            $atomRegex = '/<' . $elementName . '\b.*<\/' . $elementName . '>/SUis';
 
             preg_match_all($atomRegex, $xml, $atoms);
             $xml = preg_replace($atomRegex, '', $xml);      //clean up before the next round
             $atoms = $atoms[0];
             foreach($atoms as $atomString) {
-                preg_match('/<' . $titleElement . '>(.*?)<\/' . $titleElement . '>/i', $atomString, $match);
+                preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
                 $alphaTitle = strip_tags($title);
                 $timestamp = $atom->freshTimestampString();
