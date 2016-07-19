@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 
 use App\Atom;
 
-class ImportClear extends Command
+class ImportClearAtoms extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:clear';
+    protected $signature = 'import:clearatoms';
 
     /**
      * The console command description.

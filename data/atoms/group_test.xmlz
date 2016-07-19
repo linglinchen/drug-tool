@@ -1,0 +1,24 @@
+<group>
+	<group_title>test group 1</group_title>
+	<monograph>
+		<mono_name>test monograph 1</mono_name>
+	</monograph>
+	<monograph>
+		<mono_name>test monograph 2</mono_name>
+	</monograph>
+</group>
+<group>
+	<group_title>test group 2</group_title>
+	<monograph>
+		<mono_name>test monograph 3</mono_name>
+	</monograph>
+	<monograph>
+		<mono_name>test monograph 4</mono_name>
+	</monograph>
+</group>
+<monograph>
+	<mono_name>test monograph 5</mono_name>
+</monograph>
+<monograph>
+	<mono_name>test monograph 6</mono_name>
+</monograph>

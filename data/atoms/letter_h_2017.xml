@@ -1,0 +1,4738 @@
+<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.1//EN//XML" "Y:\WWW1\tools\Drugs\3_1_drug.dtd">
+<drug_guide isbn="9780323448260">
+	<alpha letter="h">
+		<monograph id="1" status="active">
+			<mono_name>halcinonide topical</mono_name>
+			<section type="none" id="sidelem4x19">
+				<para>See <see refid="tra">Appendix B</see></para>
+			</section>
+		</monograph>
+<monograph id="2" status="active">
+			<mono_name>haloperidol (Rx)</mono_name>
+			<info>
+				<pronunciation>(hal-oh-pehr′ih-dol)</pronunciation>
+			</info>
+		</monograph>
+<monograph id="3" status="active">
+			<mono_name>haloperidol decanoate (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x310">Haldol Decanoate</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="4" status="active">
+			<mono_name>haloperidol lactate (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x360">Haldol</tradename>
+				</tradenames>
+				<class type="func"> Antipsychotic, neuroleptic</class>
+				<class type="chem"> Butyrophenone</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x46">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x460">haloperidol</tradename>
+						<drug type="generic" refid="idelem4x460">Halotestin</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x50">
+				<sec_title>Action:</sec_title>
+				<para> Depresses cerebral cortex, hypothalamus, limbic system, which control activity and aggression; blocks neurotransmission produced by DOPamine at synapse; exhibits strong α-adrenergic, anticholinergic blocking action; mechanism for antipsychotic effects unclear</para>
+			</section>
+			<section type="uses" id="sidelem4x55">
+				<sec_title>Uses:</sec_title>
+				<para> Psychotic disorders, control of tics, vocal utterances in Gilles de la Tourette’s syndrome, short-term treatment of hyperactive children showing excessive motor activity, prolonged parenteral therapy in chronic schizophrenia, organic mental syndrome with psychotic features, hiccups (short-term), emergency sedation of severely agitated or delirious patients, ADHD</para>
+				<section type="none" id="sidelem4x60">
+					<section type="none" id="sidelem4x61">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Nausea, vomiting during chemotherapy; hiccups; autism; migraine</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x66">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity, coma, Parkinson’s disease</para>
+				<section type="none" id="sidelem4x71">
+					<section type="none" id="sidelem4x72">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, geriatric patients, seizure disorders, hypertension, pulmonary/cardiac/hepatic disease, QT prolongation, torsades de pointes, prostatic hypertrophy, hyperthyroidism, thyrotoxicosis, children, blood dyscrasias, brain damage, bone marrow depression, alcohol and barbiturate withdrawal states, angina, epilepsy, urinary retention, closed-angle glaucoma, CNS depression</para>
+						<para>
+							<bbw>Increased mortality in elderly patients with dementia-related psychosis</bbw>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x88">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x91">
+					<section type="none" id="sidelem4x92">
+						<sec_title>Acute psychosis</sec_title>
+						<section type="none" id="sidelem4x100">
+							<label>•</label>
+							<sec_title>Adult<route> IM/IV</route></sec_title>
+							<para>
+								<list id="lidelem4x100">
+									<item>
+										<label>•</label>
+										<para> (lactate) 2-10 mg, may repeat q1hr, convert to  as soon as possible,  should be 150% of total parenteral dose required</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x113">
+							<label>•</label>
+							<sec_title>Child 6-12 yr<route> IM/IV</route></sec_title>
+							<para>
+								<list id="lidelem4x113">
+									<item>
+										<label>•</label>
+										<para> (lactate) (unlabeled) 1-3 mg q4-8hr, max 0.15 mg/kg/day, switch to  as soon as possible</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x120">
+						<sec_title>Chronic psychosis</sec_title>
+						<section type="none" id="sidelem4x128">
+							<label>•</label>
+							<sec_title>Adult<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x128">
+									<item>
+										<label>•</label>
+										<para> (decanoate) 50-100 mg q4wk, max 100 mg for 1st inj</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x135">
+							<label>•</label>
+							<sec_title>Child 3-12 yr<route> PO/IM</route></sec_title>
+							<para>
+								<list id="lidelem4x135">
+									<item>
+										<label>•</label>
+										<para> 0.05-0.15 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x139">
+						<sec_title>Tourette’s syndrome</sec_title>
+						<section type="none" id="sidelem4x147">
+							<label>•</label>
+							<sec_title>Adult and adolescent<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x147">
+									<item>
+										<label>•</label>
+										<para> 0.5-2 mg bid-tid, increase until desired response occurs</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x154">
+							<label>•</label>
+							<sec_title>Elderly<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x154">
+									<item>
+										<label>•</label>
+										<para> 0.5-2 mg bid-tid may increase gradually</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x161">
+							<label>•</label>
+							<sec_title>Child 3-12 yr or weighing 15-40 kg<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x161">
+									<item>
+										<label>•</label>
+										<para> 0.25-0.5 mg/day in 2-3 divided doses, increase by 0.25-0.5 mg q5-7days, max 0.15 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x165">
+						<sec_title>Nausea and vomiting related to chemotherapy/surgery (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x171">
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x171">
+									<item>
+										<para> 1-2 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x175">
+						<sec_title>Hiccups (Unlabeled)</sec_title>
+						<section type="none" id="sidelem4x181">
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x181">
+									<item>
+										<para> 0.5-2 mg bid-tid or  5-10 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x188">
+						<sec_title>Autism (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x196">
+							<label>•</label>
+							<sec_title>Child<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x196">
+									<item>
+										<label>•</label>
+										<para> 0.04 mg/kg/day or 1-3 mg/day, max 4 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x200">
+						<sec_title>Available forms:</sec_title>
+						<para> Tabs 0.5, 1, 2, 5, 10, 20 mg; <emphasis style="bold">lactate:</emphasis> oral sol 2 mg/ml; inj 5 mg/ml, <emphasis style="bold">decanoate:</emphasis> 50 mg/ml, 100 mg/ml</para>
+					</section>
+					<section type="none" id="sidelem4x211">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x215">
+								<item>
+									<label>•</label>
+									<para>Reduced dose to geriatric patients</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Antiparkinsonian agent if EPS occurs</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Avoid use with CNS depressants</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x232">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x237">
+									<item>
+										<label>•</label>
+										<para>Store in tight, light-resistant container</para>
+									</item>
+								</list>
+							</para>
+							<section type="none" id="sidelem4x245">
+								<label>•</label>
+								<sec_title>Oral liquid</sec_title>
+								<para>
+									<list id="lidelem4x245">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Oral liquid:</emphasis> use calibrated device; do not mix in coffee or tea</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<para>
+								<list id="lidelem4x249">
+									<item>
+										<label>•</label>
+										<para>PO with food or milk</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<list id="lidelem4x254">
+									<item>
+										<label>•</label>
+										<para>Avoid skin contact with oral suspension or solution—may cause contact dermatitis</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x259">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x263">
+									<item>
+										<label>•</label>
+										<para>IM inj into large muscle mass, use 21-G, 2-in needle; give no more than 3 ml/inj site; patient should remain recumbent for 30 min</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x269">
+							<sec_title>IV route (lactate) (unlabeled)</sec_title>
+							<para>
+								<list id="lidelem4x273">
+									<item>
+										<label>•</label>
+										<para>Give undiluted for psychotic episode at 5 mg/min</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Only use lactate for IV</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Closely monitor ECG for QT prolongation</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Switch to oral as soon as possible if needed, give first PO dose within 12-24 hr of last parenteral dose</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis style="bold">Y-site compatibilities:</emphasis> Alcohol 10%, dextrose 5%, alemtuzumab, amifostine, aminocaproic acid, amiodarone, amphotericin B liposome (ambisome), amsacrine, anidulafungin, argatroban, arsenic trioxide, asparaginase, atenolol, azithromycin, bleomycin, cangrelor, CARBOplatin, carmustine, caspofungin, ceftaroline, cisatracurium, CISplatin, cladribine, cloNIDine, codeine phosphate, cyclophosphamide, cytarabine, DACTINomycin, DAPTOmycin, DAUNOrubicin liposome, DAUNOrubicin, dexmedetomidine, dexrazoxane, diltiazem, DOCEtaxel, dolasetron, doxacurium, DOXOrubicin, doxorubicin liposomal, epirubicin, eptifibatide, ertapenem, etoposide, etoposide phosphate, fenoldopam, filgrastim, fludarabine, gatifloxacin, gemcitabine, granisetron, HYDROmorphone, IDArubicin, ifosfamide, irinotecan, ketamine, lepirudin, leucovorin, levofloxacin, linezolid, LORazepam, mechlorethamine, melphalan, mesna, methadone, metroNIDAZOLE, milrinone, mitoXANtrone, mivacurium, morphine, moxifloxacin, mycophenolate mofetil, nesiritide, niCARdipine, octreotide, oritavancin, oxaliplatin, PACLitaxel (solvent/surfactant), palonosetron, pamidronate, pancuronium, PEMEtrexed, potassium acetate, propofol, quinupristin-dalfopristin, remifentanil, riTUXimab, rocuronium, sodium acetate, tacrolimus, teniposide, thiotepa, tigecycline, tirofiban, topotecan, TPN (2-in-1), vecuronium, vinBLAStine, vinCRIStine, vinorelbine, voriconazole, zoledronic acid</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x298">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x301">
+					<section type="none" id="sidelem4x302">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">EPS: pseudoparkinsonism, akathisia, dystonia, tardive dyskinesia, drowsiness, headache,</emphasis><emphasis style="bold">seizures, neuroleptic malignant syndrome,</emphasis> confusion</para>
+					</section>
+					<section type="none" id="sidelem4x312">
+						<sec_title>CV:</sec_title>
+						<para> <emphasis style="italic">Orthostatic hypotension,</emphasis> hypertension, <emphasis style="bold">cardiac arrest,</emphasis> ECG changes, <emphasis style="bold">tachycardia, QT prolongation, sudden death, torsades de pointes</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x325">
+						<sec_title>EENT:</sec_title>
+						<para> Blurred vision, glaucoma, dry eyes</para>
+					</section>
+					<section type="none" id="sidelem4x330">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Dry mouth, nausea, vomiting, anorexia, constipation,</emphasis> diarrhea, jaundice, weight gain, <emphasis style="bold">ileus, hepatitis</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x340">
+						<sec_title>GU:</sec_title>
+						<para> Urinary retention, dysuria, urinary frequency, enuresis, impotence, amenorrhea, gynecomastia</para>
+					</section>
+					<section type="none" id="sidelem4x345">
+						<sec_title>INTEG:</sec_title>
+						<para> <emphasis style="italic">Rash,</emphasis> photosensitivity, dermatitis</para>
+					</section>
+					<section type="none" id="sidelem4x353">
+						<sec_title>RESP:</sec_title>
+						<para> <emphasis style="bold">Laryngospasm,</emphasis> dyspnea, <emphasis style="bold">respiratory depression</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x363">
+						<sec_title>SYST:</sec_title>
+						<para> <emphasis style="bold">Risk for death (dementia)</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x370">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Metabolized by liver; excreted in urine, bile; crosses placenta; enters breast milk; protein binding 92%; terminal half-life 12-36 hr (metabolites)</para>
+				<section type="none" id="sidelem4x375">
+					<section type="none" id="sidelem4x376">
+						<sec_title>PO:</sec_title>
+						<para> Onset erratic, peak 2-6 hr, half-life 24 hr</para>
+					</section>
+					<section type="none" id="sidelem4x381">
+						<sec_title>IM:</sec_title>
+						<para> Onset 15-30 min, peak 15-20 min, half-life 21 hr</para>
+					</section>
+					<section type="none" id="sidelem4x386">
+						<sec_title>IM (Decanoate):</sec_title>
+						<para> Peak 4-11 days, half-life 3 wk</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x392">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis alert="lifethreat">Increase: serotonin syndrome, neuroleptic malignant syndrome—SSRIs, SNRIs</emphasis>
+				</para>
+				<para>
+					<emphasis alert="lifethreat">Increase: QT prolongation—class IA, III antidysrhythmics, tricyclics, amoxapine, maprotiline, phenothiazines, pimozide, risperiDONE, sertindole, ziprasidone, β-blockers, chloroquine, cloZAPine, dasatinib, dolasetron, droperidol, dronedarone, flecainide, halogenated/local anesthetics, lapatinib, methadone, erythromycin, telithromycin, troleandomycin, octreotide, ondansetron, palonosetron, pentamidine, propafenone, ranolazine, SUNItinib, tacrolimus, vardenafil, vorinostat, usually with IV use</emphasis>
+				</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> oversedation—other CNS depressants, alcohol, barbiturate anesthetics</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> toxicity—EPINEPHrine, lithium</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> both drugs effects—β-adrenergic blockers, alcohol</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> anticholinergic effects—anticholinergics</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> effects—lithium, levodopa</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> haloperidol effects—PHENobarbital, carBAMazepine</para>
+				<section type="none" id="sidelem4x425">
+					<section type="none" id="sidelem4x426">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> LFTs</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x433">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x436">
+					<section type="none" id="sidelem4x437">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x442">
+								<item>
+									<label>•</label>
+									<para>Prolactin, CBC, urinalysis, ophthalmic exam before and during prolonged therapy
+<bbw>Dementia, affect, orientation, LOC, reflexes, gait, coordination, sleep pattern disturbances, risk for death in dementia-related psychosis</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x456">
+								<item>
+									<label>•</label>
+									<para>B/P standing, lying; take pulse, respirations q4hr during initial treatment; establish baseline before starting treatment; report drops of 30 mm Hg</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x461">
+								<item>
+									<label>•</label>
+									<para>Dizziness, faintness, palpitations, tachycardia on rising</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x469">
+							<label>•</label>
+							<sec_title>
+								<route>EPS</route>
+							</sec_title>
+							<para>
+								<list id="lidelem4x469">
+									<item>
+										<label>•</label>
+										<para> including akathisia (inability to sit still, no pattern to movements), tardive dyskinesia (bizarre movements of jaw, mouth, tongue, extremities), pseudoparkinsonism (rigidity, tremors, pill rolling, shuffling gait)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x474">
+								<item>
+									<para>
+										<emphasis alert="nurse">Neuroleptic malignant syndrome/serotonin syndrome: hyperthermia, muscle rigidity, altered mental status, increased CPK, seizures, hypo/hypertension, tachycardia; notify prescriber immediately</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x479">
+								<item>
+									<label>•</label>
+									<para>Constipation, urinary retention daily; if these occur, increase bulk, water in diet</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x487">
+							<label>•</label>
+							<sec_title>Abrupt discontinuation<route> do not withdraw abruptly, taper</route></sec_title>
+						</section>
+						<section type="none" id="sidelem4x493">
+							<label>•</label>
+							<sec_title>QT prolongation<route> more common with IV use at high doses; monitor ECG in those with CV disease</route></sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x496">
+								<item>
+									<label>•</label>
+									<para>Supervised ambulation until patient stabilized on medication; do not involve patient in strenuous exercise program, fainting is possible; patient should not stand still for long periods</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x501">
+								<item>
+									<label>•</label>
+									<para>Sips of water, sugarless candy, gum for dry mouth</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x506">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x510">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decrease in emotional excitement, hallucinations, delusions, paranoia, reorganization of patterns of thought, speech; improvement in specific behaviors</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x516">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x520">
+								<item>
+									<label>•</label>
+									<para>That orthostatic hypotension occurs often; to rise from sitting or lying position gradually; to remain lying down after IM inj for at least 30 min</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid hazardous activities until stabilized on medication and effects are known</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid abrupt withdrawal of this product because EPS may result; to withdraw slowly</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid OTC preparations (cough, hay fever, cold) unless approved by prescriber, serious product interactions may occur; to avoid use with alcohol, increased drowsiness may occur</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>About EPS and necessity of meticulous oral hygiene because oral candidiasis may occur</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To report impaired vision, jaundice, tremors, muscle twitching</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="5" status="active" ha="yes">
+			<mono_name> heparin (Rx)</mono_name>
+			<info>
+				<pronunciation>(hep′a-rin)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x5644">
+						<country code="CAN">Hepalean </country>
+					</tradename>
+					<tradename id="tnidelem4x5643">
+						<country code="CAN">Heparin Leo </country>
+					</tradename>
+					<tradename id="tnidelem4x5642">Hep-Lock</tradename>
+					<tradename id="tnidelem4x5641">Hep-Lock U/P</tradename>
+					<tradename id="tnidelem4x5640">Monoject Prefill</tradename>
+				</tradenames>
+				<class type="func"> Anticoagulant, antithrombotic</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x576">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x5760">heparin</tradename>
+						<drug type="generic" refid="idelem4x5760">Hespan</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x580">
+				<sec_title>Action:</sec_title>
+				<para> Prevents conversion of fibrinogen to fibrin and prothrombin to thrombin by enhancing inhibitory effects of antithrombin III</para>
+			</section>
+			<section type="uses" id="sidelem4x585">
+				<sec_title>Uses:</sec_title>
+				<para> Prevention treatment of deep venous thrombosis, PE, MI, open heart surgery, disseminated intravascular clotting syndrome, atrial fibrillation with embolization, as an anticoagulant in transfusion and dialysis procedures, to maintain patency of indwelling venipuncture devices; diagnosis, treatment of DIC</para>
+			</section>
+			<section type="contra" id="sidelem4x590">
+				<sec_title>Contraindications:</sec_title>
+				<para> Bleeding, hypersensitivity to this product, corn, porcine protein (pork product)</para>
+				<section type="none" id="sidelem4x595">
+					<section type="none" id="sidelem4x596">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), children, geriatric patients, alcoholism, hyperlipidemia, diabetes, renal disease, heparin-induced thrombocytopenia (HIT), hemophilia, leukemia with bleeding, peptic ulcer disease, severe thrombocytopenic purpura, severe renal/hepatic disease, blood dyscrasias, severe hypertension, subacute bacterial endocarditis, acute nephritis; benzyl alcohol products in neonates/infants/pregnancy/lactation</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x601">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x604">
+					<section type="none" id="sidelem4x605">
+						<sec_title>Deep venous thrombosis/pulmonary embolism</sec_title>
+						<section type="none" id="sidelem4x613">
+							<label>•</label>
+							<sec_title>Adult<route> IV BOL</route></sec_title>
+							<para>
+								<list id="lidelem4x613">
+									<item>
+										<label>•</label>
+										<para> 80 international units/kg, then maintenance  18 international units/kg/hr; if aPTT &lt;35 (1.2× normal), increase  rate by 4 international units/kg/hr and rebolus with 80 international units/kg; if aPTT 35-45 (1.2-1.5× normal), increase  by 2 international units/kg/hr and rebolus with 40 international units/kg; if aPTT 46-70 (1.5-2.3× normal), maintain  if aPTT 71-90 (2.3-3× normal), decrease  by 2 international units/kg/hr; if aPTT &gt;90 (&gt;3× normal), hold  for 1 hr, then decrease rate 3 international units/kg/hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x638">
+							<label>•</label>
+							<sec_title>Child/infant/neonate<route> IV</route></sec_title>
+							<para>
+								<list id="lidelem4x638">
+									<item>
+										<label>•</label>
+										<para> loading dose 75 international units/kg</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x645">
+							<label>•</label>
+							<sec_title>Child &gt;1 yr</sec_title>
+							<para>
+								<list id="lidelem4x645">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Child &gt;1 yr:</emphasis> 20 international units/kg/hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x652">
+							<label>•</label>
+							<sec_title>Infant/neonate &lt;1 yr</sec_title>
+							<para>
+								<list id="lidelem4x652">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Infant/neonate &lt;1 yr:</emphasis> 28 international units/kg/hr as initial maintenance dose</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x656">
+						<sec_title>Thrombosis prophylaxis (open heart/CV surgery)</sec_title>
+						<section type="none" id="sidelem4x664">
+							<label>•</label>
+							<sec_title>Adult<route> IV</route></sec_title>
+							<para>
+								<list id="lidelem4x664">
+									<item>
+										<label>•</label>
+										<para> ≥150 international units/kg; procedures &lt;60 min, up to 300 international units/kg; procedures &gt;60 min, up to 400 international units/kg based on ACT</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x668">
+						<sec_title>Thrombosis prophylaxis (PCI, not receiving abciximab)</sec_title>
+						<section type="none" id="sidelem4x676">
+							<label>•</label>
+							<sec_title>Adult<route> IV BOL</route></sec_title>
+							<para>
+								<list id="lidelem4x676">
+									<item>
+										<label>•</label>
+										<para> weight adjusted with 60-100 international units/kg, maintain ACT within 250-300 sec (HemoTec) or 300-350 sec (Hemochron)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x683">
+							<label>•</label>
+							<sec_title>Child/infant/neonate<route> IV BOL</route></sec_title>
+							<para>
+								<list id="lidelem4x683">
+									<item>
+										<label>•</label>
+										<para> 100-150 international units/kg</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x687">
+						<sec_title>Prophylaxis for DVT/PE</sec_title>
+						<section type="none" id="sidelem4x695">
+							<label>•</label>
+							<sec_title>Adult<route> SUBCUT</route></sec_title>
+							<para>
+								<list id="lidelem4x695">
+									<item>
+										<label>•</label>
+										<para> 5000 units q8-12hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x699">
+						<sec_title>IV catheter occlusion prophylaxis</sec_title>
+						<section type="none" id="sidelem4x707">
+							<label>•</label>
+							<sec_title>Adult/child<route> IV</route></sec_title>
+							<para>
+								<list id="lidelem4x707">
+									<item>
+										<label>•</label>
+										<para> 10-100 units/ml</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x714">
+							<label>•</label>
+							<sec_title>Infant &lt;10 kg<route> IV</route></sec_title>
+							<para>
+								<list id="lidelem4x714">
+									<item>
+										<label>•</label>
+										<para> 10 units/ml</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x718">
+						<sec_title>Available forms:</sec_title>
+						<para> Sol for inj 10, 100, 1000, 2000, 5000, 7500, 10,000, 20,000 units/ml; premixed 1000 units/500 ml, 2000 units/1000 ml, 12,500 units/250 ml, 25,000 units/250 ml, 25,000 units/500 ml; lock flush preparations 10 units/ml</para>
+					</section>
+					<section type="none" id="sidelem4x723">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x727">
+								<item>
+									<label>•</label>
+									<para>Cannot be used interchangeably (unit for unit) with LMWHs or heparinoids</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>At same time each day to maintain steady blood levels</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Store at room temperature</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x744">
+							<sec_title>Heparin Lock route</sec_title>
+							<para>
+								<emphasis alert="nurse">Do not mistake heparin sodium inj 10,000 units/ml and Hep-Lock U/P 10 units/ml; they have similar blue labeling; deaths in pediatric patients have occurred when heparin sodium inj vials were confused with heparin flush vials</emphasis>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x752">
+							<sec_title>SUBCUT route</sec_title>
+							<para>
+								<list id="lidelem4x756">
+									<item>
+										<label>•</label>
+										<para>Give deeply with 25-G <emphasis style="sup">3</emphasis>/<emphasis style="inf">8</emphasis>-<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis>-in needle; do not massage area or aspirate when giving SUBCUT inj; give in abdomen between pelvic bones, rotate sites; do not pull back on plunger; leave in for 10 sec; apply gentle pressure for 1 min</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Changing needles is not recommended</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Avoid all IM inj that may cause bleeding, hematoma</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x784">
+							<sec_title>Direct IV route</sec_title>
+							<para>
+								<list id="lidelem4x788">
+									<item>
+										<label>•</label>
+										<para>Give loading dose undiluted, over ≥1 min, use before continuous infusion</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x794">
+							<sec_title>
+								<emphasis style="bold">Continuous IV INFUSION route</emphasis>
+							</sec_title>
+							<para>
+								<list id="lidelem4x799">
+									<item>
+										<label>•</label>
+										<para>Dilute 25,000 units/250-500 ml 0.9 NaCl or D<emphasis style="inf">5</emphasis>W, (50-100 units) solutions are premixed and ready for use</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>When product is added to infusion sol for cont IV, invert container at least 6 times to ensure adequate mixing</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis style="bold">Y-site compatibilities:</emphasis> Acetaminophen, acetylcysteine, acyclovir, alcohol 10%, dextrose 5%, alemtuzumab, alfentanil, allopurinol, amifostine, aminocaproic acid, aminophylline, amphotericin B lipid complex, amphotericin B liposome, anidulafungin, argatroban, arsenic trioxide, ascorbic acid injection, asparaginase, atenolol, atropine, azathioprine, azithromycin, aztreonam, benztropine, betamethasone, bivalirudin, bleomycin, bretylium, bumetanide, buprenorphine, butorphanol, caffeine, calcium chloride/gluconate, cangrelor, CARBOplatin, carmustine, cefamandole, ceFAZolin, cefotaxime, cefoTEtan, cefotiam, cefOXitin, ceftaroline, cefTAZidime, ceftizoxime, ceftobiprole, cefTRIAXone, cefuroxime, chloramphenicol succinate, chlordiazePOXIDE, chlorothiazide, chlorpheniramine, cimetidine, CISplatin, cladribine, clindamycin, cloxacillin, codeine, colistimethate, cyanocobalamin, cyclophosphamide, cycloSPORINE, cytarabine, DACTINomycin, DAPTOmycin, DAUNOrubicin citrate liposome, dexamethasone, dexmedetomidine, dexrazoxane, digoxin, DOCEtaxel, DOPamine, doripenem, doxacurium, doxapram, DOXOrubicin liposomal, edetate calcium disodium, edrophonium, enalaprilat, ePHEDrine sulfate, EPINEPHrine, epoetin alfa, eptifibatide, ergonovine, ertapenem, esmolol, estrogens conjugated, ethacrynate, etoposide, etoposide phosphate, famotidine, fenoldopam, fentaNYL, flecainide, fluconazole, fludarabine, fluorouracil, folic acid (as sodium salt), foscarnet, gallamine, gallium, ganciclovir, gemcitabine, gemtuzumab, glycopyrrolate, granisetron, hydrocortisone, HYDROmorphone, ibuprofen lysine, ifosfamide, imipenem-cilastatin, indomethacin, irinotecan, isoproterenol, ketorolac, lactated ringer’s injection, lansoprazole, leucovorin, lidocaine, lincomycin, linezolid, lorazepam, magnesium sulfate, mannitol, mechlorethamine, melphalan, mephentermine, meropenem, mesna, metaraminol, methadone, methohexital, methotrexate, methoxamine, methyldopate, methylergonovine, metoclopramide, metoprolol, metroNIDAZOLE, micafungin, midazolam, milrinone, minocycline, mitoMYcin, mivacurium, morphine, moxifloxacin, multiple vitamins injection, nafcillin, nalbuphine, nalorphine, naloxone, neostigmine, nitroglycerin, nitroprusside, norepinephrine, octreotide, ondansetron, oxacillin, oxaliplatin, oxytocin, PACLitaxel (solvent/surfactant), palonosetron, pamidronate, pancuronium, PEMEtrexed, penicillin G potassium, sodium, PENTobarbital, PHENobarbital s, phentolamine, phenylephrine, phytonadione, piperacillin sodium, piperacillin-tazobactam, potassium acetate/chloride, procainamide, prochlorperazine, promazine, propofol, propranolol, pyridostigmine, pyridoxine, ranitidine, remifentanil, ringer’s injection, riTUXimab, rocuronium, sargramostim, scopolamine, sodium acetate, bicarbonate/fusidate, succinylcholine, SUFentanil, tacrolimus, theophylline, thiamine, thiopental, thiotepa, ticarcillin, ticarcillin-clavulanate, tigecycline, tirofiban, tolazoline, topotecan, TPN (2-in-1), tranexamic, trastuzumab, trimetaphan, trimethobenzamide, tubocurarine, urokinase, vasopressin, vecuronium, verapamil, vinBLAStine, vinCRIStine, voriconazole, warfarin, zidovudine, zoledronic acid</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x819">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x822">
+					<section type="none" id="sidelem4x823">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Fever,</emphasis> chills, headache</para>
+					</section>
+					<section type="none" id="sidelem4x831">
+						<sec_title>GU:</sec_title>
+						<para> <emphasis style="bold">Hematuria</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x838">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Hemorrhage, thrombocytopenia, anemia, HIT</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x845">
+						<sec_title>INTEG:</sec_title>
+						<para> <emphasis style="italic">Rash,</emphasis> dermatitis, urticaria, pruritus, alopecia, hematoma, cutaneous necrosis (SUBCUT), inj-site reactions</para>
+					</section>
+					<section type="none" id="sidelem4x853">
+						<sec_title>META:</sec_title>
+						<para> Hyperkalemia, hypoaldosteronism, hyperlipidemia</para>
+					</section>
+					<section type="none" id="sidelem4x858">
+						<sec_title>SYST:</sec_title>
+						<para> <emphasis style="bold">Anaphylaxis</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x865">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Half-life 1-2 hr (dose dependent); excreted in urine; 95% bound to plasma proteins; does not cross placenta or alter breast milk; removed from the system via the lymph and spleen; partially metabolized in kidney, liver; excreted in urine (&lt;50% unchanged)</para>
+				<section type="none" id="sidelem4x870">
+					<section type="none" id="sidelem4x871">
+						<sec_title>SUBCUT:</sec_title>
+						<para> Onset 20-60 min, duration 8-12 hr, well absorbed &gt;35,000 international units/24 hr</para>
+					</section>
+					<section type="none" id="sidelem4x876">
+						<sec_title>IV:</sec_title>
+						<para> Peak 5 min, duration 2-6 hr</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x881">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> heparin action—oral anticoagulants, salicylates, dextran, NSAIDs, platelet inhibitors, cephalosporins, penicillins, ticlopidine, dipyridamole, antineoplastics, clopidogrel, SSRIs, SNRIs, quinidine, valproic acid</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> heparin action—digoxin, tetracyclines, antihistamines, cardiac glycosides, nicotine, nitroglycerin</para>
+				<section type="none" id="sidelem4x892">
+					<section type="none" id="sidelem4x893">
+						<sec_title>Drug/Herb</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> bleeding risk—arnica, anise, chamomile, clove, dong quai, garlic, ginger, ginkgo, feverfew, green tea, horse chestnut</para>
+					</section>
+					<section type="none" id="sidelem4x900">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> ALT, AST, INR, PT, PTT, potassium</para>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> platelets</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x911">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x914">
+					<section type="none" id="sidelem4x915">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x921">
+								<item>
+									<para>
+										<emphasis alert="nurse">Bleeding, hemorrhage: gums, petechiae, ecchymosis, black tarry stools, hematuria, epistaxis, decrease in Hct, B/P; HIT may occur after product discontinuation</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x926">
+								<item>
+									<label>•</label>
+									<para>Blood studies (Hct, occult blood in stools) q3mo</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x931">
+								<item>
+									<label>•</label>
+									<para>Partial prothrombin time, which should be 1.5-2.5× control; for continuous IV infusion, check aPTT baseline 6 hr after initiation and 6 hr after any dose change; use aPTT for dosing adjustments; after therapeutic aPTT has been measured 2×, check aPTT daily</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x936">
+								<item>
+									<label>•</label>
+									<para>Platelet count q2-3days; thrombocytopenia may occur on 4th day of treatment</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x944">
+							<label>•</label>
+							<sec_title>Hypersensitivity</sec_title>
+							<para>
+								<list id="lidelem4x944">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Hypersensitivity:</emphasis> rash, chills, fever, itching; report to prescriber</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x948">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x952">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: prevention of DVT and pulmonary emboli, adequate anticoagulation based on aPTT</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x958">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x963">
+								<item>
+									<label>•</label>
+									<para>To avoid OTC preparations that may cause serious product interactions unless directed by prescriber, notify all health care persons of heparin use</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x968">
+								<item>
+									<label>•</label>
+									<para>That product may be held during active bleeding (menstruation), depending on condition</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x973">
+								<item>
+									<label>•</label>
+									<para>To use soft-bristle toothbrush to avoid bleeding gums; to avoid contact sports; to use an electric razor, to avoid IM inj</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x978">
+								<item>
+									<label>•</label>
+									<para>To carry emergency ID identifying product taken</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x986">
+							<label>•</label>
+							<sec_title>Bleeding<route> To report to prescriber any signs of bleeding</route></sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x989">
+								<item>
+									<label>•</label>
+									<para>To report to prescriber any signs of hypersensitivity: rash, chills, fever, itching</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="6" status="active">
+			<mono_name>hepatitis B immune globulin (HBIG) (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x10032">HepaGam B</tradename>
+					<tradename id="tnidelem4x10031">Hyper HEP B S/D</tradename>
+					<tradename id="tnidelem4x10030">Nabi-HB</tradename>
+				</tradenames>
+				<class type="func"> Immune globulin</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x1009">
+				<sec_title>Action:</sec_title>
+				<para> Provides passive immunity to hepatitis B</para>
+			</section>
+			<section type="uses" id="sidelem4x1014">
+				<sec_title>Uses:</sec_title>
+				<para> Prevention of hepatitis B virus in exposed patients, including passive immunity in neonates born to HBsAg-positive mother, prevention of hepatitis B recurrence after liver transplant in HBsAg-positive patients</para>
+			</section>
+			<section type="contra" id="sidelem4x1019">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to immune globulins, coagulation disorders</para>
+				<section type="none" id="sidelem4x1024">
+					<section type="none" id="sidelem4x1025">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children, geriatric patients, hemophilia, active infection, IgA deficiency, maltose sensitivity</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x1030">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x1033">
+					<section type="none" id="sidelem4x1034">
+						<sec_title>Hepatitis B exposure in those at high risk</sec_title>
+						<section type="none" id="sidelem4x1042">
+							<label>•</label>
+							<sec_title>Adult and child<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x1042">
+									<item>
+										<label>•</label>
+										<para> 0.06 ml/kg (usual 3-5 ml) within 7 days of exposure; repeat 28 days after exposure if patient wishes to not receive hepatitis B vaccine</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1046">
+						<sec_title>Neonates born to hepatitis B surface-antigen–positive persons</sec_title>
+						<section type="none" id="sidelem4x1054">
+							<label>•</label>
+							<sec_title>Neonate<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x1054">
+									<item>
+										<label>•</label>
+										<para> 0.5 ml within 12 hr of birth</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1058">
+						<sec_title>Prevention of hepatitis B infection recurrence after liver transplant</sec_title>
+						<section type="none" id="sidelem4x1066">
+							<label>•</label>
+							<sec_title>Adult<route> IV</route></sec_title>
+							<para>
+								<list id="lidelem4x1066">
+									<item>
+										<label>•</label>
+										<para> (HepaGam B only) 20,000 international units concurrent with grafting transplanted liver, then 20,000 international units/day on days 1-7, then 20,000 international units q2wk starting on day 14, then 20,000 international units/mo starting with mo 4</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1070">
+						<sec_title>Available forms:</sec_title>
+						<para> Inj 1-, 4-, 5-ml vials; neonatal syringe 0.5 ml; HepaGam B sol for inj 312, 1560 units/ml; Hyper HEP B S/D 217 units/ml</para>
+					</section>
+					<section type="none" id="sidelem4x1075">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x1078">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x1082">
+									<item>
+										<label>•</label>
+										<para>After rotating vial; do not shake</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Only with EPINEPHrine 1:1000 on unit to treat laryngospasm</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>In deltoid for better absorption (adult)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1098">
+							<sec_title>IV route (HepaGam B only)</sec_title>
+							<para>
+								<list id="lidelem4x1103">
+									<item>
+										<label>•</label>
+										<para>Calculate volume needed for each 20,000 international unit dose using measured potency of each lot; HBIG potency stamped on label</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<list id="lidelem4x1108">
+									<item>
+										<label>•</label>
+										<para>Promptly use after vial entered; discard unused product</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<list id="lidelem4x1113">
+									<item>
+										<label>•</label>
+										<para>Give at 2 ml/min through separate IV line, use infusion pump, decrease to 1 ml/min if infusion-related event occurs, patient becomes uncomfortable</para>
+									</item>
+								</list>
+							</para>
+							<section type="none" id="sidelem4x1121">
+								<label>•</label>
+								<sec_title>
+									<route>Do not use HyperHEP B BS/D or Nabi-HB IV</route>
+								</sec_title>
+							</section>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x1124">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x1127">
+					<section type="none" id="sidelem4x1128">
+						<sec_title>CNS:</sec_title>
+						<para> Headache, dizziness, fever, chills</para>
+					</section>
+					<section type="none" id="sidelem4x1133">
+						<sec_title>GI:</sec_title>
+						<para> Nausea, vomiting</para>
+					</section>
+					<section type="none" id="sidelem4x1138">
+						<sec_title>INTEG:</sec_title>
+						<para> Soreness at inj site, urticaria, erythema, swelling</para>
+					</section>
+					<section type="none" id="sidelem4x1143">
+						<sec_title>SYST:</sec_title>
+						<para> Induration, <emphasis style="bold">anaphylaxis, angioedema</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x1150">
+				<sec_title>Interactions</sec_title>
+				<section type="none" id="sidelem4x1158">
+					<label>•</label>
+					<sec_title>
+						<route>Do not use within 3 mo of hepatitis B immune globulin, MMR, varicella, or rotavirus vaccines even after discontinuing product</route>
+					</sec_title>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x1161">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x1164">
+					<section type="none" id="sidelem4x1165">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x1170">
+								<item>
+									<label>•</label>
+									<para>History of allergies, skin conditions (eczema, psoriasis, dermatitis), reactions to vaccinations</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1175">
+								<item>
+									<label>•</label>
+									<para>Skin reactions: rash, induration, urticaria</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1181">
+								<item>
+									<para>
+										<emphasis alert="nurse">Anaphylaxis: inability to breathe, bronchospasm, hypotension, wheezing, diaphoresis, fever, flushing</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1186">
+								<item>
+									<label>•</label>
+									<para>Can be used with hepatitis B vaccine in cases of direct contact</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1191">
+								<item>
+									<label>•</label>
+									<para>Written record of immunization</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1196">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x1200">
+								<item>
+									<label>•</label>
+									<para>Prevention of hepatitis B</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1206">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x1211">
+								<item>
+									<label>•</label>
+									<para>That discomfort may occur at site</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1217">
+								<item>
+									<label>•</label>
+									<para>To report any rash, wheezing, inability to breathe immediately</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1225">
+							<label>•</label>
+							<sec_title>
+								<route>Do not obtain MMR or varicella within 3 mo of this product</route>
+							</sec_title>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="7" status="active">
+			<mono_name>homatropine ophthalmic</mono_name>
+			<section type="none" id="sidelem4x1231">
+				<para>See <see refid="tra">Appendix B</see></para>
+			</section>
+		</monograph>
+<monograph id="8" status="active">
+			<mono_name>hydrALAZINE (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-dral′a-zeen)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x12400">
+						<country code="CAN">Apresoline </country>
+					</tradename>
+				</tradenames>
+				<class type="func"> Antihypertensive, direct-acting peripheral vasodilator</class>
+				<class type="chem"> Phthalazine</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x1252">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x12520">hydrALAZINE</tradename>
+						<drug type="generic" refid="idelem4x12520">hydrOXYzine</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x1259">
+				<sec_title>Action:</sec_title>
+				<para> Vasodilates arteriolar smooth muscle by direct relaxation; reduction in blood pressure with reflex increases in heart rate, stroke volume, cardiac output</para>
+			</section>
+			<section type="uses" id="sidelem4x1264">
+				<sec_title>Uses:</sec_title>
+				<para> Essential hypertension; hypertensive emergency/urgency</para>
+				<section type="none" id="sidelem4x1269">
+					<section type="none" id="sidelem4x1270">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> CHF, preeclampsia</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x1275">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to hydrALAZINEs, mitral valvular rheumatic heart disease, CAD</para>
+				<section type="none" id="sidelem4x1280">
+					<section type="none" id="sidelem4x1281">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, geriatric patients, CVA, advanced renal disease, hepatic disease, SLE, dissecting aortic aneurysm</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x1286">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x1289">
+					<section type="none" id="sidelem4x1290">
+						<sec_title>Hypertension</sec_title>
+						<section type="none" id="sidelem4x1298">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1298">
+									<item>
+										<label>•</label>
+										<para> 10 mg qid 2-4 days, then 25 mg for rest of 1st wk, then 50 mg qid individualized to desired response, max 300 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1305">
+							<label>•</label>
+							<sec_title>Child<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1305">
+									<item>
+										<label>•</label>
+										<para> 0.75-1 mg/kg/day in 2-4 divided doses, max 25 mg/dose, increase over 3-4 wk to max 7.5 mg/kg/day or 200 mg, whichever is less</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1309">
+						<sec_title>Hypertensive crisis</sec_title>
+						<section type="none" id="sidelem4x1317">
+							<label>•</label>
+							<sec_title>Adult<route> IV BOL</route></sec_title>
+							<para>
+								<list id="lidelem4x1317">
+									<item>
+										<label>•</label>
+										<para> 10-20 mg q4-6hr, administer  as soon as possible;  10-50 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1330">
+							<label>•</label>
+							<sec_title>Child<route> IV BOL</route></sec_title>
+							<para>
+								<list id="lidelem4x1330">
+									<item>
+										<label>•</label>
+										<para> 0.1-0.6 mg/kg q4hr;  0.1-0.6 mg/kg q4-6hr, max 1.7-3.5 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1337">
+						<sec_title>CHF (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x1345">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1345">
+									<item>
+										<label>•</label>
+										<para> 10-25 mg tid, max 100 mg tid</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1349">
+						<sec_title>Available forms:</sec_title>
+						<para> Inj 20 mg/ml; tabs 10, 25, 50, 100 mg</para>
+					</section>
+					<section type="none" id="sidelem4x1354">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x1357">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x1361">
+									<item>
+										<label>•</label>
+										<para>Give with meals (PO) to enhance absorption</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1367">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x1371">
+									<item>
+										<label>•</label>
+										<para>Do not admix, switch to PO as soon as possible</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>No dilution needed, inject deeply in large muscle, aspirate</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1382">
+							<sec_title>Direct IV route</sec_title>
+							<para>
+								<list id="lidelem4x1386">
+									<item>
+										<label>•</label>
+										<para>IV undiluted; give through <emphasis style="sans-serif">Y</emphasis>-tube or 3-way stopcock, give each 10 mg over ≥1 min</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>To recumbent patient, keep recumbent for 1 hr after administration</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis style="bold">Y-site compatibilities:</emphasis> Alemtuzumab, anidulafungin, argatroban, atenolol, bivalirudin, bleomycin, DACTINomycin, DAPTOmycin, dexrazoxone, diltiazem, DOCEtaxel, etoposide, fludarabine, gatifloxacin, gemcitabine, granisetron, HYDROmorphone, IDArubicin, irinotecan, leucovorin, linezolid, mechlorethamine, metroNIDAZOLE, milrinone, mitoXANtrone, octreotide, oxaliplatin, PACLitaxel, palonosetron, pancuronium, potassium chloride, tacrolimus, teniposide, thiotepa, tirofiban, vecuronium, vinorelbine, vitamin B/C, voriconazole</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x1404">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x1407">
+					<section type="none" id="sidelem4x1408">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Headache, tremors, dizziness, anxiety,</emphasis> peripheral neuritis, depression, fever, chills</para>
+					</section>
+					<section type="none" id="sidelem4x1416">
+						<sec_title>CV:</sec_title>
+						<para> <emphasis style="italic">Palpitations, reflex tachycardia, angina,</emphasis><emphasis style="bold">shock,</emphasis> rebound hypertension, orthostatic hypotension</para>
+					</section>
+					<section type="none" id="sidelem4x1426">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, vomiting, anorexia, diarrhea,</emphasis> constipation, paralytic ileus, <emphasis style="bold">hepatotoxicity</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1437">
+						<sec_title>GU:</sec_title>
+						<para> Urinary retention, glomerulonephritis, hematuria</para>
+					</section>
+					<section type="none" id="sidelem4x1442">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Leukopenia, agranulocytosis,</emphasis> anemia, <emphasis style="bold">thrombocytopenia</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1452">
+						<sec_title>INTEG:</sec_title>
+						<para> Rash, pruritus, urticaria</para>
+					</section>
+					<section type="none" id="sidelem4x1457">
+						<sec_title>MISC:</sec_title>
+						<para> Nasal congestion, muscle cramps, <emphasis style="italic">lupuslike symptoms,</emphasis> flushing, edema, dyspnea</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x1465">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Half-life 3-7 hr, metabolized by liver, 12%-14% excreted in urine, protein binding 89%</para>
+				<section type="none" id="sidelem4x1470">
+					<section type="none" id="sidelem4x1471">
+						<sec_title>PO:</sec_title>
+						<para> Onset 20-30 min, peak 1-2 hr, duration 2-4 hr</para>
+					</section>
+					<section type="none" id="sidelem4x1476">
+						<sec_title>IM:</sec_title>
+						<para> Onset 10-30 min, peak 1 hr, duration 2-6 hr</para>
+					</section>
+					<section type="none" id="sidelem4x1481">
+						<sec_title>IV:</sec_title>
+						<para> Onset 5-30 min, peak 10-80 min, duration up to 12 hr</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x1486">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> severe hypotension—MAOIs</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> tachycardia, angina—sympathomimetics (EPINEPHrine, norepinephrine)</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> hypotension—other antihypertensives, alcohol, thiazide diuretics</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> effects of β-blockers <emphasis style="bold">(metoprolol, propranolol)</emphasis></para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> hydrALAZINE effects—NSAIDs, estrogens</para>
+				<section type="none" id="sidelem4x1511">
+					<section type="none" id="sidelem4x1512">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> Hgb, WBC, RBC, platelets, neutrophils</para>
+						<para>
+							<emphasis style="bold">Positive:</emphasis> ANA titer</para>
+					</section>
+					<section type="none" id="sidelem4x1523">
+						<sec_title>Drug/Food</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> drug absorption; have patient take with food</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x1530">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x1533">
+					<section type="none" id="sidelem4x1534">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x1542">
+							<label>•</label>
+							<sec_title>Cardiac status</sec_title>
+							<para>
+								<list id="lidelem4x1542">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Cardiac status:</emphasis> B/P q5min × 2 hr, then q1hr × 2 hr, then q4hr; pulse, jugular venous distention q4hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1546">
+								<item>
+									<label>•</label>
+									<para>Electrolytes, blood studies: potassium, sodium, chloride, carbon dioxide, CBC, serum glucose, LE prep, ANA titer before, during treatment; assess for fever, joint pain, rash, sore throat (lupuslike symptoms); notify prescriber</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1551">
+								<item>
+									<label>•</label>
+									<para>Weight daily, I&amp;O</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1556">
+								<item>
+									<label>•</label>
+									<para>Edema in feet, legs daily, skin turgor, dryness of mucous membranes for hydration status</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1561">
+								<item>
+									<label>•</label>
+									<para>Crackles, dyspnea, orthopnea</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1566">
+								<item>
+									<label>•</label>
+									<para>IV site for extravasation, rate</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1571">
+								<item>
+									<label>•</label>
+									<para>Mental status: affect, mood, behavior, anxiety; check for personality changes</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1576">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x1580">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased B/P</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1586">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x1590">
+								<item>
+									<label>•</label>
+									<para>To take with food to increase bioavailability (PO)</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid OTC preparations unless directed by prescriber</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To notify prescriber if chest pain, severe fatigue, fever, muscle or joint pain occurs</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To rise slowly to prevent orthostatic hypotension</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To notify prescriber if pregnancy is suspected</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="9" status="active">
+			<mono_name>hydrochlorothiazide (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-droe-klor-oh-thye′a-zide)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x16262">
+						<country code="CAN">Apo-Hydro </country>
+					</tradename>
+					<tradename id="tnidelem4x16261">
+						<country code="CAN">Neo-Codema </country>
+					</tradename>
+					<tradename id="tnidelem4x16260">
+						<country code="CAN">Urozide</country>
+					</tradename>
+				</tradenames>
+				<class type="func"> Thiazide diuretic, antihypertensive</class>
+				<class type="chem"> Sulfonamide derivative</class>
+				<class type="preg">Pregnancy category <preg cat="B">B</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x1644">
+				<sec_title>Action:</sec_title>
+				<para> Acts on distal tubule and ascending limb of loop of Henle by increasing excretion of water, sodium, chloride, potassium</para>
+			</section>
+			<section type="uses" id="sidelem4x1649">
+				<sec_title>Uses:</sec_title>
+				<para> Edema, hypertension, diuresis, CHF; idiopathic lower extremity edema therapy</para>
+				<section type="none" id="sidelem4x1654">
+					<section type="none" id="sidelem4x1655">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Diabetes insipidus, hypercalciuria, nephrolithiasis, premenstrual syndrome, renal calculus</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x1661">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to thiazides or sulfonamides, pregnancy (D) preeclampsia, anuria, renal decompensation</para>
+				<section type="none" id="sidelem4x1666">
+					<section type="none" id="sidelem4x1667">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="B">B</preg>), breastfeeding, hypokalemia, renal/hepatic disease, gout, COPD, LE, diabetes mellitus, hyperlipidemia, CCr &lt;30 ml/min, hypomagnesemia</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x1672">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x1675">
+					<section type="none" id="sidelem4x1676">
+						<sec_title>Hypertension:</sec_title>
+						<section type="none" id="sidelem4x1684">
+							<label>•</label>
+							<sec_title>Adult/adolescent<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1684">
+									<item>
+										<label>•</label>
+										<para> 12.5-25 mg/day, may increase to 50 mg/day in 1-2 divided doses, max 100 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1691">
+							<label>•</label>
+							<sec_title>Child &gt;6 mo<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1691">
+									<item>
+										<label>•</label>
+										<para> 1-2 mg/kg/day in divided doses, max 37.5 mg for 6 mo-2 yr; max 37.5 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1698">
+							<label>•</label>
+							<sec_title>Child &lt;6 mo<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x1698">
+									<item>
+										<label>•</label>
+										<para> up to 2-3.3 mg/kg/day in divided doses</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1702">
+						<sec_title>Renal dose:</sec_title>
+						<section type="none" id="sidelem4x1710">
+							<label>•</label>
+							<sec_title>Adult<route> PO CCr &lt;30 ml/min, do not use; not effective</route></sec_title>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1713">
+						<sec_title>Available forms:</sec_title>
+						<para> Tabs 12.5, 25, 50 mg; caps 12.5 mg</para>
+					</section>
+					<section type="none" id="sidelem4x1718">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x1721">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x1725">
+									<item>
+										<label>•</label>
+										<para>In <emphasis style="smallcaps">am</emphasis> to avoid interference with sleep if using product as a diuretic; tab may be crushed, mixed with food</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Potassium replacement if potassium &lt;3 mg/dl, replace magnesium if needed</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>With food; if nausea occurs, absorption may be decreased slightly</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x1744">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x1747">
+					<section type="none" id="sidelem4x1748">
+						<sec_title>CNS:</sec_title>
+						<para> Drowsiness, paresthesia, depression, headache, <emphasis style="italic">dizziness, fatigue, weakness,</emphasis> fever</para>
+					</section>
+					<section type="none" id="sidelem4x1756">
+						<sec_title>CV:</sec_title>
+						<para> Irregular pulse, <emphasis style="italic">orthostatic hypotension,</emphasis> palpitations, volume depletion, allergic myocarditis</para>
+					</section>
+					<section type="none" id="sidelem4x1764">
+						<sec_title>EENT:</sec_title>
+						<para> Blurred vision</para>
+					</section>
+					<section type="none" id="sidelem4x1769">
+						<sec_title>ELECT:</sec_title>
+						<para> <emphasis style="italic">Hypokalemia,</emphasis> hypercalcemia, hyponatremia, hypochloremia, hypomagnesemia</para>
+					</section>
+					<section type="none" id="sidelem4x1777">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, vomiting, anorexia,</emphasis> constipation, diarrhea, cramps, <emphasis style="bold">pancreatitis,</emphasis> GI irritation, <emphasis style="bold">hepatitis,</emphasis> jaundice</para>
+					</section>
+					<section type="none" id="sidelem4x1791">
+						<sec_title>GU:</sec_title>
+						<para> <emphasis style="italic">Urinary frequency,</emphasis> polyuria, <emphasis style="bold">uremia, glucosuria,</emphasis> hyperuricemia, <emphasis style="bold">renal failure,</emphasis> erectile dysfunction</para>
+					</section>
+					<section type="none" id="sidelem4x1805">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Aplastic anemia, hemolytic anemia, leukopenia, agranulocytosis, thrombocytopenia, neutropenia</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1812">
+						<sec_title>INTEG:</sec_title>
+						<para> <emphasis style="italic">Rash,</emphasis> urticaria, purpura, photosensitivity, alopecia, erythema multiforme</para>
+					</section>
+					<section type="none" id="sidelem4x1820">
+						<sec_title>META:</sec_title>
+						<para> <emphasis style="italic">Hyperglycemia, hyperuricemia,</emphasis> increased creatinine, BUN</para>
+					</section>
+					<section type="none" id="sidelem4x1828">
+						<sec_title>SYST:</sec_title>
+						<para> <emphasis style="bold">Stevens-Johnson syndrome</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x1835">
+				<sec_title>Pharmacokinetics</sec_title>
+				<section type="none" id="sidelem4x1838">
+					<section type="none" id="sidelem4x1839">
+						<sec_title>PO:</sec_title>
+						<para> Onset 2 hr, peak 4 hr, duration 6-12 hr, half-life 6-15 hr, excreted unchanged by kidneys, crosses placenta, enters breast milk</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x1844">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> hyperglycemia, hyperuricemia, hypotension—diazoxide</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> hypokalemia—corticosteroids, amphotericin B, piperacillin, ticarcillin</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> toxicity—lithium, non-depolarizing skeletal muscle relaxants, cardiac glycosides</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> thiazide effect—NSAIDs</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> effects—loop diuretics</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> antidiabetics effects</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> thiazides absorption—cholestyramine, colestipol</para>
+				<section type="none" id="sidelem4x1875">
+					<section type="none" id="sidelem4x1876">
+						<sec_title>Drug/Food</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> severe hypokalemia—licorice</para>
+					</section>
+					<section type="none" id="sidelem4x1883">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> parathyroid test, uric acid, calcium, glucose, cholesterol, triglycerides</para>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> potassium, sodium, Hgb, WBC, platelets</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x1894">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x1897">
+					<section type="none" id="sidelem4x1898">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x1903">
+								<item>
+									<label>•</label>
+									<para>Weight, I&amp;O daily to determine fluid loss; effect of product may be decreased if used daily</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1912">
+							<label>•</label>
+							<sec_title>Hypersensitivity to sulfonamides<route> rash, discontinue, fatal Stevens-Johnson syndrome may occur</route></sec_title>
+						</section>
+						<section type="none" id="sidelem4x1918">
+							<label>•</label>
+							<sec_title>Hypertension</sec_title>
+							<para>
+								<list id="lidelem4x1918">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Hypertension:</emphasis> B/P lying, standing; postural hypotension may occur</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1922">
+								<item>
+									<label>•</label>
+									<para>Blood studies: BUN, blood glucose, CBC, serum creatinine, blood pH, ABGs, uric acid, electrolytes</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1930">
+							<label>•</label>
+							<sec_title>Signs of metabolic alkalosis</sec_title>
+							<para>
+								<list id="lidelem4x1930">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Signs of metabolic alkalosis:</emphasis> drowsiness, restlessness</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1937">
+							<label>•</label>
+							<sec_title>Signs of hypokalemia</sec_title>
+							<para>
+								<list id="lidelem4x1937">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Signs of hypokalemia:</emphasis> postural hypotension, malaise, fatigue, tachycardia, leg cramps, weakness, dehydration</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1941">
+								<item>
+									<label>•</label>
+									<para>Confusion, especially in geriatric patients; take safety precautions if needed</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1946">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x1950">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: improvement in edema of feet, legs, sacral area daily, decreased B/P</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1956">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x1961">
+								<item>
+									<label>•</label>
+									<para>To rise slowly from lying or sitting position to prevent postural hypotension</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1969">
+							<label>•</label>
+							<sec_title>
+								<route>rash</route>
+							</sec_title>
+							<para>
+								<list id="lidelem4x1969">
+									<item>
+										<label>•</label>
+										<para>To notify prescriber of muscle weakness, cramps, nausea, dizziness; hypokalemia is common; </para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1973">
+								<item>
+									<label>•</label>
+									<para>That product may be taken with food or milk</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1978">
+								<item>
+									<label>•</label>
+									<para>To use sunscreen for photosensitivity</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1983">
+								<item>
+									<label>•</label>
+									<para>That blood glucose may be increased in diabetics</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1988">
+								<item>
+									<label>•</label>
+									<para>To take early in day at same time of day to avoid nocturia</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1993">
+								<item>
+									<label>•</label>
+									<para>To avoid alcohol, OTC meds unless approved by prescriber</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1998">
+								<item>
+									<label>•</label>
+									<para>To monitor weight and report prescriber of changes</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2003">
+								<item>
+									<label>•</label>
+									<para>To discuss dietary potassium requirements</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2008">
+								<item>
+									<label>•</label>
+									<para>That follow-ups and routine lab tests will be required</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2013">
+								<item>
+									<label>•</label>
+									<para>How to take B/P, to continue with other medical regimens (weight loss, exercise)</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="10" status="active" ha="yes">
+			<mono_name> HYDROcodone (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-droe-koe′done)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x20301">
+						<country code="CAN">Hycodan </country>
+					</tradename>
+					<tradename id="tnidelem4x20300">
+						<country code="CAN">Robidone</country>
+					</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="11" status="active">
+			<mono_name>HYDROcodone/acetaminophen (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x204013">Anexsia</tradename>
+					<tradename id="tnidelem4x204012">Co-Gesic</tradename>
+					<tradename id="tnidelem4x204011">Dolorex Forte</tradename>
+					<tradename id="tnidelem4x204010">Duocet</tradename>
+					<tradename id="tnidelem4x20409">Hycet</tradename>
+					<tradename id="tnidelem4x20408">Lorcet</tradename>
+					<tradename id="tnidelem4x20407">Lortab</tradename>
+					<tradename id="tnidelem4x20406">Norco</tradename>
+					<tradename id="tnidelem4x20405">Verdrocet</tradename>
+					<tradename id="tnidelem4x20404">Vicodin</tradename>
+					<tradename id="tnidelem4x20403">Vicodin ES</tradename>
+					<tradename id="tnidelem4x20402">Vicodin HP</tradename>
+					<tradename id="tnidelem4x20401">Xodol</tradename>
+					<tradename id="tnidelem4x20400">Zydone</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="12" status="active">
+			<mono_name>HYDROcodone/ibuprofen (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x20453">Ibudone</tradename>
+					<tradename id="tnidelem4x20452">Reprexain</tradename>
+					<tradename id="tnidelem4x20451">Vicoprofen</tradename>
+					<tradename id="tnidelem4x20450">Xylon</tradename>
+				</tradenames>
+				<class type="func"> Antitussive opioid analgesic/nonopioid analgesic</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+				<class type="schedule">Controlled Substance Schedule <schedule num="2">II</schedule></class>
+			</info>
+			<section type="confusion" id="sidelem4x2053">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x20530">HYDROcodone</tradename>
+						<drug type="generic" refid="idelem4x20530">hydrocortisone</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x2060">
+				<sec_title>Action:</sec_title>
+				<para> Acts directly on cough center in medulla to suppress cough; binds to opiate receptors in CNS to reduce pain</para>
+			</section>
+			<section type="uses" id="sidelem4x2065">
+				<sec_title>Uses:</sec_title>
+				<para> Mild to moderate pain</para>
+			</section>
+			<section type="contra" id="sidelem4x2070">
+				<sec_title>Contraindications:</sec_title>
+				<para> Acne rosacea/vulgaris, Cushing syndrome, measles, perioral dermatitis, varicella, abrupt discontinuation; hypersensitivity to this product, benzyl</para>
+				<section type="none" id="sidelem4x2075">
+					<section type="none" id="sidelem4x2076">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, neonates, addictive personality, increased intracranial pressure, MI (acute), severe heart disease, respiratory depression, renal/hepatic disease, bowel impaction, urinary retention, viral infection, ulcerative colitis, seizures, sulfite hypersensitivity, psychosis, hypertension, hyperthyroidism</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x2082">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x2085">
+					<section type="none" id="sidelem4x2086">
+						<sec_title>Analgesic</sec_title>
+						<section type="none" id="sidelem4x2094">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x2094">
+									<item>
+										<label>•</label>
+										<para> 2.5-10 mg q4-6hr prn, max 60 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2098">
+						<sec_title>Available forms:</sec_title>
+						<para> <emphasis style="bold">
+								<emphasis style="italic">HYDROcodone:</emphasis>
+							</emphasis> bulk powder; <emphasis style="bold">
+								<emphasis style="italic">HYDROcodone/acetaminophen:</emphasis>
+							</emphasis> 5 mg HYDROcodone/500 mg acetaminophen (Co-Gesic, Lorcet, Lortab 5/500, Vicodin); 7.5 mg HYDROcodone/400 mg acetaminophen (Zydone), 7.5 mg HYDROcodone/500 mg acetaminophen (Lortab 7.5/500), 7.5 mg HYDROcodone/750 mg acetaminophen (Vicodin ES), 5 mg HYDROcodone/325 acetaminophen, 10 mg HYDROcodone/325 acetaminophen (Norco), 10 mg HYDROcodone/500 mg acetaminophen (Lortab 10/500), 10 mg HYDROcodone/650 mg acetaminophen (Lorcet 10/650, Vicodin HP), 10 mg HYDROcodone/660 acetaminophen (Vicodin HP); caps 5 mg HYDROcodone/500 mg acetaminophen (Stagesic, Zydone); <emphasis style="bold">
+								<emphasis style="italic">HYDROcodone/ibuprofen:</emphasis>
+							</emphasis> tabs 7.5 mg HYDROcodone/200 mg ibuprofen (Vicoprofen)</para>
+					</section>
+					<section type="none" id="sidelem4x2115">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<emphasis alert="lifethreat">Check product carefully before using, fatalities have occurred using wrong dose, wrong product</emphasis>
+							<list id="lidelem4x2121">
+								<item>
+									<label>•</label>
+									<para>Do not break, crush, or chew tabs; only scored tabs can be broken</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>With antiemetic after meals if nausea or vomiting occurs
+<bbw>Do not exceed 4 g acetaminophen with combination product</bbw>
+</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Give with food or milk to prevent gastric upset</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Store in light-resistant area at room temperature</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x2152">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x2155">
+					<section type="none" id="sidelem4x2156">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Drowsiness</emphasis>, dizziness, light-headedness, confusion, headache, sedation, euphoria, dysphoria, weakness, hallucinations, disorientation, mood changes, dependence, <emphasis style="bold">seizures</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2166">
+						<sec_title>CV:</sec_title>
+						<para> Palpitations, tachycardia, bradycardia, change in B/P, <emphasis style="bold">circulatory depression,</emphasis> syncope, <emphasis style="bold">cardiac arrest (children)</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2176">
+						<sec_title>EENT:</sec_title>
+						<para> Tinnitus, blurred vision, miosis, diplopia</para>
+					</section>
+					<section type="none" id="sidelem4x2181">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, vomiting, anorexia, constipation</emphasis>, cramps, dry mouth, ulcers</para>
+					</section>
+					<section type="none" id="sidelem4x2189">
+						<sec_title>GU:</sec_title>
+						<para> Increased urinary output, dysuria, urinary retention</para>
+					</section>
+					<section type="none" id="sidelem4x2194">
+						<sec_title>INTEG:</sec_title>
+						<para> Rash, urticaria, flushing, pruritus</para>
+					</section>
+					<section type="none" id="sidelem4x2199">
+						<sec_title>RESP:</sec_title>
+						<para> <emphasis style="bold">Respiratory depression; pulmonary edema, bronchopneumonia, respiratory arrest (children)</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x2206">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Onset 10-20 min, duration 4-6 hr, half-life 3<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis>-4<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis> hr, metabolized in liver, excreted in urine, crosses placenta</para>
+			</section>
+			<section type="interactions" id="sidelem4x2223">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> CNS depression—alcohol, opioids, sedative/hypnotics, phenothiazines, skeletal muscle relaxants, general anesthetics, tricyclics</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> severe reactions—MAOIs</para>
+				<section type="none" id="sidelem4x2234">
+					<section type="none" id="sidelem4x2235">
+						<sec_title>Drug/Herb</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> CNS depression—lavender, valerian</para>
+					</section>
+					<section type="none" id="sidelem4x2242">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> amylase, lipase</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x2249">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x2252">
+					<section type="none" id="sidelem4x2253">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x2261">
+							<label>•</label>
+							<sec_title>Pain</sec_title>
+							<para>
+								<list id="lidelem4x2261">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Pain:</emphasis> intensity, type, location, other characteristics before, 1 hr after giving product; titrate upward by 25% until pain reduced by half; need for pain medication, physical dependence; opioid is more effective before pain is severe</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2268">
+							<label>•</label>
+							<sec_title>CNS changes</sec_title>
+							<para>
+								<list id="lidelem4x2268">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">CNS changes:</emphasis> dizziness, drowsiness, hallucinations, euphoria, LOC, pupil reaction</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x2272">
+								<item>
+									<label>•</label>
+									<para>B/P, pulse, respirations before, periodically; if respirations &lt;10/min, dose may need to be reduced, oversedation may occur</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2277">
+								<item>
+									<label>•</label>
+									<para>Bowel status: constipation; provide fluids, fiber in diet, may need stimulate laxatives</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2286">
+							<label>•</label>
+							<sec_title>Allergic reactions</sec_title>
+							<para>
+								<list id="lidelem4x2286">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Allergic reactions:</emphasis> rash, urticaria</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x2290">
+								<item>
+									<label>•</label>
+									<para>Cough and respiratory dysfunction: respiratory depression, character, rate, rhythm</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x2295">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x2299">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decrease in pain or cough</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x2305">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x2309">
+								<item>
+									<label>•</label>
+									<para>To report any symptoms of CNS changes, allergic reactions</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>That physical dependency may result when used for extended periods</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>That withdrawal symptoms may occur: nausea, vomiting, cramps, fever, faintness, anorexia</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid driving, other hazardous activities because drowsiness occurs</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid other CNS depressants; they will enhance sedating properties of this product</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To change positions slowly to reduce orthostatic hypotension</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To notify prescriber if pregnancy is planned or suspected</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>For dry mouth, use sugarless gum, frequent sips of water</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To notify prescriber of relief of pain
+<bbw>Not to exceed 4000 mg in combination product with acetaminophen, check all other products that may contain acetaminophen</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="13" status="active">
+			<mono_name>hydrocortisone (Rx)</mono_name>
+			<info>
+				<pronunciation>(hy-dro-kor′tih-sone)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x23773">Cortef</tradename>
+					<tradename id="tnidelem4x23772">Colocort</tradename>
+					<tradename id="tnidelem4x23771">Cortenema</tradename>
+					<tradename id="tnidelem4x23770">Cortifoam</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="14" status="active">
+			<mono_name>hydrocortisone acetate (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x23826">Anucort</tradename>
+					<tradename id="tnidelem4x23825">Anusol</tradename>
+					<tradename id="tnidelem4x23824">Cortifoam</tradename>
+					<tradename id="tnidelem4x23823">Hemril</tradename>
+					<tradename id="tnidelem4x23822">Proctocort</tradename>
+					<tradename id="tnidelem4x23821">Rectasol</tradename>
+					<tradename id="tnidelem4x23820">Rectasol HC</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="15" status="active">
+			<mono_name>hydrocortisone sodium succinate (Rx)</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x23871">A-hydroCort</tradename>
+					<tradename id="tnidelem4x23870">Solu-CORTEF</tradename>
+				</tradenames>
+				<class type="func"> Corticosteroid</class>
+				<class type="chem"> Short-acting glucocorticoid</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x2397">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x23970">hydrocortisone</tradename>
+						<drug type="generic" refid="idelem4x23970">HYDROcodone</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x2401">
+				<sec_title>Action:</sec_title>
+				<para> Decreases inflammation by suppression of migration of polymorphonuclear leukocytes, fibroblasts, reversal of increased capillary permeability, and lysosomal stabilization</para>
+			</section>
+			<section type="uses" id="sidelem4x2406">
+				<sec_title>Uses:</sec_title>
+				<para> Severe inflammation, adrenal insufficiency, ulcerative colitis, collagen disorders, asthma, COPD, SLE, Stevens-Johnson syndrome, ulcerative, TB</para>
+				<section type="none" id="sidelem4x2411">
+					<section type="none" id="sidelem4x2412">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Carpal tunnel syndrome, Churg-Strauss syndrome, endophthalmitis, mixed connective-tissue disease, multiple myeloma, polyarteritis nodosa, polychondritis, pulmonary edema, temporal arteritis, Wegener’s granulomatosis, septic shock</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x2417">
+				<sec_title>Contraindications:</sec_title>
+				<para> Fungal infection, hypersensitivity</para>
+				<section type="none" id="sidelem4x2422">
+					<section type="none" id="sidelem4x2423">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children &lt;2 yr, diabetes mellitus, glaucoma, osteoporosis, seizure disorders, ulcerative colitis, CHF, myasthenia gravis, renal disease, esophagitis, peptic ulcer, metastatic carcinoma, psychosis, idiopathic thrombocytopenia (IM), acute glomerulonephritis, amebiasis, nonasthmatic bronchial disease, AIDS, TB, recent MI (associated with left ventricular rupture), Cushing syndrome, hepatic disease, hypothyroidism, coagulopathy, thromboembolism</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x2430">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x2433">
+					<section type="none" id="sidelem4x2434">
+						<sec_title>Adrenal insufficiency/inflammation</sec_title>
+						<section type="none" id="sidelem4x2442">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x2442">
+									<item>
+										<label>•</label>
+										<para> 20-240 mg daily; in divided doses  100-500 mg (succinate), may repeat q2-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2449">
+						<sec_title>Shock prevention</sec_title>
+						<section type="none" id="sidelem4x2457">
+							<label>•</label>
+							<sec_title>Adult<route> IM/IV</route></sec_title>
+							<para>
+								<list id="lidelem4x2457">
+									<item>
+										<label>•</label>
+										<para> (succinate) 50 mg/kg repeated after 4 hr, repeat q24hr as needed</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2461">
+						<sec_title>Colitis</sec_title>
+						<section type="none" id="sidelem4x2469">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x2469">
+									<item>
+										<label>•</label>
+										<para> 20-240 mg (base)/day in 2-4 divided doses;  100 mg nightly for 21 days; susp 2-3×/day × 2 wk; foam 1 applicatorful 1-2×/day × 2-3 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2479">
+							<label>•</label>
+							<sec_title>Child<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x2479">
+									<item>
+										<label>•</label>
+										<para> 2-8 mg (base)/kg/day or 60-240 mg (base)/m<emphasis style="sup">2</emphasis>/day in 3-4 divided doses</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2486">
+						<sec_title>Available forms:</sec_title>
+						<para> <emphasis style="bold">Hydrocortisone:</emphasis> enema 100 mg/60 ml; tabs 5, 10, 20 mg; <emphasis style="bold">Acetate: rectal aerosol foam:</emphasis> 10%; <emphasis style="bold">Cypionate:</emphasis> tabs 5, 10, 20 mg; <emphasis style="bold">Succinate:</emphasis> injection 100, 250, 500, 1000 mg vial</para>
+					</section>
+					<section type="none" id="sidelem4x2503">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x2507">
+								<item>
+									<label>•</label>
+									<para>Daily dose in <emphasis style="smallcaps">am</emphasis> for better results</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>In one dose in <emphasis style="smallcaps">am</emphasis> to prevent adrenal suppression; avoid SUBCUT administration, may damage tissue</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Do not use acetate or susp for IV</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2529">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x2533">
+									<item>
+										<label>•</label>
+										<para>With food or milk for GI symptoms</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2539">
+							<sec_title>Rectal route</sec_title>
+							<para>
+								<list id="lidelem4x2543">
+									<item>
+										<label>•</label>
+										<para>Tell patient to retain for 1 hr if possible</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2549">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x2553">
+									<item>
+										<label>•</label>
+										<para>IM inj deep in large muscle mass; rotate sites; avoid deltoid; use 21-G needle</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2559">
+							<sec_title>IV route</sec_title>
+							<section type="none" id="sidelem4x2567">
+								<label>•</label>
+								<sec_title>Succinate</sec_title>
+								<para>
+									<list id="lidelem4x2567">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Succinate:</emphasis> IV in mix-o-vial or reconstitute ≤250 mg/2 ml bacteriostatic water for inj; mix gently; give direct IV over ≥1 min; may be further diluted in 100, 250, 500, or 1000 ml of D<emphasis style="inf">5</emphasis>W, D<emphasis style="inf">5</emphasis> 0.9%, NaCl 0.9% given over ordered rate</para>
+										</item>
+									</list>
+								</para>
+							</section>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2577">
+						<sec_title>Sodium succinate preparations</sec_title>
+						<para>
+							<emphasis style="bold">Y-site compatibilities:</emphasis> Acyclovir, acetaminophen, alemtuzumab, alfentanil, allopurinol, amifostine, amphotericin B cholesteryl, ampicillin, amrinone, amsacrine, atracurium, atropine, aztreonam, betamethasone, calcium gluconate, cefepime, cefmetazole, cephalothin, chlordiazePOXIDE, chlorproMAZINE, cisatracurium, cladribine, cyanocobalamin, cytarabine, dexamethasone, digoxin, diphenhydrAMINE, DOPamine, DOXOrubicin liposome, droperidol, edrophonium, enalaprilat, EPINEPHrine, esmolol, estrogens conjugated, ethacrynate, famotidine, fentaNYL, fentaNYL/droperidol, filgrastim, fludarabine, fluorouracil, foscarnet, furosemide, gallium, granisetron, heparin, hydrALAZINE, insulin (regular), isoproterenol, kanamycin, lidocaine, LORazepam, magnesium sulfate, melphalan, menadiol, meperidine, methicillin, methoxamine, methylergonovine, minocycline, morphine, neostigmine, norepinephrine, ondansetron, oxacillin, oxytocin, PACLitaxel, pancuronium, penicillin G potassium, pentazocine, phytonadione, piperacillin/tazobactam, prednisoLONE, procainamide, prochlorperazine, propofol, propranolol, pyridostigmine, remifentanil, scopolamine, sodium bicarbonate, succinylcholine, tacrolimus, teniposide, theophylline, thiotepa, trimethaphan, trimethobenzamide, vecuronium, vinorelbine, zoledronic acid</para>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x2584">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x2587">
+					<section type="none" id="sidelem4x2588">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Depression, flushing, sweating,</emphasis> headache, mood changes, <emphasis style="bold">pseudotumor cerebri, euphoria, insomnia, seizures</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2598">
+						<sec_title>CV:</sec_title>
+						<para> <emphasis style="italic">Hypertension,</emphasis><emphasis style="bold">circulatory collapse, thrombophlebitis, embolism,</emphasis> tachycardia, edema, <emphasis style="bold">heart failure</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2610">
+						<sec_title>EENT:</sec_title>
+						<para> Fungal infections, increased intraocular pressure, blurred vision, cataracts, glaucoma</para>
+					</section>
+					<section type="none" id="sidelem4x2615">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Diarrhea, nausea,</emphasis> abdominal distention, <emphasis style="bold">GI hemorrhage,</emphasis> increased appetite, <emphasis style="bold">pancreatitis</emphasis>, vomiting</para>
+					</section>
+					<section type="none" id="sidelem4x2629">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Thrombocytopenia</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2636">
+						<sec_title>INTEG:</sec_title>
+						<para> Acne, poor wound healing, ecchymosis, petechiae</para>
+					</section>
+					<section type="none" id="sidelem4x2642">
+						<sec_title>
+							<emphasis style="bold">MISC:</emphasis>
+						</sec_title>
+						<para> <emphasis style="bold">Adrenal insufficiency (after stress/withdrawal)</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x2650">
+						<sec_title>MS:</sec_title>
+						<para> Fractures, osteoporosis, weakness</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x2655">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Metabolized by liver, excreted in urine (17-OHCS, 17-KS), crosses placenta</para>
+				<section type="none" id="sidelem4x2660">
+					<section type="none" id="sidelem4x2661">
+						<sec_title>PO:</sec_title>
+						<para> Peak 1-2 hr, duration 1-1<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis> days</para>
+					</section>
+					<section type="none" id="sidelem4x2672">
+						<sec_title>IM/IV:</sec_title>
+						<para> Onset 20 min, peak 4-8 hr, duration 1-1<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis> days</para>
+					</section>
+					<section type="none" id="sidelem4x2683">
+						<sec_title>IV:</sec_title>
+						<para> Peak 1-2 hr</para>
+					</section>
+					<section type="none" id="sidelem4x2688">
+						<sec_title>RECT:</sec_title>
+						<para> Onset 3-5 hr</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x2693">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> GI bleeding risk—salicylates, NSAIDs, acetaminophen</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> side effects—alcohol, amphotericin B, digoxin, cycloSPORINE, diuretics</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> neurologic reactions—live virus vaccines/toxoids</para>
+				<para>
+					<emphasis style="bold">Decrease/Increase:</emphasis> anticoagulation—oral anticoagulants</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> hydrocortisone action—bosentan, cholestyramine, colestipol, barbiturates, rifampin, phenytoin, theophylline, carBAMazepine</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> anticoagulant effects, anticonvulsants, antidiabetics, calcium supplements, toxoids, vaccines</para>
+				<section type="none" id="sidelem4x2720">
+					<section type="none" id="sidelem4x2721">
+						<sec_title>Drug/Herb</sec_title>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> hydrocortisone levels—ephedra</para>
+					</section>
+					<section type="none" id="sidelem4x2728">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> cholesterol, sodium, blood glucose, uric acid, calcium, glucose</para>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> calcium, potassium, T<emphasis style="inf">4</emphasis>, T<emphasis style="inf">3</emphasis>, thyroid <emphasis style="sup">131</emphasis>I uptake test, urine 17-OHCS, 17-KS</para>
+						<para>
+							<emphasis style="bold">False negative:</emphasis> skin allergy tests</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x2752">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x2755">
+					<section type="none" id="sidelem4x2756">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x2761">
+								<item>
+									<label>•</label>
+									<para>Potassium, blood glucose, urine glucose while patient receiving long-term therapy; hypokalemia and hyperglycemia; potassium depletion: paresthesias, fatigue, nausea, vomiting, depression, polyuria, dysrhythmias, weakness</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2766">
+								<item>
+									<label>•</label>
+									<para>B/P, pulse; notify prescriber of chest pain</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2771">
+								<item>
+									<label>•</label>
+									<para>I&amp;O ratio; be alert for decreasing urinary output, increasing edema; weight daily, notify prescriber of weekly gain &gt;5 lb</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2779">
+							<label>•</label>
+							<sec_title>Adrenal insufficiency (cushingoid symptoms)</sec_title>
+							<para>
+								<list id="lidelem4x2779">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adrenal insufficiency (cushingoid symptoms):</emphasis> nausea, anorexia, SOB, moon face, fatigue, dizziness, weakness, joint pain before and during treatment; plasma cortisol levels during long-term therapy (normal level: 138-635 nmol/L SI units when drawn at 8 <emphasis style="smallcaps">am</emphasis>)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2789">
+							<label>•</label>
+							<sec_title>Infection</sec_title>
+							<para>
+								<list id="lidelem4x2789">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Infection:</emphasis> increased temperature, WBC even after withdrawal of medication; product masks infection</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x2793">
+								<item>
+									<label>•</label>
+									<para>Mental status: affect, mood, behavioral changes, aggression</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2801">
+							<label>•</label>
+							<sec_title>GI effects</sec_title>
+							<para>
+								<list id="lidelem4x2801">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">GI effects:</emphasis> nausea, vomitting, anorexia or appetite stimulation, diarrhea, constipation, abdominal pain, hiccups, gastritis, pancreatitis, GI bleeding/perforation with long-term treatment</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2805">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x2809">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased inflammation, GI symptoms</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x2815">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x2820">
+								<item>
+									<label>•</label>
+									<para>That emergency ID as corticosteroid user should be carried</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2828">
+							<label>•</label>
+							<sec_title>
+								<route>To immediately report abdominal pain, black tarry stools because GI bleeding/perforation can occur</route>
+							</sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x2831">
+								<item>
+									<label>•</label>
+									<para>To notify prescriber if therapeutic response decreases; that dosage adjustment may be needed; about signs of infection</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x2839">
+							<label>•</label>
+							<sec_title>
+								<route>Not to discontinue abruptly because adrenal crisis can result; that product should be tapered</route>
+							</sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x2842">
+								<item>
+									<label>•</label>
+									<para>That supplemental calcium/vit D may be needed if patient receiving long-term therapy</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2847">
+								<item>
+									<label>•</label>
+									<para>That product can mask infection and cause hypo/hyperglycemia (diabetic)</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2852">
+								<item>
+									<label>•</label>
+									<para>To avoid OTC products: salicylates, alcohol in cough products, cold preparations unless directed by prescriber</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2857">
+								<item>
+									<label>•</label>
+									<para>About cushingoid symptoms of adrenal insufficiency: nausea, anorexia, fatigue, dizziness, dyspnea, weakness, joint pain, moon face</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x2862">
+								<item>
+									<label>•</label>
+									<para>To avoid live-virus vaccines if using steroids long term</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="16" status="active">
+			<mono_name>hydrocortisone nasal</mono_name>
+			<section type="none" id="sidelem4x2871">
+				<para>See <see refid="tra">Appendix B</see></para>
+			</section>
+		</monograph>
+<monograph id="17" status="active">
+			<mono_name>hydrocortisone (topical)</mono_name>
+			<info>
+				<pronunciation>(hye-droe-kor′ti-sone)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x28808">Ala-Cort</tradename>
+					<tradename id="tnidelem4x28807">Ala-Scalp</tradename>
+					<tradename id="tnidelem4x28806">Anusol HC</tradename>
+					<tradename id="tnidelem4x28805">Cetacort</tradename>
+					<tradename id="tnidelem4x28804">Cortizone-5</tradename>
+					<tradename id="tnidelem4x28803">Cortizone-10</tradename>
+					<tradename id="tnidelem4x28802">Cortizone-10 Dermolate</tradename>
+					<tradename id="tnidelem4x28801">Procort</tradename>
+					<tradename id="tnidelem4x28800">Texacort</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="18" status="active">
+			<mono_name>hydrocortisone acetate</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x28858">Anusol HC</tradename>
+					<tradename id="tnidelem4x28857">Cortaid</tradename>
+					<tradename id="tnidelem4x28856">Cortef</tradename>
+					<tradename id="tnidelem4x28855">Corticaine</tradename>
+					<tradename id="tnidelem4x28854">Cortifoam</tradename>
+					<tradename id="tnidelem4x28853">ProctoCream-HC</tradename>
+					<tradename id="tnidelem4x28852">ProctoFoam-HC</tradename>
+					<tradename id="tnidelem4x28851">Tucks</tradename>
+					<tradename id="tnidelem4x28850">U-cort</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="19" status="active">
+			<mono_name>hydrocortisone butyrate</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x28901">Locoid</tradename>
+					<tradename id="tnidelem4x28900">Locoid Lipocream</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="20" status="active">
+			<mono_name>hydrocortisone probutate</mono_name>
+			<info>
+				<tradenames>
+					<tradename id="tnidelem4x28950">Pandel</tradename>
+				</tradenames>
+			</info>
+		</monograph>
+<monograph id="21" status="active">
+			<mono_name>hydrocortisone valerate</mono_name>
+			<info>
+				<class type="func"> Corticosteroid, topical</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x2904">
+				<sec_title>Action:</sec_title>
+				<para> Crosses cell membrane to attach to receptors to decrease inflammation, itching, inhibits multiple inflammatory cytokines</para>
+			</section>
+			<section type="uses" id="sidelem4x2909">
+				<sec_title>Uses:</sec_title>
+				<para> Inflammation/itching in corticosteroid-responsive dermatoses on the skin, rectal area</para>
+			</section>
+			<section type="contra" id="sidelem4x2914">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity</para>
+				<section type="none" id="sidelem4x2919">
+					<section type="none" id="sidelem4x2920">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x2925">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x2928">
+					<section type="none" id="sidelem4x2929">
+						<sec_title>Corticosteroid-responsive dermatoses, inflammation, pruritus</sec_title>
+						<section type="none" id="sidelem4x2937">
+							<label>•</label>
+							<sec_title>Adult/child<route> TOP</route></sec_title>
+							<para>
+								<list id="lidelem4x2937">
+									<item>
+										<label>•</label>
+										<para> apply to affected area 1 to 4 times per day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2941">
+						<sec_title>Inflammation from proctitis</sec_title>
+						<section type="none" id="sidelem4x2949">
+							<label>•</label>
+							<sec_title>Adult<route> Rectal</route></sec_title>
+							<para>
+								<list id="lidelem4x2949">
+									<item>
+										<label>•</label>
+										<para> 1 applicator full of foam once or twice a day × 2-3 wk, then every other day as needed; suppository: 1 bid × 2 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x2953">
+						<sec_title>Available forms:</sec_title>
+						<para>
+							<emphasis style="bold">Hydrocortisone:</emphasis> cream 0.5%, 1%, 2.5%; gel 1%, 2%; lotion 0.25%, 1%, 2%, 2.5%; ointment 0.5%, 1%, 2.5%; rectal cream 1%; rectal ointment 1%; spray 1%; solution 1%, 2.5%; <emphasis style="bold">Hydrocortisone acetate:</emphasis> cream 0.5%, 1%, 2%, 2.5%; lotion 0.5%; ointment 0.5%, 1%; rectal foam 90 mg/application; suppositories 25 mg, 30 mg; <emphasis style="bold">Hydrocortisone butyrate:</emphasis> cream 0.1%; ointment 0.1%; lotion; <emphasis style="bold">Hydrocortisone probutate:</emphasis> cream 0.1%; <emphasis style="bold">Hydrocortisone valerate:</emphasis> cream 0.2%, ointment 0.2%</para>
+					</section>
+					<section type="none" id="sidelem4x2972">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x2975">
+							<sec_title>Topical route</sec_title>
+							<para>
+								<list id="lidelem4x2979">
+									<item>
+										<label>•</label>
+										<para>May be used with dressings</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x2985">
+							<sec_title>Cream/Ointment/Lotion</sec_title>
+							<para>
+								<list id="lidelem4x2989">
+									<item>
+										<label>•</label>
+										<para>Apply sparingly in a thin film and rub gently</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x2995">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x2998">
+					<section type="none" id="sidelem4x2999">
+						<sec_title>CNS:</sec_title>
+						<para> Seizures, <emphasis style="bold">increased intracranial pressure,</emphasis> headache</para>
+					</section>
+					<section type="none" id="sidelem4x3007">
+						<sec_title>CV:</sec_title>
+						<para> Hypertension</para>
+					</section>
+					<section type="none" id="sidelem4x3012">
+						<sec_title>EENT:</sec_title>
+						<para> Cataracts, glaucoma</para>
+					</section>
+					<section type="none" id="sidelem4x3017">
+						<sec_title>INTEG:</sec_title>
+						<para> Burning, folliculitis, pruritus, dermatitis, maceration</para>
+					</section>
+					<section type="none" id="sidelem4x3022">
+						<sec_title>MISC:</sec_title>
+						<para> Hyperglycemia; glycosuria, HPA suppression</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x3027">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Unknown, minimally absorbed</para>
+			</section>
+			<section type="considerations" id="sidelem4x3032">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x3035">
+					<section type="none" id="sidelem4x3036">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x3040">
+								<item>
+									<label>•</label>
+									<para>Skin reactions: burning, pruritus, folliculitis, dermatitis</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3046">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x3050">
+								<item>
+									<label>•</label>
+									<para>Decreasing itching, inflammation on the skin, rectal area</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3056">
+						<sec_title>Teach patient/family:</sec_title>
+						<section type="none" id="sidelem4x3059">
+							<sec_title>Topical route</sec_title>
+							<para>
+								<list id="lidelem4x3063">
+									<item>
+										<label>•</label>
+										<para>That product may be used with dressings</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3069">
+							<sec_title>Cream/Ointment/Lotion</sec_title>
+							<para>
+								<list id="lidelem4x3073">
+									<item>
+										<label>•</label>
+										<para>To apply sparingly in a thin film and rub gently into the affected area</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3080">
+							<sec_title>Gel</sec_title>
+							<para>
+								<list id="lidelem4x3084">
+									<item>
+										<label>•</label>
+										<para>To apply sparingly in a thin film and rub gently</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3090">
+							<sec_title>Rectal</sec_title>
+							<para>
+								<list id="lidelem4x3094">
+									<item>
+										<label>•</label>
+										<para>To remove wrapper and insert suppository</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="22" status="active" ha="yes">
+			<mono_name> HYDROmorphone (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-droe-mor′fone)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x31073">Dilaudid</tradename>
+					<tradename id="tnidelem4x31072">Dilaudid HP</tradename>
+					<tradename id="tnidelem4x31071">Exalgo</tradename>
+					<tradename id="tnidelem4x31070">
+						<country code="CAN">Hydromorph Contin </country>
+					</tradename>
+				</tradenames>
+				<class type="func"> Opiate analgesic</class>
+				<class type="chem"> Semisynthetic phenanthrene</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+				<class type="schedule">Controlled Substance Schedule <schedule num="2">II</schedule></class>
+			</info>
+			<section type="confusion" id="sidelem4x3121">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x31210">HYDROmorphone</tradename>
+						<drug type="generic" refid="idelem4x31210">meperidine/morphine</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x3128">
+				<sec_title>Action:</sec_title>
+				<para> Inhibits ascending pain pathways in CNS, increases pain threshold, alters pain perception</para>
+			</section>
+			<section type="uses" id="sidelem4x3133">
+				<sec_title>Uses:</sec_title>
+				<para> Moderate to severe pain</para>
+				<section type="none" id="sidelem4x3138">
+					<section type="none" id="sidelem4x3139">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Arthralgia, bone, dental pain, headache, migraine, myalgia</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x3144">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to this product/sulfite, COPD, cor pulmonale, emphysema, GI obstruction, ileus, increased intracranial pressure, obstetric delivery, status asthmaticus</para>
+				<para>
+					<bbw>Respiratory depression, opioid-naive patients</bbw>
+				</para>
+				<section type="none" id="sidelem4x3159">
+					<section type="none" id="sidelem4x3160">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children &lt;18 yr, addictive personality, renal/hepatic disease, abrupt discontinuation, adrenal insufficiency, angina, asthma, biliary tract disease, bladder obstruction, hypothyroidism, hypovolemia, hypoxemia, IBD, IV use, lactase/paraben deficiency, labor, latex hypersensitivity, myxedema, seizure disorders, sleep apnea</para>
+						<para>
+							<bbw>Substance abuse, accidental exposure, potential for overdose/poisoning</bbw>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x3175">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x3178">
+					<section type="none" id="sidelem4x3179">
+						<sec_title>Analgesic</sec_title>
+						<section type="none" id="sidelem4x3187">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3187">
+									<item>
+										<label>•</label>
+										<para> (oral solution) 2.5-10 mg q3-6hr or (tabs) 2-4 mg q4-6hr;  (Exalgo): convert to  by giving total daily dose of immediate release/day, in 1 daily dose, if needed titrate  q3-4days until adequate pain relief; use 25%-50% increase for each titration step, if more than 2 doses of rescue medication needed in 24 hr consider titration;  0.2-1 mg q2-3hr given over 2-3 min;  1-2 mg q4-6hr prn, may be increased (opioid-naive patients may require lower dose);  3 mg q6-8hr prn</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3212">
+							<label>•</label>
+							<sec_title>Geriatric<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3212">
+									<item>
+										<label>•</label>
+										<para> 1-2 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3219">
+							<label>•</label>
+							<sec_title>Child &gt;50 kg (unlabeled)<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3219">
+									<item>
+										<label>•</label>
+										<para> 2-4 mg q3-4hr in opioid-naive patients, titrate;  0.2-1 mg q2-4hr or 0.3 mg/kg infusion (opioid-naive will require lower dose)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3229">
+							<label>•</label>
+							<sec_title>Infant &gt;6 mo/child &lt;50 kg (unlabeled)<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3229">
+									<item>
+										<label>•</label>
+										<para> 0.04-0.08 mg/kg q3-4hr in opioid-naive patients, titrate;  0.015-0.02 mg/kg q2-4hr or 0.006 mg/kg/hr infusion (opioid-naive)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3236">
+						<sec_title>Hepatic disease</sec_title>
+						<section type="none" id="sidelem4x3244">
+							<label>•</label>
+							<sec_title>Adult<route> Child-Pugh B, or C (oral liquid, immediate rel tab, supp) give reduced dose based on response, impairment (parental) give 25%-50% of dose (moderate impairment)</route></sec_title>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3247">
+						<sec_title>Available forms:</sec_title>
+						<para> Powder for inj 250 mg; inj 1, 2, 4, 10 mg/ml; tabs 2, 4, 8 mg; supp 3 mg; oral sol 5 mg/5 ml; ext rel tab 8, 12, 16, 32 mg</para>
+					</section>
+					<section type="none" id="sidelem4x3252">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x3255">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x3260">
+									<item>
+										<label>•</label>
+										<para>Give with food or milk for GI irritation</para>
+									</item>
+								</list>
+							</para>
+							<section type="none" id="sidelem4x3268">
+								<label>•</label>
+								<sec_title>Ext rel (Exalgo)</sec_title>
+								<para>
+									<list id="lidelem4x3268">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Ext rel (Exalgo):</emphasis> discontinue all other ext rel opioids, give q24hr; do not crush, break, chew</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<para>
+								<list id="lidelem4x3273">
+									<item>
+										<label>•</label>
+										<para>When pain is beginning to return; determine interval by response</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<list id="lidelem4x3278">
+									<item>
+										<label>•</label>
+										<para>Store in light-resistant area at room temperature
+<bbw>Do not use ext rel products in opioid-naive patients or with other ext rel opioids</bbw>
+</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3292">
+							<sec_title>Extended release</sec_title>
+							<section type="none" id="sidelem4x3300">
+								<label>•</label>
+								<sec_title>Converting from oral opioids</sec_title>
+								<para>
+									<list id="lidelem4x3300">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Converting from oral opioids:</emphasis> conversion ratios are approximate; initiate ext rel tabs at 50% of calculated total daily equivalent dose of ext rel, give q24hr; max increase q3-4days, consider titration increases of 25%-50% with each step</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<section type="none" id="sidelem4x3307">
+								<label>•</label>
+								<sec_title>Converting from transdermal patch (fentaNYL)</sec_title>
+								<para>
+									<list id="lidelem4x3307">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Converting from transdermal patch (fentaNYL):</emphasis> initiate ext rel tabs 18 hr after removal of patch; for each 25 mcg/hr dose of transdermal fentaNYL dose is 12 mg q24hr, start dose at 50% of calculated HYDROmorphone ext rel dose q24hr; titrate no more often than q3-4days, consider dose increases of 25%-50% with each step; if more than 2 rescue doses are required in 24 hr, consider titration</para>
+										</item>
+									</list>
+								</para>
+							</section>
+						</section>
+						<section type="none" id="sidelem4x3311">
+							<sec_title>SUBCUT route</sec_title>
+							<para>
+								<list id="lidelem4x3315">
+									<item>
+										<label>•</label>
+										<para>Use short 30-G needle; make sure not to inject ID</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Rotate inj sites</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3326">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x3330">
+									<item>
+										<label>•</label>
+										<para>Rotate sites</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3336">
+							<sec_title>IV route</sec_title>
+							<section type="none" id="sidelem4x3344">
+								<label>•</label>
+								<sec_title>
+									<route>Direct,</route>
+								</sec_title>
+								<para>
+									<list id="lidelem4x3344">
+										<item>
+											<label>•</label>
+											<para> diluted with 5 ml sterile water or NS; give through <emphasis style="sans-serif">Y</emphasis>-connector or 3-way stopcock; give ≤2 mg over 3-5 min</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<section type="none" id="sidelem4x3354">
+								<label>•</label>
+								<sec_title>IV INFUSION</sec_title>
+								<para>
+									<list id="lidelem4x3354">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">IV INFUSION:</emphasis> Dilute each 0.1-1 mg/ml NS (0.1-1 mg/ml), deliver by opioid syringe infusor; may be diluted in D<emphasis style="inf">5</emphasis>W, D<emphasis style="inf">5</emphasis>/NaCl, 0.45% NaCl, NS for larger amounts, delivery through infusion pump</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<para>
+								<emphasis style="bold">Y-site compatibilities:</emphasis> Acyclovir, allopurinol, amifostine, amikacin, amsacrine, aztreonam, cefamandole, cefepime, cefoperazone, cefotaxime, cefOXitin, cefTAZidime, ceftizoxime, cefuroxime, chloramphenicol, cisatracurium, CISplatin, cladribine, clindamycin, cyclophosphamide, cytarabine, diltiazem, DOBUTamine, DOPamine, DOXOrubicin, DOXOrubicin liposome, doxycycline, EPINEPHrine, erythromycin lactobionate, famotidine, fentaNYL, filgrastim, fludarabine, foscarnet, furosemide, gentamicin, granisetron, heparin, kanamycin, labetalol, LORazepam, magnesium sulfate, melphalan, methotrexate, metroNIDAZOLE, midazolam, milrinone, morphine, nafcillin, niCARdipine, nitroglycerin, norepinephrine, ondansetron, oxacillin, PACLitaxel, penicillin G potassium, piperacillin, piperacillin/tazobactam, propofol, ranitidine, remifentanil, teniposide, thiotepa, ticarcillin, tobramycin, trimethoprim-sulfamethoxazole, vancomycin, vecuronium, vinorelbine</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x3368">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x3371">
+					<section type="none" id="sidelem4x3372">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Drowsiness, dizziness, confusion, headache, sedation, euphoria,</emphasis> mood changes, <emphasis style="bold">seizures</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x3382">
+						<sec_title>CV:</sec_title>
+						<para> Palpitations, bradycardia, change in B/P, hypotension, tachycardia, peripheral vasodilation</para>
+					</section>
+					<section type="none" id="sidelem4x3387">
+						<sec_title>EENT:</sec_title>
+						<para> Tinnitus, blurred vision, miosis, diplopia</para>
+					</section>
+					<section type="none" id="sidelem4x3392">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, vomiting, anorexia, constipation, cramps,</emphasis> dry mouth, paralytic ileus</para>
+					</section>
+					<section type="none" id="sidelem4x3400">
+						<sec_title>GU:</sec_title>
+						<para> Increased urinary output, dysuria, urinary retention</para>
+					</section>
+					<section type="none" id="sidelem4x3405">
+						<sec_title>INTEG:</sec_title>
+						<para> <emphasis style="italic">Rash,</emphasis> urticaria, bruising, flushing, diaphoresis, pruritus</para>
+					</section>
+					<section type="none" id="sidelem4x3413">
+						<sec_title>RESP:</sec_title>
+						<para> <emphasis style="bold">Respiratory depression,</emphasis> dyspnea</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x3421">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>
+					<emphasis style="bold">IM:</emphasis> Onset 15-30 min, peak <emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis>-1 hr, duration 4-5 hr, metabolized by liver, excreted by kidneys, crosses placenta, excreted in breast milk, half-life 2-3 hr</para>
+			</section>
+			<section type="interactions" id="sidelem4x3434">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> effects—other CNS depressants (alcohol, opiates, sedative/hypnotics, antipsychotics, skeletal muscle relaxants)</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> CNS, respiratory depression—MAOIs</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> HYDROmorphone effects—opiate antagonists</para>
+				<section type="none" id="sidelem4x3450">
+					<section type="none" id="sidelem4x3451">
+						<sec_title>Drug/Herb</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> action—chamomile, hops, kava, lavender, St. John’s wort, valerian</para>
+					</section>
+					<section type="none" id="sidelem4x3458">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> amylase</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x3465">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x3468">
+					<section type="none" id="sidelem4x3469">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<bbw>
+								<emphasis alert="lifethreat">Respiratory dysfunction:</emphasis> respiratory depression, character, rate, rhythm; notify prescriber if respirations &lt;10/min</bbw>
+						</para>
+						<para>
+							<list id="lidelem4x3485">
+								<item>
+									<label>•</label>
+									<para>I&amp;O ratio; check for decreasing output; may indicate urinary retention</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3490">
+								<item>
+									<label>•</label>
+									<para>CNS changes: dizziness, drowsiness, hallucinations, euphoria, LOC, pupil reaction</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3495">
+								<item>
+									<label>•</label>
+									<para>Bowel function, constipation</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3500">
+								<item>
+									<label>•</label>
+									<para>Allergic reactions: rash, urticaria</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3505">
+								<item>
+									<label>•</label>
+									<para>Need for pain medication, physical dependence</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x3513">
+							<label>•</label>
+							<sec_title>Pain</sec_title>
+							<para>
+								<list id="lidelem4x3513">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Pain:</emphasis> control, sedation by scoring on 0-10 scale, ATC dosing is best for pain control</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x3517">
+								<item>
+									<label>•</label>
+									<para>Assistance with ambulation</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3522">
+								<item>
+									<label>•</label>
+									<para>Safety measures: side rails, night-light, call bell within easy reach</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3527">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x3531">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decrease in pain</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3537">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x3541">
+								<item>
+									<label>•</label>
+									<para>To report any symptoms of CNS changes, allergic reactions</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>That physical dependency may result when used for extended periods; that withdrawal symptoms may occur: nausea, vomiting, cramps, fever, faintness, anorexia</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid driving, other hazardous activities because drowsiness occurs
+<bbw>That extended release products must be taken whole</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="23" status="active">
+			<mono_name>hydroxychloroquine (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-drox-ee-klor′oh-kwin)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x35791">
+						<country code="CAN">Apo-Hydroxyquine </country>
+					</tradename>
+					<tradename id="tnidelem4x35790">Plaquenil</tradename>
+				</tradenames>
+				<class type="func"> Antimalarial, antirheumatic (DMARDs)</class>
+				<class type="chem"> 4-Aminoquinoline derivative</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x3592">
+				<sec_title>Action:</sec_title>
+				<para> Impairs complement-dependent antigen–antibody reactions</para>
+			</section>
+			<section type="uses" id="sidelem4x3597">
+				<sec_title>Uses:</sec_title>
+				<para> Malaria caused by susceptible strains of <emphasis style="italic">Plasmodium vivax, P. malariae, P. ovale, P. falciparum</emphasis> (some strains); SLE, rheumatoid arthritis</para>
+				<section type="none" id="sidelem4x3605">
+					<section type="none" id="sidelem4x3606">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> SLE in children</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x3611">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to this product or chloroquine; retinal field changes</para>
+				<para>
+					<bbw>Children (long term), ocular disease</bbw>
+				</para>
+				<section type="none" id="sidelem4x3626">
+					<section type="none" id="sidelem4x3627">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, blood dyscrasias, severe GI disease, neurologic disease, alcoholism, hepatic disease, G6PD deficiency, psoriasis, eczema</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x3632">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x3635">
+					<section type="none" id="sidelem4x3636">
+						<sec_title>Malaria</sec_title>
+						<section type="none" id="sidelem4x3644">
+							<label>•</label>
+							<sec_title>Adult<route> PO Suppression or prevention</route></sec_title>
+							<para>
+								<list id="lidelem4x3644">
+									<item>
+										<label>•</label>
+										<para> 400 mg/wk, begin 1-2 wk before travel, continue 4 wk after returning; <emphasis style="bold">treatment:</emphasis> 800 mg, then 400 mg after 6-8 hr, then 400 mg/day on 2nd and 3rd day, total dose 2 g</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3654">
+							<label>•</label>
+							<sec_title>Child<route> PO Suppression or prevention</route></sec_title>
+							<para>
+								<list id="lidelem4x3654">
+									<item>
+										<label>•</label>
+										<para> 6.4 mg/kg (5 mg/kg base) weekly, begin 1-2 wk before travel, continue 4 wk after returning; <emphasis style="bold">treatment:</emphasis> 10 mg/kg, 6.4 mg/kg (5 mg/kg base) at 6, 18, 24 hr after 1st dose</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3661">
+						<sec_title>Lupus erythematosus</sec_title>
+						<section type="none" id="sidelem4x3669">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3669">
+									<item>
+										<label>•</label>
+										<para> 400 mg (310 mg base) daily-bid; length depends on patient response;  200-400 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3680">
+							<label>•</label>
+							<sec_title>Child (unlabeled)<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3680">
+									<item>
+										<label>•</label>
+										<para> 5 mg/kg/day, max 400 mg/day; long-term therapy is contraindicated</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3684">
+						<sec_title>Rheumatoid arthritis</sec_title>
+						<section type="none" id="sidelem4x3692">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3692">
+									<item>
+										<label>•</label>
+										<para> 400-600 mg/day for 4-12 wk, then 200-300 mg/day after good response</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3696">
+						<sec_title>Available forms:</sec_title>
+						<para> Tabs 200 mg</para>
+					</section>
+					<section type="none" id="sidelem4x3701">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x3704">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x3708">
+									<item>
+										<label>•</label>
+										<para>Tabs may be crushed and mixed with food, fluids</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>With food or milk; at same time each day to maintain product level</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>For malaria, prophylaxis should be started 2 wk before exposure, continued for 4-6 wk after leaving exposure area</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Store in tight, light-resistant container at room temperature; keep inj in cool environment</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x3729">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x3732">
+					<section type="none" id="sidelem4x3733">
+						<sec_title>CNS:</sec_title>
+						<para> Headache, stimulation, fatigue, irritability, <emphasis style="bold">seizures,</emphasis> bad dreams, dizziness, confusion, psychosis, decreased reflexes</para>
+					</section>
+					<section type="none" id="sidelem4x3741">
+						<sec_title>CV:</sec_title>
+						<para> Hypotension, heart block, <emphasis style="bold">asystole with syncope</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x3748">
+						<sec_title>EENT:</sec_title>
+						<para> <emphasis style="italic">Blurred vision, corneal changes, retinal changes, difficulty focusing,</emphasis> tinnitus, vertigo, deafness, photophobia, corneal edema</para>
+					</section>
+					<section type="none" id="sidelem4x3756">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, vomiting, anorexia,</emphasis> diarrhea, cramps</para>
+					</section>
+					<section type="none" id="sidelem4x3764">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Thrombocytopenia, agranulocytosis, leukopenia, aplastic anemia</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x3771">
+						<sec_title>INTEG:</sec_title>
+						<para> Pruritus, pigmentation changes, skin eruptions, lichen-planus–like eruptions, eczema, <emphasis style="bold">exfoliative dermatitis,</emphasis> alopecia, <emphasis style="bold">Stevens-Johnson syndrome,</emphasis> photosensitivity</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x3782">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Peak 3 hr; terminal half-life 32-50 days; metabolized in liver; excreted in urine, feces, breast milk; crosses placenta, protein binding 45%</para>
+			</section>
+			<section type="interactions" id="sidelem4x3787">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> digoxin, methotrexate levels</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> antibody titer—rabies vaccine</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> hydroxychloroquine action—magnesium or aluminum compounds</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> effect of—live virus vaccines, botulinum toxoids</para>
+			</section>
+			<section type="considerations" id="sidelem4x3806">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x3809">
+					<section type="none" id="sidelem4x3810">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x3818">
+							<label>•</label>
+							<sec_title>SLE, malaria symptoms</sec_title>
+							<para>
+								<list id="lidelem4x3818">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">SLE, malaria symptoms:</emphasis> before treatment and daily</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3825">
+							<label>•</label>
+							<sec_title>Rheumatoid arthritis</sec_title>
+							<para>
+								<list id="lidelem4x3825">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Rheumatoid arthritis:</emphasis> pain, swelling, ROM, temperature of joints; for decreased reflexes: knee, ankle</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x3829">
+								<item>
+									<label>•</label>
+									<para>Ophthalmic exam at baseline and q6mo if long-term treatment or product dosage &gt;150 mg/day</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x3834">
+								<item>
+									<label>•</label>
+									<para>Hepatic studies weekly: AST, ALT, bilirubin if patient receiving long-term treatment</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x3842">
+							<label>•</label>
+							<sec_title>Blood dyscrasias</sec_title>
+							<para>
+								<list id="lidelem4x3842">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Blood dyscrasias:</emphasis> blood studies: CBC, platelets; WBC, RBC, platelets may be decreased; if severe, product should be discontinued; assess for malaise, fever, bruising, bleeding (rare)</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3849">
+							<label>•</label>
+							<sec_title>
+								<route>ECG</route>
+							</sec_title>
+							<para>
+								<list id="lidelem4x3849">
+									<item>
+										<label>•</label>
+										<para> during therapy: watch for depression of T waves, widening of QRS complex</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3856">
+							<label>•</label>
+							<sec_title>Allergic reactions</sec_title>
+							<para>
+								<list id="lidelem4x3856">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Allergic reactions:</emphasis> pruritus, rash, urticaria</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x3863">
+							<label>•</label>
+							<sec_title>
+								<route>Ototoxicity</route>
+							</sec_title>
+							<para>
+								<list id="lidelem4x3863">
+									<item>
+										<label>•</label>
+										<para> (tinnitus, vertigo, change in hearing); audiometric testing should be done before, after treatment</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x3868">
+								<item>
+									<para>
+										<emphasis alert="nurse">For toxicity: blurring vision, difficulty focusing, headache, dizziness, knee, ankle reflexes; product should be discontinued immediately</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3873">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x3877">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased symptoms of malaria, SLE, rheumatoid arthritis</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x3883">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x3887">
+								<item>
+									<label>•</label>
+									<para>To use sunglasses in bright sunlight to decrease photophobia; to wear protective clothing (photosensitivity)</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>That urine may turn rust or brown; that skin may become blue-black</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To report hearing, visual problems, fever, fatigue, bruising, bleeding, which may indicate blood dyscrasias</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="24" status="active" ha="yes">
+			<mono_name> hydroxyurea (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-drox′ee-yoo-ree-ah)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x39171">Droxia</tradename>
+					<tradename id="tnidelem4x39170">Hydrea</tradename>
+				</tradenames>
+				<class type="func"> Antineoplastic, antimetabolite</class>
+				<class type="chem"> Synthetic urea analog</class>
+				<class type="preg">Pregnancy category <preg cat="D">D</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x3927">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x39270">hydroxyurea</tradename>
+						<drug type="generic" refid="idelem4x39270">hydrOXYzine</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x3931">
+				<sec_title>Action:</sec_title>
+				<para> Acts by inhibiting DNA synthesis without interfering with RNA or protein synthesis; incorporates thymidine into DNA, thereby causing direct damage to DNA strands; specific for S phase of cell cycle</para>
+			</section>
+			<section type="uses" id="sidelem4x3936">
+				<sec_title>Uses:</sec_title>
+				<para> Melanoma, chronic myelogenous leukemia, recurrent or metastatic ovarian cancer, squamous cell carcinoma of the head and neck, sickle cell anemia</para>
+				<section type="none" id="sidelem4x3941">
+					<section type="none" id="sidelem4x3942">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Psoriasis, acute myelogenous leukemia (AML), astrocytoma, HIV, lung cancer, malignant glioma, polycythemia vera, thrombocytosis</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x3947">
+				<sec_title>Contraindications:</sec_title>
+				<para> Pregnancy (<preg cat="D">D</preg>), breastfeeding, hypersensitivity, leukopenia (&lt;2500/mm<emphasis style="sup">3</emphasis>), thrombocytopenia (&lt;100,000/mm<emphasis style="sup">3</emphasis>), anemia (severe)</para>
+				<section type="none" id="sidelem4x3958">
+					<section type="none" id="sidelem4x3959">
+						<sec_title>Precautions:</sec_title>
+						<para> Renal disease (severe), anemia, bone marrow suppression, dental disease, geriatric patients, HIV, hyperkalemia, hyperphosphatemia, hyperuricemia, hypocalcemia, infection, infertility, IM injection, tumor lysis syndrome, vaccinations</para>
+						<para>
+							<bbw>Requires an experienced clinician, secondary malignancy</bbw>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x3974">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x3977">
+					<section type="none" id="sidelem4x3978">
+						<sec_title>Ovarian cancer, malignant melanoma</sec_title>
+						<section type="none" id="sidelem4x3986">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3986">
+									<item>
+										<label>•</label>
+										<para> 80 mg/kg as a single dose q3days or 20-30 mg/kg as a single dose daily</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x3990">
+						<sec_title>Ovarian cancer in combination with radiation</sec_title>
+						<section type="none" id="sidelem4x3998">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x3998">
+									<item>
+										<label>•</label>
+										<para> 80 mg/kg as a single dose q3days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4002">
+						<sec_title>Chronic myelogenous leukemia (CML)/acute myelogenous leukemia (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x4010">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4010">
+									<item>
+										<label>•</label>
+										<para> WBC &gt;100,000/mm<emphasis style="sup">3</emphasis>, 50-75 mg/kg/day; WBC &lt;100,000/mm<emphasis style="sup">3</emphasis>, 10-30 mg/kg/day; adjust for WBCs</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4023">
+							<label>•</label>
+							<sec_title>Child<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4023">
+									<item>
+										<label>•</label>
+										<para> 10-20 mg/kg/day, adjust to hematologic response</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4027">
+						<sec_title>Sickle cell anemia</sec_title>
+						<section type="none" id="sidelem4x4035">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4035">
+									<item>
+										<label>•</label>
+										<para> 15 mg/kg/day, may increase by 5 mg/kg/day q12wk, max 35 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4039">
+						<sec_title>Renal disease</sec_title>
+						<section type="none" id="sidelem4x4047">
+							<label>•</label>
+							<sec_title>Adult<route> CCr &lt;59 ml/min use 50% of dose</route></sec_title>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4050">
+						<sec_title>Available forms:</sec_title>
+						<para> Caps 200, 300, 400, 500 mg</para>
+					</section>
+					<section type="none" id="sidelem4x4055">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x4059">
+								<item>
+									<label>•</label>
+									<para>Gloves should be worn when handling bottles or caps, including by caregivers; wash hands immediately and thoroughly</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Do not crush or chew caps; caps can be opened and contents mixed with water</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Antiemetic 30-60 min before product and prn</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x4075">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x4078">
+					<section type="none" id="sidelem4x4079">
+						<sec_title>CNS:</sec_title>
+						<para> Headache, confusion, hallucinations, dizziness, <emphasis style="bold">seizures</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x4086">
+						<sec_title>CV:</sec_title>
+						<para> Angina, ischemia</para>
+					</section>
+					<section type="none" id="sidelem4x4091">
+						<sec_title>GI:</sec_title>
+						<para> Nausea, vomiting, anorexia, diarrhea, stomatitis, constipation, <emphasis style="bold">hepatotoxicity, pancreatitis</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x4098">
+						<sec_title>GU:</sec_title>
+						<para> Increased BUN, uric acid, creatinine, temporary renal function impairment</para>
+					</section>
+					<section type="none" id="sidelem4x4103">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Leukopenia, anemia, thrombocytopenia, megaloblastic erythropoiesis</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x4110">
+						<sec_title>INTEG:</sec_title>
+						<para> <emphasis style="italic">Rash,</emphasis> urticaria, pruritus, dry skin, facial erythema</para>
+					</section>
+					<section type="none" id="sidelem4x4119">
+						<sec_title>META:</sec_title>
+						<para> Hyperphosphatemia, hyperuricemia, hypocalcemia</para>
+					</section>
+					<section type="none" id="sidelem4x4124">
+						<sec_title>MISC:</sec_title>
+						<para> Fever, chills, malaise, <emphasis style="bold">secondary cancers, tumor lysis syndrome</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x4131">
+						<sec_title>RESP:</sec_title>
+						<para> <emphasis style="bold">Pulmonary fibrosis, diffuse pulmonary infiltrates</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x4138">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Readily absorbed when taken orally; peak level in 1-4 hr; degraded in liver; excreted in urine; almost totally eliminated within 24 hr; readily crosses blood-brain barrier; eliminated as CO<emphasis style="inf">2</emphasis>; terminal half-life 3.5-4.5 hr</para>
+			</section>
+			<section type="interactions" id="sidelem4x4146">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> pancreatitis/hepatotoxicity—didanosine, stavudine</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> toxicity—radiation or other antineoplastics</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> bleeding risk—NSAIDs, anticoagulants, thrombolytics, salicylates, platelet inhibitors</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> uric acid levels—probenecid, sulfinpyrazone<list id="lidelem4x4165">
+						<item>
+							<label>•</label>
+							<para>Do not use with live virus vaccines</para>
+						</item>
+						<item>
+							<label>•</label>
+							<para>Do not use hematopoietic progenitor cells (sargramostim, filgrastim) 24 hr before or after antineoplastic</para>
+						</item>
+					</list></para>
+				<section type="none" id="sidelem4x4176">
+					<section type="none" id="sidelem4x4177">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> BUN, creatinine, LFTs, uric acid</para>
+						<para>
+							<emphasis style="bold">False increase:</emphasis> urea, uric acid, lactic acid</para>
+						<para>
+							<emphasis style="bold">Decrease:</emphasis> Hgb, WBC, platelets, phosphate, calcium</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x4192">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x4195">
+					<section type="none" id="sidelem4x4196">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x4204">
+							<label>•</label>
+							<sec_title>Bone marrow suppression<route> determine the hemoglobin concentrations, total leukocyte count, and platelet count at least once a week during entire course; if the WBC is ≤2500/mm3 or platelets are ≤100,000/mm3, interrupt Hydrea until the values rise significantly toward normal concentrations; if severe anemia occurs, manage it without interrupting Hydrea receipt; for Droxia, monitor blood counts q2wk and interrupt drug receipt if neutrophils are &lt;2000/mm3, platelets are &lt;80,000/mm3, hemoglobin is &lt;4.5 g/dl, or reticulocytes are &lt;80,000/mm3 when the hemoglobin concentration is &lt;9 g/dl; after recovery, Droxia may be resumed at lower dosage; Droxia therapy requires an experienced clinician knowledgeable in the use of this medication for the treatment of sickle cell anemia</route></sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x4222">
+								<item>
+									<label>•</label>
+									<para>Renal studies: BUN, serum uric acid, urine CCr, electrolytes before, during therapy</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x4230">
+							<label>•</label>
+							<sec_title>
+								<route>Tumor lysis syndrome; hyperkalemia, hyperphosphatemia, hyperuricemia, hypocalcemia; uric acid nephropathy, acute renal failure, metabolic acidosis can also occur; aggressive alkalinization of urine, allopurinol can prevent this</route>
+							</sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x4233">
+								<item>
+									<label>•</label>
+									<para>I&amp;O ratio; report fall in urine output to &lt;30 ml/hr</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4238">
+								<item>
+									<label>•</label>
+									<para>Monitor temperature; fever may indicate beginning infection</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4243">
+								<item>
+									<label>•</label>
+									<para>Hepatic studies before, during therapy: bilirubin, alk phos, AST, ALT, LDH; prn or monthly, pancreatitis may also occur</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x4251">
+							<label>•</label>
+							<sec_title>Cutaneous vasculitic toxicity and gangrene<route> more common in those who are receiving interferon</route></sec_title>
+						</section>
+						<section type="none" id="sidelem4x4257">
+							<label>•</label>
+							<sec_title>Bleeding</sec_title>
+							<para>
+								<list id="lidelem4x4257">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Bleeding:</emphasis> hematuria, guaiac, bruising or petechiae, mucosa or orifices q8hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x4261">
+								<item>
+									<label>•</label>
+									<para>Buccal cavity for dryness, sores or ulceration, white patches, oral pain, bleeding, dysphagia</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x4269">
+							<label>•</label>
+							<sec_title>Pulmonary reactions<route> assess for pulmonary fibrosis, fever, dyspnea, diffuse pulmonary infiltrates</route></sec_title>
+						</section>
+						<section type="none" id="sidelem4x4275">
+							<label>•</label>
+							<sec_title>Symptoms indicating severe allergic reaction<route> rash, urticaria, itching, flushing</route></sec_title>
+						</section>
+						<section type="none" id="sidelem4x4281">
+							<label>•</label>
+							<sec_title>Neurotoxicity<route> headaches, hallucinations, seizures, dizziness</route></sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x4284">
+								<item>
+									<label>•</label>
+									<para>Rinsing of mouth tid-qid with water, club soda; brushing of teeth bid-tid with soft brush or cotton-tipped applicators for stomatitis; use unwaxed dental floss
+<bbw>Secondary malignancy: leukemia may occur after extended use</bbw>
+
+<bbw>Only experienced clinicians should use this product</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4307">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x4311">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased tumor size, spread of malignancy</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4318">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x4323">
+								<item>
+									<label>•</label>
+									<para>To report signs of infection: elevated temperature, sore throat, flulike symptoms</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4328">
+								<item>
+									<label>•</label>
+									<para>To report signs of anemia: fatigue, headache, faintness, SOB, irritability</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4333">
+								<item>
+									<label>•</label>
+									<para>To report bleeding; to avoid use of razors, commercial mouthwash</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4338">
+								<item>
+									<label>•</label>
+									<para>To avoid use of aspirin products, ibuprofen (thrombocytopenia)</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4343">
+								<item>
+									<label>•</label>
+									<para>To avoid foods with citric acid, hot or rough texture if stomatitis is present</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x4348">
+								<item>
+									<label>•</label>
+									<para>To report stomatitis: any bleeding, white spots, ulcerations in the mouth; to examine mouth daily, report symptoms</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x4356">
+							<label>•</label>
+							<sec_title>
+								<route>To notify prescriber if pregnancy is planned or suspected, pregnancy (D)</route>
+							</sec_title>
+						</section>
+						<section type="none" id="sidelem4x4362">
+							<label>•</label>
+							<sec_title>
+								<route>To notify prescriber of fever, chills, sore throat, nausea, vomiting, anorexia, diarrhea, bleeding, bruising; may indicate blood dyscrasias; mental status changes, pancreatitis, hepatotoxicity</route>
+							</sec_title>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="25" status="active">
+			<mono_name>hydrOXYzine (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-drox′i-zeen)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x43700">Atarax Vistaril</tradename>
+				</tradenames>
+				<class type="func"> Antianxiety/antihistamine/sedative/hypnotic, antiemetic</class>
+				<class type="chem"> Piperazine derivative</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x4383">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x43830">hydrOXYzine</tradename>
+						<drug type="generic" refid="idelem4x43830">hydrALAZINE</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x4390">
+				<sec_title>Action:</sec_title>
+				<para> Depresses subcortical levels of CNS, including limbic system, reticular formation; competes with H<emphasis style="inf">1</emphasis>-receptor sites</para>
+			</section>
+			<section type="uses" id="sidelem4x4398">
+				<sec_title>Uses:</sec_title>
+				<para> Anxiety preoperatively, post-operatively to prevent nausea, vomiting; to potentiate opioid analgesics; sedation; pruritus, ethanol withdrawal</para>
+				<section type="none" id="sidelem4x4403">
+					<section type="none" id="sidelem4x4404">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Insomnia, allergic rhinitis, generalized anxiety disorder</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x4409">
+				<sec_title>Contraindications:</sec_title>
+				<para> Pregnancy 1st trimester, breastfeeding; hypersensitivity to this product or cetirizine; acute asthma</para>
+				<section type="none" id="sidelem4x4414">
+					<section type="none" id="sidelem4x4415">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>) (2nd/3rd trimester), geriatric patients, debilitated, renal/hepatic disease, closed-angle glaucoma, COPD, prostatic hypertrophy, asthma</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x4420">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x4423">
+					<section type="none" id="sidelem4x4424">
+						<sec_title>Anxiety</sec_title>
+						<section type="none" id="sidelem4x4432">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4432">
+									<item>
+										<label>•</label>
+										<para> 50-100 mg qid, max 400 mg/day;  50-100 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4442">
+							<label>•</label>
+							<sec_title>Child &gt;6 yr<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4442">
+									<item>
+										<label>•</label>
+										<para> 50-100 mg/day in divided doses, max 100 mg/day or 2 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4449">
+							<label>•</label>
+							<sec_title>Child &lt;6 yr<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4449">
+									<item>
+										<label>•</label>
+										<para> 50 mg/day in divided doses, max 50 mg/day or 2 mg/kg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4453">
+						<sec_title>Alcohol withdrawal</sec_title>
+						<section type="none" id="sidelem4x4461">
+							<label>•</label>
+							<sec_title>Adult<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x4461">
+									<item>
+										<label>•</label>
+										<para> 50-100 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4465">
+						<sec_title>Preoperatively/postoperatively (nausea/vomiting)</sec_title>
+						<section type="none" id="sidelem4x4473">
+							<label>•</label>
+							<sec_title>Adult<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x4473">
+									<item>
+										<label>•</label>
+										<para> 25-100 mg q4-6hr</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4480">
+							<label>•</label>
+							<sec_title>Child<route> IM</route></sec_title>
+							<para>
+								<list id="lidelem4x4480">
+									<item>
+										<label>•</label>
+										<para> 1.1 mg/kg as a single dose</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4484">
+						<sec_title>Pruritus</sec_title>
+						<section type="none" id="sidelem4x4492">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4492">
+									<item>
+										<label>•</label>
+										<para> 25 mg tid-qid;  50-100 mg, then q4-6hr prn, switch to  as soon as feasible</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4505">
+							<label>•</label>
+							<sec_title>Child ≥6 yr<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4505">
+									<item>
+										<label>•</label>
+										<para> 50-100 mg/day in divided doses;  0.5-1 mg/kg/dose q4-6hr prn, use  when possible</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4518">
+							<label>•</label>
+							<sec_title>Child &lt;6 yr<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4518">
+									<item>
+										<label>•</label>
+										<para> 50 mg/day in divided doses</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4522">
+						<sec_title>Insomnia (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x4530">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x4530">
+									<item>
+										<label>•</label>
+										<para> 50-100 mg 30-60 min before bedtime;  50 mg 30-60 min before bedtime</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4537">
+						<sec_title>Renal dose</sec_title>
+						<section type="none" id="sidelem4x4545">
+							<label>•</label>
+							<sec_title>Adult<route> PO CCr &lt;50 ml/min, give 50% of dose</route></sec_title>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x4548">
+						<sec_title>Available forms:</sec_title>
+						<para> Tabs 10, 25, 50 mg; caps 25, 50, 100 mg; oral sol 10 mg/ 5 ml; inj 25, 50 mg/ml; oral susp 25 mg/ 5 ml</para>
+					</section>
+					<section type="none" id="sidelem4x4553">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x4556">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x4560">
+									<item>
+										<label>•</label>
+										<para>Without regard to meals</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Crushed if patient is unable to swallow medication whole</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Shake oral susp before giving</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x4576">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x4580">
+									<item>
+										<label>•</label>
+										<para>Does not need to be diluted; give by <emphasis style="sans-serif">Z</emphasis>-track inj in large muscle to decrease pain, chance of necrosis; never give IV/SUBCUT (HCI)</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis style="bold">Additive compatibilities:</emphasis> CISplatin, cyclophosphamide, cytarabine, dimenhyDRINATE, etoposide, lidocaine, mesna, methotrexate, nafcillin</para>
+							<para>
+								<emphasis style="bold">Syringe compatibilities:</emphasis> Atropine, butorphanol, chlorproMAZINE, cimetidine, codeine, diphenhydrAMINE, doxapram, droperidol, fentaNYL, fluPHENAZine, glycopyrrolate, HYDROmorphone, lidocaine, meperidine, metoclopramide, midazolam, morphine, nalbuphine, oxymorphone, pentazocine, perphenazine, procaine, prochlorperazine, scopolamine, SUFentanil</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x4598">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x4601">
+					<section type="none" id="sidelem4x4602">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Dizziness, drowsiness,</emphasis> confusion, headache, tremors, fatigue, depression, <emphasis style="bold">seizures</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x4612">
+						<sec_title>CV:</sec_title>
+						<para> Hypotension</para>
+					</section>
+					<section type="none" id="sidelem4x4617">
+						<sec_title>GI:</sec_title>
+						<para> Dry mouth, increased appetite, nausea, diarrhea, weight gain</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x4622">
+				<sec_title>Pharmacokinetics</sec_title>
+				<section type="none" id="sidelem4x4625">
+					<section type="none" id="sidelem4x4626">
+						<sec_title>PO:</sec_title>
+						<para> Onset 15-60 min, duration 4-6 hr, half-life 3 hr, metabolized by liver, excreted by kidneys</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x4631">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> CNS depressant effect—barbiturates, opioids, analgesics, alcohol, sedative/hypnotics, other CNS depressants</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> anticholinergic effects—phenothiazines, quiNIDine, disopyramide, antihistamines, antidepressants, atropine, haloperidol, MAOIs</para>
+				<section type="none" id="sidelem4x4642">
+					<section type="none" id="sidelem4x4643">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">False negative:</emphasis> skin allergy testing</para>
+						<para>
+							<emphasis style="bold">False increase:</emphasis> 17-hydroxycorticosteroids</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x4654">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x4657">
+					<section type="none" id="sidelem4x4658">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x4662">
+								<item>
+									<label>•</label>
+									<para>Anticholinergic effects: dry mouth, dizziness, confusion, hypotension, increased sedation; monitor B/P</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Assistance with ambulation during beginning therapy, since drowsiness, dizziness occurs</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4673">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x4677">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased anxiety</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4683">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x4687">
+								<item>
+									<label>•</label>
+									<para>To avoid OTC preparations (cold, cough, hay fever) unless approved by prescriber</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid driving, activities that require alertness</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid alcohol, psychotropic medications</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Not to discontinue medication quickly after long-term use</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To rise slowly because fainting may occur</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="26" status="active">
+			<mono_name>hyoscyamine (Rx)</mono_name>
+			<info>
+				<pronunciation>(hye-oh-sye′a-meen)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x472312">Anaspaz</tradename>
+					<tradename id="tnidelem4x472311">Colidrops</tradename>
+					<tradename id="tnidelem4x472310">Colytrol Pediatric</tradename>
+					<tradename id="tnidelem4x47239">Cystospaz-M</tradename>
+					<tradename id="tnidelem4x47238">ED-SPAZ</tradename>
+					<tradename id="tnidelem4x47237">HyoMax</tradename>
+					<tradename id="tnidelem4x47236">HyoMax SL</tradename>
+					<tradename id="tnidelem4x47235">Hyosyne</tradename>
+					<tradename id="tnidelem4x47234">Levsin SL</tradename>
+					<tradename id="tnidelem4x47233">NuLev</tradename>
+					<tradename id="tnidelem4x47232">Oscimin</tradename>
+					<tradename id="tnidelem4x47231">Spasdel</tradename>
+					<tradename id="tnidelem4x47230">Symax</tradename>
+				</tradenames>
+				<class type="func"> Anticholinergic/antispasmodics</class>
+				<class type="chem"> Belladonna alkaloid</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x4733">
+				<sec_title>Action:</sec_title>
+				<para> Inhibits muscarinic actions of acetylcholine at postganglionic parasympathetic neuroeffector sites; reduces rigidity, tremors, hyperhidrosis of parkinsonism</para>
+			</section>
+			<section type="uses" id="sidelem4x4738">
+				<sec_title>Uses:</sec_title>
+				<para> Treatment of peptic ulcer disease in combination with other products; other GI disorders, other spastic disorders, IBS, urinary incontinence</para>
+			</section>
+			<section type="contra" id="sidelem4x4743">
+				<sec_title>Contraindications:</sec_title>
+				<para> Hypersensitivity to anticholinergics, closed-angle glaucoma, GI obstruction, myasthenia gravis, paralytic ileus, GI atony, toxic megacolon, prostatic hypertrophy, urinary tract obstruction</para>
+				<section type="none" id="sidelem4x4749">
+					<section type="none" id="sidelem4x4750">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), geriatric patients, hyperthyroidism, dysrhythmias, CHF, ulcerative colitis, hypertension, hiatal hernia, renal/hepatic disease, urinary retention, CAD</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x4755">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x4763">
+					<label>•</label>
+					<sec_title>Adult/adolescent/child ≥12 yr<route> PO/SL</route></sec_title>
+					<para>
+						<list id="lidelem4x4763">
+							<item>
+								<label>•</label>
+								<para> 0.125-0.25 mg q4hr;  0.375-0.75 mg q12hr</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x4773">
+					<label>•</label>
+					<sec_title>Adult<route> IM/SUBCUT/IV</route></sec_title>
+					<para>
+						<list id="lidelem4x4773">
+							<item>
+								<label>•</label>
+								<para> 0.25-0.5 mg in a single dose or 2-4×/day q6hr</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x4780">
+					<label>•</label>
+					<sec_title>Geriatric</sec_title>
+					<para>
+						<list id="lidelem4x4780">
+							<item>
+								<label>•</label>
+								<para>
+									<emphasis style="bold">Geriatric:</emphasis> Max 1.5 mg/day in divided doses or max 4 biphasic tabs</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x4787">
+					<label>•</label>
+					<sec_title>Child 2-12 yr<route> PO</route></sec_title>
+					<para>
+						<list id="lidelem4x4787">
+							<item>
+								<label>•</label>
+								<para> SL 0.0625-0.125 q4hr</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x4791">
+					<section type="none" id="sidelem4x4792">
+						<sec_title>Available forms:</sec_title>
+						<para> Tabs 0.125, 0.15 mg; ext rel caps 0.375 mg; sol 0.125 mg/ml; elix 0.125 mg/5 ml; sol for inj 0.5 mg/ml; SL tab 0.125 mg; tab, biphasic 0.125, 0.375 mg; orally disintegrating tab 0.125 mg</para>
+					</section>
+					<section type="none" id="sidelem4x4797">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x4800">
+							<sec_title>PO route</sec_title>
+							<para>
+								<list id="lidelem4x4804">
+									<item>
+										<label>•</label>
+										<para>Do not break, crush, or chew ext rel caps</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis> hr before meals for better absorption</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Decreased dose to geriatric patients; metabolism may be slowed</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Store in tight container protected from light</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis alert="lifethreat">IV route</emphasis>
+								<list id="lidelem4x4833">
+									<item>
+										<label>•</label>
+										<para>Use undiluted, inject slowly</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x4839">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x4842">
+					<section type="none" id="sidelem4x4843">
+						<sec_title>CNS:</sec_title>
+						<para> <emphasis style="italic">Confusion, stimulation in geriatric patients,</emphasis> headache, insomnia, dizziness, drowsiness, anxiety, weakness, hallucination</para>
+					</section>
+					<section type="none" id="sidelem4x4851">
+						<sec_title>CV:</sec_title>
+						<para> <emphasis style="italic">Palpitations,</emphasis> tachycardia</para>
+					</section>
+					<section type="none" id="sidelem4x4859">
+						<sec_title>EENT:</sec_title>
+						<para> <emphasis style="italic">Blurred vision,</emphasis> photophobia, mydriasis, cycloplegia, increased ocular tension</para>
+					</section>
+					<section type="none" id="sidelem4x4867">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Dry mouth, constipation, paralytic ileus,</emphasis> heartburn, nausea, vomiting, dysphagia, absence of taste</para>
+					</section>
+					<section type="none" id="sidelem4x4875">
+						<sec_title>GU:</sec_title>
+						<para> <emphasis style="italic">Urinary hesitancy, retention,</emphasis> impotence</para>
+					</section>
+					<section type="none" id="sidelem4x4883">
+						<sec_title>INTEG:</sec_title>
+						<para> Urticaria, rash, pruritus, anhidrosis, fever, allergic reactions</para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x4888">
+				<sec_title>Pharmacokinetics</sec_title>
+				<section type="none" id="sidelem4x4891">
+					<section type="none" id="sidelem4x4892">
+						<sec_title>PO:</sec_title>
+						<para> Duration 4-6 hr, metabolized by liver, excreted in urine, half-life 3.5 hr</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x4897">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> anticholinergic effect—amantadine, tricyclics, MAOIs, H<emphasis style="inf">1</emphasis>-antihistamines</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> hyoscyamine effect—antacids</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> effect of phenothiazines, levodopa, ketoconazole</para>
+			</section>
+			<section type="considerations" id="sidelem4x4915">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x4918">
+					<section type="none" id="sidelem4x4919">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x4923">
+								<item>
+									<label>•</label>
+									<para>VS, cardiac status: checking for dysrhythmias, increased rate, palpitations</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>I&amp;O ratio; check for urinary retention or hesitancy</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>GI complaints: pain, nausea, vomiting, anorexia</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Increased fluids, bulk, exercise to decrease constipation</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4944">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x4948">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: absence of epigastric pain, bleeding, nausea, vomiting</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x4954">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x4958">
+								<item>
+									<label>•</label>
+									<para>To avoid driving, other hazardous activities until stabilized on medication</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid alcohol or other CNS depressants; they will enhance sedating properties of this product</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To avoid hot environments because heat stroke may occur; that product suppresses perspiration</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To use sunglasses when outside to prevent photophobia; that product may cause blurred vision</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To notify prescriber if pregnancy is planned or suspected (C)</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+</alpha>
+</drug_guide>

@@ -1,0 +1,1447 @@
+<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.1//EN//XML" "Y:\WWW1\tools\Drugs\3_1_drug.dtd">
+<drug_guide isbn="9780323448260">
+	<alpha letter="k">
+		<monograph id="1" status="active" ru="yes">
+			<mono_name> ketoconazole (Rx)</mono_name>
+			<info>
+				<pronunciation>(kee-toe-koe′na-zole)</pronunciation>
+				<class type="func"> Antifungal</class>
+				<class type="chem"> Imidazole derivative</class>
+			</info>
+			<section type="uses" id="sidelem4x31">
+				<sec_title>Uses:</sec_title>
+				<para>Systemic candidiasis, chronic mucocandidiasis, oral thrush, candiduria, coccidioidomycosis, histoplasmosis, chromomycosis, paracoccidioidomycosis, blastomycosis; tinea cruris, tinea corporis, tinea versicolor, <emphasis style="italic">Pityrosporum ovale</emphasis></para>
+			</section>
+			<section type="contra" id="sidelem4x38">
+				<sec_title>Contraindications:</sec_title>
+				<para>Breastfeeding, hypersensitivity, fungal meningitis</para>
+				<para>
+					<bbw>Coadministration with other products (ergot derivatives, cisapride, or triazolam) may cause fatal cardiac arrhythmias due to inhibition of CYP3A4 enzyme system</bbw>
+				</para>
+				<para>
+					<bbw>Hepatic disease</bbw>
+				</para>
+			</section>
+			<section type="doses" id="sidelem4x63">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x71">
+					<label>•</label>
+					<sec_title>Adult<route> PO</route></sec_title>
+					<para>
+						<list id="lidelem4x71">
+							<item>
+								<label>•</label>
+								<para> 200-400 mg/day for 1-2 wk (candidiasis), 6 wk (other infections)</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x78">
+					<label>•</label>
+					<sec_title>Child ≥2 yr<route> PO</route></sec_title>
+					<para>
+						<list id="lidelem4x78">
+							<item>
+								<label>•</label>
+								<para> 3.3-6.6 mg/kg/day as a single daily dose</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x82">
+					<section type="none" id="sidelem4x83">
+						<sec_title>Prostate cancer (unlabeled)</sec_title>
+						<section type="none" id="sidelem4x91">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x91">
+									<item>
+										<label>•</label>
+										<para> 400 mg tid</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="2" status="active">
+			<mono_name>ketoconazole (topical)</mono_name>
+			<info>
+				<pronunciation>(kee-toe-koe′na-zole)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x1005">Extina</tradename>
+					<tradename id="tnidelem4x1004">
+						<country code="CAN">Ketoderm</country>
+					</tradename>
+					<tradename id="tnidelem4x1003">Ketozole</tradename>
+					<tradename id="tnidelem4x1002">Nizoral</tradename>
+					<tradename id="tnidelem4x1001">Nizoral A-D</tradename>
+					<tradename id="tnidelem4x1000">Xolegel</tradename>
+				</tradenames>
+				<class type="func"> Topical antifungal</class>
+				<class type="chem"> Imidazole derivative</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x113">
+				<sec_title>Action:</sec_title>
+				<para>Antifungal activity results from altering cell membrane permeability</para>
+			</section>
+			<section type="uses" id="sidelem4x118">
+				<sec_title>Uses:</sec_title>
+				<para>Seborrheic dermatitis (immunocompromised), tinea corporis, cruris, pedis, versicolor, dandruff</para>
+			</section>
+			<section type="contra" id="sidelem4x123">
+				<sec_title>Contraindications:</sec_title>
+				<para>Hypersensitivity, sulfite allergy</para>
+				<section type="none" id="sidelem4x128">
+					<section type="none" id="sidelem4x129">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x134">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x137">
+					<section type="none" id="sidelem4x138">
+						<sec_title>Seborrheic dermatitis:</sec_title>
+						<section type="none" id="sidelem4x146">
+							<label>•</label>
+							<sec_title>Adult/child ≥12 yr<route> TOP FOAM</route></sec_title>
+							<para>
+								<list id="lidelem4x146">
+									<item>
+										<label>•</label>
+										<para> apply to affected areas bid × 4 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x153">
+							<label>•</label>
+							<sec_title>
+								<route>GEL</route>
+							</sec_title>
+							<para>
+								<list id="lidelem4x153">
+									<item>
+										<label>•</label>
+										<para> apply to affected areas daily × 2 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x157">
+						<sec_title>Tinea corporis, cruris, pedis, versicolor</sec_title>
+						<section type="none" id="sidelem4x165">
+							<label>•</label>
+							<sec_title>Adult<route> TOP</route></sec_title>
+							<para>
+								<list id="lidelem4x165">
+									<item>
+										<label>•</label>
+										<para> cover areas daily × 2 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x169">
+						<sec_title>Dandruff:</sec_title>
+						<section type="none" id="sidelem4x177">
+							<label>•</label>
+							<sec_title>Adult<route> SHAMPOO</route></sec_title>
+							<para>
+								<list id="lidelem4x177">
+									<item>
+										<label>•</label>
+										<para> wet hair, lather, massage for 1 min, rinse, repeat 2×/wk spaced by 3 days, for up to 8 wk, then as needed</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x181">
+						<sec_title>Available forms:</sec_title>
+						<para> Topical gel, foam, cream 2%; shampoo 1%, 2%</para>
+					</section>
+					<section type="none" id="sidelem4x186">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x189">
+							<sec_title>Topical route</sec_title>
+							<para>
+								<list id="lidelem4x194">
+									<item>
+										<label>•</label>
+										<para>For external use only; do not use skin products near the eyes, nose, or mouth, wash hands before and after use</para>
+									</item>
+								</list>
+							</para>
+							<section type="none" id="sidelem4x202">
+								<label>•</label>
+								<sec_title>Cream/lotion</sec_title>
+								<para>
+									<list id="lidelem4x202">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Cream/lotion:</emphasis> Apply to the cleansed affected area, massage gently into affected areas, do not use on skin that is broken or irritated</para>
+										</item>
+									</list>
+								</para>
+							</section>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x206">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x209">
+					<section type="none" id="sidelem4x210">
+						<sec_title>INTEG:</sec_title>
+						<para> Irritation, stinging, pustules, pruritus</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x215">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x218">
+					<section type="none" id="sidelem4x219">
+						<sec_title>Assess allergic reaction:</sec_title>
+						<para>
+							<list id="lidelem4x224">
+								<item>
+									<label>•</label>
+									<para>Assess for hypersensitivity, product might need to be discontinued</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x230">
+								<item>
+									<para>
+										<emphasis alert="nurse">Assess for sulfite allergy; may be life-threatening</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x235">
+							<sec_title>Evaluate:</sec_title>
+							<para>
+								<list id="lidelem4x239">
+									<item>
+										<label>•</label>
+										<para>Decreased itching scaling</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x245">
+						<sec_title>Teach patient/family:</sec_title>
+						<section type="none" id="sidelem4x248">
+							<sec_title>Topical route</sec_title>
+							<para>
+								<list id="lidelem4x253">
+									<item>
+										<label>•</label>
+										<para>These products are not for intravaginal therapy and are for external use only; do not use skin products near the eyes, nose, or mouth; wash hands before and after use; do not wash affected area for ≥3 hr after application</para>
+									</item>
+								</list>
+							</para>
+							<section type="none" id="sidelem4x263">
+								<label>•</label>
+								<sec_title>Cream/Ointment/Lotion</sec_title>
+								<para>
+									<list id="lidelem4x263">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Cream/Ointment/Lotion:</emphasis> apply a thin film to the cleansed affected area, massage gently</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<section type="none" id="sidelem4x270">
+								<label>•</label>
+								<sec_title>Foam Formulations</sec_title>
+								<para>
+									<list id="lidelem4x270">
+										<item>
+											<label>•</label>
+											<para>
+												<emphasis style="bold">Foam Formulations:</emphasis> do not dispense foam directly onto hands or face; the warmth of the skin will cause the foam to melt; dispense desired amount directly into the cap or onto a cool surface; make sure enough foam is dispensed to cover the affected area(s); if the can feels warm or the foam seems runny, run the can under cold water; to apply, pick up small amounts of the foam with the fingertips and gently massage into the affected areas until the foam disappears</para>
+										</item>
+									</list>
+								</para>
+							</section>
+							<para>
+								<list id="lidelem4x274">
+									<item>
+										<label>•</label>
+										<para>To continue for prescribed time, tinea corporis/cruris ≥2 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="3" status="active">
+			<mono_name>ketoprofen (<emphasis style="smallcaps">otc</emphasis>, Rx)</mono_name>
+			<info>
+				<pronunciation>(ke-toe-proe′fen)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x2870">
+						<country code="CAN">Apo-Keto </country>
+					</tradename>
+				</tradenames>
+				<class type="func"> Nonsteroidal antiinflammatory product (NSAID), antirheumatic</class>
+				<class type="chem"> Propionic acid derivative</class>
+				<class type="preg">Pregnancy category <preg cat="D">D</preg> <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x299">
+				<sec_title>Action:</sec_title>
+				<para>Inhibits COX-1, COX-2; analgesic, antiinflammatory, antipyretic</para>
+			</section>
+			<section type="uses" id="sidelem4x304">
+				<sec_title>Uses:</sec_title>
+				<para>Mild to moderate pain, osteoarthritis, rheumatoid arthritis, dysmenorrhea; OTC relief of minor aches, pains</para>
+				<section type="none" id="sidelem4x309">
+					<section type="none" id="sidelem4x310">
+						<sec_title>Unlabeled uses:</sec_title>
+						<para> Ankylosing spondylitis, bone pain, gouty arthritis</para>
+					</section>
+				</section>
+			</section>
+			<section type="contra" id="sidelem4x315">
+				<sec_title>Contraindications:</sec_title>
+				<para>Pregnancy (<preg cat="D">D</preg>) 2nd/3rd trimester, hypersensitivity to this product, NSAIDs, salicylates</para>
+				<para>
+					<bbw>Perioperative pain with CABG</bbw>
+				</para>
+				<section type="none" id="sidelem4x330">
+					<section type="none" id="sidelem4x331">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>) 1st trimester, breastfeeding, children, geriatric patients, bleeding, GI/cardiac disorders, hypersensitivity to other antiinflammatory agents; asthma, severe renal/hepatic disease, ulcer disease</para>
+						<para>
+							<bbw>GI bleeding, MI, stroke</bbw>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x347">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x350">
+					<section type="none" id="sidelem4x351">
+						<sec_title>Antiinflammatory</sec_title>
+						<section type="none" id="sidelem4x359">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x359">
+									<item>
+										<label>•</label>
+										<para> 50 mg qid or 75 mg tid, max 300 mg/day or  200 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x366">
+						<sec_title>Analgesic</sec_title>
+						<section type="none" id="sidelem4x374">
+							<label>•</label>
+							<sec_title>Adult<route> PO</route></sec_title>
+							<para>
+								<list id="lidelem4x374">
+									<item>
+										<label>•</label>
+										<para> 25-50 mg q6-8hr, max 300 mg/day</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x378">
+						<sec_title>Available forms:</sec_title>
+						<para> Caps 50, 75 mg; ext rel cap 200 mg</para>
+					</section>
+					<section type="none" id="sidelem4x383">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x387">
+								<item>
+									<label>•</label>
+									<para>Do not break, crush, or chew ext rel caps</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Store at room temperature</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Give with antacids, milk, or food for GI upset</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x403">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x406">
+					<section type="none" id="sidelem4x407">
+						<sec_title>CNS:</sec_title>
+						<para> Dizziness, drowsiness, fatigue, confusion, insomnia, depression, headache</para>
+					</section>
+					<section type="none" id="sidelem4x412">
+						<sec_title>CV:</sec_title>
+						<para> Tachycardia, peripheral edema, palpitations, hypertension, <emphasis style="bold">CV thrombotic events, MI, stroke</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x419">
+						<sec_title>EENT:</sec_title>
+						<para> Tinnitus, hearing loss, blurred vision</para>
+					</section>
+					<section type="none" id="sidelem4x424">
+						<sec_title>GI:</sec_title>
+						<para> <emphasis style="italic">Nausea, anorexia, vomiting, diarrhea,</emphasis> jaundice, <emphasis style="bold">hepatitis,</emphasis> constipation, flatulence, cramps, dry mouth, peptic ulcer, <emphasis style="bold">GI bleeding</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x437">
+						<sec_title>GU:</sec_title>
+						<para> <emphasis style="bold">Nephrotoxicity: dysuria, hematuria, azotemia</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x444">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Blood dyscrasias</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x451">
+						<sec_title>INTEG:</sec_title>
+						<para> Purpura, rash, pruritus</para>
+					</section>
+					<section type="none" id="sidelem4x456">
+						<sec_title>SYST:</sec_title>
+						<para> <emphasis style="bold">Anaphylaxis</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x463">
+				<sec_title>Pharmacokinetics</sec_title>
+				<section type="none" id="sidelem4x466">
+					<section type="none" id="sidelem4x467">
+						<sec_title>PO:</sec_title>
+						<para> Peak 1.2 hr; ext rel 6.8 hr, half-life 2-4 hr; 5.4 hr ext rel, metabolized in liver, urine (metabolites), breast milk; 99% plasma protein binding</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x472">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis alert="lifethreat">Increase: toxicity—cycloSPORINE, lithium, methotrexate, phenytoin, alcohol, cidofovir</emphasis>
+				</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> bleeding risk—anticoagulants, clopidogrel, eptifibatide, thrombolytics, ticlopidine, tirofiban, SSRIs</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> ketoprofen levels—aspirin, probenecid</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> adverse GI reactions—aspirin, corticosteroids, NSAIDs, alcohol</para>
+				<para>
+					<emphasis alert="lifethreat">Increase: hematologic toxicity, antineoplastics</emphasis>
+				</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> effect of diuretics, antihypertensives</para>
+				<section type="none" id="sidelem4x497">
+					<section type="none" id="sidelem4x498">
+						<sec_title>Drug/Herb</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> bleeding risk—feverfew, garlic, ginger, ginkgo</para>
+					</section>
+					<section type="none" id="sidelem4x505">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> BUN, alk phos, AST, ALT, LDH, creatinine, bleeding time</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x512">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x515">
+					<section type="none" id="sidelem4x516">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x524">
+							<label>•</label>
+							<sec_title>Pain</sec_title>
+							<para>
+								<list id="lidelem4x524">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Pain:</emphasis> type, location, intensity, ROM before and 1-2 hr after treatment</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x528">
+								<item>
+									<label>•</label>
+									<para>Renal, hepatic, blood studies: BUN, creatinine, AST, ALT, Hgb before treatment, periodically thereafter</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x534">
+								<item>
+									<para>
+										<emphasis alert="nurse">Aspirin sensitivity, asthma; these patients may be more likely to develop hypersensitivity to NSAIDs</emphasis>
+									</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x539">
+								<item>
+									<label>•</label>
+									<para>Audiometric, ophthalmic exam before, during, after treatment</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x544">
+								<item>
+									<label>•</label>
+									<para>For eye/ear problems: blurred vision, tinnitus; may indicate toxicity
+<bbw>GI bleeding: blood in sputum, emesis, stools</bbw>
+
+<bbw>CV thrombotic events: MI, stroke</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x567">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x571">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased pain, stiffness, swelling in joints; ability to move more easily; decreased fever</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x577">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x582">
+								<item>
+									<label>•</label>
+									<para>To report blurred vision, ringing, roaring in ears; may indicate toxicity</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x587">
+								<item>
+									<label>•</label>
+									<para>To avoid driving, other hazardous activities if dizziness, drowsiness occurs, especially in geriatric patients</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x595">
+							<label>•</label>
+							<sec_title>
+								<route>To report immediately change in urine pattern, increased weight, edema, increased pain in joints, fever, blood in urine (indicate nephrotoxicity); rash, itching, blurred vision, ringing in ears, flulike symptoms; blood in urine, vomit, or stools (bleeding)</route>
+							</sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x598">
+								<item>
+									<label>•</label>
+									<para>That therapeutic effects may take up to 1 mo; to take with 8 oz water; to sit upright for <emphasis style="sup">1</emphasis>/<emphasis style="inf">2</emphasis> hr after administration to prevent GI irritation, not to crush, chew ext rel products</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x609">
+								<item>
+									<label>•</label>
+									<para>To avoid aspirin, alcohol, corticosteroids, acetaminophen, other medications, supplements unless approved by prescriber</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x614">
+								<item>
+									<label>•</label>
+									<para>To wear sunscreen, protective clothing to prevent photosensitivity</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x619">
+								<item>
+									<label>•</label>
+									<para>To report product use to all health care providers</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x627">
+							<label>•</label>
+							<sec_title>
+								<route>To report planned or suspected pregnancy (D) (2nd/3rd trimester), (C) (1st trimester); avoid breastfeeding</route>
+							</sec_title>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="4" status="active">
+			<mono_name>ketorolac (ophthalmic)</mono_name>
+			<info>
+				<pronunciation>(kee′toe-role-ak)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x6352">Acular</tradename>
+					<tradename id="tnidelem4x6351">Acular LS</tradename>
+					<tradename id="tnidelem4x6350">Acuvail</tradename>
+				</tradenames>
+				<class type="func"> Antiinflammatory (ophthalmic)</class>
+				<class type="chem"> Nonsteroidal antiinflammatory drug</class>
+			</info>
+			<section type="actions" id="sidelem4x645">
+				<sec_title>Action:</sec_title>
+				<para>Inhibits miosis by inhibiting the biosynthesis of ocular prostaglandins; prostaglandins play a role in the miotic response produced during ocular surgery by constricting the iris sphincter independently of cholinergic mechanisms</para>
+			</section>
+			<section type="uses" id="sidelem4x650">
+				<sec_title>Uses:</sec_title>
+				<para>Pain and inflammation after cataract surgery, refractive surgery, seasonal allergic conjunctivitis</para>
+			</section>
+			<section type="contra" id="sidelem4x656">
+				<sec_title>Contraindications:</sec_title>
+				<para>Hypersensitivity to this product, NSAIDs, salicylates</para>
+				<section type="none" id="sidelem4x661">
+					<section type="none" id="sidelem4x662">
+						<sec_title>Precautions:</sec_title>
+						<para> Bleeding disorders, complicated ocular surgery, corneal denervation, diabetes mellitus, rheumatoid arthritis, dry eye syndrome, pregnancy (C), breastfeeding, children, contact lens</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x667">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x670">
+					<section type="none" id="sidelem4x671">
+						<sec_title>Seasonal allergic conjunctivitis (Acular)</sec_title>
+						<section type="none" id="sidelem4x679">
+							<label>•</label>
+							<sec_title>Adult/child ≥2 yr</sec_title>
+							<para>
+								<list id="lidelem4x679">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adult/child ≥2 yr:</emphasis> Instill 1 drop into affected eye qid</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x683">
+						<sec_title>Inflammation after cataract extraction (Acular)</sec_title>
+						<section type="none" id="sidelem4x691">
+							<label>•</label>
+							<sec_title>Adult<route> OPHTH</route></sec_title>
+							<para>
+								<list id="lidelem4x691">
+									<item>
+										<label>•</label>
+										<para> 1 drop in affected eye qid beginning 24 hr after surgery × 2 wk</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x695">
+						<sec_title>Corneal refracture surgery, pain, burning (Acular LS)</sec_title>
+						<section type="none" id="sidelem4x703">
+							<label>•</label>
+							<sec_title>Adult<route> OPHTH</route></sec_title>
+							<para>
+								<list id="lidelem4x703">
+									<item>
+										<label>•</label>
+										<para> 1 drop in affected eye qid × ≤4 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x707">
+						<sec_title>Incision refraction surgery, pain, photophobia (Acular PF)</sec_title>
+						<section type="none" id="sidelem4x715">
+							<label>•</label>
+							<sec_title>Adult<route> OPHTH</route></sec_title>
+							<para>
+								<list id="lidelem4x715">
+									<item>
+										<label>•</label>
+										<para> 1 drop qid in affected eye × 3 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x719">
+						<sec_title>Cataract surgery, pain, inflammation (Acuvail)</sec_title>
+						<section type="none" id="sidelem4x727">
+							<label>•</label>
+							<sec_title>Adult<route> OPHTH</route></sec_title>
+							<para>
+								<list id="lidelem4x727">
+									<item>
+										<label>•</label>
+										<para> 1 drop bid in affected eye, starting 1 day before surgery, on the day of surgery, × 2 wk after surgery</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x731">
+						<sec_title>Available forms:</sec_title>
+						<para> Ophthalmic solution Acular (0.5%), Acular LS (0.4%), Acuvail (0.45%)</para>
+					</section>
+					<section type="none" id="sidelem4x736">
+						<sec_title>Administer:</sec_title>
+						<para>
+							<list id="lidelem4x740">
+								<item>
+									<label>•</label>
+									<para>Apply topically to the eye, separate by ≥5 min when using with other ophthalmics</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Remove contact lenses before instillation of solution</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Instruct patient on proper instillation of eye solution</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Do not touch the tip of the dropper to the eye, fingertips, or other surface</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Do not share bottle with other patients</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x766">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x769">
+					<section type="none" id="sidelem4x770">
+						<sec_title>CNS:</sec_title>
+						<para> Headache</para>
+					</section>
+					<section type="none" id="sidelem4x775">
+						<sec_title>EENT:</sec_title>
+						<para> Abnormal sensation in eye, conjunctival hyperemia, ocular irritation, ocular pain, ocular pruritus, conjunctival hyperemia, iritis, keratitis, blurred vision, transient burning/stinging</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x780">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x783">
+					<section type="none" id="sidelem4x784">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x788">
+								<item>
+									<label>•</label>
+									<para>Eyes: for pain, inflammation, burning, redness after cataract surgery</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x794">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x798">
+								<item>
+									<label>•</label>
+									<para>Decreased pain and inflammation after cataract surgery, refractive surgery, seasonal allergic conjunctivitis</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x804">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x808">
+								<item>
+									<label>•</label>
+									<para>To apply topically to the eye</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>To remove contact lenses before instillation of solution</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Proper instillation of eye solution</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Not to touch the tip of the dropper to the eye, fingertips, or other surface</para>
+								</item>
+								<item>
+									<label>•</label>
+									<para>Not to share bottle with other patients</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="5" status="active">
+			<mono_name>ketorolac (systemic, nasal) (Rx)</mono_name>
+			<info>
+				<pronunciation>(kee-toe′role-ak)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x8391">
+						<country code="CAN">Toradol </country>
+					</tradename>
+					<tradename id="tnidelem4x8390">Sprix</tradename>
+				</tradenames>
+				<class type="func"> Nonsteroidal antiinflammatory/nonopioid analgesic</class>
+				<class type="chem"> Acetic acid</class>
+				<class type="preg">Pregnancy category <preg cat="D">D</preg> <preg cat="C">C</preg></class>
+			</info>
+			<section type="confusion" id="sidelem4x852">
+				<para>
+					<confusion>
+						<tradename id="tnidelem4x8520">Ketorolac</tradename>
+						<drug type="generic" refid="idelem4x8520">Ketalar</drug>
+					</confusion>
+				</para>
+			</section>
+			<section type="actions" id="sidelem4x856">
+				<sec_title>Action:</sec_title>
+				<para>Inhibits prostaglandin synthesis by decreasing an enzyme needed for biosynthesis; analgesic, antiinflammatory, antipyretic effects</para>
+			</section>
+			<section type="uses" id="sidelem4x861">
+				<sec_title>Uses:</sec_title>
+				<para>Mild to moderate pain (short term)</para>
+			</section>
+			<section type="contra" id="sidelem4x866">
+				<sec_title>Contraindications:</sec_title>
+				<para>Pregnancy (<preg cat="D">D</preg>) 3rd trimester, hypersensitivity to this product, salicylates, asthma, hepatic disease, peptic ulcer disease, CV bleeding, C-section intracranial bleeding</para>
+				<para>
+					<bbw>Severe renal disease, L&amp;D, perioperative pain in CABG, before major surgery, epidural/intrathecal administration, GI bleeding, hypovolemia, NSAID hypersensitivity</bbw>
+				</para>
+				<section type="none" id="sidelem4x882">
+					<section type="none" id="sidelem4x883">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, GI/cardiac disorders, hypersensitivity to other antiinflammatory agents, CCr &lt;25 ml/min</para>
+						<para>
+							<bbw>Children, geriatric patients, bleeding, MI, stroke</bbw>
+						</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x898">
+				<sec_title>Dosage and routes﻿</sec_title>
+				<section type="none" id="sidelem4x901">
+					<sec_title>For the short-term treatment of moderate pain</sec_title>
+					<section type="none" id="sidelem4x904">
+						<sec_title>Intranasal dosage:</sec_title>
+						<section type="none" id="sidelem4x912">
+							<label>•</label>
+							<sec_title>Adults ≥50 kg with normal renal function</sec_title>
+							<para>
+								<list id="lidelem4x912">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults ≥50 kg with normal renal function:</emphasis> 1 spray (15.75 mg/spray) in each nostril (total dose of 31.5 mg) q6-8hr; max 4 doses (8 sprays/126 mg)daily; total systemic therapy max 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x919">
+							<label>•</label>
+							<sec_title>Adults &lt;50 kg or who have renal impairment, and geriatric patients</sec_title>
+							<para>
+								<list id="lidelem4x919">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults &lt;50 kg or who have renal impairment, and geriatric patients:</emphasis> 1 spray (15.75 mg/spray) in one nostril q6-8hr max 4 doses (4 sprays/63 mg)daily; total systemic therapy max 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+				<section type="none" id="sidelem4x923">
+					<sec_title>For the short-term treatment of moderately severe pain</sec_title>
+					<section type="none" id="sidelem4x926">
+						<sec_title>IM/IV (single-dose treatment):</sec_title>
+						<section type="none" id="sidelem4x934">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and ≥50 kg and have normal renal function</sec_title>
+							<para>
+								<list id="lidelem4x934">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and ≥50 kg and have normal renal function:</emphasis> 60 mg IM or 30 mg IV</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x941">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and &lt;50 kg or have renal impairment, and geriatric patients</sec_title>
+							<para>
+								<list id="lidelem4x941">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and &lt;50 kg or have renal impairment, and geriatric patients:</emphasis> 30 mg IM or 15 mg IV</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x948">
+							<label>•</label>
+							<sec_title>Child ≥2 yr/adolescents ≤16 yr</sec_title>
+							<para>
+								<list id="lidelem4x948">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Child ≥2 yr/adolescents ≤16 yr:</emphasis> 1 mg/kg IM; max 30 mg or 0.5 mg/kg IV to a max of 15 mg</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x952">
+						<sec_title>IM/IV (multiple-dose treatment):</sec_title>
+						<section type="none" id="sidelem4x960">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and weigh ≥50 kg and have normal renal function</sec_title>
+							<para>
+								<list id="lidelem4x960">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and weigh ≥50 kg and have normal renal function:</emphasis> 30 mg IM/IV q6hr; total systemic therapy max 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x967">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and weigh &lt;50 kg or have renal impairment, and geriatric patients</sec_title>
+							<para>
+								<list id="lidelem4x967">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and weigh &lt;50 kg or have renal impairment, and geriatric patients:</emphasis> 15 mg IM/IV q6hr; total systemic therapy max 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x971">
+						<sec_title>PO (continuation therapy from IM/IV only):</sec_title>
+						<section type="none" id="sidelem4x979">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and weigh ≥50 kg and have normal renal function</sec_title>
+							<para>
+								<list id="lidelem4x979">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and weigh ≥50 kg and have normal renal function:</emphasis> 20 mg initially following IV/IM therapy, then 10 mg q4-6hr; max 40 mg daily; total systemic therapy max 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x986">
+							<label>•</label>
+							<sec_title>Adults/adolescents 17 yr and weigh &lt;50 kg or have renal impairment, and geriatric patients</sec_title>
+							<para>
+								<list id="lidelem4x986">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Adults/adolescents 17 yr and weigh &lt;50 kg or have renal impairment, and geriatric patients:</emphasis> 10 mg initially following IV/IM therapy, then 10 mg q4-6hr; max 40 mg daily; total systemic therapy should not exceed 5 days</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x990">
+						<sec_title>Renal dose</sec_title>
+						<section type="none" id="sidelem4x998">
+							<label>•</label>
+							<sec_title>
+								<route>Do not use in advanced renal disease</route>
+							</sec_title>
+						</section>
+					</section>
+					<section type="none" id="sidelem4x1001">
+						<sec_title>Available forms:</sec_title>
+						<para> Inj 15, 30 mg/ml (prefilled syringes), 60 mg/2 ml; tab 10 mg; nasal spray 15.75 mg/spray</para>
+					</section>
+					<section type="none" id="sidelem4x1006">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x1014">
+							<label>•</label>
+							<sec_title>
+								<route>Not to exceed 5 days</route>
+							</sec_title>
+						</section>
+						<para>
+							<list id="lidelem4x1017">
+								<item>
+									<label>•</label>
+									<para>Store at room temperature, protect from light</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1022">
+							<sec_title>IM route</sec_title>
+							<para>
+								<list id="lidelem4x1026">
+									<item>
+										<label>•</label>
+										<para>IM inj deeply and slowly in large muscle mass</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1032">
+							<sec_title>Nasal route</sec_title>
+							<para>
+								<list id="lidelem4x1036">
+									<item>
+										<label>•</label>
+										<para>Prime pump before using for the first time, point away from person/pets, pump activator 5 times, no need to reprime</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>For single-use only, discard 24 hr after opening if not used</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Do not share with others</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Have patient blow nose, sit upright to spray</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1057">
+							<sec_title>IV route</sec_title>
+							<para>
+								<list id="lidelem4x1061">
+									<item>
+										<label>•</label>
+										<para>Give undiluted over ≥15 sec</para>
+									</item>
+								</list>
+							</para>
+							<para>
+								<emphasis style="bold">Solution compatibility:</emphasis> D<emphasis style="sup">5</emphasis>W, 0.9% NaCl, LR, D<emphasis style="sup">5</emphasis>, Plasma-Lyte A</para>
+							<para>
+								<emphasis style="bold">Syringe compatibilities:</emphasis> SUFentanil</para>
+							<para>
+								<emphasis style="bold">Y-site compatibilities:</emphasis> Cisatracurium, remifentanil, SUFentanil</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x1085">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x1088">
+					<section type="none" id="sidelem4x1089">
+						<sec_title>CNS:</sec_title>
+						<para> Dizziness, <emphasis style="italic">drowsiness,</emphasis> tremors, <emphasis style="bold">seizures,</emphasis> headache</para>
+					</section>
+					<section type="none" id="sidelem4x1100">
+						<sec_title>CV:</sec_title>
+						<para> Hypertension, pallor, edema, <emphasis style="bold">CV thrombotic events, MI, stroke</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1107">
+						<sec_title>EENT:</sec_title>
+						<para> Tinnitus, hearing loss, blurred vision</para>
+					</section>
+					<section type="none" id="sidelem4x1113">
+						<sec_title>GI:</sec_title>
+						<para> Nausea, anorexia, vomiting, diarrhea, constipation, flatulence, cramps, dry mouth, peptic ulcer, <emphasis style="bold">GI bleeding, perforation,</emphasis> taste change, <emphasis style="bold">hepatic failure</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1123">
+						<sec_title>GU:</sec_title>
+						<para> <emphasis style="bold">Nephrotoxicity: dysuria, hematuria, oliguria</emphasis></para>
+					</section>
+					<section type="none" id="sidelem4x1130">
+						<sec_title>HEMA:</sec_title>
+						<para> <emphasis style="bold">Blood dyscrasias,</emphasis> prolonged bleeding</para>
+					</section>
+					<section type="none" id="sidelem4x1138">
+						<sec_title>INTEG:</sec_title>
+						<para> Purpura, rash, pruritus, sweating, <emphasis style="bold">angioedema, Stevens-Johnson syndrome, toxic epidermal necrolysis</emphasis></para>
+					</section>
+				</section>
+			</section>
+			<section type="kinetics" id="sidelem4x1145">
+				<sec_title>Pharmacokinetics</sec_title>
+				<para>Half-life 6 hr, enters breast milk, metabolized by liver, excreted by kidneys</para>
+				<section type="none" id="sidelem4x1150">
+					<section type="none" id="sidelem4x1151">
+						<sec_title>PO:</sec_title>
+						<para> Onset 30-60 min, duration 4-6 hr</para>
+					</section>
+					<section type="none" id="sidelem4x1156">
+						<sec_title>IM:</sec_title>
+						<para> Onset 30 min, duration 4-6 hr</para>
+					</section>
+				</section>
+			</section>
+			<section type="interactions" id="sidelem4x1161">
+				<sec_title>Interactions</sec_title>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> toxicity—methotrexate, lithium, cycloSPORINE, pentoxifylline, probenecid, cidofovir</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> bleeding risk—anticoagulants, clopidogrel, eptifibatide, salicylates, ticlopidine, tirofiban, thrombolytics, SSRIs, SNRIs</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> renal impairment—ACE inhibitors</para>
+				<para>
+					<emphasis alert="nurse">Increase: ketorolac levels—aspirin, other NSAIDs; contraindicated</emphasis>
+				</para>
+				<para>
+					<emphasis style="bold">Increase:</emphasis> GI effects—corticosteroids, alcohol, aspirin, NSAIDs</para>
+				<para>
+					<emphasis style="bold">Decrease:</emphasis> effects—antihypertensives, diuretics</para>
+				<section type="none" id="sidelem4x1189">
+					<section type="none" id="sidelem4x1190">
+						<sec_title>Drug/Lab Test</sec_title>
+						<para>
+							<emphasis style="bold">Increase:</emphasis> AST, ALT, LDH, bleeding time</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x1197">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x1200">
+					<section type="none" id="sidelem4x1201">
+						<sec_title>Assess:</sec_title>
+						<section type="none" id="sidelem4x1209">
+							<label>•</label>
+							<sec_title>Aspirin sensitivity, asthma</sec_title>
+							<para>
+								<list id="lidelem4x1209">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Aspirin sensitivity, asthma:</emphasis> patients may be more likely to develop hypersensitivity to NSAIDs; monitor for hypersensitivity</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<section type="none" id="sidelem4x1216">
+							<label>•</label>
+							<sec_title>Pain</sec_title>
+							<para>
+								<list id="lidelem4x1216">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Pain:</emphasis> type, location, intensity, ROM before and 1 hr after treatment
+<bbw>Renal, hepatic, blood studies: BUN, creatinine, AST, ALT, Hgb before treatment, periodically thereafter; check for dehydration</bbw>
+
+<bbw>Bleeding times; check for bruising, bleeding, occult blood in urine</bbw>
+
+<bbw>Do not use epidurally, intrathecally, alcohol is present in the solution</bbw>
+</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1247">
+								<item>
+									<label>•</label>
+									<para>Eye/ear problems: blurred vision, tinnitus (may indicate toxicity)</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1253">
+								<item>
+									<para>
+										<emphasis alert="nurse">Hepatic dysfunction: jaundice, yellow sclera and skin, clay-colored stools</emphasis>
+<bbw>CV thrombotic events: MI, stroke, do not use in perioperative pain in CABG</bbw>
+</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1267">
+								<item>
+									<label>•</label>
+									<para>Audiometric, ophthalmic exam before, during, after treatment</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1272">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x1276">
+								<item>
+									<label>•</label>
+									<para>Therapeutic response: decreased pain, stiffness, swelling in joints, ability to move more easily</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1282">
+						<sec_title>Teach patient/family:</sec_title>
+						<para>
+							<list id="lidelem4x1287">
+								<item>
+									<label>•</label>
+									<para>To report blurred vision, ringing/roaring in ears (may indicate toxicity)</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1295">
+							<para>
+								<list id="lidelem4x1295">
+									<item>
+										<label>•</label>
+										<para>To avoid driving, other hazardous activities if dizziness or drowsiness occurs
+<bbw>To report change in urine pattern, weight increase, edema; pain increase in joints, fever, blood in urine (indicates nephrotoxicity); bruising, black tarry stools (indicates bleeding); <emphasis alert="lifethreat">pruritus, jaundice, nausea, right upper quadrant pain, abdominal pain (hepatotoxicity); to notify prescriber immediately</emphasis></bbw>
+</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1308">
+								<item>
+									<label>•</label>
+									<para>To avoid alcohol, salicylates, other NSAIDs</para>
+								</item>
+							</list>
+						</para>
+						<para>
+							<list id="lidelem4x1313">
+								<item>
+									<label>•</label>
+									<para>To report product use to all health care providers, not to use with other products unless approved by prescriber; use for ≤5 days</para>
+								</item>
+							</list>
+						</para>
+						<section type="none" id="sidelem4x1321">
+							<label>•</label>
+							<sec_title>Nasal</sec_title>
+							<para>
+								<list id="lidelem4x1321">
+									<item>
+										<label>•</label>
+										<para>
+											<emphasis style="bold">Nasal:</emphasis> to discard within 24 hr of opening; may cause irritation, may drink water after dose</para>
+									</item>
+								</list>
+							</para>
+						</section>
+						<para>
+							<list id="lidelem4x1325">
+								<item>
+									<label>•</label>
+									<para>To report if pregnancy is planned or suspected pregnancy (C) systemic; not to breastfeed</para>
+								</item>
+							</list>
+						</para>
+					</section>
+				</section>
+			</section>
+		</monograph>
+<monograph id="6" status="active">
+			<mono_name>ketotifen (ophthalmic)</mono_name>
+			<info>
+				<pronunciation>(kee-toe-tye′fen)</pronunciation>
+				<tradenames>
+					<tradename id="tnidelem4x13363">Alaway</tradename>
+					<tradename id="tnidelem4x13362">Zaditor</tradename>
+					<tradename id="tnidelem4x13361">ZyrTEC Itchy Eye</tradename>
+					<tradename id="tnidelem4x13360">Claritin Eye</tradename>
+				</tradenames>
+				<class type="func"> Antihistamine (ophthalmic)</class>
+				<class type="chem"> Histamine 1 receptor antagonist/mast cell stabilizer</class>
+				<class type="preg">Pregnancy category <preg cat="C">C</preg></class>
+			</info>
+			<section type="actions" id="sidelem4x1346">
+				<sec_title>Action:</sec_title>
+				<para>A topically active, direct H<emphasis style="sup">1</emphasis>- receptor antagonist and mast cell stabilizer; by reducing these inflammatory mediators, relieves the ocular pruritus associated with allergic conjunctivitis</para>
+			</section>
+			<section type="uses" id="sidelem4x1354">
+				<sec_title>Uses:</sec_title>
+				<para>For the temporary relief of ocular pruritus due to ragweed, pollen, grass, animal hair, animal dander</para>
+			</section>
+			<section type="contra" id="sidelem4x1359">
+				<sec_title>Contraindications:</sec_title>
+				<para>Hypersensitivity</para>
+				<section type="none" id="sidelem4x1364">
+					<section type="none" id="sidelem4x1365">
+						<sec_title>Precautions:</sec_title>
+						<para> Pregnancy (<preg cat="C">C</preg>), breastfeeding, children, contact lenses</para>
+					</section>
+				</section>
+			</section>
+			<section type="doses" id="sidelem4x1370">
+				<sec_title>Dosage and routes</sec_title>
+				<section type="none" id="sidelem4x1378">
+					<label>•</label>
+					<sec_title>Adult/child ≥3 yr</sec_title>
+					<para>
+						<list id="lidelem4x1378">
+							<item>
+								<label>•</label>
+								<para>
+									<emphasis style="bold">Adult/child ≥3 yr:</emphasis> OPHTH instill 1 drop in affected eye(s) every 8-12 hr</para>
+							</item>
+						</list>
+					</para>
+				</section>
+				<section type="none" id="sidelem4x1382">
+					<section type="none" id="sidelem4x1383">
+						<sec_title>Available forms:</sec_title>
+						<para> Ophthalmic solution 0.025%</para>
+					</section>
+					<section type="none" id="sidelem4x1388">
+						<sec_title>Administer:</sec_title>
+						<section type="none" id="sidelem4x1391">
+							<sec_title>Ophthalmic route</sec_title>
+							<para>
+								<list id="lidelem4x1395">
+									<item>
+										<label>•</label>
+										<para>For topical ophthalmic use only</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Wash hands before and after use; tilt the head back slightly and pull the lower eyelid down with the index finger; squeeze the prescribed number of drops into the conjunctival sac and gently close eyes for 1-2 min, do not blink</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Do not touch the tip of the dropper to the eye, fingertips, or other surface</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Wait ≥10 min after instilling the ophthalmic solution before inserting contact lenses; contact lenses should not be worn if eye is red</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Do not share ophthalmic drops with others</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section type="effects" id="sidelem4x1421">
+				<sec_title>Side effects</sec_title>
+				<section type="none" id="sidelem4x1424">
+					<section type="none" id="sidelem4x1425">
+						<sec_title>CNS:</sec_title>
+						<para> Headache</para>
+					</section>
+					<section type="none" id="sidelem4x1430">
+						<sec_title>EENT:</sec_title>
+						<para> Conjunctival hyperemia, rhinitis, allergic reactions, ocular irritation consisting of burning or stinging, conjunctivitis, eyelid disorder, flu syndrome, keratitis, lacrimation disorder, mydriasis, ocular discharge, ocular pain, pharyngitis, photophobia, pruritus, rash, xerophthalmia (dry eyes)</para>
+					</section>
+				</section>
+			</section>
+			<section type="considerations" id="sidelem4x1435">
+				<sec_title>Nursing considerations</sec_title>
+				<section type="none" id="sidelem4x1438">
+					<section type="none" id="sidelem4x1439">
+						<sec_title>Assess:</sec_title>
+						<para>
+							<list id="lidelem4x1443">
+								<item>
+									<label>•</label>
+									<para>Eyes: for itching, redness, use of soft or hard contact lens</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1449">
+						<sec_title>Evaluate:</sec_title>
+						<para>
+							<list id="lidelem4x1453">
+								<item>
+									<label>•</label>
+									<para>Absence of redness, itching in the eyes</para>
+								</item>
+							</list>
+						</para>
+					</section>
+					<section type="none" id="sidelem4x1459">
+						<sec_title>Teach patient/family:</sec_title>
+						<section type="none" id="sidelem4x1462">
+							<sec_title>Ophthalmic route</sec_title>
+							<para>
+								<list id="lidelem4x1466">
+									<item>
+										<label>•</label>
+										<para>That product is for topical ophthalmic use only</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>To wash hands before and after use; tilt the head back slightly and pull the lower eyelid down with the index finger; squeeze the prescribed number of drops into the conjunctival sac and gently close eyes for 1-2 min; not to blink</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Not to touch the tip of the dropper to the eye, fingertips, or other surface</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>To wait ≥10 min after instilling the ophthalmic solution before inserting contact lenses; contact lenses should not be worn if eye is red</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>Not to share ophthalmic drops with others</para>
+									</item>
+									<item>
+										<label>•</label>
+										<para>To remove contact lenses before use because the preservative benzalkonium chloride may be absorbed by soft contact lenses; that product should not be used to treat contact lens-related irritation</para>
+									</item>
+								</list>
+							</para>
+						</section>
+					</section>
+				</section>
+			</section>
+		</monograph>
+</alpha>
+</drug_guide>

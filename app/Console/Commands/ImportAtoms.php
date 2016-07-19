@@ -7,14 +7,14 @@ use DB;
 
 use App\Atom;
 
-class ImportXml extends Command
+class ImportAtoms extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:xml';
+    protected $signature = 'import:atoms';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class ImportXml extends Command
      * @return mixed
      */
     public function handle() {
-        $dataPath = base_path() . '/data/';
+        $dataPath = base_path() . '/data/atoms/';
         $files = scandir($dataPath);
         $files = array_slice($files, 2);
         foreach($files as $file) {
