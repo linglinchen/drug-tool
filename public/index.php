@@ -7,8 +7,6 @@
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
-include __DIR__.'/../app/Dbug.php';
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
