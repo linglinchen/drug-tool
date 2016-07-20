@@ -43,6 +43,24 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
+| Return options headers
+|--------------------------------------------------------------------------
+|
+| Laravel doesn't like options requests...
+|
+*/
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+header('Access-Control-Allow-Credentials: true');
+
+if(strtolower($_SERVER['REQUEST_METHOD']) == 'options') {
+	exit;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
 |
@@ -51,10 +69,5 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
-
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
-header('Access-Control-Allow-Credentials: true');
 
 return $app;
