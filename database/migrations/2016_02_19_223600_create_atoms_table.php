@@ -15,14 +15,14 @@ class CreateAtomsTable extends Migration
         Schema::create('atoms', function (Blueprint $table) {
             $table->increments('id');
             $table->string('entityId');
-            $table->string('moleculeId')->nullable();
+            $table->string('moleculeCode')->nullable();
             $table->string('title');
             $table->string('alphaTitle');
             $table->text('xml');
             $table->timestamps();
 
             $table->index('entityId');
-            $table->index('moleculeId');
+            $table->index('moleculeCode');
 
             $table->softDeletes();
         });

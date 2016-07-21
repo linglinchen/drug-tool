@@ -14,11 +14,11 @@ class CreateMoleculesTable extends Migration
     {
         Schema::create('molecules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('entityId');
+            $table->string('code');
             $table->string('title');
             $table->timestamps();
 
-            $table->index('entityId');
+            $table->index('code');
 
             $table->softDeletes();
         });
