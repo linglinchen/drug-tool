@@ -21,7 +21,7 @@ class ImportAtoms extends Command
      *
      * @var string
      */
-    protected $description = 'Import atoms from XML file(s) in the data/atoms directory';
+    protected $description = 'Import atoms from XML file(s) in the data/atoms directory. Do not run without importing or adding molecules first.';
 
     /**
      * Execute the console command.
