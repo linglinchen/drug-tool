@@ -45,9 +45,9 @@ class ImportAtoms extends Command
 
             if($alphas) {
                 foreach($alphas as $alpha) {
-                    preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $letter);
-                    $letter = $letter ? $letter[1] : null;
-                    self::importXMLChunk($alpha, $letter);
+                    preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $moleculeCode);
+                    $moleculeCode = $moleculeCode ? $moleculeCode[1] : null;
+                    self::importXMLChunk($alpha, $moleculeCode);
                 }
             }
             else {
@@ -58,7 +58,7 @@ class ImportAtoms extends Command
         echo "Done\n";
     }
 
-    public function importXMLChunk($xml, $letter = null) {
+    public function importXMLChunk($xml, $moleculeCode = null) {
         $atom = new Atom();
 
         //atom types must be in order of priority, or your data will be mangled
@@ -72,8 +72,6 @@ class ImportAtoms extends Command
                 'titleElement' => 'mono_name'
             ]
         ];
-
-        $letter = $letter ? $letter[0] : null;      //make sure the letter is sane
 
         foreach($atomTypes as $atomType) {
             $elementName = $atomType['elementName'];
@@ -93,7 +91,7 @@ class ImportAtoms extends Command
                     'entityId' => Atom::makeUID(),
                     'title' => $title,
                     'alphaTitle' => $alphaTitle,
-                    'letter' => $letter,
+                    'moleculeCode' => $moleculeCode,
                     'xml' => trim($atomString),
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp
