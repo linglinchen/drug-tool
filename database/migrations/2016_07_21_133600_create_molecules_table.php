@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAtomsTable extends Migration
+class CreateMoleculesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,17 +12,13 @@ class CreateAtomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('atoms', function (Blueprint $table) {
+        Schema::create('molecules', function (Blueprint $table) {
             $table->increments('id');
             $table->string('entityId');
-            $table->string('moleculeId')->nullable();
             $table->string('title');
-            $table->string('alphaTitle');
-            $table->text('xml');
             $table->timestamps();
 
             $table->index('entityId');
-            $table->index('moleculeId');
 
             $table->softDeletes();
         });
@@ -35,6 +31,6 @@ class CreateAtomsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('atoms');
+        Schema::drop('molecules');
     }
 }
