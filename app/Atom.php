@@ -18,20 +18,7 @@ class Atom extends Model {
 
     public function save(array $options = []) {
         $this->updateTitle();
-        $this->fixLetter();
         parent::save($options);
-    }
-
-    /*
-     * Force the letter field to be something sensible.
-     */
-    public function fixLetter() {
-        if($this->letter) {
-            $this->letter = strtolower(substr(trim($this->letter), 0, 1));
-        }
-        else {
-            $this->letter = null;
-        }
     }
 
     public function updateTitle() {

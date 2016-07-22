@@ -15,7 +15,7 @@ use App\ApiPayload;
 
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['letter', 'xml'];
+    protected $_allowedProperties = ['moleculeCode', 'blah', 'xml'];
 
     public function listAction() {
         $list = [];
@@ -23,12 +23,7 @@ class AtomController extends Controller
             ->orderBy('alphaTitle', 'asc')
             ->get();
         foreach($atoms as $atom) {
-            $firstChar = strtoupper($atom['letter']);
-            if(!isset($list[$firstChar])) {
-                $list[$firstChar] = [];
-            }
-
-            $list[$firstChar][] = [
+            $list[] = [
                 'entityId' => $atom->entityId,
                 'title' => $atom->title
             ];
@@ -38,11 +33,13 @@ class AtomController extends Controller
     }
 
     public function postAction(Request $request) {
+        $input = $request->all();
+
         $atom = new Atom();
         $atom->entityId = Atom::makeUID();
         foreach($this->_allowedProperties as $allowed) {
-            if($request->input($allowed)) {
-                $atom->$allowed = $request->input($allowed);
+            if(array_key_exists($allowed, $input)) {
+                $atom->$allowed = $input[$allowed];
             }
         }
         $atom->save();
@@ -61,6 +58,8 @@ class AtomController extends Controller
     }
 
     public function putAction($entityId, Request $request) {
+        $input = $request->all();
+
         $atom = Atom::findNewest($entityId);
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
@@ -68,8 +67,8 @@ class AtomController extends Controller
 
         $atom = $atom->replicate();
         foreach($this->_allowedProperties as $allowed) {
-            if($request->input($allowed)) {
-                $atom->$allowed = $request->input($allowed);
+            if(array_key_exists($allowed, $input)) {
+                $atom->$allowed = $input[$allowed];
             }
         }
         $atom->save();
