@@ -28,8 +28,8 @@ php artisan import:clearmolecules
 - Import users, atoms, or molecules. See their files in **app/Console/Commands** for more information.
 ```
 php artisan import:users
-php artisan import:atoms
 php artisan import:molecules
+php artisan import:atoms
 ```
 - Sometimes Laravel will fail to find a class that you just added, even though you did everything correctly. In those cases, try running all of these commands in order. You might need to alter the composer command to fit your setup.
 ```
