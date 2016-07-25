@@ -19,15 +19,17 @@
 
 - Refresh/reseed database by running: `php artisan migrate:refresh --seed`
 - See a list of available Artisan commands: `php artisan`
-- You can truncate the **users** and **atoms** tables with these commands:
+- You can truncate the **users**, **atoms**, and **molecules** tables with these commands:
 ```
 php artisan import:clearusers
 php artisan import:clearatoms
+php artisan import:clearmolecules
 ```
-- Import users or atoms. See their files in **app/Console/Commands** for more information.
+- Import users, atoms, or molecules. See their files in **app/Console/Commands** for more information.
 ```
 php artisan import:users
 php artisan import:atoms
+php artisan import:molecules
 ```
 - Sometimes Laravel will fail to find a class that you just added, even though you did everything correctly. In those cases, try running all of these commands in order. You might need to alter the composer command to fit your setup.
 ```
@@ -36,6 +38,6 @@ composer dump-autoload
 php artisan optimize
 ```
 
-# Helpful Links
+# Third Party Libraries and Frameworks
 
 - [Official Laravel 5.2 Documentation](https://laravel.com/docs/5.2)
