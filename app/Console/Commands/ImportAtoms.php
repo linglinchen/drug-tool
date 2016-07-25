@@ -81,11 +81,9 @@ class ImportAtoms extends Command
         foreach($atomTypes as $atomType) {
             $elementName = $atomType['elementName'];
             $titleElement = $atomType['titleElement'];
-            $atomRegex = '/<' . $elementName . '\b.*<\/' . $elementName . '>/SUis';
 
-            preg_match_all($atomRegex, $xml, $atoms);
-            $xml = preg_replace($atomRegex, '', $xml);      //clean up before the next round
-            $atoms = $atoms[0];
+            extract(self::extractAtoms($xml, $elementName));
+
             foreach($atoms as $atomString) {
                 preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
@@ -103,5 +101,45 @@ class ImportAtoms extends Command
                 ]);
             }
         }
+    }
+
+    /*
+     * This method gently extracts only the top-level atoms' XML without altering it in any way.
+     */
+    public static function extractAtoms($xml, $tagName) {
+        //find the top-level atoms' bookends
+        $level = 0;
+        $bookends = [];
+        preg_match_all('/(<' . $tagName . '[ >]|<\/' . $tagName . '>)/Si', $xml, $matches, PREG_OFFSET_CAPTURE);
+        foreach($matches[0] as $tag) {
+            $isOpenTag = strpos($tag[0], '/') === false;
+            $level += $isOpenTag ? 1 : -1;
+
+            //record bookends as needed
+            if($isOpenTag && $level == 1) {
+                $bookend = [$tag[1]];
+            }
+            elseif(!$isOpenTag && $level == 0) {
+                $bookend[] = $tag[1] + strlen($tag[0]);
+                $bookends[] = $bookend;
+            }
+        }
+
+        //now that we have the bookends, we can extract the atoms
+        $atoms = [];
+        foreach($bookends as $bookend) {
+            $atoms[] = substr($xml, $bookend[0], $bookend[1] - $bookend[0]);
+        }
+
+        //remove the atoms that we just extracted
+        $bookends = array_reverse($bookends);
+        foreach($bookends as $bookend) {
+            $xml = substr_replace($xml, '', $bookend[0], $bookend[1] - $bookend[0]);
+        }
+
+        return [
+            'xml' => $xml,
+            'atoms' => $atoms
+        ];
     }
 }
