@@ -43,9 +43,19 @@ class Atom extends Model {
     }
 
     public static function assignXMLIds($xml) {
+        $idPrefixes = [
+            'group' => 'g',
+            'monograph' => 'm',
+            'tradename' => 'tn',
+            'list' => 'li',
+            'section' => 's',
+            'para' => 'p'
+        ];
+
         $tagRegex = '/<[^\/<>]+>/S';
         $nameRegex = '/<([^\s<>]+).*?>/S';
         $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
+        $idReplaceableSuffixRegex = '/__REPLACE_ME__/S';
         $idRegex = '/\bid="[^"]*"/Si';
 
         //remove empty ids
@@ -55,7 +65,14 @@ class Atom extends Model {
         $idSuffix = 0;
         preg_match_all($tagRegex, $xml, $tags);
         $tags = $tags[0];
-        foreach($tags as $tag) {
+        foreach($tags as $key => $tag) {
+            //skip the tags we don't care about
+            $name = strtolower(preg_replace($nameRegex, '$1', $tag));
+            if(!isset($idPrefixes[$name])) {
+                unset($tags[$key]);
+                continue;
+            }
+
             preg_match($idSuffixRegex, $tag, $id);
             if($id) {
                 $id = (int)$id[1];
@@ -63,14 +80,27 @@ class Atom extends Model {
             }
         }
 
+        //complete id replacements
+        $old = '';
+        $new = $xml;
+        while($old != $new) {
+            $old = $new;
+            $new = preg_replace($idReplaceableSuffixRegex, ++$idSuffix, $old, 1);
+        }
+        if($old) {
+            --$idSuffix;
+        }
+        $xml = $new;
+
         //assign the missing ids
         foreach($tags as $tag) {
             if(preg_match($idRegex, $tag)) {
                 continue;       //it already has an id
             }
 
-            $name = preg_replace($nameRegex, '$1', $tag);
-            $id = $name . ++$idSuffix;
+            $name = strtolower(preg_replace($nameRegex, '$1', $tag));
+            $prefix = $idPrefixes[$name];
+            $id = $prefix . ++$idSuffix;
             $newTag = substr($tag, 0, strlen($tag) - 1) . ' id="' . $id . '">';
             $tag = preg_quote($tag, '/');
             $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
