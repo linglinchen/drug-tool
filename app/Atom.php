@@ -18,7 +18,7 @@ class Atom extends Model {
 
     public function save(array $options = []) {
         $this->updateTitle();
-        $this->assignXMLIds();
+        $this->xml = self::assignXMLIds($this->xml);
         parent::save($options);
     }
 
@@ -42,18 +42,21 @@ class Atom extends Model {
         $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
-    public function assignXMLIds() {
+    public static function assignXMLIds($xml) {
         $tagRegex = '/<[^\/<>]+>/S';
         $nameRegex = '/<([^\s<>]+).*?>/S';
-        $idRegex = '/\bid="[^"]*?(\d+)"/Si';
+        $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
+        $idRegex = '/\bid="[^"]*"/Si';
+
+        //remove empty ids
+        $xml = str_replace(' id=""', '', $xml);
 
         //initialize $idSuffix
         $idSuffix = 0;
-        $xml = $this->xml;
         preg_match_all($tagRegex, $xml, $tags);
         $tags = $tags[0];
         foreach($tags as $tag) {
-            preg_match($idRegex, $tag, $id);
+            preg_match($idSuffixRegex, $tag, $id);
             if($id) {
                 $id = (int)$id[1];
                 $idSuffix = $idSuffix > $id ? $idSuffix : $id;
@@ -73,7 +76,7 @@ class Atom extends Model {
             $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
         }
 
-        $this->xml = $xml;
+        return $xml;
     }
 
     public static function makeUID() {

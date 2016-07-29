@@ -95,7 +95,7 @@ class ImportAtoms extends Command
                     'title' => $title,
                     'alphaTitle' => $alphaTitle,
                     'moleculeCode' => $moleculeCode,
-                    'xml' => trim($atomString),
+                    'xml' => Atom::assignXMLIds(trim($atomString)),
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp
                 ]);
