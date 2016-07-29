@@ -18,6 +18,7 @@ class Atom extends Model {
 
     public function save(array $options = []) {
         $this->updateTitle();
+        $this->assignXMLIds();
         parent::save($options);
     }
 
@@ -39,6 +40,40 @@ class Atom extends Model {
 
         $this->title = trim($this->title);
         $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
+    }
+
+    public function assignXMLIds() {
+        $tagRegex = '/<[^\/<>]+>/S';
+        $nameRegex = '/<([^\s<>]+).*?>/S';
+        $idRegex = '/\bid="[^"]*?(\d+)"/Si';
+
+        //initialize $idSuffix
+        $idSuffix = 0;
+        $xml = $this->xml;
+        preg_match_all($tagRegex, $xml, $tags);
+        $tags = $tags[0];
+        foreach($tags as $tag) {
+            preg_match($idRegex, $tag, $id);
+            if($id) {
+                $id = (int)$id[1];
+                $idSuffix = $idSuffix > $id ? $idSuffix : $id;
+            }
+        }
+
+        //assign the missing ids
+        foreach($tags as $tag) {
+            if(preg_match($idRegex, $tag)) {
+                continue;       //it already has an id
+            }
+
+            $name = preg_replace($nameRegex, '$1', $tag);
+            $id = $name . ++$idSuffix;
+            $newTag = substr($tag, 0, strlen($tag) - 1) . ' id="' . $id . '">';
+            $tag = preg_quote($tag, '/');
+            $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
+        }
+
+        $this->xml = $xml;
     }
 
     public static function makeUID() {
