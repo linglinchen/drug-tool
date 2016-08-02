@@ -46,7 +46,6 @@ class Atom extends Model {
         $idPrefixes = [
             'group' => 'g',
             'monograph' => 'm',
-            'tradename' => 'tn',
             'list' => 'li',
             'section' => 's',
             'para' => 'p'
