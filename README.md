@@ -41,7 +41,7 @@ sudo service httpd graceful
 ```
 cd /var/www/drug-tool
 ```
-- Install the Composer packages. You might need to modify this command depending on how you installed Composer. `composer install`
+- Install the Composer packages. You might need to modify this command depending on how you installed Composer. `composer.phar install`
 - Run the DB migrations: `php artisan migrate:refresh`
 - Seed the DB with junk data for testing purposes `php artisan db:seed` or import real data (see below).
 - Restart Apache.
