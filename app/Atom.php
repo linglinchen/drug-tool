@@ -46,9 +46,13 @@ class Atom extends Model {
         $idPrefixes = [
             'group' => 'g',
             'monograph' => 'm',
-            'list' => 'li',
+            'list' => 'l',
             'section' => 's',
-            'para' => 'p'
+            'para' => 'p',
+            'table' => 't',
+            'tgroup' => 'tg',
+            'row' => 'r',
+            'pill' => 'pl'
         ];
 
         $tagRegex = '/<[^\/<>]+>/S';
