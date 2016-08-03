@@ -71,6 +71,7 @@ php artisan clear-compiled
 composer dump-autoload
 php artisan optimize
 ```
+- By default, Laravel logs to **storage/logs/laravel.log**
 
 # Third Party Libraries and Frameworks
 
