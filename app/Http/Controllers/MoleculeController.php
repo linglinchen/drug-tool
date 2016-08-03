@@ -13,8 +13,19 @@ use App\Molecule;
 use App\ApiError;
 use App\ApiPayload;
 
+/**
+ * This controller handles molecules.
+ * All endpoint methods should return an ApiPayload or ApiError.
+ */
 class MoleculeController extends Controller
 {
+    /**
+     * GET a list of all molecules.
+     *
+     * @api
+     *
+     * @return ApiPayload|ApiError
+     */
     public function listAction() {
         return new ApiPayload(Molecule::all());
     }
