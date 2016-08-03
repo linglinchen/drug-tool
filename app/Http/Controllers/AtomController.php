@@ -13,10 +13,23 @@ use App\Atom;
 use App\ApiError;
 use App\ApiPayload;
 
+/**
+ * This controller handles atoms.
+ * All endpoint methods should return an ApiPayload or ApiError.
+ *
+ * @property-read string[] $_allowedProperties The list of writeable properties that are accepted from the client
+ */
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['moleculeCode', 'blah', 'xml'];
+    protected $_allowedProperties = ['moleculeCode', 'xml'];
 
+    /**
+     * GET a list of all atoms.
+     *
+     * @api
+     *
+     * @return ApiPayload|ApiError
+     */
     public function listAction() {
         $list = [];
         $atoms = Atom::whereIn('id', Atom::latestIDs())
@@ -32,6 +45,15 @@ class AtomController extends Controller
         return new ApiPayload($list);
     }
 
+    /**
+     * POST a new atom.
+     *
+     * @api
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|ApiError
+     */
     public function postAction(Request $request) {
         $input = $request->all();
 
@@ -47,6 +69,15 @@ class AtomController extends Controller
         return new ApiPayload($atom);
     }
 
+    /**
+     * GET an atom.
+     *
+     * @api
+     *
+     * @param string $entityId The entityId of the atom to retrieve
+     *
+     * @return ApiPayload|ApiError
+     */
     public function getAction($entityId) {
         $atom = Atom::findNewestIfNotDeleted($entityId);
 
@@ -57,6 +88,16 @@ class AtomController extends Controller
         return new ApiPayload($atom);
     }
 
+    /**
+     * GET an atom.
+     *
+     * @api
+     *
+     * @param string $entityId The entityId of the atom to retrieve
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|ApiError
+     */
     public function putAction($entityId, Request $request) {
         $input = $request->all();
 
@@ -76,10 +117,27 @@ class AtomController extends Controller
         return new ApiPayload($atom);
     }
 
+    /**
+     * DELETE an atom. This is a soft delete, not a hard one.
+     *
+     * @todo Implement this.
+     * @api
+     *
+     * @param string $entityId The entityId of the atom to delete
+     */
     public function deleteAction($entityId) {
         //
     }
 
+    /**
+     * GET the ID of the previous atom in alphabetical order.
+     *
+     * @api
+     *
+     * @param string $entityId The entityId of the current atom
+     *
+     * @return ApiPayload|ApiError
+     */
     public function previousAction($entityId) {
         $ids = Atom::latestIDs();
         $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
@@ -93,6 +151,15 @@ class AtomController extends Controller
         ]);
     }
 
+    /**
+     * GET the ID of the next atom in alphabetical order.
+     *
+     * @api
+     *
+     * @param string $entityId The entityId of the current atom
+     *
+     * @return ApiPayload|ApiError
+     */
     public function nextAction($entityId) {
         $ids = Atom::latestIDs();
         $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
@@ -106,6 +173,15 @@ class AtomController extends Controller
         ]);
     }
 
+    /**
+     * GET a list of atoms matching the query.
+     *
+     * @api
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|ApiError
+     */
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
         $limit = max((int)$request->input('limit', 10), 1);
