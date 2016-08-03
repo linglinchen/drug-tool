@@ -12,8 +12,20 @@ use App\ApiError;
 use App\ApiPayload;
 use App\AccessControl;
 
+/**
+ * This controller handles users.
+ * All endpoint methods should return an ApiPayload or ApiError.
+ */
 class UserController extends Controller
 {
+	/**
+	 * This endpoint's name is misleading. All it does is provide the user's information after they have already
+	 * passed through the authentication layer.
+	 *
+	 * @api
+     *
+     * @return ApiPayload|ApiError
+	 */
 	public function loginAction() {
 		$user = \Auth::user();
 		$accessControl = new AccessControl();
@@ -25,6 +37,9 @@ class UserController extends Controller
 		]);
 	}
 
+	/**
+	 * This is just an unused stub.
+	 */
 	public function logoutAction() {
 		//
 	}
