@@ -14,7 +14,7 @@ use App\AccessControl;
 
 /**
  * This controller handles users.
- * All endpoint methods should return an ApiPayload or ApiError.
+ * All endpoint methods should return an ApiPayload or Response.
  */
 class UserController extends Controller
 {
@@ -24,7 +24,7 @@ class UserController extends Controller
 	 *
 	 * @api
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
 	 */
 	public function loginAction() {
 		$user = \Auth::user();

@@ -15,7 +15,7 @@ use App\ApiPayload;
 
 /**
  * This controller handles atoms.
- * All endpoint methods should return an ApiPayload or ApiError.
+ * All endpoint methods should return an ApiPayload or Response.
  *
  * @property-read string[] $_allowedProperties The list of writeable properties that are accepted from the client
  */
@@ -28,7 +28,7 @@ class AtomController extends Controller
      *
      * @api
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function listAction() {
         $list = [];
@@ -52,7 +52,7 @@ class AtomController extends Controller
      *
      * @param Request $request The Laravel Request object
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function postAction(Request $request) {
         $input = $request->all();
@@ -76,7 +76,7 @@ class AtomController extends Controller
      *
      * @param string $entityId The entityId of the atom to retrieve
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function getAction($entityId) {
         $atom = Atom::findNewestIfNotDeleted($entityId);
@@ -96,7 +96,7 @@ class AtomController extends Controller
      * @param string $entityId The entityId of the atom to retrieve
      * @param Request $request The Laravel Request object
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function putAction($entityId, Request $request) {
         $input = $request->all();
@@ -136,7 +136,7 @@ class AtomController extends Controller
      *
      * @param string $entityId The entityId of the current atom
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function previousAction($entityId) {
         $ids = Atom::latestIDs();
@@ -158,7 +158,7 @@ class AtomController extends Controller
      *
      * @param string $entityId The entityId of the current atom
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function nextAction($entityId) {
         $ids = Atom::latestIDs();
@@ -180,7 +180,7 @@ class AtomController extends Controller
      *
      * @param Request $request The Laravel Request object
      *
-     * @return ApiPayload|ApiError
+     * @return ApiPayload|Response
      */
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
