@@ -24,6 +24,11 @@ class ImportAtoms extends Command
      */
     protected $description = 'Import atoms from XML file(s) in the data/atoms directory. Do not run without importing or adding molecules first.';
 
+    /**
+     * The contents of the molecules table
+     *
+     * @var array
+     */
     protected $moleculeLookups;
 
     /**
@@ -63,6 +68,14 @@ class ImportAtoms extends Command
         echo "Done\n";
     }
 
+    /**
+     * Import an XML string. Usually a whole letter node.
+     *
+     * @param string $xml The XML string to import
+     * @param string|null $moleculeCode (optional) The code of the molecule that this atom belongs to
+     *
+     * @return void
+     */
     public function importXMLChunk($xml, $moleculeCode = null) {
         $atom = new Atom();
 
@@ -105,6 +118,11 @@ class ImportAtoms extends Command
 
     /*
      * This method gently extracts only the top-level atoms' XML without altering it in any way.
+     *
+     * @param string $xml The XML string to import
+     * @param string $tagName The type of tag we would like to extract
+     *
+     * @return array The extracted atoms and the xml string with those atoms removed
      */
     public static function extractAtoms($xml, $tagName) {
         //find the top-level atoms' bookends

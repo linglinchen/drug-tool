@@ -54,6 +54,11 @@ class ImportMolecules extends Command
         echo "Done\n";
     }
 
+    /**
+     * Import a molecule.
+     *
+     * @param array $molecule The molecule as an associative array
+     */
     public function importMolecule($molecule) {
         $timestamp = (new Molecule())->freshTimestampString();
 

@@ -54,11 +54,16 @@ class ImportUsers extends Command
         echo "Done\n";
     }
 
+    /**
+     * Import a user. The password field will be hashed automatically.
+     *
+     * @param array $user The user as an associative array
+     */
     public function importUser($user) {
         $timestamp = (new User())->freshTimestampString();
 
         //set up a few fields that can't be imported directly from the csv
-        $user['password'] = Hash::make($user['password']);
+        $user['password'] = isset($user['password']) ? Hash::make($user['password']) : '';
         $user['created_at'] = $timestamp;
         $user['updated_at'] = $timestamp;
 
