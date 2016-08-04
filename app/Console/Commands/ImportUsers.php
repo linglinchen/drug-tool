@@ -28,7 +28,7 @@ class ImportUsers extends Command
      *
      * @var string
      */
-    protected $description = 'Import users from data/users.csv';
+    protected $description = 'Import users from data/import/users.csv';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ImportUsers extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/users.csv';
+        $filename = base_path() . '/data/import/users.csv';
         $lines = preg_split('/\v+/', trim(file_get_contents($filename)));
 
         //parse the lines as csv

@@ -22,7 +22,7 @@ class ImportAtoms extends Command
      *
      * @var string
      */
-    protected $description = 'Import atoms from XML file(s) in the data/atoms directory. Do not run without importing or adding molecules first.';
+    protected $description = 'Import atoms from XML file(s) in the data/import/atoms directory. Do not run without importing or adding molecules first.';
 
     /**
      * The contents of the molecules table
@@ -39,7 +39,7 @@ class ImportAtoms extends Command
     public function handle() {
         $this->moleculeLookups = Molecule::getLookups();
 
-        $dataPath = base_path() . '/data/atoms/';
+        $dataPath = base_path() . '/data/import/atoms/';
         $files = scandir($dataPath);
         $files = array_slice($files, 2);
         foreach($files as $file) {

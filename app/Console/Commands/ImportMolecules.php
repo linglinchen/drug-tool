@@ -28,7 +28,7 @@ class ImportMolecules extends Command
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/molecules.csv';
+    protected $description = 'Import molecules from data/import/molecules.csv';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ImportMolecules extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/molecules.csv';
+        $filename = base_path() . '/data/import/molecules.csv';
         $lines = preg_split('/\v+/', trim(file_get_contents($filename)));
 
         //parse the lines as csv
