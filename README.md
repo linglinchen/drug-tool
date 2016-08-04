@@ -14,7 +14,7 @@
 ```
 sudo service httpd configtest
 ```
-- Ensure that all of the directories in **storage** and **bootstrap/cache** is writeable by Apache.
+- Ensure that everything in **storage** and **bootstrap/cache** is writeable by Apache.
 - Copy **.env.example** to **.env** -- **.env** should *always live outside of source control*.
 - Alter **.env** to match suit the environment.
 - Navigate to the directory where the project lives (e.g. **/var/www/drug-tool**)
