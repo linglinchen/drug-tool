@@ -12,16 +12,39 @@ use App\FuzzyRank;
 class Atom extends Model {
     use SoftDeletes;
 
+    /**
+     * @var string $table This model's corresponding database table
+     */
     protected $table = 'atoms';
+
+    /**
+     * @var string[] $guarded Columns that are protected from writes by other sources
+     */
     protected $guarded = ['id'];
+
+    /**
+     * @var string[] $dates The names of the date columns
+     */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    /**
+     * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
+     *
+     * @param array $options
+     *
+     * @return void
+     */
     public function save(array $options = []) {
         $this->updateTitle();
         $this->xml = self::assignXMLIds($this->xml);
         parent::save($options);
     }
 
+    /**
+     * Extracts the title from the atom's XML, cleans it up, and places it into meta data columns.
+     *
+     * @return void
+     */
     public function updateTitle() {
         $titleElements = ['group_title', 'mono_name'];      //must be in order of priority
 
@@ -42,6 +65,13 @@ class Atom extends Model {
         $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
+    /**
+     * Assign IDs to XML elements where appropriate.
+     *
+     * @param string $xml The XML to operate on
+     *
+     * @return string The modified XML
+     */
     public static function assignXMLIds($xml) {
         $idPrefixes = [
             'group' => 'g',
@@ -112,10 +142,20 @@ class Atom extends Model {
         return $xml;
     }
 
+    /**
+     * Generate a UID for use as an entityId.
+     *
+     * @return string The UID
+     */
     public static function makeUID() {
         return uniqid('', true);
     }
 
+    /**
+     * Get a list of the latest version of every atom that hasn't been deleted.
+     *
+     * @return string[] The IDs of all current atoms
+     */
     public static function latestIDs() {
         $sql = 'select id
                 from atoms
@@ -136,6 +176,15 @@ class Atom extends Model {
         return $list;
     }
 
+    /**
+     * Get a list of the latest version of every atom that hasn't been deleted.
+     *
+     * @param string $query The user's search query
+     * @param int $limit (optional) Max number of results per page
+     * @param int $page (optional) The results page to retrieve
+     *
+     * @return string[] The IDs of all current atoms
+     */
     public static function search($query, $limit = 10, $page = 1) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
@@ -168,6 +217,13 @@ class Atom extends Model {
         ];
     }
 
+    /**
+     * Get the latest version of an atom regardless of whether or not it has been deleted.
+     *
+     * @param string $entityId The entityId of the atom
+     *
+     * @return mixed[]|null The atom
+     */
     public static function findNewest($entityId) {
         $atom = self::withTrashed()
                 ->where('entityId', '=', $entityId)
@@ -177,6 +233,13 @@ class Atom extends Model {
         return $atom;
     }
 
+    /**
+     * Get the latest version of an atom or null if it has been deleted.
+     *
+     * @param string $entityId The entityId of the atom
+     *
+     * @return mixed[]|null The atom
+     */
     public static function findNewestIfNotDeleted($entityId) {
         $atom = self::withTrashed()
                 ->where('entityId', '=', $entityId)
