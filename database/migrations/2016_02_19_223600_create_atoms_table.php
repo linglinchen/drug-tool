@@ -19,10 +19,12 @@ class CreateAtomsTable extends Migration
             $table->string('title');
             $table->string('alphaTitle');
             $table->text('xml');
+            $table->integer('modifiedBy')->nullable();
             $table->timestamps();
 
             $table->index('entityId');
             $table->index('moleculeCode');
+            $table->index('modifiedBy');
 
             $table->softDeletes();
         });

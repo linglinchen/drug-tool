@@ -37,6 +37,7 @@ class Atom extends Model {
     public function save(array $options = []) {
         $this->updateTitle();
         $this->xml = self::assignXMLIds($this->xml);
+        $this->modifiedBy = \Auth::user()['id'];
         parent::save($options);
     }
 
