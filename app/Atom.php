@@ -149,7 +149,7 @@ class Atom extends Model {
      * @return string The UID
      */
     public static function makeUID() {
-        return uniqid('', true);
+        return str_replace('.', '', uniqid('', true));
     }
 
     /**
