@@ -63,9 +63,8 @@ class ImportAtoms extends Command
 
             $xml = file_get_contents($dataPath . $file);
             $xml = $this->_addTallman($xml);
-            preg_match_all('/<alpha\b.*?<\/alpha>/SUis', $xml, $alphas);
-            $alphas = $alphas ? $alphas[0] : [];
 
+            $alphas = $this->_extractAlphas($xml);
             if($alphas) {
                 foreach($alphas as $alpha) {
                     preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $moleculeCode);
@@ -73,12 +72,31 @@ class ImportAtoms extends Command
                     self::_importXMLChunk($alpha, $moleculeCode);
                 }
             }
-            else {
+            else {        //we don't know which letter(s) these atoms belong to
                 self::_importXMLChunk($xml);
             }
         }
 
         echo "Done\n";
+    }
+
+    /**
+     * Break XML into alpha sections, and remove everything else.
+     *
+     * @param string $xml The XML string to extract from
+     *
+     * @return string[] The extracted alpha sections
+     */
+    protected function _extractAlphas($xml) {
+        $alphas = explode('</alpha>', $xml);
+        array_pop($alphas);
+
+        foreach($alphas as &$alpha) {
+            $alpha = preg_replace('/^.*<alpha/Ssi', '<alpha', $alpha);     //strip off garbage
+            $alpha .= '</alpha>';      //add the closing tag back
+        }
+
+        return $alphas;
     }
 
     /**
