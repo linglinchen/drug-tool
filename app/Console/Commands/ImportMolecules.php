@@ -1,11 +1,5 @@
 <?php
 
-/*
- * Expected field headers for molecules.csv:
- *
- * code,title
- */
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -14,6 +8,12 @@ use DB;
 
 use App\Molecule;
 
+
+/**
+ * Expected field headers for molecules.csv:
+ *
+ * code,title
+ */
 class ImportMolecules extends Command
 {
     /**

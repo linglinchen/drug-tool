@@ -1,11 +1,5 @@
 <?php
 
-/*
- * Expected field headers for users.csv:
- *
- * username,email,firstname,lastname,groupId,password
- */
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -14,6 +8,12 @@ use DB;
 
 use App\User;
 
+
+/**
+ * Expected field headers for users.csv:
+ *
+ * username,email,firstname,lastname,groupId,password
+ */
 class ImportUsers extends Command
 {
     /**
