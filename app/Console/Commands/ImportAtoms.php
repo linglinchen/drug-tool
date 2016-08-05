@@ -8,6 +8,11 @@ use DB;
 use App\Atom;
 use App\Molecule;
 
+/**
+ * Imports atoms from XML file(s) in the data/import/atoms directory. Automatically applies tallman tags to text.
+ * When editing tallman.txt, be sure that you capitalize ONLY the characters that you want tagged as tallman.
+ * To avoid headaches, run this after creating the molecules.
+ */
 class ImportAtoms extends Command
 {
     /**
@@ -32,6 +37,13 @@ class ImportAtoms extends Command
     protected $moleculeLookups;
 
     /**
+     * A translation table for tallman drug names
+     *
+     * @var string[]
+     */
+    protected $tallman = [];
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -50,6 +62,7 @@ class ImportAtoms extends Command
             echo 'Loading ', $file, "\n";
 
             $xml = file_get_contents($dataPath . $file);
+            $xml = $this->_addTallman($xml);
             preg_match_all('/<alpha\b.*?<\/alpha>/SUis', $xml, $alphas);
             $alphas = $alphas ? $alphas[0] : [];
 
@@ -57,15 +70,68 @@ class ImportAtoms extends Command
                 foreach($alphas as $alpha) {
                     preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $moleculeCode);
                     $moleculeCode = $moleculeCode ? $moleculeCode[1] : null;
-                    self::importXMLChunk($alpha, $moleculeCode);
+                    self::_importXMLChunk($alpha, $moleculeCode);
                 }
             }
             else {
-                self::importXMLChunk($xml);
+                self::_importXMLChunk($xml);
             }
         }
 
         echo "Done\n";
+    }
+
+    /**
+     * Add tallman tags to XML.
+     *
+     * @param string $xml The XML string to modify
+     *
+     * @return string The modified XML string
+     */
+    protected function _addTallman($xml) {
+        $this->_loadTallman();
+
+        foreach($this->tallman as $find => $replacement) {
+            $xml = preg_replace($find, $replacement, $xml);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * Loads the tallman data if needed, and computes searches / replacements.
+     */
+    protected function _loadTallman() {
+        if(!$this->tallman) {
+            $dataPath = base_path() . '/data/tallman.txt';
+            $tallman = file_get_contents($dataPath);
+            $tallman = preg_split('/\v+/S', trim($tallman));
+            foreach($tallman as $name) {
+                $name = trim($name);
+
+                //build inner portion of the search regex
+                $find = preg_replace('/[A-Z]+/S', '($0)', $name);
+                $find = preg_replace('/[a-z]+/S', '($0)', $find);
+
+                //build the replacement
+                $i = 0;
+                $parts = explode(')(', $find);
+                $replacement = '';
+                foreach($parts as $part) {
+                    if(strtolower($part) == $part) {
+                        $replacement .= '$' . ++$i;     //lowercase
+                    }
+                    else {
+                        $replacement .= '<emphasis style="tallman">$' . ++$i . '</emphasis>';     //uppercase
+                    }
+                }
+
+                //finish building the search regex
+                $find = '#\b' . $find . '\b#Si';
+
+                $this->tallman[$find] = $replacement;
+            }
+        }
     }
 
     /**
@@ -76,7 +142,7 @@ class ImportAtoms extends Command
      *
      * @return void
      */
-    public function importXMLChunk($xml, $moleculeCode = null) {
+    protected function _importXMLChunk($xml, $moleculeCode = null) {
         $atom = new Atom();
 
         //atom types must be in order of priority, or your data will be mangled
@@ -95,7 +161,7 @@ class ImportAtoms extends Command
             $elementName = $atomType['elementName'];
             $titleElement = $atomType['titleElement'];
 
-            extract(self::extractAtoms($xml, $elementName));
+            extract(self::_extractAtoms($xml, $elementName));
 
             foreach($atoms as $atomString) {
                 preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
@@ -124,7 +190,7 @@ class ImportAtoms extends Command
      *
      * @return array The extracted atoms and the xml string with those atoms removed
      */
-    public static function extractAtoms($xml, $tagName) {
+    protected static function _extractAtoms($xml, $tagName) {
         //find the top-level atoms' bookends
         $level = 0;
         $bookends = [];
