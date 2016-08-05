@@ -13,19 +13,34 @@ class Atom extends Model {
     use SoftDeletes;
 
     /**
-     * @var string $table This model's corresponding database table
+     * @var string This model's corresponding database table
      */
     protected $table = 'atoms';
 
     /**
-     * @var string[] $guarded Columns that are protected from writes by other sources
+     * @var string[] Columns that are protected from writes by other sources
      */
     protected $guarded = ['id'];
 
     /**
-     * @var string[] $dates The names of the date columns
+     * @var string[] The names of the date columns
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @var string[] The names and prefixes for the elements that we want to assign IDs to
+     */
+    protected static $idPrefixes = [
+        'group' => 'g',
+        'monograph' => 'm',
+        'list' => 'l',
+        'section' => 's',
+        'para' => 'p',
+        'table' => 't',
+        'tgroup' => 'tg',
+        'row' => 'r',
+        'pill' => 'pl'
+    ];
 
     /**
      * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
@@ -74,18 +89,6 @@ class Atom extends Model {
      * @return string The modified XML
      */
     public static function assignXMLIds($xml) {
-        $idPrefixes = [
-            'group' => 'g',
-            'monograph' => 'm',
-            'list' => 'l',
-            'section' => 's',
-            'para' => 'p',
-            'table' => 't',
-            'tgroup' => 'tg',
-            'row' => 'r',
-            'pill' => 'pl'
-        ];
-
         $tagRegex = '/<[^\/<>]+>/S';
         $nameRegex = '/<([^\s<>]+).*?>/S';
         $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
@@ -102,7 +105,7 @@ class Atom extends Model {
         foreach($tags as $key => $tag) {
             //skip the tags we don't care about
             $name = strtolower(preg_replace($nameRegex, '$1', $tag));
-            if(!isset($idPrefixes[$name])) {
+            if(!isset(self::$idPrefixes[$name])) {
                 unset($tags[$key]);
                 continue;
             }
@@ -133,7 +136,7 @@ class Atom extends Model {
             }
 
             $name = strtolower(preg_replace($nameRegex, '$1', $tag));
-            $prefix = $idPrefixes[$name];
+            $prefix = self::$idPrefixes[$name];
             $id = $prefix . ++$idSuffix;
             $newTag = substr($tag, 0, strlen($tag) - 1) . ' id="' . $id . '">';
             $tag = preg_quote($tag, '/');
