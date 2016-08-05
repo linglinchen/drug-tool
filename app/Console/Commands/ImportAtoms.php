@@ -129,6 +129,10 @@ class ImportAtoms extends Command
             foreach($tallman as $name) {
                 $name = trim($name);
 
+                if(!$name) {
+                    continue;       //skip blank lines
+                }
+
                 //build inner portion of the search regex
                 $find = preg_replace('/[A-Z]+/S', '($0)', $name);
                 $find = preg_replace('/[a-z]+/S', '($0)', $find);
