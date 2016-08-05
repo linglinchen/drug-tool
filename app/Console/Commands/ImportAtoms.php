@@ -69,14 +69,20 @@ class ImportAtoms extends Command
             $alphas = $this->_extractAlphas($xml);
             if($alphas) {
                 foreach($alphas as $alpha) {
-                    preg_match('/<alpha letter="(\w*)"/SUis', $alpha, $moleculeCode);
-                    $moleculeCode = $moleculeCode ? $moleculeCode[1] : null;
-                    self::_importXMLChunk($alpha, $moleculeCode);
+                    preg_match('/<alpha\b[^>]letter="([^"]*)"/Sis', $alpha, $moleculeCode);
+                    $moleculeCode = $moleculeCode ? trim($moleculeCode[1]) : null;
+                    $atomCount = self::_importXMLChunk($alpha, $moleculeCode);
+
+                    echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
                 }
             }
             else {        //we don't know which letter(s) these atoms belong to
-                self::_importXMLChunk($xml);
+                $atomCount = self::_importXMLChunk($xml);
+
+                echo "\t<no molecule detected> ", $atomCount, "\n";
             }
+
+            echo "\n";
         }
 
         echo "Done\n";
@@ -93,9 +99,11 @@ class ImportAtoms extends Command
         $alphas = explode('</alpha>', $xml);
         array_pop($alphas);
 
-        foreach($alphas as &$alpha) {
-            $alpha = preg_replace('/^.*<alpha/Ssi', '<alpha', $alpha);     //strip off garbage
-            $alpha .= '</alpha>';      //add the closing tag back
+        foreach($alphas as $key => &$alpha) {
+            $alpha = explode('<alpha', $alpha);
+            $alpha = $alpha[1];
+
+            $alphas[$key] = '<alpha' . $alpha . '</alpha>';
         }
 
         return $alphas;
@@ -164,7 +172,7 @@ class ImportAtoms extends Command
      * @param string $xml The XML string to import
      * @param string|null $moleculeCode (optional) The code of the molecule that this atom belongs to
      *
-     * @return void
+     * @return int The number of atoms imported
      */
     protected function _importXMLChunk($xml, $moleculeCode = null) {
         $atom = new Atom();
@@ -181,12 +189,14 @@ class ImportAtoms extends Command
             ]
         ];
 
+        $atomCount = 0;
         foreach($atomTypes as $atomType) {
             $elementName = $atomType['elementName'];
             $titleElement = $atomType['titleElement'];
 
             extract(self::_extractAtoms($xml, $elementName));
 
+            $atomCount += sizeof($atoms);
             foreach($atoms as $atomString) {
                 preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
@@ -207,6 +217,8 @@ class ImportAtoms extends Command
                 DB::table('atoms')->insert($atomData);
             }
         }
+
+        return $atomCount;
     }
 
     /*
