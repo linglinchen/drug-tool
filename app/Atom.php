@@ -83,6 +83,7 @@ class Atom extends Model {
 
     /**
      * Assign IDs to XML elements where appropriate.
+     * This doesn't detect atom entityIds or handle reimports yet.
      *
      * @param string $xml The XML to operate on
      *
@@ -92,8 +93,9 @@ class Atom extends Model {
         $tagRegex = '/<[^\/<>]+>/S';
         $nameRegex = '/<([^\s<>]+).*?>/S';
         $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
-        $idReplaceableSuffixRegex = '/__REPLACE_ME__/S';
+        $idReplaceableSuffixRegex = '/_REPLACE_ME__/S';
         $idRegex = '/\bid="[^"]*"/Si';
+        $firstIdRemovalRegex = '/^(\s*<[^>]*) id="[^"]*"/Si';
 
         //remove empty ids
         $xml = str_replace(' id=""', '', $xml);
@@ -142,6 +144,9 @@ class Atom extends Model {
             $tag = preg_quote($tag, '/');
             $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
         }
+
+        //remove the first id -- it will be added during export
+        $xml = preg_replace($firstIdRemovalRegex, '$1', $xml);
 
         return $xml;
     }
