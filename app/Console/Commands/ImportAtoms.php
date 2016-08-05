@@ -12,6 +12,8 @@ use App\Molecule;
  * Imports atoms from XML file(s) in the data/import/atoms directory. Automatically applies tallman tags to text.
  * When editing tallman.txt, be sure that you capitalize ONLY the characters that you want tagged as tallman.
  * To avoid headaches, run this after creating the molecules.
+ *
+ * Reimports probably work, but are untested.
  */
 class ImportAtoms extends Command
 {
@@ -186,16 +188,19 @@ class ImportAtoms extends Command
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
                 $alphaTitle = strip_tags($title);
                 $timestamp = $atom->freshTimestampString();
+                $entityId = Atom::detectAtomIDFromXML($atomString);
 
-                DB::table('atoms')->insert([
-                    'entityId' => Atom::makeUID(),
+                $atomData = [
+                    'entityId' => $entityId === null ? Atom::makeUID() : $entityId,
                     'title' => $title,
                     'alphaTitle' => $alphaTitle,
                     'moleculeCode' => $moleculeCode,
                     'xml' => Atom::assignXMLIds(trim($atomString)),
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp
-                ]);
+                ];
+
+                DB::table('atoms')->insert($atomData);
             }
         }
     }

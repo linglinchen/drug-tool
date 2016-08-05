@@ -83,7 +83,6 @@ class Atom extends Model {
 
     /**
      * Assign IDs to XML elements where appropriate.
-     * This doesn't detect atom entityIds or handle reimports yet.
      *
      * @param string $xml The XML to operate on
      *
@@ -95,10 +94,12 @@ class Atom extends Model {
         $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
         $idReplaceableSuffixRegex = '/_REPLACE_ME__/S';
         $idRegex = '/\bid="[^"]*"/Si';
-        $firstIdRemovalRegex = '/^(\s*<[^>]*) id="[^"]*"/Si';
 
         //remove empty ids
         $xml = str_replace(' id=""', '', $xml);
+
+        //remove the first id -- it will be added during export
+        $xml = self::removeAtomIDFromXML($xml);
 
         //initialize $idSuffix
         $idSuffix = 0;
@@ -145,10 +146,35 @@ class Atom extends Model {
             $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
         }
 
-        //remove the first id -- it will be added during export
-        $xml = preg_replace($firstIdRemovalRegex, '$1', $xml);
+        //yes, we need to do this again in order to keep automatic IDs from creeping in
+        $xml = self::removeAtomIDFromXML($xml);
 
         return $xml;
+    }
+
+    /**
+     * Attempt to find the atom's entityId in its XML
+     *
+     * @param string $xml The XML to operate on
+     *
+     * @return ?string The detected entityId
+     */
+    public static function detectAtomIDFromXML($xml) {
+        $prefixPartial = '(' . implode('|', self::$idPrefixes) . ')';
+        preg_match('/^(\s*<[^>]*) id="' . $prefixPartial . '([^"]*)"/Si', $xml, $match);
+
+        return (isset($match[3]) && $match[3] != '_REPLACE_ME__') ? $match[3] : null;
+    }
+
+    /**
+     * Attempt to remove the atom's entityId from its XML
+     *
+     * @param string $xml The XML to operate on
+     *
+     * @return ?string The detected entityId
+     */
+    public static function removeAtomIDFromXML($xml) {
+        return preg_replace('/^(\s*<[^>]*) id="[^"]*"/Si', '$1', $xml);
     }
 
     /**
