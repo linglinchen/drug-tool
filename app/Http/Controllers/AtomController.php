@@ -21,7 +21,7 @@ use App\ApiPayload;
  */
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['moleculeCode', 'xml'];
+    protected $_allowedProperties = ['moleculeCode', 'xml', 'statusId'];
 
     /**
      * GET a list of all atoms.
