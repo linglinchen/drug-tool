@@ -9,24 +9,28 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 use App\Molecule;
+use App\Status;
 
 use App\ApiError;
 use App\ApiPayload;
 
 /**
- * This controller handles molecules.
+ * This controller exists to serve up the lookup tables.
  * All endpoint methods should return an ApiPayload or Response.
  */
-class MoleculeController extends Controller
+class LookupsController extends Controller
 {
     /**
-     * GET a list of all molecules.
+     * GET a list of all statuses.
      *
      * @api
      *
      * @return ApiPayload|Response
      */
     public function listAction() {
-        return new ApiPayload(Molecule::all());
+        return new ApiPayload([
+            'molecules' => Molecule::all(),
+            'statuses' => Status::orderBy('id')->get()
+        ]);
     }
 }
