@@ -11,7 +11,7 @@ class Molecule extends Model
 
     protected $table = 'molecules';
     protected $guarded = ['id'];
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at'];
 
     /*
      * Returns all molecule titles as an associative array.
