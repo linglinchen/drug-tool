@@ -14,6 +14,16 @@ class Assignment extends Model
 	protected $guarded = ['id'];
 	protected $dates = ['created_at', 'updated_at'];
 
+	/**
+	 * GET a list of all assignments or POST filters to retrieve a filtered list.
+	 * Adds the appropriate atoms.
+	 *
+	 * @api
+	 *
+	 * @param Request ?array $filters The filters as key => value pairs
+	 *
+	 * @return array The
+	 */
 	public static function getList($filters) {
 		$output = self::orderBy('taskId');
 
@@ -25,6 +35,7 @@ class Assignment extends Model
 		$output = $output->get()
 				->toArray();
 
+		//Laravel's built-in hasOne functionality won't work on atoms
 		$entityIds = array_column($output, 'atomEntityId');
 		$atoms = Atom::findNewest($entityIds)
 				->get()
