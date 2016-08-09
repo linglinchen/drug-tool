@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 
 use App\ApiError;
 use App\ApiPayload;
+use App\User;
 use App\AccessControl;
 
 /**
