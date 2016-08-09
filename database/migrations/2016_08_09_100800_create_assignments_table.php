@@ -17,13 +17,17 @@ class CreateAssignmentsTable extends Migration
             $table->string('entityId');
             $table->integer('userId');
             $table->integer('taskId');
-            $table->integer('modifiedBy');
+            $table->integer('createdBy');
+            $table->timestamp('taskStart');
+            $table->timestamp('taskEnd');
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
 
             $table->index('entityId');
             $table->index('userId');
             $table->index('taskId');
-            $table->index('modifiedBy');
+            $table->index('createdBy');
+            $table->index('active');
         });
     }
 

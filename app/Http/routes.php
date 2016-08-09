@@ -52,6 +52,8 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('lookups', ['uses' => 'LookupsController@listAction']);
 
+            Route::get('assignment', ['list' => 'AssignmentsController@listAction']);
+
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
