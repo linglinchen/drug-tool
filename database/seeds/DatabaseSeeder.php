@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             $this->call(CommentSeeder::class);
             $this->call(GroupSeeder::class);
             $this->call(StatusSeeder::class);
+            $this->call(TaskSeeder::class);
         });
 
         Model::reguard();

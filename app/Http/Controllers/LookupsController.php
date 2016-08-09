@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Boilerplate;
 use App\Molecule;
 use App\Status;
+use App\Task;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -32,6 +33,7 @@ class LookupsController extends Controller
         return new ApiPayload([
             'boilerplates' => Boilerplate::all(),
             'molecules' => Molecule::all(),
+            'tasks' => Task::all(),
             'statuses' => Status::orderBy('id')->get()
         ]);
     }
