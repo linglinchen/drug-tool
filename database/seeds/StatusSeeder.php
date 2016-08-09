@@ -14,31 +14,15 @@ class StatusSeeder extends Seeder
         $statuses = [
             [
                 'id' => 0,
-                'title' => 'New word'
+                'title' => 'Deactivated'
             ],
             [
                 'id' => 100,
-                'title' => 'Awaiting copyeditor'
+                'title' => 'Development'
             ],
             [
                 'id' => 200,
-                'title' => 'Rejected by copyeditor'
-            ],
-            [
-                'id' => 300,
-                'title' => 'Approved by copyeditor'
-            ],
-            [
-                'id' => 400,
-                'title' => 'Awaiting SME'
-            ],
-            [
-                'id' => 500,
-                'title' => 'Ready to publish'
-            ],
-            [
-                'id' => 600,
-                'title' => 'Deactivated'
+                'title' => 'Gold'
             ]
         ];
 
