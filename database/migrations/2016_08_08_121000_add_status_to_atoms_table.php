@@ -13,7 +13,7 @@ class AddStatusToAtomsTable extends Migration
     public function up()
     {
         Schema::table('atoms', function($table) {
-            $table->integer('statusId')->default(0)->after('entityId');
+            $table->integer('statusId')->default(100)->after('entityId');
 
             $table->index('statusId');
         });
@@ -26,6 +26,8 @@ class AddStatusToAtomsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('atoms');
+        Schema::table('atoms', function($table) {
+            $table->dropColumn('statusId');
+        });
     }
 }

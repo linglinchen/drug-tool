@@ -211,7 +211,8 @@ class ImportAtoms extends Command
                     'moleculeCode' => $moleculeCode,
                     'xml' => Atom::assignXMLIds(trim($atomString)),
                     'created_at' => $timestamp,
-                    'updated_at' => $timestamp
+                    'updated_at' => $timestamp,
+                    'statusId' => 200
                 ];
 
                 DB::table('atoms')->insert($atomData);
