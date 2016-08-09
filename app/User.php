@@ -23,4 +23,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Returns a list of all users with sensitive fields excluded.
+     *
+     * @return array The list of users
+     */
+    public static function publicList() {
+        $users = self::all();
+
+        foreach($users as &$user) {
+            unset($user['password'], $user['remember_token']);
+        }
+
+        return $users;
+    }
 }

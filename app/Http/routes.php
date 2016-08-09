@@ -52,7 +52,9 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('lookups', ['uses' => 'LookupsController@listAction']);
 
-            Route::post('login', ['uses' => 'UserController@loginAction']);
+            Route::get('user', ['uses' => 'UserController@listAction']);
+            Route::post('user/login', ['uses' => 'UserController@loginAction']);
+            Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
         });
     });
 });

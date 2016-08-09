@@ -19,6 +19,17 @@ use App\AccessControl;
 class UserController extends Controller
 {
 	/**
+	 * Get a list of users.
+	 *
+	 * @api
+     *
+     * @return ApiPayload|Response
+	 */
+	public function listAction() {
+		return new ApiPayload(User::publicList());
+	}
+
+	/**
 	 * This endpoint's name is misleading. All it does is provide the user's information after they have already
 	 * passed through the authentication layer.
 	 *
