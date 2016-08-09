@@ -14,16 +14,16 @@ class CreateAssignmentsTable extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('entityId');
+            $table->string('atomEntityId');
             $table->integer('userId');
             $table->integer('taskId');
             $table->integer('createdBy');
-            $table->timestamp('taskStart');
-            $table->timestamp('taskEnd');
+            $table->timestamp('taskStart')->nullable();
+            $table->timestamp('taskEnd')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->timestamps();
 
-            $table->index('entityId');
+            $table->index('atomEntityId');
             $table->index('userId');
             $table->index('taskId');
             $table->index('createdBy');

@@ -50,9 +50,10 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::post('atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
             Route::delete('atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
 
-            Route::get('lookups', ['uses' => 'LookupsController@listAction']);
+            Route::get('lookup', ['uses' => 'LookupController@listAction']);
 
-            Route::get('assignment', ['list' => 'AssignmentsController@listAction']);
+            Route::get('assignment', ['uses' => 'AssignmentController@listAction']);
+            Route::post('assignment', ['uses' => 'AssignmentController@listAction']);
 
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);

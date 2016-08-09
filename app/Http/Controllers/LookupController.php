@@ -20,7 +20,7 @@ use App\ApiPayload;
  * This controller exists to serve up the lookup tables.
  * All endpoint methods should return an ApiPayload or Response.
  */
-class LookupsController extends Controller
+class LookupController extends Controller
 {
     /**
      * GET a list of all statuses.

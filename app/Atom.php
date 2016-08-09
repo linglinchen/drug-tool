@@ -255,11 +255,31 @@ class Atom extends Model {
     /**
      * Get the latest version of an atom regardless of whether or not it has been deleted.
      *
-     * @param string $entityId The entityId of the atom
+     * @param string|string $entityIds The entityId(s) of the atom
+     *
+     * @return mixed|mixed[]|null The atom(s)
+     */
+    public static function findNewest($entityIds) {
+        if(is_array($entityIds)) {      //plural
+            return self::whereIn('id', self::latestIDs())
+                    ->whereIn('entityId', $entityIds);
+        }
+        else {      //singular
+            return self::withTrashed()
+                    ->where('entityId', '=', $entityId)
+                    ->orderBy('id', 'desc')
+                    ->first();
+        }
+    }
+
+    /**
+     * Get the latest versions of a list of atoms regardless of whether or not it has been deleted.
+     *
+     * @param string[] $entityIds The entityId of the atom
      *
      * @return mixed[]|null The atom
      */
-    public static function findNewest($entityId) {
+    public static function findNewestInList($entityIds) {
         $atom = self::withTrashed()
                 ->where('entityId', '=', $entityId)
                 ->orderBy('id', 'desc')
