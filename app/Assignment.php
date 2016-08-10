@@ -43,8 +43,9 @@ class Assignment extends Model
 		foreach($output as &$row) {
 			foreach($atoms as $atomKey => $atom) {
 				if($atom['entityId'] == $row['atomEntityId']) {
+					unset($atom['xml']);		//a waste of bandwidth in this case
 					$row['atom'] = $atom;
-					unset($atoms[$atomKey]);
+					unset($atoms[$atomKey]);		//for performance
 				}
 			}
 		}
