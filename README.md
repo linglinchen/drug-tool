@@ -61,6 +61,7 @@ php artisan import:clearaclstructure
 php artisan import:clearacl
 php artisan import:clearatoms
 php artisan import:clearmolecules
+php artisan import:cleartasks
 ```
 - Import users, atoms, or molecules. See their files in **app/Console/Commands** for more information.
 ```
@@ -68,8 +69,9 @@ php artisan import:users
 php artisan import:groups
 php artisan import:aclstructure
 php artisan import:acl
-php artisan import:molecules
 php artisan import:atoms
+php artisan import:molecules
+php artisan import:tasks
 ```
 - Sometimes Laravel will fail to find a class that you just added, even though you did everything correctly. In those cases, try running all of these commands in order. You might need to alter the composer command to fit your setup.
 ```
