@@ -26,12 +26,7 @@ class Assignment extends Model
 	 */
 	public static function getList($filters) {
 		$output = self::orderBy('taskId');
-
-		if($filters) {
-			if(isset($filters['userId'])) {
-				$output = $output->where('userId', '=', $filters['userId']);
-			}
-		}
+		self::_addListFilters($output, $filters);
 		$output = $output->get()
 				->toArray();
 
@@ -51,5 +46,25 @@ class Assignment extends Model
 		}
 
 		return $output;
+	}
+
+	protected static function _addListFilters($query, $filters) {
+		if($filters) {
+			if(isset($filters['taskId'])) {
+				$query->where('taskId', '=', $filters['taskId']);
+			}
+
+			if(isset($filters['statusId'])) {
+				$query->where('statusId', '=', $filters['statusId']);
+			}
+
+			if(isset($filters['userId'])) {
+				$query->where('userId', '=', $filters['userId']);
+			}
+
+			if(isset($filters['active'])) {
+				$query->where('active', '=', $filters['active']);
+			}
+		}
 	}
 }
