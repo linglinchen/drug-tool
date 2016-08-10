@@ -10,9 +10,10 @@ use App\AccessControl;
 
 
 /**
+ * Since the ACL model defaults to denial, every line that is imported is treated as implicitly permitted.
  * Expected field headers for acl.csv:
  *
- * id,userId,groupId,accessControlStructureId,permitted
+ * userId,groupId,accessControlStructureId
  */
 class ImportACL extends Command
 {
@@ -37,6 +38,10 @@ class ImportACL extends Command
      */
     public function handle() {
         $filename = base_path() . '/data/import/acl.csv';
+        if(!file_exists($filename)) {
+            return;
+        }
+
         $lines = preg_split('/\v+/', trim(file_get_contents($filename)));
 
         //parse the lines as csv
@@ -67,6 +72,7 @@ class ImportACL extends Command
             $accessControl[$nullable] = $accessControl[$nullable] === '' ? null : $accessControl[$nullable];
         }
 
+        $accessControl['permitted'] = true;
         $accessControl['created_at'] = $timestamp;
         $accessControl['updated_at'] = $timestamp;
 

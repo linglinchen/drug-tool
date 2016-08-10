@@ -37,6 +37,10 @@ class ImportGroups extends Command
      */
     public function handle() {
         $filename = base_path() . '/data/import/groups.csv';
+        if(!file_exists($filename)) {
+            return;
+        }
+
         $lines = preg_split('/\v+/', trim(file_get_contents($filename)));
 
         //parse the lines as csv
