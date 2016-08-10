@@ -4,23 +4,23 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\AccessControlStructure;
+use App\AccessControl;
 
-class ImportClearACLStructure extends Command
+class ImportClearACL extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:clearaclstructure';
+    protected $signature = 'import:clearacl';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Truncate the access_control_structures table';
+    protected $description = 'Truncate the access_controls table';
 
     /**
      * Execute the console command.
@@ -29,8 +29,8 @@ class ImportClearACLStructure extends Command
      */
     public function handle()
     {
-        (new AccessControlStructure())->truncate();
+        (new AccessControl())->truncate();
 
-        echo "Access_control_structures table truncated\n";
+        echo "Access_controls table truncated\n";
     }
 }

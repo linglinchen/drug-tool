@@ -10,25 +10,25 @@ use App\Molecule;
 
 
 /**
- * Expected field headers for acl_structure.csv:
+ * Expected field headers for acl.csv:
  *
- * id,parentId,accessKey,title
+ * id,userId,groupId,accessControlStructureId,permitted
  */
-class ImportACLStructure extends Command
+class ImportACL extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:aclstructure';
+    protected $signature = 'import:acl';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/import/acl_structure.csv';
+    protected $description = 'Import molecules from data/import/acl.csv';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ImportACLStructure extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/import/acl_structure.csv';
+        $filename = base_path() . '/data/import/acl.csv';
         $lines = preg_split('/\v+/', trim(file_get_contents($filename)));
 
         //parse the lines as csv
@@ -62,8 +62,7 @@ class ImportACLStructure extends Command
     public function importStructure($structure) {
         $timestamp = (new Molecule())->freshTimestampString();
 
-
-        $nullables = ['parentId'];
+        $nullables = ['userId', 'groupId'];
         foreach($nullables as $nullable) {
             $structure[$nullable] = $structure[$nullable] === '' ? null : $structure[$nullable];
         }
@@ -71,6 +70,6 @@ class ImportACLStructure extends Command
         $structure['created_at'] = $timestamp;
         $structure['updated_at'] = $timestamp;
 
-        DB::table('access_control_structure')->insert($structure);
+        DB::table('access_control')->insert($structure);
     }
 }

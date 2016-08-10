@@ -21,6 +21,8 @@ class Kernel extends ConsoleKernel
         Commands\ImportAtoms::class,
         Commands\ImportClearACLStructure::class,
         Commands\ImportACLStructure::class,
+        Commands\ImportClearACL::class,
+        Commands\ImportACL::class,
     ];
 
     /**
