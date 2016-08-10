@@ -20,13 +20,15 @@ class Assignment extends Model
 	 *
 	 * @api
 	 *
-	 * @param Request ?array $filters The filters as key => value pairs
+	 * @param ?array $filters The filters as key => value pairs
+	 * @param ?array $order The order column and direction
 	 *
-	 * @return array The
+	 * @return array The list of assignments
 	 */
-	public static function getList($filters) {
-		$output = self::orderBy('taskId');
+	public static function getList($filters, $order) {
+		$output = self::select();
 		self::_addListFilters($output, $filters);
+		self::_addOrder($output, $order);
 		$output = $output->get()
 				->toArray();
 
@@ -65,6 +67,16 @@ class Assignment extends Model
 			if(isset($filters['active'])) {
 				$query->where('active', '=', $filters['active']);
 			}
+		}
+	}
+
+	protected static function _addOrder($query, $order) {
+		if($order && isset($order['column'])) {
+			$order['direction'] = isset($order['direction']) && strtolower($order['direction']) == 'desc' ?
+					'desc' :
+					'asc';
+
+			$query->orderBy($order['column'], $order['direction']);
 		}
 	}
 }

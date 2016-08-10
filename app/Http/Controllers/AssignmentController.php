@@ -29,6 +29,6 @@ class AssignmentController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction(Request $request) {
-        return new ApiPayload(Assignment::getList($request->input('filters')));
+        return new ApiPayload(Assignment::getList($request->input('filters'), $request->input('order')));
     }
 }
