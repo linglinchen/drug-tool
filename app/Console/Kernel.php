@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\ImportClearUsers::class,
         Commands\ImportUsers::class,
+        Commands\ImportClearGroups::class,
+        Commands\ImportGroups::class,
         Commands\ImportClearMolecules::class,
         Commands\ImportMolecules::class,
         Commands\ImportClearAtoms::class,

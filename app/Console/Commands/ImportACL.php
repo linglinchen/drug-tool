@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use DB;
 
-use App\Molecule;
+use App\AccessControl;
 
 
 /**
@@ -47,29 +47,29 @@ class ImportACL extends Command
         $headers = array_shift($lines);     //first row is expected to contain the headers
 
         foreach($lines as $line) {
-            $structure = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
-            $this->importStructure($structure);
+            $accessControl = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
+            $this->importAccessControl($accessControl);
         }
 
         echo "Done\n";
     }
 
     /**
-     * Import an ACL structure line.
+     * Import an ACL line.
      *
-     * @param array $structure The ACL structure line as an associative array
+     * @param array $accessControl The ACL line as an associative array
      */
-    public function importStructure($structure) {
-        $timestamp = (new Molecule())->freshTimestampString();
+    public function importAccessControl($accessControl) {
+        $timestamp = (new AccessControl())->freshTimestampString();
 
         $nullables = ['userId', 'groupId'];
         foreach($nullables as $nullable) {
-            $structure[$nullable] = $structure[$nullable] === '' ? null : $structure[$nullable];
+            $accessControl[$nullable] = $accessControl[$nullable] === '' ? null : $accessControl[$nullable];
         }
 
-        $structure['created_at'] = $timestamp;
-        $structure['updated_at'] = $timestamp;
+        $accessControl['created_at'] = $timestamp;
+        $accessControl['updated_at'] = $timestamp;
 
-        DB::table('access_control')->insert($structure);
+        DB::table('access_control')->insert($accessControl);
     }
 }

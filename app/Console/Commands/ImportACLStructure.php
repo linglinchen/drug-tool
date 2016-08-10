@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use DB;
 
-use App\Molecule;
+use App\AccessControlStructure;
 
 
 /**
@@ -60,7 +60,7 @@ class ImportACLStructure extends Command
      * @param array $structure The ACL structure line as an associative array
      */
     public function importStructure($structure) {
-        $timestamp = (new Molecule())->freshTimestampString();
+        $timestamp = (new AccessControlStructure())->freshTimestampString();
 
 
         $nullables = ['parentId'];
