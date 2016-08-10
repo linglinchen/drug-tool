@@ -28,7 +28,7 @@ class ImportACLStructure extends Command
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/import/acl_structure.csv';
+    protected $description = 'Import ACL structure from data/import/acl_structure.csv';
 
     /**
      * Execute the console command.

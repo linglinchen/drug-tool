@@ -28,7 +28,7 @@ class ImportACL extends Command
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/import/acl.csv';
+    protected $description = 'Import ACL from data/import/acl.csv';
 
     /**
      * Execute the console command.

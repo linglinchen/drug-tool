@@ -28,7 +28,7 @@ class ImportGroups extends Command
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/import/groups.csv';
+    protected $description = 'Import groups from data/import/groups.csv';
 
     /**
      * Execute the console command.
