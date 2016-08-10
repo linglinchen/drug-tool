@@ -64,6 +64,6 @@ class ImportTasks extends Command
      * @param array $task The task line as an associative array
      */
     public function importTask($task) {
-        DB::table('groups')->insert($task);
+        DB::table('tasks')->insert($task);
     }
 }
