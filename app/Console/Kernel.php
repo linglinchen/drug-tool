@@ -19,6 +19,8 @@ class Kernel extends ConsoleKernel
         Commands\ImportMolecules::class,
         Commands\ImportClearAtoms::class,
         Commands\ImportAtoms::class,
+        Commands\ImportClearACLStructure::class,
+        Commands\ImportACLStructure::class,
     ];
 
     /**
