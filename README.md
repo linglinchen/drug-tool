@@ -56,12 +56,18 @@ sudo service httpd restart
 - You can truncate the **users**, **atoms**, and **molecules** tables with these commands.
 ```
 php artisan import:clearusers
+php artisan import:cleargroups
+php artisan import:clearaclstructure
+php artisan import:clearacl
 php artisan import:clearatoms
 php artisan import:clearmolecules
 ```
 - Import users, atoms, or molecules. See their files in **app/Console/Commands** for more information.
 ```
 php artisan import:users
+php artisan import:groups
+php artisan import:aclstructure
+php artisan import:acl
 php artisan import:molecules
 php artisan import:atoms
 ```

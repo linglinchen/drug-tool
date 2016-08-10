@@ -6,29 +6,29 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use DB;
 
-use App\Molecule;
+use App\Group;
 
 
 /**
- * Expected field headers for molecules.csv:
+ * Expected field headers for groups.csv:
  *
- * code,title
+ * title
  */
-class ImportMolecules extends Command
+class ImportGroups extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:molecules';
+    protected $signature = 'import:groups';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import molecules from data/import/molecules.csv';
+    protected $description = 'Import groups from data/import/groups.csv';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ImportMolecules extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/import/molecules.csv';
+        $filename = base_path() . '/data/import/groups.csv';
         if(!file_exists($filename)) {
             return;
         }
@@ -51,24 +51,24 @@ class ImportMolecules extends Command
         $headers = array_shift($lines);     //first row is expected to contain the headers
 
         foreach($lines as $line) {
-            $molecule = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
-            $this->importMolecule($molecule);
+            $group = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
+            $this->importGroup($group);
         }
 
         echo "Done\n";
     }
 
     /**
-     * Import a molecule.
+     * Import a group line.
      *
-     * @param array $molecule The molecule as an associative array
+     * @param array $group The group line as an associative array
      */
-    public function importMolecule($molecule) {
-        $timestamp = (new Molecule())->freshTimestampString();
+    public function importGroup($group) {
+        $timestamp = (new Group())->freshTimestampString();
 
-        $molecule['created_at'] = $timestamp;
-        $molecule['updated_at'] = $timestamp;
+        $group['created_at'] = $timestamp;
+        $group['updated_at'] = $timestamp;
 
-        DB::table('molecules')->insert($molecule);
+        DB::table('groups')->insert($group);
     }
 }

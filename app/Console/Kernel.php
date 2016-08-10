@@ -15,10 +15,16 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\ImportClearUsers::class,
         Commands\ImportUsers::class,
+        Commands\ImportClearGroups::class,
+        Commands\ImportGroups::class,
         Commands\ImportClearMolecules::class,
         Commands\ImportMolecules::class,
         Commands\ImportClearAtoms::class,
         Commands\ImportAtoms::class,
+        Commands\ImportClearACLStructure::class,
+        Commands\ImportACLStructure::class,
+        Commands\ImportClearACL::class,
+        Commands\ImportACL::class,
     ];
 
     /**
