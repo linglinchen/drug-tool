@@ -53,7 +53,7 @@ sudo service httpd restart
 
 - Refresh/reseed database by running: `php artisan migrate:refresh --seed`
 - See a list of available Artisan commands: `php artisan`
-- You can truncate the **users**, **atoms**, and **molecules** tables with these commands.
+- You can truncate the various tables with these commands.
 ```
 php artisan import:clearusers
 php artisan import:cleargroups
@@ -63,7 +63,7 @@ php artisan import:clearatoms
 php artisan import:clearmolecules
 php artisan import:cleartasks
 ```
-- Import users, atoms, or molecules. See their files in **app/Console/Commands** for more information.
+- Import all the things. See their files in **app/Console/Commands** for more information.
 ```
 php artisan import:users
 php artisan import:groups
