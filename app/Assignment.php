@@ -21,11 +21,12 @@ class Assignment extends Model
 	 * @api
 	 *
 	 * @param ?array $filters The filters as key => value pairs
-	 * @param ?array $order The order column and direction
+	 * @param ?array $order (optional) The order column and direction
+	 * @param boolean $addAtoms (optional) Add associated atoms to the assignments?
 	 *
 	 * @return array The list of assignments
 	 */
-	public static function getList($filters, $order) {
+	public static function getList($filters, $order = [], $addAtoms = false) {
 		$output = self::select();
 		self::_addListFilters($output, $filters);
 		self::_addOrder($output, $order);
@@ -33,16 +34,18 @@ class Assignment extends Model
 				->toArray();
 
 		//Laravel's built-in hasOne functionality won't work on atoms
-		$entityIds = array_column($output, 'atomEntityId');
-		$atoms = Atom::findNewest($entityIds)
-				->get()
-				->toArray();
-		foreach($output as &$row) {
-			foreach($atoms as $atomKey => $atom) {
-				if($atom['entityId'] == $row['atomEntityId']) {
-					unset($atom['xml']);		//a waste of bandwidth in this case
-					$row['atom'] = $atom;
-					unset($atoms[$atomKey]);		//for performance
+		if($addAtoms) {
+			$entityIds = array_column($output, 'atomEntityId');
+			$atoms = Atom::findNewest($entityIds)
+					->get()
+					->toArray();
+			foreach($output as &$row) {
+				foreach($atoms as $atomKey => $atom) {
+					if($atom['entityId'] == $row['atomEntityId']) {
+						unset($atom['xml']);		//a waste of bandwidth in this case
+						$row['atom'] = $atom;
+						unset($atoms[$atomKey]);		//for performance
+					}
 				}
 			}
 		}

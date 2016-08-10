@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 
 use App\FuzzyRank;
+use App\Assignment;
 
 class Atom extends Model {
     use SoftDeletes;
@@ -302,5 +303,19 @@ class Atom extends Model {
                 ->first();
 
         return ($atom && $atom->trashed()) ? null : $atom;
+    }
+
+    /**
+     * Add active assignments to the atom.
+     *
+     * @return object This object
+     */
+    public function addAssignments() {
+        $this->assignments = Assignment::getList([
+            'atomEntityId' => $this->entityId,
+            'active' => true
+        ]);
+
+        return $this;
     }
 }
