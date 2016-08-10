@@ -51,7 +51,7 @@ sudo service httpd restart
 
 # Notes
 
-- Refresh/reseed database by running: `php artisan migrate:refresh --seed`
+- Refresh database by running: `php artisan migrate:refresh`
 - See a list of available Artisan commands: `php artisan`
 - You can truncate the various tables with these commands.
 ```
