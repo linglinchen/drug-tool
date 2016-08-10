@@ -27,6 +27,8 @@ class Kernel extends ConsoleKernel
         Commands\ImportACL::class,
         Commands\ImportClearTasks::class,
         Commands\ImportTasks::class,
+        Commands\ImportClearStatuses::class,
+        Commands\ImportStatuses::class,
     ];
 
     /**

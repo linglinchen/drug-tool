@@ -62,6 +62,7 @@ php artisan import:clearacl
 php artisan import:clearatoms
 php artisan import:clearmolecules
 php artisan import:cleartasks
+php artisan import:clearstatuses
 ```
 - Import all the things. See their files in **app/Console/Commands** for more information.
 ```
@@ -72,6 +73,7 @@ php artisan import:acl
 php artisan import:atoms
 php artisan import:molecules
 php artisan import:tasks
+php artisan import:statuses
 ```
 - Sometimes Laravel will fail to find a class that you just added, even though you did everything correctly. In those cases, try running all of these commands in order. You might need to alter the composer command to fit your setup.
 ```
