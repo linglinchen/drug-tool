@@ -54,21 +54,13 @@ class Assignment extends Model
 	}
 
 	protected static function _addListFilters($query, $filters) {
+		$validFilters = ['taskId', 'statusId', 'userId', 'active', 'atomEntityId'];
+
 		if($filters) {
-			if(isset($filters['taskId'])) {
-				$query->where('taskId', '=', $filters['taskId']);
-			}
-
-			if(isset($filters['statusId'])) {
-				$query->where('statusId', '=', $filters['statusId']);
-			}
-
-			if(isset($filters['userId'])) {
-				$query->where('userId', '=', $filters['userId']);
-			}
-
-			if(isset($filters['active'])) {
-				$query->where('active', '=', $filters['active']);
+			foreach($validFilters as $validFilter) {
+				if(isset($filters[$validFilter])) {
+					$query->where($validFilter, '=', $filters[$validFilter]);
+				}
 			}
 		}
 	}
