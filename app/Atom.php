@@ -256,14 +256,14 @@ class Atom extends Model {
     /**
      * Get the latest version of an atom regardless of whether or not it has been deleted.
      *
-     * @param string|string $entityIds The entityId(s) of the atom
+     * @param string|string $entityId The entityId(s) of the atom
      *
      * @return mixed|mixed[]|null The atom(s)
      */
-    public static function findNewest($entityIds) {
-        if(is_array($entityIds)) {      //plural
+    public static function findNewest($entityId) {
+        if(is_array($entityId)) {      //plural
             return self::whereIn('id', self::latestIDs())
-                    ->whereIn('entityId', $entityIds);
+                    ->whereIn('entityId', $entityId);
         }
         else {      //singular
             return self::withTrashed()
