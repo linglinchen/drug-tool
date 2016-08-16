@@ -58,7 +58,6 @@ class AssignmentController extends Controller
         //get the currently active assignment
         $lastAssignment = Assignment::find(1)
                 ->orderBy('id', 'DESC')
-                ->where('active', '=', '1')
                 ->where('atomEntityId', '=', $assignment->atomEntityId)
                 ->first();
 
