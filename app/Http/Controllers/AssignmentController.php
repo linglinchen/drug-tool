@@ -44,13 +44,7 @@ class AssignmentController extends Controller
      * @return ApiPayload|Response
      */
     public function postAction(Request $request) {
-        //get the currently active assignment
-        $lastAssignment = Assignment::find(1)
-                ->orderBy('id', 'DESC')
-                ->where('active', '=', '1')
-                ->first();
-
-        //save the new assignment
+        //build the new assignment
         $input = $request->all();
         $user = \Auth::user();
         $assignment = new Assignment();
@@ -60,6 +54,15 @@ class AssignmentController extends Controller
             }
         }
         $assignment->createdBy = $user->id;
+
+        //get the currently active assignment
+        $lastAssignment = Assignment::find(1)
+                ->orderBy('id', 'DESC')
+                ->where('active', '=', '1')
+                ->where('atomEntityId', '=', $assignment->atomEntityId)
+                ->first();
+
+        //save the new assignment
         $assignment->save();
 
         //end the previous assignment
