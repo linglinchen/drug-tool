@@ -66,7 +66,7 @@ class AtomController extends Controller
         }
         $atom->save();
 
-        return new ApiPayload($atom);
+        return new ApiPayload($atom->addAssignments());
     }
 
     /**
@@ -114,7 +114,7 @@ class AtomController extends Controller
         }
         $atom->save();
 
-        return new ApiPayload($atom);
+        return new ApiPayload($atom->addAssignments());
     }
 
     /**
