@@ -65,7 +65,7 @@ class AssignmentController extends Controller
         //end the previous assignment
         if($lastAssignment) {
             $lastAssignment->taskEnd = $assignment->created_at;
-            $assignment->save();
+            $lastAssignment->save();
         }
 
         return new ApiPayload($assignment);
