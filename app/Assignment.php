@@ -58,18 +58,35 @@ class Assignment extends Model
 		return $output;
 	}
 
+	/**
+	 * Add filters to the list query.
+	 *
+	 * @param object $query The query object to modify
+	 * @param mixed[] $filters The filters to add represented as key => value pairs
+	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['taskId', 'statusId', 'userId', 'active', 'atomEntityId'];
-
+		$validFilters = ['taskId', 'statusId', 'userId', 'active', 'atomEntityId', 'taskEnd'];
+var_dump($filters);exit;
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
-					$query->where($validFilter, '=', $filters[$validFilter]);
+					if($filters[$validFilter] === null) {
+						$query->whereNull($validFilter);
+					}
+					else {
+						$query->where($validFilter, '=', $filters[$validFilter]);
+					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Order the list query.
+	 *
+	 * @param object $query The query object to modify
+	 * @param string[] $order The order column and direction
+	 */
 	protected static function _addOrder($query, $order) {
 		if($order && isset($order['column'])) {
 			$order['direction'] = isset($order['direction']) && strtolower($order['direction']) == 'desc' ?
