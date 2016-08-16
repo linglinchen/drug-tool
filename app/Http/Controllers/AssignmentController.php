@@ -61,8 +61,10 @@ class AssignmentController extends Controller
                 ->where('atomEntityId', '=', $assignment->atomEntityId)
                 ->first();
 
-        //save the new assignment
-        $assignment->save();
+        //save the new assignment if it has a taskId
+        if($assignment->taskId) {
+            $assignment->save();
+        }
 
         //end the previous assignment
         if($lastAssignment) {
@@ -70,6 +72,11 @@ class AssignmentController extends Controller
             $lastAssignment->save();
         }
 
-        return new ApiPayload($assignment);
+        //only return the assignment if we saved it
+        if($assignment->taskId) {
+            return new ApiPayload($assignment);
+        }
+
+        return new ApiPayload(null);
     }
 }
