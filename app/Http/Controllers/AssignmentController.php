@@ -8,7 +8,10 @@ use App\Http\Requests;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+use DB;
+
 use App\Assignment;
+use App\Atom;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -68,15 +71,10 @@ class AssignmentController extends Controller
 
         //end the previous assignment
         if($lastAssignment) {
-            $lastAssignment->taskEnd = $assignment->created_at;
+            $lastAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
             $lastAssignment->save();
         }
 
-        //only return the assignment if we saved it
-        if($assignment->taskId) {
-            return new ApiPayload($assignment);
-        }
-
-        return new ApiPayload(null);
+        return new ApiPayload(Atom::getAssignments($assignment->atomEntityId));
     }
 }

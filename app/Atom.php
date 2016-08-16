@@ -311,11 +311,22 @@ class Atom extends Model {
      * @return object This object
      */
     public function addAssignments() {
-        $this->assignments = Assignment::getList([
-            'atomEntityId' => $this->entityId,
-            'active' => true
-        ]);
+        $this->assignments = self::getAssignments($this->entityId);
 
         return $this;
+    }
+
+    /**
+     * Get active assignments for the given atom entityId.
+     *
+     * @param string $entityId The atom's entityId
+     *
+     * @return object[] The assignments
+     */
+    public static function getAssignments($entityId) {
+        return Assignment::getList([
+            'atomEntityId' => $entityId,
+            'active' => true
+        ]);
     }
 }
