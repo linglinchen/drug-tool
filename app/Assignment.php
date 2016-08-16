@@ -65,7 +65,7 @@ class Assignment extends Model
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['taskId', 'statusId', 'userId', 'active', 'atomEntityId', 'taskEnded'];
+		$validFilters = ['taskId', 'statusId', 'userId', 'atomEntityId', 'taskEnded'];
 
 		if($filters) {
 			foreach($validFilters as $validFilter) {

@@ -19,7 +19,7 @@ use App\ApiPayload;
  */
 class AssignmentController extends Controller
 {
-    protected $_allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskStart', 'taskEnd', 'active'];
+    protected $_allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
 
     /**
      * GET a list of assignments.
