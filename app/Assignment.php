@@ -39,12 +39,17 @@ class Assignment extends Model
 			$atoms = Atom::findNewest($entityIds)
 					->get()
 					->toArray();
+
+			//remove xml
+			foreach($atoms as $atomKey => $atom) {
+				unset($atom['xml']);		//a waste of bandwidth in this case
+			}
+
 			foreach($output as &$row) {
 				foreach($atoms as $atomKey => $atom) {
 					if($atom['entityId'] == $row['atomEntityId']) {
-						unset($atom['xml']);		//a waste of bandwidth in this case
 						$row['atom'] = $atom;
-						unset($atoms[$atomKey]);		//for performance
+						break;
 					}
 				}
 			}
