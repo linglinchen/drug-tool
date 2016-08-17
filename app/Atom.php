@@ -325,7 +325,12 @@ class Atom extends AppModel {
      */
     public static function getAssignments($entityId) {
         return (new Assignment)->getList([
-            'atomEntityId' => $entityId
-        ]);
+                'atomEntityId' => $entityId
+            ],
+            [
+                'column' => 'assignments.id',
+                'direction' => 'asc'
+            ]
+        );
     }
 }
