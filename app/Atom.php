@@ -311,7 +311,7 @@ class Atom extends Model {
      * @return object This object
      */
     public function addAssignments() {
-        $this->assignments = self::getAssignments($this->entityId);
+        $this->assignments = self::getAssignments($this->entityId)['assignments'];
 
         return $this;
     }
