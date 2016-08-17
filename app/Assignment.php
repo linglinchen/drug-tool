@@ -65,9 +65,11 @@ class Assignment extends Model
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['taskId', 'statusId', 'userId', 'atomEntityId', 'taskEnded'];
+		$validFilters = ['taskId', 'atoms.statusId', 'userId', 'atomEntityId', 'taskEnded'];
 
 		if($filters) {
+			self::_joinAtoms($query);
+
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter];
@@ -102,5 +104,16 @@ class Assignment extends Model
 
 			$query->orderBy($order['column'], $order['direction']);
 		}
+	}
+
+	/**
+	 * Join in the current versions of the atoms.
+	 *
+	 * @param object $query The query object to modify
+	 */
+	protected static function _joinAtoms($query) {
+		$currentAtomIds = Atom::latestIDs();
+		$query->leftJoin('atoms', 'assignments.atomEntityId', '=', 'atoms.entityId')
+				->whereIn('atoms.id', $currentAtomIds);
 	}
 }
