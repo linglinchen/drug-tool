@@ -77,10 +77,12 @@ class Assignment extends AppModel {
 	 * @return ?object The assignment (if found)
 	 */
 	public static function getCurrentAssignment($entityId) {
-        return self::find(1)
+        $assignment = self::find(1)
                 ->orderBy('id', 'DESC')
                 ->where('atomEntityId', '=', $entityId)
                 ->first();
+
+        return $assignment->taskEnd ? null : $assignment;
 	}
 
 	/**
