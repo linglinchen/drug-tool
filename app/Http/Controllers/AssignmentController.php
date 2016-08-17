@@ -58,11 +58,7 @@ class AssignmentController extends Controller
         }
         $assignment->createdBy = $user->id;
 
-        //get the currently active assignment
-        $lastAssignment = Assignment::find(1)
-                ->orderBy('id', 'DESC')
-                ->where('atomEntityId', '=', $assignment->atomEntityId)
-                ->first();
+        $currentAssignment = Assignment::getCurrentAssignment($assignment->atomEntityId);
 
         //save the new assignment if it has a taskId
         if($assignment->taskId) {
@@ -70,9 +66,9 @@ class AssignmentController extends Controller
         }
 
         //end the previous assignment
-        if($lastAssignment) {
-            $lastAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
-            $lastAssignment->save();
+        if($currentAssignment) {
+            $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
+            $currentAssignment->save();
         }
 
         return new ApiPayload(Atom::getAssignments($assignment->atomEntityId));

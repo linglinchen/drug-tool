@@ -59,6 +59,20 @@ class Assignment extends Model
 	}
 
 	/**
+	 * Get the specified atom's currently active assignment.
+	 *
+	 * @param string $entityId The atom's entityId
+	 *
+	 * @return ?object The assignment (if found)
+	 */
+	public static function getCurrentAssignment($entityId) {
+        return self::find(1)
+                ->orderBy('id', 'DESC')
+                ->where('atomEntityId', '=', $entityId)
+                ->first();
+	}
+
+	/**
 	 * Add filters to the list query.
 	 *
 	 * @param object $query The query object to modify
