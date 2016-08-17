@@ -13,21 +13,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\ImportClearUsers::class,
+        Commands\ImportClear::class,
         Commands\ImportUsers::class,
-        Commands\ImportClearGroups::class,
         Commands\ImportGroups::class,
-        Commands\ImportClearMolecules::class,
         Commands\ImportMolecules::class,
-        Commands\ImportClearAtoms::class,
         Commands\ImportAtoms::class,
-        Commands\ImportClearACLStructure::class,
         Commands\ImportACLStructure::class,
-        Commands\ImportClearACL::class,
         Commands\ImportACL::class,
-        Commands\ImportClearTasks::class,
         Commands\ImportTasks::class,
-        Commands\ImportClearStatuses::class,
         Commands\ImportStatuses::class,
     ];
 

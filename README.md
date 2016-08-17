@@ -55,14 +55,14 @@ sudo service httpd restart
 - See a list of available Artisan commands: `php artisan`
 - You can truncate the various tables with these commands.
 ```
-php artisan import:clearusers
-php artisan import:cleargroups
-php artisan import:clearaclstructure
-php artisan import:clearacl
-php artisan import:clearatoms
-php artisan import:clearmolecules
-php artisan import:cleartasks
-php artisan import:clearstatuses
+php artisan import:clear users
+php artisan import:clear groups
+php artisan import:clear access_control_structure
+php artisan import:clear access_controls
+php artisan import:clear atoms
+php artisan import:clear molecules
+php artisan import:clear tasks
+php artisan import:clear statuses
 ```
 - Import all the things. See their files in **app/Console/Commands** for more information.
 ```
