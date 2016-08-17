@@ -34,7 +34,10 @@ class AssignmentController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction(Request $request) {
-        return new ApiPayload(Assignment::getList($request->input('filters'), $request->input('order'), true));
+        $limit = $request->input('limit') ? max((int)$request->input('limit', 10), 1) : null;
+        $page = $request->input('page') ? max((int)$request->input('page', 1), 1) : null;
+
+        return new ApiPayload(Assignment::getList($request->input('filters'), $request->input('order'), $limit, $page, true));
     }
 
     /**

@@ -22,20 +22,29 @@ class Assignment extends Model
 	 *
 	 * @param ?array $filters The filters as key => value pairs
 	 * @param ?array $order (optional) The order column and direction
+     * @param ?int $limit (optional) Max number of results per page
+     * @param int $page (optional) The results page to retrieve
 	 * @param boolean $addAtoms (optional) Add associated atoms to the assignments?
 	 *
 	 * @return array The list of assignments
 	 */
-	public static function getList($filters, $order = [], $addAtoms = false) {
-		$output = self::select();
-		self::_addListFilters($output, $filters);
-		self::_addOrder($output, $order);
-		$output = $output->get()
+	public static function getList($filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+		$query = self::select();
+		self::_addListFilters($query, $filters);
+		self::_addOrder($query, $order);
+		$count = $query->count();
+
+		//paginate the results
+		if($limit) {
+			$query->skip($limit * ($page - 1))->take($limit);
+		}
+
+		$assignments = $query->get()
 				->toArray();
 
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
-			$entityIds = array_column($output, 'atomEntityId');
+			$entityIds = array_column($assignments, 'atomEntityId');
 			$atoms = Atom::findNewest($entityIds)
 					->get()
 					->toArray();
@@ -45,7 +54,7 @@ class Assignment extends Model
 				unset($atom['xml']);		//a waste of bandwidth in this case
 			}
 
-			foreach($output as &$row) {
+			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
 					if($atom['entityId'] == $row['atomEntityId']) {
 						$row['atom'] = $atom;
@@ -55,7 +64,10 @@ class Assignment extends Model
 			}
 		}
 
-		return $output;
+		return [
+			'assignments' => $assignments,
+			'count' => $count
+		];
 	}
 
 	/**
