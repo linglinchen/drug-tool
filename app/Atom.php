@@ -325,8 +325,7 @@ class Atom extends AppModel {
      */
     public static function getAssignments($entityId) {
         return (new Assignment)->getList([
-            'atomEntityId' => $entityId,
-            'active' => true
+            'atomEntityId' => $entityId
         ]);
     }
 }

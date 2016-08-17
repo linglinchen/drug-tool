@@ -127,7 +127,8 @@ class Assignment extends AppModel {
 					'desc' :
 					'asc';
 
-			$query->orderBy($order['column'], $order['direction']);
+			$query->orderBy($order['column'], $order['direction'])
+					->groupBy($order['column']);
 		}
 	}
 
