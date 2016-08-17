@@ -2,14 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 use DB;
+
+use App\AppModel;
 
 /**
  * Manages the ACL structure.
  */
-class AccessControlStructure extends Model {
+class AccessControlStructure extends AppModel {
 	/**
 	 * @var string $table This model's corresponding database table
 	 */

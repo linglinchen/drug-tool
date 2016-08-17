@@ -2,10 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AppModel;
 
-class Status extends Model
-{
+class Status extends AppModel {
     protected $table = 'statuses';
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at'];

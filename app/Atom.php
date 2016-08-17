@@ -2,15 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
 
+use App\AppModel;
 use App\FuzzyRank;
 use App\Assignment;
 
-class Atom extends Model {
+class Atom extends AppModel {
     use SoftDeletes;
 
     /**
@@ -324,7 +324,7 @@ class Atom extends Model {
      * @return object[] The assignments
      */
     public static function getAssignments($entityId) {
-        return Assignment::getList([
+        return (new Assignment)->getList([
             'atomEntityId' => $entityId,
             'active' => true
         ]);

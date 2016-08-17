@@ -2,11 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Molecule extends Model
-{
+use App\AppModel;
+
+class Molecule extends AppModel {
     use SoftDeletes;
 
     protected $table = 'molecules';

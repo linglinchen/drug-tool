@@ -2,14 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 use DB;
 
+use App\AppModel;
 use App\Atom;
 
-class Assignment extends Model
-{
+class Assignment extends AppModel {
 	protected $table = 'assignments';
 	protected $guarded = ['id'];
 	protected $dates = ['created_at', 'updated_at'];
@@ -28,8 +26,9 @@ class Assignment extends Model
 	 *
 	 * @return array The list of assignments
 	 */
-	public static function getList($filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
-		$query = self::select();
+	public function getList($filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+		$columns = $this->getMyColumns();
+		$query = self::select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 		$count = $query->count();

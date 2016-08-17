@@ -2,18 +2,17 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 use DB;
 use Log;
 
+use App\AppModel;
 use App\AccessControlStructure;
 
 /**
  * Manages ACLs. Defaults to denial. Supports per-group and per-user permission settings. The behavior of this model
  * is expected to match the ACL model in the UI.
  */
-class AccessControl extends Model {
+class AccessControl extends AppModel {
 	/**
 	 * @var string $table This model's corresponding database table
 	 */
