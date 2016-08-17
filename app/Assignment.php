@@ -82,7 +82,7 @@ class Assignment extends AppModel {
                 ->where('atomEntityId', '=', $entityId)
                 ->first();
 
-        return $assignment->taskEnd ? null : $assignment;
+        return ($assignment && $assignment->taskEnd) ? null : $assignment;
 	}
 
 	/**
