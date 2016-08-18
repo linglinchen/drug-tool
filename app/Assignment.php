@@ -120,6 +120,8 @@ class Assignment extends AppModel {
 	/**
 	 * Order the list query.
 	 *
+	 * @fixme Ordering broke somehow...
+	 *
 	 * @param object $query The query object to modify
 	 * @param string[] $order The order column and direction
 	 */
