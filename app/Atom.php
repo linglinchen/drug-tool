@@ -216,12 +216,13 @@ class Atom extends AppModel {
      * Get a list of the latest version of every atom that hasn't been deleted.
      *
      * @param string $query The user's search query
+     * @param mixed[] $filters (optional) Filter the search with these key => value pairs
      * @param int $limit (optional) Max number of results per page
      * @param int $page (optional) The results page to retrieve
      *
      * @return string[] The IDs of all current atoms
      */
-    public static function search($query, $limit = 10, $page = 1) {
+    public static function search($query, $filters = [], $limit = 10, $page = 1) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
@@ -247,10 +248,32 @@ class Atom extends AppModel {
         $candidates = array_keys($candidates);
         $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
 
+        $query = self::whereIn('id', $candidates);
+        self::_addFilters($query, $filters);
+
         return [
             'count' => $count,
-            'atoms' => self::whereIn('id', $candidates)->get()
+            'atoms' => $query->get()
         ];
+    }
+
+    /**
+     * Add filters to the query.
+     *
+     * @param object $query The query object to modify
+     * @param mixed[] $filters The filters to add represented as key => value pairs
+     */
+    protected static function _addFilters($query, $filters) {
+        $validFilters = ['statusId', 'moleculeCode'];
+
+        if($filters) {
+            foreach($validFilters as $validFilter) {
+                if(isset($filters[$validFilter])) {
+                    $filterValue = $filters[$validFilter];
+                    $query->where($validFilter, '=', $filterValue);
+                }
+            }
+        }
     }
 
     /**

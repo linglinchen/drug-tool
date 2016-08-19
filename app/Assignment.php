@@ -92,7 +92,7 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['taskId', 'atoms.statusId', 'userId', 'atomEntityId', 'taskEnded'];
+		$validFilters = ['taskId', 'atoms.moleculeCode', 'userId', 'atomEntityId', 'taskEnded'];
 
 		if($filters) {
 			self::_joinAtoms($query);
@@ -101,7 +101,7 @@ class Assignment extends AppModel {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter];
 
-					if($validFilter === 'taskEnded') {
+					if($validFilter == 'taskEnded') {
 						if($filterValue) {
 							$query->whereNotNull('taskEnd');
 						}

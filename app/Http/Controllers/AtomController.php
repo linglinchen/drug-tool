@@ -184,10 +184,11 @@ class AtomController extends Controller
      */
     public function searchAction(Request $request) {
         $q = strtolower($request->input('q', ''));
+        $filters = $request->input('filters', []);
         $limit = max((int)$request->input('limit', 10), 1);
         $page = max((int)$request->input('page', 1), 1);
 
-        $results = $q ? Atom::search($q, $limit, $page) : [];
+        $results = $q ? Atom::search($q, $filters, $limit, $page) : [];
 
         return new ApiPayload($results);
     }
