@@ -76,6 +76,6 @@ class ImportACL extends Command
         $accessControl['created_at'] = $timestamp;
         $accessControl['updated_at'] = $timestamp;
 
-        DB::table('access_control')->insert($accessControl);
+        DB::table('access_controls')->insert($accessControl);
     }
 }
