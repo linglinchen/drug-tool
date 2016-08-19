@@ -17,7 +17,7 @@ class CreateAssignmentsTable extends Migration
             $table->string('atomEntityId');
             $table->integer('userId');
             $table->integer('taskId');
-            $table->integer('createdBy');
+            $table->integer('createdBy')->nullable();
             $table->timestamp('taskStart')->nullable();
             $table->timestamp('taskEnd')->nullable();
             $table->tinyInteger('active')->default(1);

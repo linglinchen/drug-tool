@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportACL::class,
         Commands\ImportTasks::class,
         Commands\ImportStatuses::class,
+        Commands\CreateAssignments::class,
     ];
 
     /**
