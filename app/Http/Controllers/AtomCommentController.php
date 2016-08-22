@@ -13,10 +13,9 @@ use App\ApiPayload;
 use App\Atom;
 use App\Comment;
 
-class AtomCommentController extends Controller
-{
-    public function postAction($atomId) {
-        if(!Atom::findNewestIfNotDeleted($atomId)) {
+class AtomCommentController extends Controller {
+    public function postAction($atomEntityId) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
@@ -29,8 +28,8 @@ class AtomCommentController extends Controller
         }
 
         $comment = Comment::create([
-            'atomId' => $atomId,
-            'userId' => 1,        //TODO: make this use the user's actual id
+            'atomEntityId' => $atomEntityId,
+            'userId' => \Auth::user()['id'],
             'parentId' => (int)$_POST['parentId'],
             'text' => $_POST['text']
         ]);
@@ -38,14 +37,14 @@ class AtomCommentController extends Controller
         return new ApiPayload($comment);
     }
 
-    public function deleteAction($atomId, $commentId) {
-        if(!Atom::findNewestIfNotDeleted($atomId)) {
+    public function deleteAction($atomEntityId, $commentId) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
         $comment = Comment::where([
                 ['id', '=', $commentId],
-                ['atomId', '=', $atomId]
+                ['atomEntityId', '=', $atomEntityId]
             ])
         	->first();
 

@@ -85,7 +85,7 @@ class AtomController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments()->addComments());
     }
 
     /**
