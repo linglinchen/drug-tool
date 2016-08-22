@@ -145,11 +145,6 @@ class AtomController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
 
-        //strip the xml to save bandwidth
-        foreach($versions as &$version) {
-            unset($version['xml']);
-        }
-
         return new ApiPayload($versions);
     }
 
