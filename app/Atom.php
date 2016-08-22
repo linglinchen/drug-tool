@@ -9,6 +9,7 @@ use DB;
 use App\AppModel;
 use App\FuzzyRank;
 use App\Assignment;
+use App\Comment;
 
 class Atom extends AppModel {
     use SoftDeletes;
