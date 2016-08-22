@@ -130,6 +130,30 @@ class AtomController extends Controller
     }
 
     /**
+     * GET an atom's history.
+     *
+     * @api
+     *
+     * @param string $entityId The entityId of the atom to examine
+     *
+     * @return ApiPayload|Response
+     */
+    public function historyAction($entityId) {
+        $versions = Atom::where('entityId', '=', $entityId)->orderBy('id', 'DESC')->get();
+
+        if(!$versions) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
+        }
+
+        //strip the xml to save bandwidth
+        foreach($versions as &$version) {
+            unset($version['xml']);
+        }
+
+        return new ApiPayload($versions);
+    }
+
+    /**
      * GET the ID of the previous atom in alphabetical order.
      *
      * @api
