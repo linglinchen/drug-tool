@@ -365,19 +365,8 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addComments() {
-        $this->comments = self::_getComments($this->entityId);
+        $this->comments = Comment::getByAtomEntityId($this->entityId);
 
         return $this;
-    }
-
-    /**
-     * Get comments for the given atom entityId.
-     *
-     * @param string $entityId The atom's entityId
-     *
-     * @return object[] The comments
-     */
-    protected static function _getComments($entityId) {
-        return Comment::where('atomEntityId', '=', $entityId)->get();
     }
 }
