@@ -24,6 +24,6 @@ class Comment extends AppModel {
                 ->get()
                 ->toArray();
 
-        return self::toTree($comments);
+        return $comments;
     }
 }
