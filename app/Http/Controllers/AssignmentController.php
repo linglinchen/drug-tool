@@ -78,4 +78,24 @@ class AssignmentController extends Controller
 
         return new ApiPayload(Atom::getAssignments($assignment->atomEntityId));
     }
+
+    /**
+     * GET the user's next open assignment.
+     *
+     * @api
+     *
+     * @param integer $assignmentId The current assignment's ID
+     *
+     * @return ApiPayload|Response
+     */
+    public function nextAction($assignmentId) {
+        $user = \Auth::user();
+
+        $assignment = Assignment::where('userId' , '=', $user->id)
+                ->whereNull('taskEnd')
+                ->where('id', '>', $assignmentId)
+                ->first();
+
+        return new ApiPayload($assignment);
+    }
 }
