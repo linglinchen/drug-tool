@@ -149,50 +149,6 @@ class AtomController extends Controller
     }
 
     /**
-     * GET the ID of the previous atom in alphabetical order.
-     *
-     * @api
-     *
-     * @param string $entityId The entityId of the current atom
-     *
-     * @return ApiPayload|Response
-     */
-    public function previousAction($entityId) {
-        $ids = Atom::latestIDs();
-        $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
-        $currentLocation = array_search($currentId, $ids);
-        end($ids);
-        $targetLocation = $currentLocation ? $currentLocation - 1 : key($ids);
-        $atom = Atom::find($ids[$targetLocation]);
-
-        return new ApiPayload([
-            'entityId'      => $atom['entityId']
-        ]);
-    }
-
-    /**
-     * GET the ID of the next atom in alphabetical order.
-     *
-     * @api
-     *
-     * @param string $entityId The entityId of the current atom
-     *
-     * @return ApiPayload|Response
-     */
-    public function nextAction($entityId) {
-        $ids = Atom::latestIDs();
-        $currentId = Atom::findNewestIfNotDeleted($entityId)['id'];
-        $currentLocation = array_search($currentId, $ids);
-        reset($ids);
-        $targetLocation = $currentLocation < sizeof($ids) - 1 ? $currentLocation + 1 : key($ids);
-        $atom = Atom::find($ids[$targetLocation]);
-
-        return new ApiPayload([
-            'entityId'    => $atom['entityId']
-        ]);
-    }
-
-    /**
      * GET a list of atoms matching the query.
      *
      * @api
