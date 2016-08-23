@@ -14,13 +14,17 @@ use App\Atom;
 use App\Comment;
 
 class AtomCommentController extends Controller {
-    public function postAction($atomEntityId) {
+    public function getAction($atomEntityId) {
         if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
-        if(!isset($_POST['parentId'])) {
-            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing parentId field.');
+        return new ApiPayload(Comment::where('atomEntityId', '=', $atomEntityId)->get());
+    }
+
+    public function postAction($atomEntityId) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
         if(!isset($_POST['text'])) {
@@ -30,7 +34,7 @@ class AtomCommentController extends Controller {
         $comment = Comment::create([
             'atomEntityId' => $atomEntityId,
             'userId' => \Auth::user()['id'],
-            'parentId' => (int)$_POST['parentId'],
+            'parentId' => isset($_POST['parentId']) ? (int)$_POST['parentId'] : null,
             'text' => $_POST['text']
         ]);
 
