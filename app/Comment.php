@@ -13,15 +13,21 @@ class Comment extends AppModel {
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * Get comments for the given atom entityId.
+     * Get comments for the given atom entityId(s).
      *
-     * @param string $entityId The atom's entityId
+     * @param string|string[] $entityId The atom's entityId(s)
      *
      * @return object[] The comments
      */
     protected static function getByAtomEntityId($entityId) {
-        $comments = self::where('atomEntityId', '=', $entityId)
-                ->get()
+        if(is_array($entityId)) {
+            $comments = self::whereIn('atomEntityId', $entityId);
+        }
+        else {
+            $comments = self::where('atomEntityId', '=', $entityId);
+        }
+
+        $comments = $comments->get()
                 ->toArray();
 
         return $comments;

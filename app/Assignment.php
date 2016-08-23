@@ -6,6 +6,7 @@ use DB;
 
 use App\AppModel;
 use App\Atom;
+use App\Comment;
 
 class Assignment extends AppModel {
 	protected $table = 'assignments';
@@ -20,8 +21,8 @@ class Assignment extends AppModel {
 	 *
 	 * @param ?array $filters The filters as key => value pairs
 	 * @param ?array $order (optional) The order column and direction
-     * @param ?int $limit (optional) Max number of results per page
-     * @param int $page (optional) The results page to retrieve
+	 * @param ?int $limit (optional) Max number of results per page
+	 * @param int $page (optional) The results page to retrieve
 	 * @param boolean $addAtoms (optional) Add associated atoms to the assignments?
 	 *
 	 * @return array The list of assignments
@@ -45,8 +46,9 @@ class Assignment extends AppModel {
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atomEntityId');
 			$atoms = Atom::findNewest($entityIds)
-					->get()
-					->toArray();
+					->get();
+			self::_addCommentSummaries($atoms);
+			$atoms = $atoms->toArray();
 
 			//remove xml
 			foreach($atoms as $atomKey => $atom) {
@@ -70,6 +72,42 @@ class Assignment extends AppModel {
 	}
 
 	/**
+	 * Add a summary of comments to an atom collection.
+	 *
+	 * @param object $atoms The atom collection
+	 *
+	 * @return object This object
+	 */
+	protected function _addCommentSummaries($atoms) {
+		$groupedComments = [];
+		$commentSummaries = [];
+		$entityIds = array_unique($atoms->pluck('entityId')->toArray());
+		$comments = Comment::getByAtomEntityId($entityIds);
+
+		foreach($comments as $comment) {
+			if(!isset($groupedComments[$comment['atomEntityId']])) {
+				$groupedComments[$comment['atomEntityId']] = [];
+			}
+
+			$groupedComments[$comment['atomEntityId']][] = $comment;
+		}
+
+		foreach($groupedComments as $entityId => $group) {
+			$commentSummaries[$entityId] = [
+					'count' => sizeof($group),
+					'lastComment' => [
+						'date' => sizeof($group) ? $group[0]['created_at'] : null,
+						'userId' => sizeof($group) ? $group[0]['userId'] : null
+					]
+				];
+		}
+
+		foreach($atoms as $atom) {
+			$atom->commentSummary = isset($commentSummaries[$atom->entityId]) ? $commentSummaries[$atom->entityId] : null;
+		}
+	}
+
+	/**
 	 * Get the specified atom's currently active assignment.
 	 *
 	 * @param string $entityId The atom's entityId
@@ -77,12 +115,12 @@ class Assignment extends AppModel {
 	 * @return ?object The assignment (if found)
 	 */
 	public static function getCurrentAssignment($entityId) {
-        $assignment = self::find(1)
-                ->orderBy('id', 'DESC')
-                ->where('atomEntityId', '=', $entityId)
-                ->first();
+		$assignment = self::find(1)
+				->orderBy('id', 'DESC')
+				->where('atomEntityId', '=', $entityId)
+				->first();
 
-        return ($assignment && $assignment->taskEnd) ? null : $assignment;
+		return ($assignment && $assignment->taskEnd) ? null : $assignment;
 	}
 
 	/**
