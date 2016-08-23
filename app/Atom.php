@@ -335,7 +335,7 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addAssignments() {
-        $this->assignments = self::_getAssignments($this->entityId)['assignments'];
+        $this->assignments = self::getAssignments($this->entityId)['assignments'];
 
         return $this;
     }
@@ -347,7 +347,7 @@ class Atom extends AppModel {
      *
      * @return object[] The assignments
      */
-    protected static function _getAssignments($entityId) {
+    public static function getAssignments($entityId) {
         return (new Assignment)->getList(
             [
                 'atomEntityId' => $entityId
