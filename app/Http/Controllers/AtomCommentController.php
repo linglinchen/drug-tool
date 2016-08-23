@@ -19,26 +19,29 @@ class AtomCommentController extends Controller {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
-        return new ApiPayload(Comment::where('atomEntityId', '=', $atomEntityId)->get());
+        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId));
     }
 
-    public function postAction($atomEntityId) {
+    public function postAction($atomEntityId, Request $request) {
         if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
-        if(!isset($_POST['text'])) {
+        $text = $request->input('text');
+        $parentId = $request->input('parentId');
+
+        if(!$text) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing text field.');
         }
 
         $comment = Comment::create([
             'atomEntityId' => $atomEntityId,
             'userId' => \Auth::user()['id'],
-            'parentId' => isset($_POST['parentId']) ? (int)$_POST['parentId'] : null,
-            'text' => $_POST['text']
+            'parentId' => $parentId,
+            'text' => $text
         ]);
 
-        return new ApiPayload($comment);
+        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId));
     }
 
     public function deleteAction($atomEntityId, $commentId) {
