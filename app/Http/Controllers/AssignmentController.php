@@ -55,30 +55,7 @@ class AssignmentController extends Controller {
         $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
         $promotion = $request->input('promotion');
 
-        $user = \Auth::user();
-
-        //build the new assignments
-        $atoms = [];
-        foreach($atomEntityIds as $atomEntityId) {
-            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
-            if($atom) {
-                continue;       //skip atoms that don't exist
-            }
-
-            Assignment::promote($atomEntityId, $promotion);
-
-            //we might need to update the atom
-            if(isset($promotion['statusId'])) {
-                $atom->statusId = $promotion['statusId'];
-                $atom->save();
-            }
-
-            $atom = $atom->addAssignments()->toArray();
-            unset($atom['xml']);
-            $atoms[] = $atom;
-        }
-
-        return new ApiPayload($atoms);
+        return new ApiPayload(Assignments::promote($atomEntityIds, $promotion));
     }
 
     /**
