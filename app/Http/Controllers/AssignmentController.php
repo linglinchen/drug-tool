@@ -52,6 +52,7 @@ class AssignmentController extends Controller {
      */
     public function postAction(Request $request) {
         $atomEntityIds = $request->input('atomEntityIds');
+        $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
         $promotion = $request->input('promotion');
 
         $user = \Auth::user();
@@ -59,6 +60,11 @@ class AssignmentController extends Controller {
         //build the new assignments
         $atoms = [];
         foreach($atomEntityIds as $atomEntityId) {
+            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
+            if($atom) {
+                continue;       //skip atoms that don't exist
+            }
+
             //save a new assignment if we have a taskId
             if(isset($promotion['taskId'])) {
                 $assignment = new Assignment();
@@ -76,13 +82,12 @@ class AssignmentController extends Controller {
 
             //end the previous assignment
             $currentAssignment = Assignment::getCurrentAssignment($atomEntityId);
-            if($currentAssignment) {
+            if($currentAssignment && !$currentAssignment->taskEnd) {
                 $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
                 $currentAssignment->save();
             }
 
             //we might need to update the atom
-            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
             if(isset($promotion['statusId'])) {
                 $atom->statusId = $promotion['statusId'];
                 $atom->save();
