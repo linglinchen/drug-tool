@@ -195,7 +195,10 @@ class Assignment extends AppModel {
 		$allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
 
 		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
-			if($promotion['taskId']) {		//terminal promotions have empty taskIds
+			self::_endCurrentAssignment($atomEntityId);
+
+			//create a new assignment if this isn't a terminal promotion
+			if($promotion['taskId']) {
 				$assignment = new Assignment();
 				foreach($allowedProperties as $allowed) {
 					if(array_key_exists($allowed, $promotion)) {
@@ -209,8 +212,6 @@ class Assignment extends AppModel {
 
 				$assignment->save();
 			}
-
-			self::_endCurrentAssignment($atomEntityId);
 		}
 	}
 
