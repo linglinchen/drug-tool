@@ -202,6 +202,7 @@ class Assignment extends AppModel {
 						$assignment->$allowed = $promotion[$allowed];
 					}
 				}
+       			$user = \Auth::user();
 				$assignment->createdBy = $user->id;
 				$assignment->taskId = $promotion['taskId'];
 				$assignment->atomEntityId = $atomEntityId;

@@ -384,7 +384,7 @@ class Atom extends AppModel {
         $atoms = [];
         foreach($atomEntityIds as $atomEntityId) {
             $atom = Atom::findNewestIfNotDeleted($atomEntityId);
-            if($atom) {
+            if(!$atom) {
                 continue;       //skip atoms that don't exist
             }
 
