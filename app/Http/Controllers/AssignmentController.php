@@ -65,10 +65,7 @@ class AssignmentController extends Controller {
                 continue;       //skip atoms that don't exist
             }
 
-            //save a new assignment if we have a taskId
-            if(isset($promotion['taskId'])) {
-                Assignment::promote($atomEntityId, $promotion);
-            }
+            Assignment::promote($atomEntityId, $promotion);
 
             //we might need to update the atom
             if(isset($promotion['statusId'])) {

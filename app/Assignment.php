@@ -191,21 +191,25 @@ class Assignment extends AppModel {
 	 * @param string $atomEntityId The atom's entityId
 	 * @param mixed[] $promotion The promotion we're going to perform
 	 */
-    public static function promote($atomEntityId, $promotion) {
-        $assignment = new Assignment();
-        foreach($this->_allowedProperties as $allowed) {
-            if(array_key_exists($allowed, $promotion)) {
-                $assignment->$allowed = $promotion[$allowed];
-            }
-        }
-        $assignment->createdBy = $user->id;
-        $assignment->taskId = $promotion['taskId'];
-        $assignment->atomEntityId = $atomEntityId;
+	public static function promote($atomEntityId, $promotion) {
+		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
+			if($promotion['taskId']) {		//terminal promotions have empty taskIds
+				$assignment = new Assignment();
+				foreach($this->_allowedProperties as $allowed) {
+					if(array_key_exists($allowed, $promotion)) {
+						$assignment->$allowed = $promotion[$allowed];
+					}
+				}
+				$assignment->createdBy = $user->id;
+				$assignment->taskId = $promotion['taskId'];
+				$assignment->atomEntityId = $atomEntityId;
 
-        $assignment->save();
+				$assignment->save();
+			}
 
-        self::endCurrentAssignment($atomEntityId);
-    }
+			self::endCurrentAssignment($atomEntityId);
+		}
+	}
 
 	/**
 	 * End the current task if it's still open.
@@ -213,10 +217,10 @@ class Assignment extends AppModel {
 	 * @param string $atomEntityId The atom's entityId
 	 */
 	public static function endCurrentAssignment($atomEntityId) {
-        $currentAssignment = self::getCurrentAssignment($atomEntityId);
-        if($currentAssignment && !$currentAssignment->taskEnd) {
-            $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
-            $currentAssignment->save();
-        }
-    }
+		$currentAssignment = self::getCurrentAssignment($atomEntityId);
+		if($currentAssignment && !$currentAssignment->taskEnd) {
+			$currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
+			$currentAssignment->save();
+		}
+	}
 }
