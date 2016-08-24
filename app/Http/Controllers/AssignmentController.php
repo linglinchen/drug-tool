@@ -20,8 +20,7 @@ use App\ApiPayload;
  * This controller exists to serve up the lookup tables.
  * All endpoint methods should return an ApiPayload or Response.
  */
-class AssignmentController extends Controller
-{
+class AssignmentController extends Controller {
     protected $_allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
 
     /**
@@ -43,7 +42,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * POST a new assignment.
+     * Promote atom(s) in the workflow.
      *
      * @api
      *
@@ -52,31 +51,49 @@ class AssignmentController extends Controller
      * @return ApiPayload|Response
      */
     public function postAction(Request $request) {
-        //build the new assignment
-        $input = $request->all();
+        $atomEntityIds = $request->input('atomEntityIds');
+        $promotion = $request->input('promotion');
+
         $user = \Auth::user();
-        $assignment = new Assignment();
-        foreach($this->_allowedProperties as $allowed) {
-            if(array_key_exists($allowed, $input)) {
-                $assignment->$allowed = $input[$allowed];
+
+        //build the new assignments
+        $atoms = [];
+        foreach($atomEntityIds as $atomEntityId) {
+            //save a new assignment if we have a taskId
+            if(isset($promotion['taskId'])) {
+                $assignment = new Assignment();
+                foreach($this->_allowedProperties as $allowed) {
+                    if(array_key_exists($allowed, $promotion)) {
+                        $assignment->$allowed = $promotion[$allowed];
+                    }
+                }
+                $assignment->createdBy = $user->id;
+                $assignment->taskId = $promotion['taskId'];
+                $assignment->atomEntityId = $atomEntityId;
+
+                $assignment->save();
             }
+
+            //end the previous assignment
+            $currentAssignment = Assignment::getCurrentAssignment($atomEntityId);
+            if($currentAssignment) {
+                $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
+                $currentAssignment->save();
+            }
+
+            //we might need to update the atom
+            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
+            if(isset($promotion['statusId'])) {
+                $atom->statusId = $promotion['statusId'];
+                $atom->save();
+            }
+
+            $atom = $atom->addAssignments()->toArray();
+            unset($atom['xml']);
+            $atoms[] = $atom;
         }
-        $assignment->createdBy = $user->id;
 
-        $currentAssignment = Assignment::getCurrentAssignment($assignment->atomEntityId);
-
-        //save the new assignment if it has a taskId
-        if($assignment->taskId) {
-            $assignment->save();
-        }
-
-        //end the previous assignment
-        if($currentAssignment) {
-            $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
-            $currentAssignment->save();
-        }
-
-        return new ApiPayload(Atom::getAssignments($assignment->atomEntityId));
+        return new ApiPayload($atoms);
     }
 
     /**
