@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 
 use DB;
 
-use App\Assignment;
+use App\Atom;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -34,6 +34,6 @@ class AtomPromotionController extends Controller {
         $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
         $promotion = $request->input('promotion');
 
-        return new ApiPayload(Assignment::promote($atomEntityIds, $promotion));
+        return new ApiPayload(Atom::promote($atomEntityIds, $promotion));
     }
 }

@@ -369,4 +369,37 @@ class Atom extends AppModel {
 
         return $this;
     }
+
+    /**
+     * Perform workflow promotions.
+     *
+     * @param string $atomEntityIds The atoms' entityIds
+     * @param mixed[] $promotion The promotion we're going to perform
+     *
+     * @return mixed[] The
+     */
+    public static function promote($atomEntityIds, $promotion) {
+        $atomEntityIds = array_unique($atomEntityIds);      //no need to promote twice
+
+        $atoms = [];
+        foreach($atomEntityIds as $atomEntityId) {
+            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
+            if($atom) {
+                continue;       //skip atoms that don't exist
+            }
+
+            Assignment::updateAssignments($atomEntityId, $promotion);
+
+            //we might need to update the atom
+            if(isset($promotion['statusId'])) {
+                $atom->statusId = $promotion['statusId'];
+                $atom->save();
+            }
+
+            $atom = $atom->addAssignments()->toArray();
+            $atoms[] = $atom;
+        }
+
+        return $atoms;
+    }
 }

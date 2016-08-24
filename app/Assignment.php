@@ -186,46 +186,12 @@ class Assignment extends AppModel {
 	}
 
 	/**
-	 * Perform workflow promotions.
-	 *
-	 * @param string $atomEntityIds The atoms' entityIds
-	 * @param mixed[] $promotion The promotion we're going to perform
-	 *
-	 * @return mixed[] The
-	 */
-	public static function promote($atomEntityIds, $promotion) {
-        $atomEntityIds = array_unique($atomEntityIds);		//no need to promote twice
-
-        $atoms = [];
-        foreach($atomEntityIds as $atomEntityId) {
-            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
-            if($atom) {
-                continue;       //skip atoms that don't exist
-            }
-
-            self::_updateAssignments($atomEntityId, $promotion);
-
-            //we might need to update the atom
-            if(isset($promotion['statusId'])) {
-                $atom->statusId = $promotion['statusId'];
-                $atom->save();
-            }
-
-            $atom = $atom->addAssignments()->toArray();
-            unset($atom['xml']);
-            $atoms[] = $atom;
-        }
-
-        return $atoms;
-    }
-
-	/**
 	 * Update the atom's assignments.
 	 *
 	 * @param string $atomEntityId The atom's entityId
 	 * @param mixed[] $promotion The promotion we're going to perform
 	 */
-	protected static function _updateAssignments($atomEntityId, $promotion) {
+	public static function updateAssignments($atomEntityId, $promotion) {
 		$allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
 
 		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
