@@ -67,24 +67,7 @@ class AssignmentController extends Controller {
 
             //save a new assignment if we have a taskId
             if(isset($promotion['taskId'])) {
-                $assignment = new Assignment();
-                foreach($this->_allowedProperties as $allowed) {
-                    if(array_key_exists($allowed, $promotion)) {
-                        $assignment->$allowed = $promotion[$allowed];
-                    }
-                }
-                $assignment->createdBy = $user->id;
-                $assignment->taskId = $promotion['taskId'];
-                $assignment->atomEntityId = $atomEntityId;
-
-                $assignment->save();
-            }
-
-            //end the previous assignment
-            $currentAssignment = Assignment::getCurrentAssignment($atomEntityId);
-            if($currentAssignment && !$currentAssignment->taskEnd) {
-                $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
-                $currentAssignment->save();
+                Assignment::promote($atomEntityId, $promotion);
             }
 
             //we might need to update the atom

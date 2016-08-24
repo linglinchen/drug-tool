@@ -184,4 +184,39 @@ class Assignment extends AppModel {
 		$query->leftJoin('atoms', 'assignments.atomEntityId', '=', 'atoms.entityId')
 				->whereIn('atoms.id', $currentAtomIds);
 	}
+
+	/**
+	 * Update the atom's assignments.
+	 *
+	 * @param string $atomEntityId The atom's entityId
+	 * @param mixed[] $promotion The promotion we're going to perform
+	 */
+    public static function promote($atomEntityId, $promotion) {
+        $assignment = new Assignment();
+        foreach($this->_allowedProperties as $allowed) {
+            if(array_key_exists($allowed, $promotion)) {
+                $assignment->$allowed = $promotion[$allowed];
+            }
+        }
+        $assignment->createdBy = $user->id;
+        $assignment->taskId = $promotion['taskId'];
+        $assignment->atomEntityId = $atomEntityId;
+
+        $assignment->save();
+
+        self::endCurrentAssignment($atomEntityId);
+    }
+
+	/**
+	 * End the current task if it's still open.
+	 *
+	 * @param string $atomEntityId The atom's entityId
+	 */
+	public static function endCurrentAssignment($atomEntityId) {
+        $currentAssignment = self::getCurrentAssignment($atomEntityId);
+        if($currentAssignment && !$currentAssignment->taskEnd) {
+            $currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
+            $currentAssignment->save();
+        }
+    }
 }
