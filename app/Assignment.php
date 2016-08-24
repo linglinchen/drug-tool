@@ -226,10 +226,12 @@ class Assignment extends AppModel {
 	 * @param mixed[] $promotion The promotion we're going to perform
 	 */
 	protected static function _updateAssignments($atomEntityId, $promotion) {
+		$allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
+
 		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
 			if($promotion['taskId']) {		//terminal promotions have empty taskIds
 				$assignment = new Assignment();
-				foreach($this->_allowedProperties as $allowed) {
+				foreach($allowedProperties as $allowed) {
 					if(array_key_exists($allowed, $promotion)) {
 						$assignment->$allowed = $promotion[$allowed];
 					}

@@ -17,7 +17,7 @@ use App\ApiError;
 use App\ApiPayload;
 
 /**
- * This controller exists to serve up the lookup tables.
+ * This controller is used for various aspects of assignment management.
  * All endpoint methods should return an ApiPayload or Response.
  */
 class AssignmentController extends Controller {
@@ -39,23 +39,6 @@ class AssignmentController extends Controller {
         $payload = (new Assignment)->getList($request->input('filters'), $request->input('order'), $limit, $page, true);
 
         return new ApiPayload($payload);
-    }
-
-    /**
-     * Promote atom(s) in the workflow.
-     *
-     * @api
-     *
-     * @param Request $request The Laravel Request object
-     *
-     * @return ApiPayload|Response
-     */
-    public function postAction(Request $request) {
-        $atomEntityIds = $request->input('atomEntityIds');
-        $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
-        $promotion = $request->input('promotion');
-
-        return new ApiPayload(Assignments::promote($atomEntityIds, $promotion));
     }
 
     /**
