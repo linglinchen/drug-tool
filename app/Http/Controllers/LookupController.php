@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+use App\Group;
 use App\Boilerplate;
 use App\Molecule;
 use App\Status;
@@ -31,6 +32,7 @@ class LookupController extends Controller
      */
     public function listAction() {
         return new ApiPayload([
+            'groups' => Group::all(),
             'boilerplates' => Boilerplate::all(),
             'molecules' => Molecule::all(),
             'tasks' => Task::all(),
