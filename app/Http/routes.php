@@ -53,6 +53,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::delete('atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
 
             Route::get('molecule', ['uses' => 'MoleculeController@listAction']);
+            Route::get('molecule/{code}', ['uses' => 'MoleculeController@getAction']);
 
             Route::get('lookup', ['uses' => 'LookupController@listAction']);
 

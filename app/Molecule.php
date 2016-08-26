@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\AppModel;
+use App\Atom;
 
 class Molecule extends AppModel {
     use SoftDeletes;
@@ -25,5 +26,22 @@ class Molecule extends AppModel {
     	}
 
     	return $output;
+    }
+
+    /**
+     * Add atoms to the molecule.
+     *
+     * @param mixed[] $molecule The molecule
+     */
+    public static function addAtoms($molecule) {
+        $entityIds = Atom::select(['entityId'])
+                ->where('moleculeCode', '=', $molecule['code'])
+                ->get()
+                ->pluck('entityId')
+                ->all();
+
+        $molecule['atoms'] = Atom::findNewest($entityIds)->get();
+
+        return $molecule;
     }
 }
