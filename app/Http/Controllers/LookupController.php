@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 
 use App\Group;
 use App\Boilerplate;
-use App\Molecule;
 use App\Status;
 use App\Task;
 
@@ -34,7 +33,6 @@ class LookupController extends Controller
         return new ApiPayload([
             'groups' => Group::all(),
             'boilerplates' => Boilerplate::all(),
-            'molecules' => Molecule::all(),
             'tasks' => Task::all(),
             'statuses' => Status::orderBy('id')->get()
         ]);
