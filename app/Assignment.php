@@ -137,7 +137,7 @@ class Assignment extends AppModel {
 
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
-					$filterValue = $filters[$validFilter];
+					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
 
 					if($validFilter == 'taskEnded') {
 						if($filterValue) {
