@@ -34,13 +34,11 @@ class Molecule extends AppModel {
      * @param mixed[] $molecule The molecule
      */
     public static function addAtoms($molecule) {
-        $entityIds = Atom::select(['entityId'])
-                ->where('moleculeCode', '=', $molecule['code'])
-                ->get()
-                ->pluck('entityId')
-                ->all();
+        $currentAtomIds = Atom::latestIds();
+        $atoms = Atom::where('moleculeCode', '=', $molecule['code'])
+                ->whereIn('id', $currentAtomIds)
+                ->get();
 
-        $atoms = Atom::findNewest($entityIds)->get();
         foreach($atoms as $atom) {
             $atom->addAssignments();
         }
