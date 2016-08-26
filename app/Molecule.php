@@ -40,7 +40,12 @@ class Molecule extends AppModel {
                 ->pluck('entityId')
                 ->all();
 
-        $molecule['atoms'] = Atom::findNewest($entityIds)->get();
+        $atoms = Atom::findNewest($entityIds)->get();
+        foreach($atoms as $atom) {
+            $atom->addAssignments();
+        }
+
+        $molecule['atoms'] = $atoms;
 
         return $molecule;
     }
