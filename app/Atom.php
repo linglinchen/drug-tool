@@ -271,7 +271,12 @@ class Atom extends AppModel {
             foreach($validFilters as $validFilter) {
                 if(isset($filters[$validFilter])) {
                     $filterValue = $filters[$validFilter];
-                    $query->where($validFilter, '=', $filterValue);
+                    if($filterValue === '') {
+                        $query->whereNull($validFilter);
+                    }
+                    else {
+                        $query->where($validFilter, '=', $filterValue);
+                    }
                 }
             }
         }
