@@ -110,14 +110,14 @@ class Assignment extends AppModel {
 	/**
 	 * Get the specified atom's currently active assignment.
 	 *
-	 * @param string $entityId The atom's entityId
+	 * @param string $atomEntityId The atom's entityId
 	 *
 	 * @return ?object The assignment (if found)
 	 */
-	public static function getCurrentAssignment($entityId) {
+	public static function getCurrentAssignment($atomEntityId) {
 		$assignment = self::find(1)
 				->orderBy('id', 'DESC')
-				->where('atomEntityId', '=', $entityId)
+				->where('atomEntityId', '=', $atomEntityId)
 				->first();
 
 		return ($assignment && $assignment->taskEnd) ? null : $assignment;
@@ -194,6 +194,7 @@ class Assignment extends AppModel {
 	public static function updateAssignments($atomEntityId, $promotion) {
 		$allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
 
+		$user = \Auth::user();
 		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
 			self::_endCurrentAssignment($atomEntityId);
 
@@ -205,11 +206,20 @@ class Assignment extends AppModel {
 						$assignment->$allowed = $promotion[$allowed];
 					}
 				}
-       			$user = \Auth::user();
 				$assignment->createdBy = $user->id;
 				$assignment->taskId = $promotion['taskId'];
 				$assignment->atomEntityId = $atomEntityId;
 
+				$assignment->save();
+			}
+		}
+		else if(isset($promotion['userId']) && $promotion['userId']) {		//change assignment's owner
+			$assignment = self::getCurrentAssignment($atomEntityId);
+			if($assignment) {
+				self::_endCurrentAssignment($atomEntityId);
+				$assignment = $assignment->replicate();
+				$assignment->createdBy = $user->id;
+				$assignment->userId = $promotion['userId'];
 				$assignment->save();
 			}
 		}
