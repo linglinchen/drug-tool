@@ -32,4 +32,40 @@ class Comment extends AppModel {
 
         return $comments;
     }
+
+    /**
+     * Add a summary of comments to an atom collection.
+     *
+     * @param object $atoms The atom collection
+     *
+     * @return object This object
+     */
+    public static function addSummaries($atoms) {
+        $groupedComments = [];
+        $commentSummaries = [];
+        $entityIds = array_unique($atoms->pluck('entityId')->toArray());
+        $comments = self::getByAtomEntityId($entityIds);
+
+        foreach($comments as $comment) {
+            if(!isset($groupedComments[$comment['atomEntityId']])) {
+                $groupedComments[$comment['atomEntityId']] = [];
+            }
+
+            $groupedComments[$comment['atomEntityId']][] = $comment;
+        }
+
+        foreach($groupedComments as $entityId => $group) {
+            $commentSummaries[$entityId] = [
+                    'count' => sizeof($group),
+                    'lastComment' => [
+                        'date' => sizeof($group) ? $group[0]['created_at'] : null,
+                        'userId' => sizeof($group) ? $group[0]['userId'] : null
+                    ]
+                ];
+        }
+
+        foreach($atoms as $atom) {
+            $atom->commentSummary = isset($commentSummaries[$atom->entityId]) ? $commentSummaries[$atom->entityId] : null;
+        }
+    }
 }
