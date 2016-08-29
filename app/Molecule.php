@@ -39,8 +39,11 @@ class Molecule extends AppModel {
                 ->whereIn('id', $currentAtomIds)
                 ->get();
 
-        foreach($atoms as $atom) {
+        foreach($atoms as $key => $atom) {
             $atom->addAssignments();
+            $atom = $atom->toArray();
+            unset($atom['xml']);
+            $atoms[$key] = $atom;
         }
 
         $molecule['atoms'] = $atoms;
