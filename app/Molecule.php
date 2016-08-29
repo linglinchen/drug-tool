@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\AppModel;
 use App\Atom;
+use App\Comment;
 
 class Molecule extends AppModel {
     use SoftDeletes;
@@ -38,6 +39,7 @@ class Molecule extends AppModel {
         $atoms = Atom::where('moleculeCode', '=', $molecule['code'])
                 ->whereIn('id', $currentAtomIds)
                 ->get();
+        Comment::addSummaries($atoms);
 
         foreach($atoms as $key => $atom) {
             $atom->addAssignments();
