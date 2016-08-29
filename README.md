@@ -77,6 +77,7 @@ php artisan import:statuses
 ```
 - Sometimes Laravel will fail to find a class that you just added, even though you did everything correctly. In those cases, try running all of these commands in order. You might need to alter the composer command to fit your setup.
 ```
+composer install
 php artisan clear-compiled
 composer dump-autoload
 php artisan optimize
