@@ -15,10 +15,10 @@ class AppModel extends Model {
 		$columns = \Schema::getColumnListing($table);
 
 		$mapping = function ($column) use ($table) {
-            return $table . '.' . $column;
-        };
+			return $table . '.' . $column;
+		};
 
-        return array_map($mapping, $columns);
+		return array_map($mapping, $columns);
 	}
 
 	/**
@@ -33,11 +33,53 @@ class AppModel extends Model {
 		$output = [];
 
 		foreach($input as $key => $row) {
-			if($row['parentId'] === $parentId) {
+			if($row['parent_id'] === $parentId) {
 				unset($input[$key]);
 				$row['children'] = self::toTree($input, $row['id']);
 				$output[] = $row;
 			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Recursively convert an array's keys to camelCase.
+	 *
+	 * @param mixed[] $input The array to transform
+	 *
+	 * @param mixed[] The transformed array
+	 */
+	public static function arrayKeysToCamelCase($input) {
+		if(!is_array($input)) {
+			return $input;
+		}
+
+		$output = [];
+
+		foreach($input as $key => $value) {
+			$output[camel_case($key)] = is_array($value) ? self::arrayKeysToCamelCase($value) : $value;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Recursively convert an array's keys to snake_case.
+	 *
+	 * @param mixed[] $input The array to transform
+	 *
+	 * @param mixed[] The transformed array
+	 */
+	public static function arrayKeysToSnakeCase($input) {
+		if(!is_array($input)) {
+			return $input;
+		}
+
+		$output = [];
+
+		foreach($input as $key => $value) {
+			$output[snake_case($key)] = $value;
 		}
 
 		return $output;

@@ -35,25 +35,25 @@ class CreateAssignments extends Command {
         $entities = self::_organizeAtoms(self::_getAtomList());
         foreach($entities as $entityId => $versionIds) {
             $assignment1 = [
-                'atomEntityId' => $entityId,
-                'userId' => 2,
-                'taskId' => 3,
-                'taskEnd' => null
+                'atom_entity_id' => $entityId,
+                'user_id' => 2,
+                'task_id' => 3,
+                'task_end' => null
             ];
 
             if(sizeof($versionIds) > 1) {
                 $assignment2 = [
-                    'atomEntityId' => $entityId,
-                    'userId' => 5,
-                    'taskId' => 4,
-                    'taskEnd' => null
+                    'atom_entity_id' => $entityId,
+                    'user_id' => 5,
+                    'task_id' => 4,
+                    'task_end' => null
                 ];
-                $assignment1['taskEnd'] = $timestamp;
+                $assignment1['task_end'] = $timestamp;
 
                 $assignments[] = $assignment1;
                 $assignments[] = $assignment2;
 
-                $atoms = Atom::where('entityId', '=', $entityId)->get();
+                $atoms = Atom::where('entity_id', '=', $entityId)->get();
                 $atom = $atoms->last()->replicate();
                 $atom->statusId = 100;
                 $atom->save();
@@ -67,17 +67,17 @@ class CreateAssignments extends Command {
     }
 
     protected static function _getAtomList() {
-        return Atom::select(['id', 'entityId'])->get();
+        return Atom::select(['id', 'entity_id'])->get();
     }
 
     protected static function _organizeAtoms($list) {
         $output = [];
         foreach($list as $row) {
-            if(!isset($output[$row['entityId']])) {
-                $output[$row['entityId']] = [];
+            if(!isset($output[$row['entity_id']])) {
+                $output[$row['entity_id']] = [];
             }
 
-            $output[$row['entityId']][] = $row['id'];
+            $output[$row['entity_id']][] = $row['id'];
         }
 
         return $output;

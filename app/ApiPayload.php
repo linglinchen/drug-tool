@@ -5,7 +5,7 @@ namespace App;
 /**
  * A convenient, standardized way to build JSON API responses.
  */
-class ApiPayload {
+class ApiPayload extends AppModel {
 	public $success = true;
 
 	/**
@@ -13,14 +13,20 @@ class ApiPayload {
 	 */
 	public function __construct($data = null) {
 		if($data !== null) {
-			$this->payload = $data;
+			$this->setPayload($data);
 		}
 	}
 
 	/**
-	 * Return a JSON representation of this model whenever it is cast to a string.
+	 * Set the payload, and convert keys to camelCase.
+	 *
+	 * @param mixed $data Place this data in the payload
 	 */
-	public function __toString() {
-		return json_encode($this);
+	public function setPayload($data) {
+		if(is_object($data) && method_exists($data, 'toArray')) {
+			$data = $data->toArray();
+		}
+
+		$this->payload = self::arrayKeysToCamelCase($data);
 	}
 }

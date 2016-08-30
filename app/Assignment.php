@@ -44,7 +44,7 @@ class Assignment extends AppModel {
 
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
-			$entityIds = array_column($assignments, 'atomEntityId');
+			$entityIds = array_column($assignments, 'atom_entity_id');
 			$atoms = Atom::findNewest($entityIds)
 					->get();
 			Comment::addSummaries($atoms);
@@ -57,7 +57,7 @@ class Assignment extends AppModel {
 
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
-					if($atom['entityId'] == $row['atomEntityId']) {
+					if($atom['entity_id'] == $row['atom_entity_id']) {
 						$row['atom'] = $atom;
 						break;
 					}
@@ -81,7 +81,7 @@ class Assignment extends AppModel {
 	public static function getCurrentAssignment($atomEntityId) {
 		$assignment = self::find(1)
 				->orderBy('id', 'DESC')
-				->where('atomEntityId', '=', $atomEntityId)
+				->where('atom_entity_id', '=', $atomEntityId)
 				->first();
 
 		return ($assignment && $assignment->taskEnd) ? null : $assignment;
@@ -94,7 +94,7 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['taskId', 'atoms.moleculeCode', 'userId', 'atomEntityId', 'taskEnded'];
+		$validFilters = ['task_id', 'atoms.moleculeCode', 'user_id', 'atom_entity_id', 'task_ended'];
 
 		if($filters) {
 			self::_joinAtoms($query);
@@ -103,12 +103,12 @@ class Assignment extends AppModel {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
 
-					if($validFilter == 'taskEnded') {
+					if($validFilter == 'task_ended') {
 						if($filterValue) {
-							$query->whereNotNull('taskEnd');
+							$query->whereNotNull('task_end');
 						}
 						else {
-							$query->whereNull('taskEnd');
+							$query->whereNull('task_end');
 						}
 					}
 					else {
@@ -145,7 +145,7 @@ class Assignment extends AppModel {
 	 */
 	protected static function _joinAtoms($query) {
 		$currentAtomIds = Atom::latestIDs();
-		$query->leftJoin('atoms', 'assignments.atomEntityId', '=', 'atoms.entityId')
+		$query->leftJoin('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->whereIn('atoms.id', $currentAtomIds);
 	}
 
@@ -156,14 +156,14 @@ class Assignment extends AppModel {
 	 * @param mixed[] $promotion The promotion we're going to perform
 	 */
 	public static function updateAssignments($atomEntityId, $promotion) {
-		$allowedProperties = ['atomEntityId', 'userId', 'taskId', 'taskEnd'];
+		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
 
 		$user = \Auth::user();
-		if(isset($promotion['taskId'])) {		//not all promotions touch the assignments table
+		if(isset($promotion['task_id'])) {		//not all promotions touch the assignments table
 			self::_endCurrentAssignment($atomEntityId);
 
 			//create a new assignment if this isn't a terminal promotion
-			if($promotion['taskId']) {
+			if($promotion['task_id']) {
 				$assignment = new Assignment();
 				foreach($allowedProperties as $allowed) {
 					if(array_key_exists($allowed, $promotion)) {
@@ -171,19 +171,19 @@ class Assignment extends AppModel {
 					}
 				}
 				$assignment->createdBy = $user->id;
-				$assignment->taskId = $promotion['taskId'];
+				$assignment->taskId = $promotion['task_id'];
 				$assignment->atomEntityId = $atomEntityId;
 
 				$assignment->save();
 			}
 		}
-		else if(isset($promotion['userId']) && $promotion['userId']) {		//change assignment's owner
+		else if(isset($promotion['user_id']) && $promotion['user_id']) {		//change assignment's owner
 			$assignment = self::getCurrentAssignment($atomEntityId);
 			if($assignment) {
 				self::_endCurrentAssignment($atomEntityId);
 				$assignment = $assignment->replicate();
 				$assignment->createdBy = $user->id;
-				$assignment->userId = $promotion['userId'];
+				$assignment->userId = $promotion['user_id'];
 				$assignment->save();
 			}
 		}

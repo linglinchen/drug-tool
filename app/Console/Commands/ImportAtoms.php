@@ -205,14 +205,14 @@ class ImportAtoms extends Command
                 $entityId = Atom::detectAtomIDFromXML($atomString);
 
                 $atomData = [
-                    'entityId' => $entityId === null ? Atom::makeUID() : $entityId,
+                    'entity_id' => $entityId === null ? Atom::makeUID() : $entityId,
                     'title' => $title,
-                    'alphaTitle' => $alphaTitle,
-                    'moleculeCode' => $moleculeCode,
+                    'alpha_title' => $alphaTitle,
+                    'molecule_code' => $moleculeCode,
                     'xml' => Atom::assignXMLIds(trim($atomString)),
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
-                    'statusId' => 200
+                    'status_id' => 200
                 ];
 
                 DB::table('atoms')->insert($atomData);
