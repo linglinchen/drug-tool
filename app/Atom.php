@@ -240,11 +240,11 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-                })
-                ->lists('alpha_title', 'id');
-
+                });
         self::_addFilters($candidates, $filters);
-        $candidates = $candidates->all();
+        $candidates = $candidates
+                ->lists('alpha_title', 'id')
+                ->all();
 
         $candidates = FuzzyRank::rank($candidates, $query);
         $count = sizeof($candidates);
@@ -266,7 +266,7 @@ class Atom extends AppModel {
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
-        $validFilters = ['atoms.status_id', 'atoms.molecule_code'];
+        $validFilters = ['status_id', 'molecule_code'];
 
         if($filters) {
             foreach($validFilters as $validFilter) {
