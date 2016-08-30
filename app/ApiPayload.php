@@ -23,10 +23,27 @@ class ApiPayload extends AppModel {
 	 * @param mixed $data Place this data in the payload
 	 */
 	public function setPayload($data) {
-		if(is_object($data) && method_exists($data, 'toArray')) {
+		$data = self::_forceToArray($data);
+		$this->payload = self::arrayKeysToCamelCase($data);
+	}
+
+	/**
+	 * Convert model(s) into arrays.
+	 *
+	 * @param mixed $data
+	 *
+	 * @return mixed
+	 */
+	protected static function _forceToArray($data) {
+		if(is_array($data)) {
+			foreach($data as $key => $value) {
+				$data[$key] = self::_forceToArray($value);
+			}
+		}
+		else if(is_object($data) && method_exists($data, 'toArray')) {
 			$data = $data->toArray();
 		}
 
-		$this->payload = self::arrayKeysToCamelCase($data);
+		return $data;
 	}
 }
