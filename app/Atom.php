@@ -232,7 +232,7 @@ class Atom extends AppModel {
         $explodedQuery = preg_split('/\s+/', $query);
         foreach($explodedQuery as $queryPart) {
             $queryTitleConditions[] = [DB::raw('lower(title)'), 'like', '%' . $queryPart . '%'];
-            $queryalphaTitleConditions[] = [DB::raw('lower("alpha_title")'), 'like', '%' . $queryPart . '%'];
+            $queryalphaTitleConditions[] = [DB::raw('lower(alpha_title)'), 'like', '%' . $queryPart . '%'];
         }
 
         //need to get the unranked list of candidates first
@@ -241,8 +241,10 @@ class Atom extends AppModel {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
                 })
-                ->lists('alpha_title', 'id')
-                ->all();
+                ->lists('alpha_title', 'id');
+
+        self::_addFilters($candidates, $filters);
+        $candidates = $candidates->all();
 
         $candidates = FuzzyRank::rank($candidates, $query);
         $count = sizeof($candidates);
@@ -250,7 +252,6 @@ class Atom extends AppModel {
         $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
 
         $query = self::whereIn('id', $candidates);
-        self::_addFilters($query, $filters);
 
         return [
             'count' => $count,
@@ -265,7 +266,7 @@ class Atom extends AppModel {
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
-        $validFilters = ['status_id', 'molecule_code'];
+        $validFilters = ['atoms.status_id', 'atoms.molecule_code'];
 
         if($filters) {
             foreach($validFilters as $validFilter) {
