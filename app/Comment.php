@@ -57,7 +57,7 @@ class Comment extends AppModel {
         foreach($groupedComments as $entityId => $group) {
             $commentSummaries[$entityId] = [
                     'count' => sizeof($group),
-                    'lastComment' => [
+                    'last_comment' => [
                         'date' => sizeof($group) ? $group[0]['created_at'] : null,
                         'user_id' => sizeof($group) ? $group[0]['user_id'] : null
                     ]
@@ -65,7 +65,7 @@ class Comment extends AppModel {
         }
 
         foreach($atoms as $atom) {
-            $atom->commentSummary = isset($commentSummaries[$atom->entityId]) ? $commentSummaries[$atom->entityId] : null;
+            $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
         }
     }
 }
