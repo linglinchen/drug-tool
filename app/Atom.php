@@ -341,7 +341,7 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addAssignments() {
-        $this->assignments = self::getAssignments($this->entityId)['assignments'];
+        $this->assignments = self::getAssignments($this->entity_id)['assignments'];
 
         return $this;
     }
@@ -371,7 +371,7 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addComments() {
-        $this->comments = Comment::getByAtomEntityId($this->entityId);
+        $this->comments = Comment::getByAtomEntityId($this->entity_id);
 
         return $this;
     }
@@ -398,7 +398,7 @@ class Atom extends AppModel {
 
             //we might need to update the atom
             if(isset($promotion['status_id'])) {
-                $atom->statusId = $promotion['status_id'];
+                $atom->status_id = $promotion['status_id'];
                 $atom->save();
             }
 
