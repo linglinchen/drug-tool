@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportTasks::class,
         Commands\ImportStatuses::class,
         Commands\CreateAssignments::class,
+        Commands\QuickFix::class,
     ];
 
     /**
