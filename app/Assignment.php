@@ -84,7 +84,7 @@ class Assignment extends AppModel {
 				->where('atom_entity_id', '=', $atomEntityId)
 				->first();
 
-		return ($assignment && $assignment->taskEnd) ? null : $assignment;
+		return ($assignment && $assignment->task_end) ? null : $assignment;
 	}
 
 	/**
@@ -170,9 +170,9 @@ class Assignment extends AppModel {
 						$assignment->$allowed = $promotion[$allowed];
 					}
 				}
-				$assignment->createdBy = $user->id;
-				$assignment->taskId = $promotion['task_id'];
-				$assignment->atomEntityId = $atomEntityId;
+				$assignment->created_by = $user->id;
+				$assignment->task_id = $promotion['task_id'];
+				$assignment->atom_entity_id = $atomEntityId;
 
 				$assignment->save();
 			}
@@ -182,8 +182,8 @@ class Assignment extends AppModel {
 			if($assignment) {
 				self::_endCurrentAssignment($atomEntityId);
 				$assignment = $assignment->replicate();
-				$assignment->createdBy = $user->id;
-				$assignment->userId = $promotion['user_id'];
+				$assignment->created_by = $user->id;
+				$assignment->user_id = $promotion['user_id'];
 				$assignment->save();
 			}
 		}
@@ -196,8 +196,8 @@ class Assignment extends AppModel {
 	 */
 	protected static function _endCurrentAssignment($atomEntityId) {
 		$currentAssignment = self::getCurrentAssignment($atomEntityId);
-		if($currentAssignment && !$currentAssignment->taskEnd) {
-			$currentAssignment->taskEnd = DB::raw('CURRENT_TIMESTAMP');
+		if($currentAssignment && !$currentAssignment->task_end) {
+			$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
 			$currentAssignment->save();
 		}
 	}
