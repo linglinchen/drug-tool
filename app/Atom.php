@@ -54,7 +54,7 @@ class Atom extends AppModel {
     public function save(array $options = []) {
         $this->updateTitle();
         $this->xml = self::assignXMLIds($this->xml);
-        $this->modifiedBy = \Auth::user()['id'];
+        $this->modified_by = \Auth::user()['id'];
         parent::save($options);
     }
 
@@ -80,7 +80,7 @@ class Atom extends AppModel {
         }
 
         $this->title = trim($this->title);
-        $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
+        $this->alpha_title = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
     /**
@@ -199,10 +199,10 @@ class Atom extends AppModel {
                 where id in (
                         select max(id)
                         from atoms
-                        group by "entityId"
+                        group by "entity_id"
                     )
                     and deleted_at is null
-                order by "alphaTitle"';
+                order by "alpha_title"';
         $results = DB::select($sql);
 
         $list = [];
@@ -232,7 +232,7 @@ class Atom extends AppModel {
         $explodedQuery = preg_split('/\s+/', $query);
         foreach($explodedQuery as $queryPart) {
             $queryTitleConditions[] = [DB::raw('lower(title)'), 'like', '%' . $queryPart . '%'];
-            $queryalphaTitleConditions[] = [DB::raw('lower("alphaTitle")'), 'like', '%' . $queryPart . '%'];
+            $queryalphaTitleConditions[] = [DB::raw('lower(alpha_title)'), 'like', '%' . $queryPart . '%'];
         }
 
         //need to get the unranked list of candidates first
@@ -240,8 +240,10 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-                })
-                ->lists('alphaTitle', 'id')
+                });
+        self::_addFilters($candidates, $filters);
+        $candidates = $candidates
+                ->lists('alpha_title', 'id')
                 ->all();
 
         $candidates = FuzzyRank::rank($candidates, $query);
@@ -250,7 +252,6 @@ class Atom extends AppModel {
         $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
 
         $query = self::whereIn('id', $candidates);
-        self::_addFilters($query, $filters);
 
         return [
             'count' => $count,
@@ -265,7 +266,7 @@ class Atom extends AppModel {
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
-        $validFilters = ['statusId', 'moleculeCode'];
+        $validFilters = ['status_id', 'molecule_code'];
 
         if($filters) {
             foreach($validFilters as $validFilter) {
@@ -292,11 +293,11 @@ class Atom extends AppModel {
     public static function findNewest($entityId) {
         if(is_array($entityId)) {      //plural
             return self::whereIn('id', self::latestIDs())
-                    ->whereIn('entityId', $entityId);
+                    ->whereIn('entity_id', $entityId);
         }
         else {      //singular
             return self::withTrashed()
-                    ->where('entityId', '=', $entityId)
+                    ->where('entity_id', '=', $entityId)
                     ->orderBy('id', 'desc')
                     ->first();
         }
@@ -311,7 +312,7 @@ class Atom extends AppModel {
      */
     public static function findNewestInList($entityIds) {
         $atom = self::withTrashed()
-                ->where('entityId', '=', $entityId)
+                ->where('entity_id', '=', $entityId)
                 ->orderBy('id', 'desc')
                 ->first();
 
@@ -327,7 +328,7 @@ class Atom extends AppModel {
      */
     public static function findNewestIfNotDeleted($entityId) {
         $atom = self::withTrashed()
-                ->where('entityId', '=', $entityId)
+                ->where('entity_id', '=', $entityId)
                 ->orderBy('id', 'desc')
                 ->first();
 
@@ -340,7 +341,7 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addAssignments() {
-        $this->assignments = self::getAssignments($this->entityId)['assignments'];
+        $this->assignments = self::getAssignments($this->entity_id)['assignments'];
 
         return $this;
     }
@@ -355,7 +356,7 @@ class Atom extends AppModel {
     public static function getAssignments($entityId) {
         return (new Assignment)->getList(
             [
-                'atomEntityId' => $entityId
+                'atom_entity_id' => $entityId
             ],
             [
                 'column' => 'assignments.id',
@@ -370,7 +371,7 @@ class Atom extends AppModel {
      * @return object This object
      */
     public function addComments() {
-        $this->comments = Comment::getByAtomEntityId($this->entityId);
+        $this->comments = Comment::getByAtomEntityId($this->entity_id);
 
         return $this;
     }
@@ -396,8 +397,8 @@ class Atom extends AppModel {
             Assignment::updateAssignments($atomEntityId, $promotion);
 
             //we might need to update the atom
-            if(isset($promotion['statusId'])) {
-                $atom->statusId = $promotion['statusId'];
+            if(isset($promotion['status_id'])) {
+                $atom->status_id = $promotion['status_id'];
                 $atom->save();
             }
 

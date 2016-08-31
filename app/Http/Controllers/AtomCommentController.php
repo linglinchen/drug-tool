@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Http\Requests\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
@@ -28,16 +26,16 @@ class AtomCommentController extends Controller {
         }
 
         $text = $request->input('text');
-        $parentId = $request->input('parentId');
+        $parentId = $request->input('parent_id');
 
         if(!$text) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing text field.');
         }
 
         $comment = Comment::create([
-            'atomEntityId' => $atomEntityId,
-            'userId' => \Auth::user()['id'],
-            'parentId' => $parentId,
+            'atom_entity_id' => $atomEntityId,
+            'user_id' => \Auth::user()['id'],
+            'parent_id' => $parentId,
             'text' => $text
         ]);
 
@@ -51,7 +49,7 @@ class AtomCommentController extends Controller {
 
         $comment = Comment::where([
                 ['id', '=', $commentId],
-                ['atomEntityId', '=', $atomEntityId]
+                ['atom_entity_id', '=', $atomEntityId]
             ])
         	->first();
 

@@ -36,7 +36,7 @@ class Molecule extends AppModel {
      */
     public static function addAtoms($molecule) {
         $currentAtomIds = Atom::latestIds();
-        $atoms = Atom::where('moleculeCode', '=', $molecule['code'])
+        $atoms = Atom::where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', $currentAtomIds)
                 ->get();
         Comment::addSummaries($atoms);

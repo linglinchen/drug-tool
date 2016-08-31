@@ -33,7 +33,7 @@ class AccessControlStructure extends AppModel {
 	public function getStructure() {
 		$output = array();
 		$structure = self::whereRaw('1 = 1')
-				->orderBy('parentId')
+				->orderBy('parent_id')
 				->get();
 		foreach($structure as $element) {
 			$element['permitted'] = false;

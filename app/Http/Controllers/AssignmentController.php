@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Http\Requests\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
@@ -53,8 +51,8 @@ class AssignmentController extends Controller {
     public function nextAction($assignmentId) {
         $user = \Auth::user();
 
-        $assignment = Assignment::where('userId' , '=', $user->id)
-                ->whereNull('taskEnd')
+        $assignment = Assignment::where('user_id' , '=', $user->id)
+                ->whereNull('task_end')
                 ->where('id', '>', $assignmentId)
                 ->first();
 

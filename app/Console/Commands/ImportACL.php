@@ -13,7 +13,7 @@ use App\AccessControl;
  * Since the ACL model defaults to denial, every line that is imported is treated as implicitly permitted.
  * Expected field headers for acl.csv:
  *
- * userId,groupId,accessControlStructureId
+ * user_id,group_id,access_control_structure_id
  */
 class ImportACL extends Command
 {
@@ -67,7 +67,7 @@ class ImportACL extends Command
     public function importAccessControl($accessControl) {
         $timestamp = (new AccessControl())->freshTimestampString();
 
-        $nullables = ['userId', 'groupId'];
+        $nullables = ['user_id', 'group_id'];
         foreach($nullables as $nullable) {
             $accessControl[$nullable] = $accessControl[$nullable] === '' ? null : $accessControl[$nullable];
         }

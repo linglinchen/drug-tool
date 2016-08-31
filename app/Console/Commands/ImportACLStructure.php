@@ -12,7 +12,7 @@ use App\AccessControlStructure;
 /**
  * Expected field headers for acl_structure.csv:
  *
- * id,parentId,accessKey,title
+ * id,parent_id,access_key,title
  */
 class ImportACLStructure extends Command
 {
@@ -63,7 +63,7 @@ class ImportACLStructure extends Command
         $timestamp = (new AccessControlStructure())->freshTimestampString();
 
 
-        $nullables = ['parentId'];
+        $nullables = ['parent_id'];
         foreach($nullables as $nullable) {
             $structure[$nullable] = $structure[$nullable] === '' ? null : $structure[$nullable];
         }

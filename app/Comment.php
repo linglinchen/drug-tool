@@ -21,10 +21,10 @@ class Comment extends AppModel {
      */
     protected static function getByAtomEntityId($entityId) {
         if(is_array($entityId)) {
-            $comments = self::whereIn('atomEntityId', $entityId);
+            $comments = self::whereIn('atom_entity_id', $entityId);
         }
         else {
-            $comments = self::where('atomEntityId', '=', $entityId);
+            $comments = self::where('atom_entity_id', '=', $entityId);
         }
 
         $comments = $comments->get()
@@ -43,29 +43,29 @@ class Comment extends AppModel {
     public static function addSummaries($atoms) {
         $groupedComments = [];
         $commentSummaries = [];
-        $entityIds = array_unique($atoms->pluck('entityId')->toArray());
+        $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
         $comments = self::getByAtomEntityId($entityIds);
 
         foreach($comments as $comment) {
-            if(!isset($groupedComments[$comment['atomEntityId']])) {
-                $groupedComments[$comment['atomEntityId']] = [];
+            if(!isset($groupedComments[$comment['atom_entity_id']])) {
+                $groupedComments[$comment['atom_entity_id']] = [];
             }
 
-            $groupedComments[$comment['atomEntityId']][] = $comment;
+            $groupedComments[$comment['atom_entity_id']][] = $comment;
         }
 
         foreach($groupedComments as $entityId => $group) {
             $commentSummaries[$entityId] = [
                     'count' => sizeof($group),
-                    'lastComment' => [
+                    'last_comment' => [
                         'date' => sizeof($group) ? $group[0]['created_at'] : null,
-                        'userId' => sizeof($group) ? $group[0]['userId'] : null
+                        'user_id' => sizeof($group) ? $group[0]['user_id'] : null
                     ]
                 ];
         }
 
         foreach($atoms as $atom) {
-            $atom->commentSummary = isset($commentSummaries[$atom->entityId]) ? $commentSummaries[$atom->entityId] : null;
+            $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
         }
     }
 }

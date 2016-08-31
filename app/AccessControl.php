@@ -41,8 +41,8 @@ class AccessControl extends AppModel {
 			$user = \Auth::user();
 		}
 
-		$permissions = self::where('userId', '=', $user['id'])
-				->orWhere('groupId', '=', $user['groupId'])
+		$permissions = self::where('user_id', '=', $user['id'])
+				->orWhere('group_id', '=', $user['group_id'])
 				->get();
 
 		$accessControlStructure = new AccessControlStructure();
@@ -66,7 +66,7 @@ class AccessControl extends AppModel {
 
 		foreach($this->permissions as $permission) {
 			//if permissions key is what we are looking for, resolve user permissions for that node.
-			if(strtolower($permission['accessKey']) == strtolower($key)) {
+			if(strtolower($permission['access_key']) == strtolower($key)) {
 				return $this->_resolvePermission($permission);
 			}
 		}
@@ -84,7 +84,7 @@ class AccessControl extends AppModel {
 	 */
 	protected static function _applyPermissions($structure, $permissions) {
 		foreach($permissions as $permission) {
-			$structure[$permission['accessControlStructureId']]['permitted'] = (bool)$permission['permitted'];
+			$structure[$permission['access_control_structure_id']]['permitted'] = (bool)$permission['permitted'];
 		}
 
 		return $structure;
@@ -108,21 +108,21 @@ class AccessControl extends AppModel {
 		}
 
 		if($permission['permitted']) {
-			if(!$permission['parentId']) {
+			if(!$permission['parent_id']) {
 				return true;
 			}
-			if(isset($permissions[$permission['parentId']])) {
-				$parent = $permissions[$permission['parentId']];
-				unset($permissions[$permission['parentId']]);
+			if(isset($permissions[$permission['parent_id']])) {
+				$parent = $permissions[$permission['parent_id']];
+				unset($permissions[$permission['parent_id']]);
 
 				return $this->_resolvePermission($parent, $permissions);
 			}
 			else {
-				if(isset($this->permissions[$permission['parentId']])) {
-					Log::warning('Permission cycle detected on permission id ' . $permission['parentId'] . '.');
+				if(isset($this->permissions[$permission['parent_id']])) {
+					Log::warning('Permission cycle detected on permission id ' . $permission['parent_id'] . '.');
 				}
 				else {
-					Log::warning('Could not find permission parent id ' . $permission['parentId'] . '.');
+					Log::warning('Could not find permission parent id ' . $permission['parent_id'] . '.');
 				}
 			}
 		}

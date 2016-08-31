@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Http\Requests\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
@@ -21,7 +19,7 @@ use App\ApiPayload;
  */
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['moleculeCode', 'xml', 'statusId'];
+    protected $_allowedProperties = ['molecule_code', 'xml', 'status_id'];
 
     /**
      * GET a list of all atoms.
@@ -33,11 +31,11 @@ class AtomController extends Controller
     public function listAction() {
         $list = [];
         $atoms = Atom::whereIn('id', Atom::latestIDs())
-            ->orderBy('alphaTitle', 'asc')
+            ->orderBy('alpha_title', 'asc')
             ->get();
         foreach($atoms as $atom) {
             $list[] = [
-                'entityId' => $atom->entityId,
+                'entity_id' => $atom->entityId,
                 'title' => $atom->title
             ];
         }
@@ -58,7 +56,7 @@ class AtomController extends Controller
         $input = $request->all();
 
         $atom = new Atom();
-        $atom->entityId = Atom::makeUID();
+        $atom->entity_id = Atom::makeUID();
         foreach($this->_allowedProperties as $allowed) {
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];
@@ -139,7 +137,7 @@ class AtomController extends Controller
      * @return ApiPayload|Response
      */
     public function historyAction($entityId) {
-        $versions = Atom::where('entityId', '=', $entityId)->get();
+        $versions = Atom::where('entity_id', '=', $entityId)->get();
 
         if(!$versions) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
