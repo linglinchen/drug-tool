@@ -19,7 +19,7 @@ use App\ApiPayload;
  */
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['moleculeCode', 'xml', 'statusId'];
+    protected $_allowedProperties = ['molecule_code', 'xml', 'status_id'];
 
     /**
      * GET a list of all atoms.
@@ -56,7 +56,7 @@ class AtomController extends Controller
         $input = $request->all();
 
         $atom = new Atom();
-        $atom->entityId = Atom::makeUID();
+        $atom->entity_id = Atom::makeUID();
         foreach($this->_allowedProperties as $allowed) {
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];

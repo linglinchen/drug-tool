@@ -54,7 +54,7 @@ class Atom extends AppModel {
     public function save(array $options = []) {
         $this->updateTitle();
         $this->xml = self::assignXMLIds($this->xml);
-        $this->modifiedBy = \Auth::user()['id'];
+        $this->modified_by = \Auth::user()['id'];
         parent::save($options);
     }
 
@@ -80,7 +80,7 @@ class Atom extends AppModel {
         }
 
         $this->title = trim($this->title);
-        $this->alphaTitle = mb_convert_encoding(strip_tags($this->title), 'ASCII');
+        $this->alpha_title = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
     /**
