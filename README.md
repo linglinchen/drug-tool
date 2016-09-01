@@ -5,7 +5,7 @@
 - The [Drug Tool development VM](http://wanda.elseviermultimedia.us/Web_Team/Virtual_Machines) if you're installing locally
 - [Composer](https://getcomposer.org/download/) (already installed on the VM)
 
-# Deploying to Bedrock
+# Deploying to Bedrock for the first time
 
 - As **u1geogit**, clone the repo into its destination. This command will clone it directly into your current directory: `git clone https://gitlab.et-scm.com/epd/drug-tool.git .`
 - Set up DNS. You might need to update its URL in **settings.js** in the UI.
@@ -18,12 +18,22 @@ sudo service httpd configtest
 - Copy **.env.example** to **.env** -- **.env** should *always live outside of source control*.
 - Alter **.env** to match suit the environment.
 - Navigate to the directory where the project lives (e.g. **/var/www/drug-tool**)
-- Install the Composer packages. You might need to modify this command depending on how you installed Composer. `composer install`
-- Run the DB migrations: `php artisan migrate:refresh`
+- Install the Composer packages. You might need to modify this command depending on how you installed Composer (it's `composer.phar` on the VM). `composer install`
+- Run the DB migrations: `php artisan migrate`
 - Import data (see below).
 - Restart Apache.
 ```
 sudo service httpd graceful
+```
+
+# Updating Bedrock
+
+It is recommended that you run the following commands after every time you pull the API on Bedrock. You might need to run others, but these are a good baseline.
+```
+php artisan clear-compiled
+composer dump-autoload
+php artisan optimize
+php artisan migrate
 ```
 
 # Deploying to a VM
