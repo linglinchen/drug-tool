@@ -44,18 +44,28 @@ class AssignmentController extends Controller {
      *
      * @api
      *
-     * @param integer $assignmentId The current assignment's ID
+     * @param string $atomEntityId The current assignment's atomEntityId
      *
      * @return ApiPayload|Response
      */
-    public function nextAction($assignmentId) {
+    public function nextAction($atomEntityId) {
         $user = \Auth::user();
 
-        $assignment = Assignment::where('user_id' , '=', $user->id)
+        $assignments = Assignment::where('user_id' , '=', $user->id)
                 ->whereNull('task_end')
-                ->where('id', '>', $assignmentId)
-                ->first();
+                ->orderBy('id', 'ASC')
+                ->get();
 
-        return new ApiPayload($assignment);
+        $found = false;
+        foreach($assignments as $key => $assignment) {
+            if($found) {
+                return new ApiPayload($assignment);
+            }
+            else if($assignment->atom_entity_id == $atomEntityId) {
+                $found = true;
+            }
+        }
+
+        return new ApiPayload(null);
     }
 }
