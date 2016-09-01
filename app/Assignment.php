@@ -132,10 +132,16 @@ class Assignment extends AppModel {
 			$order['direction'] = isset($order['direction']) && strtolower($order['direction']) == 'desc' ?
 					'desc' :
 					'asc';
-
-			$query->orderBy($order['column'], $order['direction'])
-					->groupBy($order['column']);
 		}
+		else {
+			$order = [
+				'column' => 'assignments.id',
+				'direction' => 'asc'
+			];
+		}
+
+		$query->orderBy($order['column'], $order['direction'])
+				->groupBy($order['column']);
 	}
 
 	/**
