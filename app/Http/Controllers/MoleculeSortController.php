@@ -43,7 +43,7 @@ class MoleculeSortController extends Controller {
         DB::transaction(function () {
             foreach($atoms as $atom) {
                 $atom = $atom->replicate();
-                $atom->sort = array_search($atomEntityIds);
+                $atom->sort = array_search($atomEntityIds) + 1;
                 $atom->save();
             }
         });
