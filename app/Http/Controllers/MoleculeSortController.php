@@ -30,7 +30,9 @@ class MoleculeSortController extends Controller {
      * @return ApiPayload|Response
      */
     public function putAction($code, Request $request) {
-        $molecule = Molecule::where('code', '=', $code)->get();
+        $molecule = Molecule::where('code', '=', $code)
+                ->get()
+                ->first();
         if(!$molecule) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
         }
@@ -41,13 +43,14 @@ class MoleculeSortController extends Controller {
         }
 
         $atoms = Atom::where('molecule_code', '=', $code)
-                ->whereIn($request->input('atomEntityIds'))
+                ->whereIn('id', Atom::latestIDs())
+                ->whereIn('entity_id', $request->input('atomEntityIds'))
                 ->get();
 
-        DB::transaction(function () {
+        DB::transaction(function () use($atoms, $atomEntityIds) {
             foreach($atoms as $atom) {
                 $atom = $atom->replicate();
-                $atom->sort = array_search($atomEntityIds) + 1;
+                $atom->sort = array_search($atom->entity_id, $atomEntityIds) + 1;
                 $atom->save();
             }
         });
