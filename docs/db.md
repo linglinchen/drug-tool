@@ -8,7 +8,7 @@
 - [comments](tables/comments.md) - This is where discussion threads are stored. The table supports threads, but the feature isn't used by the current version of the software.
 - [groups](tables/groups.md) - User groups. A user inherits the rights of the group that they belong to.
 - **migrations** - A built-in Laravel table. Records which data migrations have been run.
-- **molecules** - Molecules are roughly equivalent to chapters.
+- [molecules](tables/molecules.md) - Molecules are roughly equivalent to chapters.
 - **password_resets** - A built-in Laravel table. Currently unused.
 - **statuses** - A lookup table for status codes.
 - **tasks** - A lookup table for task codes.
