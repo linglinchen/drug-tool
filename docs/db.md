@@ -1,7 +1,7 @@
 # Tables
 
 - [access_control_structure](tables/access_control_structure.md) - The structure of the ACl. Trees are supported.
-- **access_controls** - Defines the rights of groups and users. User permissions take precedence over group permissions. All rights default to deny.
+- [access_controls](tables/access_controls.md) - Defines the rights of groups and users. User permissions take precedence over group permissions. All rights default to deny.
 - **assignments** - The users' work assignments, past and present.
 - **atoms** - These are roughly equivalent to monographs or pages.
 - **boilerplates** - Templates for creating new atoms.

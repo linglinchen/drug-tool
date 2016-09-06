@@ -100,4 +100,4 @@ php artisan optimize
 
 # More documentation
 
-- [Database structure](docs/tables.md)
+- [Database structure](docs/db.md)
