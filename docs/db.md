@@ -5,7 +5,7 @@
 - [assignments](tables/assignments.md) - The users' work assignments, past and present.
 - [atoms](tables/atoms.md) - These are roughly equivalent to monographs or pages.
 - [boilerplates](tables/boilerplates.md) - XML templates for creating new atoms.
-- **comments** - This is where discussion threads are stored. The table supports threads, but the feature isn't used by the current version of the software.
+- [comments](tables/comments.md) - This is where discussion threads are stored. The table supports threads, but the feature isn't used by the current version of the software.
 - **groups** - User groups. A user inherits the rights of the group that they belong to.
 - **migrations** - A built-in Laravel table. Records which data migrations have been run.
 - **molecules** - Molecules are roughly equivalent to chapters.
