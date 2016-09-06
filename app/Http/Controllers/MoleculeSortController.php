@@ -36,6 +36,10 @@ class MoleculeSortController extends Controller {
         }
 
         $atomEntityIds = $request->input('atomEntityIds');
+        if(!$atomEntityIds || !is_array($atomEntityIds)) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing atomEntityIds.');
+        }
+
         $atoms = Atom::where('molecule_code', '=', $code)
                 ->whereIn($request->input('atomEntityIds'))
                 ->get();
