@@ -38,6 +38,7 @@ class Molecule extends AppModel {
         $currentAtomIds = Atom::latestIds();
         $atoms = Atom::where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', $currentAtomIds)
+                ->orderBy('sort', 'ASC')
                 ->get();
         Comment::addSummaries($atoms);
 
