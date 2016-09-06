@@ -11,5 +11,5 @@
 - [molecules](tables/molecules.md) - Molecules are roughly equivalent to chapters.
 - **password_resets** - A built-in Laravel table. Currently unused.
 - [statuses](tables/statuses.md) - A lookup table for status codes.
-- **tasks** - A lookup table for task codes.
+- [tasks](tables/tasks.md) - A lookup table for task codes.
 - **users** - Stores all user data except permissions. Every user should belong to a group.
