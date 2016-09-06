@@ -20,6 +20,7 @@ use App\ApiPayload;
 class AtomController extends Controller
 {
     protected $_allowedProperties = ['molecule_code', 'xml', 'status_id'];
+    protected $_allowedMassUpdateProperties = ['molecule_code', 'status_id', 'sort'];
 
     /**
      * GET a list of all atoms.
@@ -87,7 +88,7 @@ class AtomController extends Controller
     }
 
     /**
-     * GET an atom.
+     * Update an atom.
      *
      * @api
      *
@@ -113,6 +114,37 @@ class AtomController extends Controller
         $atom->save();
 
         return new ApiPayload($atom->addAssignments());
+    }
+
+    /**
+     * Update many atoms.
+     *
+     * @api
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function massUpdateAction(Request $request) {
+        $entityIds = $request->input('entityIds');
+        $updates = $request->input('updates');
+
+        $atoms = Atom::findNewest($entityIds)
+                ->get();
+
+        foreach($atoms as $atomKey => $atom) {
+            $atom = $atom->replicate();
+            foreach($this->_allowedMassUpdateProperties as $allowed) {
+                if(array_key_exists($allowed, $updates)) {
+                    $atom->$allowed = $updates[$allowed];
+                }
+            }
+            $atom->save();
+
+            $atoms[$atomKey] = $atom->addAssignments();
+        }
+
+        return new ApiPayload($atoms);
     }
 
     /**

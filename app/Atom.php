@@ -293,7 +293,8 @@ class Atom extends AppModel {
     public static function findNewest($entityId) {
         if(is_array($entityId)) {      //plural
             return self::whereIn('id', self::latestIDs())
-                    ->whereIn('entity_id', $entityId);
+                    ->whereIn('entity_id', $entityId)
+                    ->orderBy('sort', 'ASC');
         }
         else {      //singular
             return self::withTrashed()
