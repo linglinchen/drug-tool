@@ -421,7 +421,7 @@ class Atom extends AppModel {
         preg_match('/^\s*<(\w+)/', $xml, $match);
         $firstTag = strtolower($match[1]);
         $id = self::$idPrefixes[$firstTag] . $this->entity_id;
-        $xml = preg_replace('/^\s*(<\w+)>/i', '$1 id="' . $id . '">', $xml);
+        $xml = preg_replace('/^\s*<([^>]+)/i', '<$1 id="' . $id . '"', $xml);
 
         return $xml;
     }
