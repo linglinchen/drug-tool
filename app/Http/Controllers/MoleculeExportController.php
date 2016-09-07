@@ -29,10 +29,10 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($code, Request $request) {
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $filename = $code . '_xml.zip';
-        $filepath = sys_get_temp_dir() . '/' . $filename;
-        $zip->open($filepath, ZipArchive::OVERWRITE);
+        $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
+        $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
         $xml = Molecule::export($code);
         $zip->addFromString($code . '.xml', $xml);

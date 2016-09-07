@@ -44,7 +44,6 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::put('atom/massUpdate', ['uses' => 'AtomController@massUpdateAction']);
             Route::get('atom/{entityId}', ['uses' => 'AtomController@getAction']);
             Route::get('atom/{entityId}/history', ['uses' => 'AtomController@historyAction']);
-            Route::get('atom/{entityId}/export', ['uses' => 'AtomExportController@getAction']);
             Route::put('atom/{entityId}', ['uses' => 'AtomController@putAction']);
             Route::delete('atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
 
@@ -56,6 +55,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('molecule', ['uses' => 'MoleculeController@listAction']);
             Route::get('molecule/{code}', ['uses' => 'MoleculeController@getAction']);
+            Route::get('molecule/{entityId}/export', ['uses' => 'MoleculeExportController@getAction']);
             Route::put('molecule/{code}/sort', ['uses' => 'MoleculeSortController@putAction']);
 
             Route::get('lookup', ['uses' => 'LookupController@listAction']);
