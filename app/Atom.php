@@ -409,4 +409,20 @@ class Atom extends AppModel {
 
         return $atoms;
     }
+
+    /**
+     * Prepare and return the atom's XML.
+     *
+     * @return string
+     */
+    public function export() {
+        $xml = trim(self::assignXMLIds($this->xml));
+
+        preg_match('/^\s*<(\w+)/', $xml, $match);
+        $firstTag = strtolower($match[1]);
+        $id = self::$idPrefixes[$firstTag] . $this->entity_id;
+        $xml = preg_replace('/^\s*(<\w+)>/i', '$1 id="' . $id . '">', $xml);
+
+        return $xml;
+    }
 }

@@ -35,9 +35,8 @@ class Molecule extends AppModel {
      * @param mixed[] $molecule The molecule
      */
     public static function addAtoms($molecule) {
-        $currentAtomIds = Atom::latestIds();
         $atoms = Atom::where('molecule_code', '=', $molecule['code'])
-                ->whereIn('id', $currentAtomIds)
+                ->whereIn('id', Atom::latestIds())
                 ->orderBy('sort', 'ASC')
                 ->get();
         Comment::addSummaries($atoms);
@@ -52,5 +51,29 @@ class Molecule extends AppModel {
         $molecule['atoms'] = $atoms;
 
         return $molecule;
+    }
+
+    /**
+     * Export a molecule to XML. Only blessed atoms are included.
+     *
+     * @param string $code The molecule's code
+     *
+     * @returns string
+     */
+    public static function export($code) {
+        $atoms = Atom::where('molecule_code', '=', $code)
+                ->whereIn('id', Atom::latestIds())
+                ->orderBy('sort', 'ASC')
+                ->get();
+
+        $xml = '<alpha letter="">' . "\n";
+        foreach($atoms as $atom) {
+            $atomXml = $atom->export();
+            $atomXml = str_replace("\n", "\n\t", $atomXml);      //indent the atom
+            $xml .= $atomXml . "\n";
+        }
+        $xml .= '</alpha>';
+
+        return $xml;
     }
 }
