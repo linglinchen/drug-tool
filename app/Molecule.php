@@ -66,7 +66,7 @@ class Molecule extends AppModel {
                 ->orderBy('sort', 'ASC')
                 ->get();
 
-        $xml = '<alpha letter="">' . "\n";
+        $xml = '<alpha letter="' . $code . '">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
             $atomXml = "\t" . str_replace("\n", "\n\t", $atomXml);      //indent the atom
