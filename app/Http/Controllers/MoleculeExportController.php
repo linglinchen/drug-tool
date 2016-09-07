@@ -29,6 +29,14 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($code, Request $request) {
+        $molecule = Molecule::where('code', '=', $code)
+                ->get()
+                ->first();
+
+        if(!$molecule) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+        }
+
         $zip = new \ZipArchive();
         $filename = $code . '_xml.zip';
         $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
