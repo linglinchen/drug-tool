@@ -40,7 +40,7 @@ class MoleculeExportController extends Controller {
         $zip->close();
 
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
         exit;

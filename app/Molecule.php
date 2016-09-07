@@ -69,7 +69,7 @@ class Molecule extends AppModel {
         $xml = '<alpha letter="">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
-            $atomXml = str_replace("\n", "\n\t", $atomXml);      //indent the atom
+            $atomXml = "\t" . str_replace("\n", "\n\t", $atomXml);      //indent the atom
             $xml .= $atomXml . "\n";
         }
         $xml .= '</alpha>';
