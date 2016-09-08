@@ -29,6 +29,9 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($code, Request $request) {
+        $statusId = $request->input('statusId');
+        $statusId = $statusId === '' ? null : $statusId;
+
         $molecule = Molecule::where('code', '=', $code)
                 ->get()
                 ->first();
@@ -42,7 +45,7 @@ class MoleculeExportController extends Controller {
         $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
         $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
-        $xml = Molecule::export($code);
+        $xml = $molecule->export($statusId);
         $zip->addFromString($code . '.xml', $xml);
 
         $zip->close();

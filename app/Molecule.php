@@ -54,19 +54,29 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Export a molecule to XML. Only blessed atoms are included.
+     * Export the molecule to XML.
      *
-     * @param string $code The molecule's code
+     * @param ?integer $statusId (optional) Only export atoms with this status
      *
      * @returns string
      */
-    public static function export($code) {
-        $atoms = Atom::where('molecule_code', '=', $code)
-                ->whereIn('id', Atom::latestIds())
-                ->orderBy('sort', 'ASC')
+    public function export($statusId = null) {
+        $orderedIds = $this->_getSortOrder($statusId);
+
+        $unorderedAtoms = Atom::where('molecule_code', '=', $this->code)
+                ->whereIn('id', Atom::latestIds($statusId))
                 ->get();
 
-        $xml = '<alpha letter="' . $code . '">' . "\n";
+        //postgres doesn't support ORDER BY FIELD, so...
+        $atoms = array_flip($orderedIds);
+        foreach($unorderedAtoms as $atom) {
+            $atoms[$atom->id] = $atom;
+        }
+        $atoms = array_filter($atoms, function ($element) {
+            return !is_numeric($element);       //remove atoms that have never been published
+        });
+
+        $xml = '<alpha letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
             $atomXml = "\t" . str_replace("\n", "\n\t", $atomXml);      //indent the atom
@@ -75,5 +85,21 @@ class Molecule extends AppModel {
         $xml .= '</alpha>';
 
         return $xml;
+    }
+
+    /**
+     * Get the molecule's ordered atom IDs.
+     *
+     * @param ?integer $statusId (optional) Only export atoms with this status
+     *
+     * @return string[]
+     */
+    protected function _getSortOrder($statusId = null) {
+        $atoms = Atom::where('molecule_code', '=', $this->code)
+                ->whereIn('id', Atom::latestIds())
+                ->orderBy('sort', 'ASC')
+                ->get();
+
+        return $atoms->pluck('id')->all();
     }
 }

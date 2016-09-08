@@ -191,18 +191,28 @@ class Atom extends AppModel {
     /**
      * Get a list of the latest version of every atom that hasn't been deleted.
      *
+     * @param ?integer $statusId (optional) Only return atoms with this status
+     *
      * @return string[] The IDs of all current atoms
      */
-    public static function latestIDs() {
-        $sql = 'select id
-                from atoms
-                where id in (
-                        select max(id)
-                        from atoms
-                        group by "entity_id"
+    public static function latestIDs($statusId = null) {
+        $sql = 'SELECT id
+                FROM atoms
+                WHERE id IN (
+                        SELECT MAX(id)
+                        FROM atoms';
+
+        if($statusId !== null) {
+            $sql .= '
+                        WHERE status_id = ' . $statusId;
+        }
+
+        $sql .= '
+                        GROUP BY entity_id
                     )
-                    and deleted_at is null
-                order by "alpha_title"';
+                    AND deleted_at IS NULL
+                ORDER BY alpha_title';
+
         $results = DB::select($sql);
 
         $list = [];
