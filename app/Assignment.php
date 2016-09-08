@@ -207,4 +207,36 @@ class Assignment extends AppModel {
 			$currentAssignment->save();
 		}
 	}
+
+	/**
+	 * Find a user's next assignment.
+	 *
+	 * @param integer $userId The user's ID
+	 * @param string $atomEntityId The atomEntityId the user is currently on
+	 *
+	 * @return ?object
+	 */
+	public static function next($userId, $atomEntityId) {
+		$assignments = Assignment::where('user_id' , '=', $userId)
+				->orderBy('id', 'ASC')
+				->get();
+
+		//find the current assignment
+		$found = 0;
+		for($i = $assignments->count() - 1; $i >= 0; --$i) {
+			if($assignments->get($i)->atom_entity_id == $atomEntityId) {
+				$found = $i;
+				break;
+			}
+		}
+
+		//find the next open assignment
+		for($i = $found + 1; $i < $assignments->count(); ++$i) {
+			if($assignments->get($i)->task_end === null) {
+				return new ApiPayload($assignments->get($i));
+			}
+		}
+
+		return null;
+	}
 }

@@ -51,21 +51,6 @@ class AssignmentController extends Controller {
     public function nextAction($atomEntityId) {
         $user = \Auth::user();
 
-        $assignments = Assignment::where('user_id' , '=', $user->id)
-                ->whereNull('task_end')
-                ->orderBy('id', 'ASC')
-                ->get();
-
-        $found = false;
-        foreach($assignments as $key => $assignment) {
-            if($found) {
-                return new ApiPayload($assignment);
-            }
-            else if($assignment->atom_entity_id == $atomEntityId) {
-                $found = true;
-            }
-        }
-
-        return new ApiPayload(null);
+        return Assignment::next($user->id, $atomEntityId);
     }
 }
