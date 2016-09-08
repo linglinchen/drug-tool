@@ -54,7 +54,7 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Export the molecule to XML.
+     * Export the molecule to XML. Takes the LATEST VERSION of each atom that matches the statusId (if passed).
      *
      * @param ?integer $statusId (optional) Only export atoms with this status
      *
