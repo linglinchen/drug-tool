@@ -52,7 +52,7 @@ php artisan migrate
 cd /var/www/drug-tool
 ```
 - Install the Composer packages. You might need to modify this command depending on how you installed Composer. `composer.phar install`
-- Run the DB migrations: `php artisan migrate:refresh`
+- Run the DB migrations: `php artisan migrate` or `php artisan migrate:refresh` (if you don't mind blowing the database away)
 - Seed the DB with junk data for testing purposes `php artisan db:seed` or import real data (see below).
 - Restart Apache.
 ```
@@ -61,6 +61,7 @@ sudo service httpd restart
 
 # Notes
 
+- Most custom code is in the **app** directory.
 - Refresh database by running: `php artisan migrate:refresh`
 - See a list of available Artisan commands: `php artisan`
 - You can truncate the various tables with these commands.
