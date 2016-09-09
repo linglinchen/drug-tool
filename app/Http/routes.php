@@ -44,6 +44,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::put('atom/massUpdate', ['uses' => 'AtomController@massUpdateAction']);
             Route::get('atom/{entityId}', ['uses' => 'AtomController@getAction']);
             Route::get('atom/{entityId}/history', ['uses' => 'AtomController@historyAction']);
+            Route::get('atom/{entityId}/version/{id}', ['uses' => 'AtomController@getAction']);
             Route::put('atom/{entityId}', ['uses' => 'AtomController@putAction']);
             Route::delete('atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
 

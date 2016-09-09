@@ -74,11 +74,20 @@ class AtomController extends Controller
      * @api
      *
      * @param string $entityId The entityId of the atom to retrieve
+     * @param ?string $id (optional) The ID of the specific version to retrieve
      *
      * @return ApiPayload|Response
      */
-    public function getAction($entityId) {
-        $atom = Atom::findNewestIfNotDeleted($entityId);
+    public function getAction($entityId, $id = null) {
+        if($id) {
+            $atom = Atom::where('id', '=', $id)
+                    ->where('entity_id', '=', $entityId)
+                    ->get()
+                    ->first();
+        }
+        else {
+            $atom = Atom::findNewestIfNotDeleted($entityId);
+        }
 
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
