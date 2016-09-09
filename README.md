@@ -76,7 +76,7 @@ php artisan import:clear molecules
 php artisan import:clear tasks
 php artisan import:clear statuses
 ```
-- Import all the things. See their files in **app/Console/Commands** for more information.
+- Import all the things. See their files in **app/Console/Commands** for each command's expected inputs. Import files belong in **data**, and are gitignored by default.
 ```
 php artisan import:users
 php artisan import:groups
