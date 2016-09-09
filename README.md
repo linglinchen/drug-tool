@@ -61,6 +61,7 @@ sudo service httpd restart
 
 # Notes
 
+- **All** modifications to the database structure should be handled with migrations. If you make the change with something like pgAdmin or Heidi, *you're doing it wrong!*
 - Most custom code is in the **app** directory.
 - Refresh database by running: `php artisan migrate:refresh`
 - See a list of available Artisan commands: `php artisan`
@@ -97,7 +98,9 @@ php artisan optimize
 
 # Third Party Libraries and Frameworks
 
-- [Official Laravel 5.2 Documentation](https://laravel.com/docs/5.2)
+- [Laravel 5.2](https://laravel.com/docs/5.2)
+- [Doctrine DBAL](http://www.doctrine-project.org/projects/dbal.html) - Embiggens (It's a perfectly cromulent word!) the ORM. Great for renaming columns in migrations.
+- [Codeception](http://codeception.com/) - For unit testing.
 
 # More documentation
 
