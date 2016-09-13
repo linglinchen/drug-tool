@@ -79,9 +79,10 @@ class Assignment extends AppModel {
 	 * @return ?object The assignment (if found)
 	 */
 	public static function getCurrentAssignment($atomEntityId) {
-		$assignment = self::find(1)
+		$assignment = self::select()
 				->orderBy('id', 'DESC')
 				->where('atom_entity_id', '=', $atomEntityId)
+				->limit(1)
 				->first();
 
 		return ($assignment && $assignment->task_end) ? null : $assignment;
@@ -165,7 +166,7 @@ class Assignment extends AppModel {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
 
 		$user = \Auth::user();
-		if(isset($promotion['task_id'])) {		//not all promotions touch the assignments table
+		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
 			self::_endCurrentAssignment($atomEntityId);
 
 			//create a new assignment if this isn't a terminal promotion
@@ -183,7 +184,7 @@ class Assignment extends AppModel {
 				$assignment->save();
 			}
 		}
-		else if(isset($promotion['user_id']) && $promotion['user_id']) {		//change assignment's owner
+		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
 			$assignment = self::getCurrentAssignment($atomEntityId);
 			if($assignment) {
 				self::_endCurrentAssignment($atomEntityId);

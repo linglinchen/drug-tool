@@ -390,17 +390,21 @@ class Atom extends AppModel {
     /**
      * Perform workflow promotions.
      *
-     * @param string $atomEntityIds The atoms' entityIds
+     * @param string[] $atomEntityIds The atoms' entityIds
      * @param mixed[] $promotion The promotion we're going to perform
      *
-     * @return mixed[] The
+     * @return mixed[] The updated atoms with their assignments
      */
     public static function promote($atomEntityIds, $promotion) {
         $atomEntityIds = array_unique($atomEntityIds);      //no need to promote twice
 
+        foreach($promotion as $key => $value) {
+            $promotion[$key] = $value === '' ? null : $value;
+        }
+
         $atoms = [];
         foreach($atomEntityIds as $atomEntityId) {
-            $atom = Atom::findNewestIfNotDeleted($atomEntityId);
+            $atom = Atom::findNewest($atomEntityId);
             if(!$atom) {
                 continue;       //skip atoms that don't exist
             }
