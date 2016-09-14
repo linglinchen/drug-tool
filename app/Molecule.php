@@ -76,13 +76,13 @@ class Molecule extends AppModel {
             return !is_numeric($element);       //remove atoms that have never been published
         });
 
-        $xml = '<alpha letter="' . $this->code . '">' . "\n";
+        $xml = "\t" . '<alpha letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
-            $atomXml = "\t" . str_replace("\n", "\n\t", $atomXml);      //indent the atom
+            $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
             $xml .= $atomXml . "\n";
         }
-        $xml .= '</alpha>';
+        $xml .= "\t" . '</alpha>' . "\n";
 
         return $xml;
     }
