@@ -84,6 +84,8 @@ class AtomController extends Controller
                     ->where('entity_id', '=', $entityId)
                     ->get()
                     ->first();
+
+            $currentAtom = Atom::findNewestIfNotDeleted($entityId);
         }
         else {
             $atom = Atom::findNewestIfNotDeleted($entityId);
@@ -92,6 +94,8 @@ class AtomController extends Controller
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
+
+        $atom->is_current = !$id || $atom->id == $currentAtom->id;
 
         return new ApiPayload($atom->addAssignments());
     }
