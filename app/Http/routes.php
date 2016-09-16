@@ -68,6 +68,8 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
+
+            Route::get('report', ['uses' => 'ReportController@listAction']);
         });
     });
 });
