@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportStatuses::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
+        Commands\QuickFixML::class,
     ];
 
     /**
