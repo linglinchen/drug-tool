@@ -1,18 +1,27 @@
 <?php
 
+/* ml to mL wherever it thinks this means milliliters. Based on quick fix
+	2016-09-16 JWS	original
+
+	Expected results from sample data:
+	42 ignored (eg, firmly, xmlns:mml)
+	16 mL ignored
+	2543 changed
+*/
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
 use App\Atom;
 
-class QuickFix_ml extends Command {
+class QuickFixML extends Command {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'quickfix_ml';
+    protected $signature = 'quickfix:ml';
 
     /**
      * The console command description.
@@ -33,25 +42,13 @@ class QuickFix_ml extends Command {
     public static function fixLowercasedML() {
         $atoms = Atom::whereIn('id', Atom::latestIDs())->get();
         $total_replaced = 0;
+        $total_replaced_atoms = 0;
 		$searchreplace = array(
 			"/([^A-Za-z])ml([^A-Za-z])/mu" => "$1mL$2", #camelcase milliliters
 		);
 
 
         foreach($atoms as $atom) {
-            /* EXPECTED:
-				42 ignored (eg, firmly, xmlns:mml)
-				16 mL ignored
-				2543 changed
-			*/
-
-
-            /*if(preg_match("/([^A-Za-z])mL([^A-Za-z])/", $atom->xml)) {
-            	if($atom->title == 'dulaglutide (Rx)') { echo $atom->xml . "\n"; }
-            	$total_replaced++;
-            	//echo $atom->title . "\n";
-            }*/
-
             $newXml = preg_replace(array_keys($searchreplace), array_values($searchreplace), $atom->xml, -1, $count);
             $total_replaced += $count;
             if($newXml != $atom->xml) {
@@ -59,10 +56,17 @@ class QuickFix_ml extends Command {
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $newAtom->save();
+                $total_replaced_atoms++;
             }
         }
 
-        echo 'Total replacements: ' . $total_replaced . "\n";
+        /* output messages */
+        echo 'Replacements:' . "\n";
+        print_r($searchreplace);
+        echo "\n";
+        echo 'Total atoms: ' . count($atoms) . "\n";
+        echo 'Total updated atoms: ' . $total_replaced_atoms . "\n";
+        echo 'Total text replacements: ' . $total_replaced . "\n";
 
     }
 }
