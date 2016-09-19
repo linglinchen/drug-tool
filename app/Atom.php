@@ -223,6 +223,11 @@ class Atom extends AppModel {
         return $list;
     }
 
+    /**
+     * Get a list of deactivated monographs.
+     *
+     * @return object
+     */
     public static function getDeactivated() {
         $sql = 'SELECT id, title
                 FROM atoms
