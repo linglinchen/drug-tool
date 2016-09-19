@@ -20,6 +20,9 @@ class ReportController extends Controller {
     }
 
     public function deactivatedAction(Request $request) {
-        return new ApiPayload(Atom::getDeactivated());
+        return new ApiPayload([
+            'totalCount'    => sizeof(Atom::latestIDs()),
+            'deactivated'   => Atom::getDeactivated()
+        ]);
     }
 }
