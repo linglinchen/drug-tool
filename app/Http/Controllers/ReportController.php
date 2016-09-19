@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\ApiError;
 use App\ApiPayload;
+use App\Atom;
 
 class ReportController extends Controller {
     protected $_reportTypes = [
@@ -16,5 +17,9 @@ class ReportController extends Controller {
 
     public function listAction() {
         return new ApiPayload($this->_reportTypes);
+    }
+
+    public function deactivatedAction(Request $request) {
+        return new ApiPayload(Atom::getDeactivated());
     }
 }

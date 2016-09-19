@@ -223,6 +223,14 @@ class Atom extends AppModel {
         return $list;
     }
 
+    public static function getDeactivated() {
+        $sql = 'SELECT id, title
+                FROM atoms
+                WHERE XPATH_EXISTS(\'monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
+
+        return DB::select($sql);
+    }
+
     /**
      * Get a list of the latest version of every atom that hasn't been deleted.
      *
