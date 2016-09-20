@@ -48,7 +48,7 @@ class MoleculeExportController extends Controller {
         $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.2//EN//XML" "Y:\WWW1\tools\Drugs\3_2_drug.dtd">' . "\n";
         $xml .= '<drug_guide isbn="9780323448260">' . "\n";     //TODO: make the ISBN dynamic
         $xml .= $molecule->export($statusId);
-        $xml .= '<drug_guide>';
+        $xml .= '</drug_guide>';
         $zip->addFromString($code . '.xml', $xml);
 
         $zip->close();
