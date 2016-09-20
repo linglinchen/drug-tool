@@ -228,12 +228,29 @@ class Atom extends AppModel {
      *
      * @return object
      */
-    public static function getDeactivated() {
-        $sql = 'SELECT id, title
+    public static function getDeactivatedMonographs() {
+        $sql = 'SELECT id, title, UNNEST(XPATH(\'//monograph[@status="discontinued"]/mono_name/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))) AS subtitle
                 FROM atoms
-                WHERE XPATH_EXISTS(\'monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
+                WHERE id IN(' . implode(',', self::latestIDs()) . ')
+                    AND XPATH_EXISTS(\'//monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
 
         return DB::select($sql);
+    }
+
+    /**
+     * Count all monographs inside active atoms, even if they are grouped.
+     *
+     * @return integer
+     */
+    public static function countMonographs() {
+        $sql = 'SELECT COUNT(*)
+                FROM (
+                    SELECT UNNEST(XPATH(\'//monograph/mono_name\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\'))))
+                    FROM atoms
+                    WHERE id IN(' . implode(',', self::latestIDs()) . ')
+                ) AS subquery';
+
+        return DB::select($sql)[0]->count;
     }
 
     /**
