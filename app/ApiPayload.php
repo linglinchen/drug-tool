@@ -41,12 +41,8 @@ class ApiPayload extends AppModel {
 			}
 		}
 		else if(is_object($data)) {
-			if(method_exists($data, 'toArray')) {
-				$data = self::_forceToArray($data->toArray());
-			}
-			else {
-				$data = self::_forceToArray((array)$data);
-			}
+			$data = method_exists($data, 'toArray') ? $data->toArray() : (array)$data;
+			$data = self::_forceToArray($data);
 		}
 
 		return $data;
