@@ -43,7 +43,7 @@ class MoleculeSortController extends Controller {
         }
 
         $atoms = Atom::where('molecule_code', '=', $code)
-                ->whereIn('id', Atom::latestIDs())
+                ->whereIn('id', Atom::buildLatestIDQuery())
                 ->whereIn('entity_id', $request->input('atomEntityIds'))
                 ->get();
 

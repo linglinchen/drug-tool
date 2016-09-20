@@ -31,7 +31,7 @@ class QuickFix extends Command {
     }
 
     public static function fixUntypedDrugNodes() {
-        $atoms = Atom::whereIn('id', Atom::latestIDs())->get();
+        $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())->get();
         foreach($atoms as $atom) {
             $newXml = str_replace('<drug>', '<drug type="generic">', $atom->xml);
             if($newXml != $atom->xml) {

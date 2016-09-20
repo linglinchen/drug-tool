@@ -36,7 +36,9 @@ class Molecule extends AppModel {
      */
     public static function addAtoms($molecule) {
         $atoms = Atom::where('molecule_code', '=', $molecule['code'])
-                ->whereIn('id', Atom::latestIds())
+                ->whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })
                 ->orderBy('sort', 'ASC')
                 ->get();
         Comment::addSummaries($atoms);
@@ -64,7 +66,9 @@ class Molecule extends AppModel {
         $orderedIds = $this->_getSortOrder($statusId);
 
         $unorderedAtoms = Atom::where('molecule_code', '=', $this->code)
-                ->whereIn('id', Atom::latestIds($statusId))
+                ->whereIn('id', function ($q) use ($statusId) {
+                    Atom::buildLatestIDQuery($statusId, $q);
+                })
                 ->get();
 
         //postgres doesn't support ORDER BY FIELD, so...
@@ -96,7 +100,9 @@ class Molecule extends AppModel {
      */
     protected function _getSortOrder($statusId = null) {
         $atoms = Atom::where('molecule_code', '=', $this->code)
-                ->whereIn('id', Atom::latestIds())
+                ->whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })
                 ->orderBy('sort', 'ASC')
                 ->get();
 

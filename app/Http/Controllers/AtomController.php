@@ -31,7 +31,7 @@ class AtomController extends Controller
      */
     public function listAction() {
         $list = [];
-        $atoms = Atom::whereIn('id', Atom::latestIDs())
+        $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())
             ->orderBy('alpha_title', 'asc')
             ->get();
         foreach($atoms as $atom) {
