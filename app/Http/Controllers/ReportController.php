@@ -13,7 +13,8 @@ use App\Report;
 class ReportController extends Controller {
     protected $_reportTypes = [
         'discontinued' => 'Discontinued Monographs',
-        'statuses' => 'Status Breakdown'
+        'statuses' => 'Status Breakdown',
+        'edits' => 'Edits'
     ];
 
     public function listAction() {
@@ -26,5 +27,9 @@ class ReportController extends Controller {
 
     public function statusesAction(Request $request) {
         return new ApiPayload(Report::statuses());
+    }
+
+    public function editsAction(Request $request) {
+        return new ApiPayload(Report::edits());
     }
 }
