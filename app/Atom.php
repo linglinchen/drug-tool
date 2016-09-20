@@ -224,11 +224,11 @@ class Atom extends AppModel {
     }
 
     /**
-     * Get a list of deactivated monographs.
+     * Get a list of discontinued monographs.
      *
      * @return object
      */
-    public static function getDeactivatedMonographs() {
+    public static function getDiscontinuedMonographs() {
         $sql = 'SELECT id, entity_id, title, UNNEST(XPATH(\'//monograph[@status="discontinued"]/mono_name/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))) AS subtitle
                 FROM atoms
                 WHERE id IN(' . implode(',', self::latestIDs()) . ')

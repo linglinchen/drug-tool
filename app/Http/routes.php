@@ -70,7 +70,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
 
             Route::get('report', ['uses' => 'ReportController@listAction']);
-            Route::get('report/deactivated', ['uses' => 'ReportController@deactivatedAction']);
+            Route::get('report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
         });
     });
 });

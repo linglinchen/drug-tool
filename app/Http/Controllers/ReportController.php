@@ -12,17 +12,17 @@ use App\Atom;
 
 class ReportController extends Controller {
     protected $_reportTypes = [
-        'deactivated'   => 'Deactivated Monographs'
+        'discontinued'   => 'Discontinued Monographs'
     ];
 
     public function listAction() {
         return new ApiPayload($this->_reportTypes);
     }
 
-    public function deactivatedAction(Request $request) {
+    public function discontinuedAction(Request $request) {
         return new ApiPayload([
             'totalCount'    => Atom::countMonographs(),
-            'deactivated'   => Atom::getDeactivatedMonographs()
+            'discontinued'   => Atom::getDiscontinuedMonographs()
         ]);
     }
 }
