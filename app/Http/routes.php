@@ -71,6 +71,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('report', ['uses' => 'ReportController@listAction']);
             Route::get('report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
+            Route::get('report/statuses', ['uses' => 'ReportController@statusesAction']);
         });
     });
 });

@@ -8,11 +8,12 @@ use App\Http\Controllers\Controller;
 
 use App\ApiError;
 use App\ApiPayload;
-use App\Atom;
+use App\Report;
 
 class ReportController extends Controller {
     protected $_reportTypes = [
-        'discontinued'   => 'Discontinued Monographs'
+        'discontinued' => 'Discontinued Monographs',
+        'statuses' => 'Status Breakdown'
     ];
 
     public function listAction() {
@@ -20,9 +21,10 @@ class ReportController extends Controller {
     }
 
     public function discontinuedAction(Request $request) {
-        return new ApiPayload([
-            'totalCount'    => Atom::countMonographs(),
-            'discontinued'   => Atom::getDiscontinuedMonographs()
-        ]);
+        return new ApiPayload(Report::discontinued());
+    }
+
+    public function statusesAction(Request $request) {
+        return new ApiPayload(Report::statuses());
     }
 }
