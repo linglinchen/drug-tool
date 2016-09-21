@@ -43,18 +43,51 @@ class Report extends AppModel {
 	}
 
 	/**
-	 * Get a count of how many atoms were edited per day.
+	 * Get a count of how many atoms were edited per day by each user.
 	 *
-	 * @return integer[]
+	 * @return array
 	 */
 	public static function edits() {
-		$results = Atom::select(DB::raw('COUNT(DISTINCT entity_id)'), DB::raw('DATE_TRUNC(\'day\', created_at) AS day'))
-				->groupBy(DB::raw('DATE_TRUNC(\'day\', created_at)'))
+		$results = Atom::select(
+					'modified_by',
+					DB::raw('DATE_TRUNC(\'day\', created_at) AS x'),
+					DB::raw('COUNT(DISTINCT entity_id) AS y')
+				)
+				->groupBy(
+					'modified_by',
+					DB::raw('DATE_TRUNC(\'day\', created_at)')
+				)
+				->orderBy(DB::raw('DATE_TRUNC(\'day\', created_at)'))
 				->get();
+
+		if(sizeof($results)) {
+			$startTime = strtotime($results[0]->x);
+			$endTime = strtotime($results[sizeof($results) - 1]->x);
+
+			$stepSize = 24 * 60 * 60;		//1 day
+			$blankSeries = [];
+			for($i = $startTime; $i <= $endTime; $i += $stepSize) {
+				$blankSeries[$i] = [
+					'x' => $i,
+					'y' => 0
+				];
+			}
+		}
 
 		$output = [];
 		foreach($results as $row) {
-			$output[strtotime($row['day'])] = $row['count'];
+			$userId = (int)$row['modified_by'];
+			unset($row['modified_by']);
+
+			if(!isset($output[$userId])) {
+				$output[$userId] = $blankSeries;
+			}
+
+			$time = strtotime($row->x);
+			$output[$userId][$time] = [
+				'x' => $time,
+				'y' => $row->y
+			];
 		}
 
 		return $output;
