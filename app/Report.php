@@ -88,8 +88,8 @@ class Report extends AppModel {
 		$results = $query->get();
 
 		if(sizeof($results)) {
-			$startTime = $startTime ? $startTime : $results[0]->x;
-			$endTime = $endTime ? $endTime : $results[sizeof($results) - 1]->x;
+			$startTime = $startTime ? $startTime : (int)$results[0]->x;
+			$endTime = $endTime ? $endTime : (int)$results[sizeof($results) - 1]->x;
 			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, self::$_stepSizeSeconds[$stepSize]);
 		}
 
@@ -102,9 +102,9 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			$output[$userId][$row->x] = [
-				'x' => $row->x,
-				'y' => $row->y
+			$output[$userId][(int)$row->x] = [
+				'x' => (int)$row->x,
+				'y' => (int)$row->y
 			];
 		}
 
