@@ -30,6 +30,12 @@ class ReportController extends Controller {
     }
 
     public function editsAction(Request $request) {
-        return new ApiPayload(Report::edits());
+        $validStepSizes = ['day', 'week'];
+        $timezoneOffset = $request->input('timezoneOffset');
+        $stepSize = $request->input('stepSize');
+        $startTime = $request->input('startTime');
+        $endTime = $request->input('endTime');
+
+        return new ApiPayload(Report::edits($stepSize, $timezoneOffset, $startTime, $endTime));
     }
 }

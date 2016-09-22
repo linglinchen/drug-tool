@@ -9,6 +9,11 @@ use App\AppModel;
 use App\Atom;
 
 class Report extends AppModel {
+	protected static $_stepSizeSeconds = [
+		'day' => 24 * 60 * 60,
+		'week' => 7 * 24 * 60 * 60
+	];
+
 	/**
 	 * Get a list of discontinued monographs and a count of the total.
 	 *
@@ -45,33 +50,47 @@ class Report extends AppModel {
 	/**
 	 * Get a count of how many atoms were edited per day by each user.
 	 *
+	 * @param string $stepSize How much time between steps?
+	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
+	 * @param ?string $startTime (optional) Start time of the graph
+	 * @param ?string $endTime (optional) End time of the graph
+	 *
 	 * @return array
 	 */
-	public static function edits() {
-		$results = Atom::select(
+	public static function edits($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		$stepSize = strtolower($stepSize);
+		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
+
+		$timezoneOffsetPart = $timezoneOffset ?
+				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
+				'';
+		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
+		$query = Atom::select(
 					'modified_by',
-					DB::raw('DATE_TRUNC(\'day\', created_at) AS x'),
+					DB::raw('EXTRACT(EPOCH FROM ' . $datePart . ') AS x'),
 					DB::raw('COUNT(DISTINCT entity_id) AS y')
-				)
-				->groupBy(
+				);
+		if($startTime) {
+			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+		}
+		if($endTime) {
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+		}
+		$query->groupBy(
 					'modified_by',
-					DB::raw('DATE_TRUNC(\'day\', created_at)')
+					DB::raw($datePart)
 				)
-				->orderBy(DB::raw('DATE_TRUNC(\'day\', created_at)'))
-				->get();
+				->orderBy(DB::raw($datePart));
+		$results = $query->get();
 
 		if(sizeof($results)) {
-			$startTime = strtotime($results[0]->x);
-			$endTime = strtotime($results[sizeof($results) - 1]->x);
-
-			$stepSize = 24 * 60 * 60;		//1 day
-			$blankSeries = [];
-			for($i = $startTime; $i <= $endTime; $i += $stepSize) {
-				$blankSeries[$i] = [
-					'x' => $i,
-					'y' => 0
-				];
-			}
+			$startTime = $startTime ? $startTime : $results[0]->x;
+			$endTime = $endTime ? $endTime : $results[sizeof($results) - 1]->x;
+			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, self::$_stepSizeSeconds[$stepSize]);
 		}
 
 		$output = [];
@@ -83,13 +102,52 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			$time = strtotime($row->x);
-			$output[$userId][$time] = [
-				'x' => $time,
+			$output[$userId][$row->x] = [
+				'x' => $row->x,
 				'y' => $row->y
 			];
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Make sure that the end time is >= the start time.
+	 *
+	 * @param integer $startTime Start time of the graph
+	 * @param integer $endTime End time of the graph
+	 *
+	 * @return integer[]
+	 */
+	protected static function _enforceRangeSanity($startTime, $endTime) {
+		$times = [$startTime, $endTime];
+
+		if($startTime && $endTime) {
+			sort($times);
+		}
+
+		return $times;
+	}
+
+	/**
+	 * Build a blank time series for the charting library to consume.
+	 * Using this will ensure that time series in sparse data sets are always the same length.
+	 *
+	 * @param integer $startTime Start time of the series
+	 * @param integer $endTime End time of the series
+	 * @param integer $stepSize How much time between steps?
+	 *
+	 * @returns array
+	 */
+	protected static function _buildBlankTimeSeries($startTime, $endTime, $stepSize) {
+		$blankSeries = [];
+		for($i = $startTime; $i <= $endTime; $i += $stepSize) {
+			$blankSeries[$i] = [
+				'x' => $i,
+				'y' => 0
+			];
+		}
+
+		return $blankSeries;
 	}
 }
