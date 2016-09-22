@@ -14,7 +14,8 @@ class ReportController extends Controller {
     protected $_reportTypes = [
         'discontinued' => 'Discontinued Monographs',
         'statuses' => 'Status Breakdown',
-        'edits' => 'Edits'
+        'edits' => 'Edits',
+        'open-assignments' => 'Open Assignments'
     ];
 
     public function listAction() {
@@ -37,5 +38,15 @@ class ReportController extends Controller {
         $endTime = $request->input('endTime');
 
         return new ApiPayload(Report::edits($stepSize, $timezoneOffset, $startTime, $endTime));
+    }
+
+    public function openAssignmentsAction(Request $request) {
+        $validStepSizes = ['day', 'week'];
+        $timezoneOffset = $request->input('timezoneOffset');
+        $stepSize = $request->input('stepSize');
+        $startTime = $request->input('startTime');
+        $endTime = $request->input('endTime');
+
+        return new ApiPayload();
     }
 }
