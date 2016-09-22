@@ -15,7 +15,7 @@ class ReportController extends Controller {
         'discontinued' => 'Discontinued Monographs',
         'statuses' => 'Status Breakdown',
         'edits' => 'Edits',
-        'open-assignments' => 'Open Assignments'
+        'openAssignments' => 'Open Assignments'
     ];
 
     public function listAction() {
