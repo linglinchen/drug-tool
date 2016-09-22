@@ -182,7 +182,9 @@ class AtomController extends Controller
      * @return ApiPayload|Response
      */
     public function historyAction($entityId) {
-        $versions = Atom::where('entity_id', '=', $entityId)->get();
+        $versions = Atom::where('entity_id', '=', $entityId)
+                ->orderBy('id', 'ASC')
+                ->get();
 
         if(!$versions) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
