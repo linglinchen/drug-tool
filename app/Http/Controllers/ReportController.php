@@ -47,6 +47,6 @@ class ReportController extends Controller {
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
 
-        return new ApiPayload();
+        return new ApiPayload(Report::openAssignments($stepSize, $timezoneOffset, $startTime, $endTime));
     }
 }

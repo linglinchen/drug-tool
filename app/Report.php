@@ -7,6 +7,7 @@ use Log;
 
 use App\AppModel;
 use App\Atom;
+use App\Assignment;
 
 class Report extends AppModel {
 	protected static $_stepSizeSeconds = [
@@ -96,7 +97,6 @@ class Report extends AppModel {
 		$output = [];
 		foreach($results as $row) {
 			$userId = (int)$row['modified_by'];
-			unset($row['modified_by']);
 
 			if(!isset($output[$userId])) {
 				$output[$userId] = $blankSeries;
@@ -109,6 +109,86 @@ class Report extends AppModel {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Determine how many assignments were open during a time period.
+	 *
+	 * @param string $stepSize How much time between steps?
+	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
+	 * @param ?string $startTime (optional) Start time of the graph
+	 * @param ?string $endTime (optional) End time of the graph
+	 *
+	 * @return array
+	 */
+	public static function openAssignments($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		$stepSize = strtolower($stepSize);
+		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
+		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
+
+		$timezoneOffsetPart = $timezoneOffset ?
+				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
+				'';
+		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
+		$query = Assignment::select(
+					'user_id',
+					'created_at',
+					'task_end',
+					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')) AS opened'),
+					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', task_end' . $timezoneOffsetPart . ')) AS closed')
+				)
+				->whereNotNull('created_at');		//filter out missing timestamps
+		if($startTime) {
+			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+		}
+		if($endTime) {
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+		}
+		$query->orderBy('created_at', 'ASC');
+		$results = $query->get();
+
+		if(sizeof($results)) {
+			$startTime = $startTime ? $startTime : (int)$results[0]->opened;
+			$endTime = $endTime ?
+					$endTime :
+					strtotime(date('Y-m-d 00:00:00 ' . ($timezoneOffset >= 0 ? '+' : '') . $timezoneOffset . ':00'));
+			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, $stepSizeSeconds);
+		}
+
+		$output = [];
+		foreach($results as $row) {
+			$userId = (int)$row['user_id'];
+			if(!isset($output[$userId])) {
+				$output[$userId] = $blankSeries;
+			}
+
+			$start = (int)$row->opened;
+			$end = $row->closed ? (int)$row->closed : $endTime;
+			self::_applyAssignmentToSeries($output[$userId], $stepSizeSeconds, $start, $end);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Expand an assignment to cover a time range in a series.
+	 *
+	 * @param array $series The user's series
+	 * @param string $stepSizeSeconds How much time between steps?
+	 * @param integer $start The start of the assignment
+	 * @param integer $end The end of the assignment
+	 */
+	protected static function _applyAssignmentToSeries(&$series, $stepSizeSeconds, $start, $end) {
+		for($i = $start; $i <= $end; $i += $stepSizeSeconds) {
+			if(!isset($series[$i])) {
+				return;
+			}
+			++$series[$i]['y'];
+		}
 	}
 
 	/**
