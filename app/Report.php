@@ -136,8 +136,6 @@ class Report extends AppModel {
 		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
 		$query = Assignment::select(
 					'user_id',
-					'created_at',
-					'task_end',
 					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')) AS opened'),
 					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', task_end' . $timezoneOffsetPart . ')) AS closed')
 				)
