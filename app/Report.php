@@ -156,8 +156,8 @@ class Report extends AppModel {
 			}
 		}
 		$query->orderBy('created_at', 'ASC');
-		$results = $query->get();
 
+		$results = $query->get();
 		if(sizeof($results)) {
 			$startTime = $startTime ? $startTime : (int)$results[0]->opened;
 			$endTime = $endTime ?
@@ -173,8 +173,10 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
+			//ensure that the bookends are within the specified time range
 			$start = $row->opened < $startTime ? $startTime : (int)$row->opened;
 			$end = $row->closed ? (int)$row->closed : $endTime;
+
 			self::_applyAssignmentToSeries($output[$userId], $stepSizeSeconds, $start, $end);
 		}
 
