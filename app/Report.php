@@ -140,11 +140,20 @@ class Report extends AppModel {
 					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', task_end' . $timezoneOffsetPart . ')) AS closed')
 				)
 				->whereNotNull('created_at');		//filter out missing timestamps
-		if($startTime) {
-			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
-		}
 		if($endTime) {
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+			$cutoff = $endTime + $stepSizeSeconds;
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . $cutoff . ')'));
+			$query->where(function ($q) use ($cutoff) {
+				$q->whereNull('task_end')
+						->orWhere('task_end', '<', DB::raw('TO_TIMESTAMP(' . $cutoff . ')'));
+			});
+
+			if($startTime) {
+				$query->where(function ($q) use ($startTime) {
+					$q->whereNull('task_end')
+							->orWhere('task_end', '>=', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+				});
+			}
 		}
 		$query->orderBy('created_at', 'ASC');
 		$results = $query->get();
@@ -164,7 +173,7 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			$start = (int)$row->opened;
+			$start = $row->opened < $startTime ? $startTime : (int)$row->opened;
 			$end = $row->closed ? (int)$row->closed : $endTime;
 			self::_applyAssignmentToSeries($output[$userId], $stepSizeSeconds, $start, $end);
 		}
