@@ -74,6 +74,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('report/statuses', ['uses' => 'ReportController@statusesAction']);
             Route::get('report/edits', ['uses' => 'ReportController@editsAction']);
             Route::get('report/openAssignments', ['uses' => 'ReportController@openAssignmentsAction']);
+            Route::get('report/brokenLinks', ['uses' => 'ReportController@brokenLinksAction']);
         });
     });
 });

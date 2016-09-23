@@ -15,18 +15,19 @@ class ReportController extends Controller {
         'discontinued' => 'Discontinued Monographs',
         'statuses' => 'Status Breakdown',
         'edits' => 'Edits',
-        'openAssignments' => 'Open Assignments'
+        'openAssignments' => 'Open Assignments',
+        'brokenLinks' => 'Broken Links'
     ];
 
     public function listAction() {
         return new ApiPayload($this->_reportTypes);
     }
 
-    public function discontinuedAction(Request $request) {
+    public function discontinuedAction() {
         return new ApiPayload(Report::discontinued());
     }
 
-    public function statusesAction(Request $request) {
+    public function statusesAction() {
         return new ApiPayload(Report::statuses());
     }
 
@@ -48,5 +49,9 @@ class ReportController extends Controller {
         $endTime = $request->input('endTime');
 
         return new ApiPayload(Report::openAssignments($stepSize, $timezoneOffset, $startTime, $endTime));
+    }
+
+    public static function brokenLinksAction() {
+        return new ApiPayload(Report::brokenLinks());
     }
 }

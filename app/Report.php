@@ -184,6 +184,15 @@ class Report extends AppModel {
 	}
 
 	/**
+	 * Generate a list of broken links.
+	 *
+	 * @return array
+	 */
+	public static function brokenLinks() {
+
+	}
+
+	/**
 	 * Expand an assignment to cover a time range in a series.
 	 *
 	 * @param array $series The user's series
