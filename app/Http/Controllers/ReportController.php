@@ -52,6 +52,6 @@ class ReportController extends Controller {
     }
 
     public static function brokenLinksAction() {
-        return new ApiPayload(Report::brokenLinks());
+        return new ApiPayload(Report::links());
     }
 }

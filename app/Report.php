@@ -7,6 +7,7 @@ use Log;
 
 use App\AppModel;
 use App\Atom;
+use App\Molecule;
 use App\Assignment;
 
 class Report extends AppModel {
@@ -184,12 +185,107 @@ class Report extends AppModel {
 	}
 
 	/**
-	 * Generate a list of broken links.
+	 * Generate a list of broken links, and get the total.
 	 *
 	 * @return array
 	 */
-	public static function brokenLinks() {
+	public static function links() {
+		$brokenLinks = [];
+		$total = 0;
+		$atoms = self::_getKeyedAtoms();
+		$molecules = self::_getKeyedMolecules();
+		foreach($atoms as $atom) {
+			$atom->xml = simplexml_load_string($atom->xml);
+		}
 
+		foreach($atoms as $atom) {
+			$elements = $atom->xml->xpath('//see|include');
+			$total += sizeof($elements);
+			foreach($elements as $element) {
+				$attributes = $element->attributes();
+				$refid = isset($attributes['refid']) ? current($attributes['refid']) : null;
+				$parsedRefid = preg_split('/[\/:]/', $refid);
+				$valid = sizeof($parsedRefid) > 1;
+				if($valid) {
+					$type = $parsedRefid[0];
+					$valid = false;
+					if($type == 'a') {		//atom
+						$valid = isset($atoms[$parsedRefid[1]]);
+						if($valid) {
+							$atom = $atoms[$parsedRefid[1]];
+							if(isset($parsedRefid[2])) {		//deep link
+								$valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
+							}
+						}
+					}
+					else if($type == 'm') {		//molecule
+						$valid = isset($molecules[$parsedRefid[1]]);
+					}
+				}
+
+				if(!$valid) {
+					$linkRefid = 'a:' . $atom->entity_id;
+					$closestAncestorId = self::_closestId($element->xpath('..')[0]);
+					if($closestAncestorId) {
+						$linkRefid .= '/' . $closestAncestorId;
+					}
+
+					$brokenLinks[] = [
+						'type' => $element->getName(),
+						'atomTitle' => $atom->title,
+						'contents' => preg_replace('/(^<[^>]*>|<[^>]*>$)/', '', $element->asXML()),
+						'linkRefid' => $linkRefid,
+						'destRefid' => $refid
+					];
+				}
+			}
+		}
+
+		return [
+			'brokenLinks' => $brokenLinks,
+			'total' => $total
+		];
+	}
+
+	protected static function _closestId($element) {
+		$parent = $element->xpath('..');
+		$parent = $parent ? $parent[0] : null;
+		$attributes = $element->attributes();
+		if(isset($attributes['id'])) {
+			return current($attributes['id']);
+		}
+		else if($parent) {
+			return self::_closestId($parent);
+		}
+		else {
+			return null;
+		}
+	}
+
+	protected static function _getKeyedAtoms() {
+		$results = Atom::select('entity_id', 'title', 'xml')
+				->whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })
+				->get();
+
+		$atoms = [];
+		foreach($results as $atom) {
+			$atoms[$atom->entity_id] = $atom;
+		}
+
+		return $atoms;
+	}
+
+	protected static function _getKeyedMolecules() {
+		$results = Molecule::all();
+
+		$molecules = $results;
+		foreach($results as $molecule) {
+			$molecules[$molecule->code] = $molecule;
+		}
+
+		return $molecules;
 	}
 
 	/**
