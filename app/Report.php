@@ -50,7 +50,8 @@ class Report extends AppModel {
 	}
 
 	/**
-	 * Get a count of how many atoms were edited per day by each user.
+	 * Get a count of how many atoms were edited per day by each user. Multiple edits to an atom on the same day
+	 * count as one.
 	 *
 	 * @param string $stepSize How much time between steps?
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
@@ -72,10 +73,20 @@ class Report extends AppModel {
 				'';
 		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
 		$query = Atom::select(
+					'entity_id',
 					'modified_by',
+					'xml',
 					DB::raw('EXTRACT(EPOCH FROM ' . $datePart . ') AS x'),
 					DB::raw('COUNT(DISTINCT entity_id) AS y')
 				);
+		$query->whereIn('id', function ($q) {
+			$subQuery = DB::table('atoms')
+					->select('id', DB::raw('row_number() over (partition by xml order by id) as row_number'));
+
+			$q->select('id')
+					->from(DB::raw('(' . $subQuery->toSql() . ') AS sub'))
+					->mergeBindings($subQuery);
+		});
 		if($startTime) {
 			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
@@ -83,7 +94,9 @@ class Report extends AppModel {
 			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
 		}
 		$query->groupBy(
+					'entity_id',
 					'modified_by',
+					'xml',
 					DB::raw($datePart)
 				)
 				->orderBy(DB::raw($datePart));
