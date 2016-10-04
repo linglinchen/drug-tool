@@ -32,7 +32,10 @@ class Assignment extends AppModel {
 		$query = self::select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
-		$count = $query->count();
+
+		$countQuery = clone $query->getQuery();
+		$countQuery->select(DB::raw('COUNT(*)'));
+		$count = sizeof($countQuery->get());
 
 		//paginate the results
 		if($limit) {
