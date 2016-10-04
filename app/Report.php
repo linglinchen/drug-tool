@@ -134,13 +134,18 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function openAssignments($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
-		$startTime = $startTime ? (int)$startTime : null;
-		$endTime = $endTime ? (int)$endTime : null;
-		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
-
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
+
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+		$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
+		$endTime = self::_snapTime($endTime, $timezoneOffset, $stepSize, true);
+
+		$stepSize = strtolower($stepSize);
+		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 
 		$timezoneOffsetPart = $timezoneOffset ?
 				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
