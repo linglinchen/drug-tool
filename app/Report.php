@@ -61,12 +61,14 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function edits($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+		$stepSize = strtolower($stepSize);
+		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
+
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
-
-		$stepSize = strtolower($stepSize);
-		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
+		$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
+		$endTime = self::_snapTime($endTime, $timezoneOffset, $stepSize, true);
 
 		$timezoneOffsetPart = $timezoneOffset ?
 				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
@@ -254,6 +256,44 @@ class Report extends AppModel {
 			'brokenLinks' => $brokenLinks,
 			'total' => $total
 		];
+	}
+
+	/**
+	 * Snap the timestamp to an interval boundary.
+	 * It is recommended to round up for an end time, and down for a start time.
+	 *
+	 * @param ?int $time The timestamp to operate on
+	 * @param integer $timezoneOffset (optional) Timezone offset in hours
+	 * @param string $interval A key from self::$_stepSizeSeconds
+	 * @param boolean $roundUp Round up or down?
+	 *
+	 * @return ?int
+	 */
+	protected static function _snapTime($time, $timezoneOffset, $interval, $roundUp) {
+		$output = null;
+		if($time === null) {
+			return $output;
+		}
+
+		$timezoneOffsetSeconds = $timezoneOffset * 60 * 60;
+		$time += $timezoneOffsetSeconds;
+		$output = strtotime(date('Y-m-d', $time)) - $timezoneOffsetSeconds;
+		if($interval == 'day') {
+			if($roundUp) {
+				$output += self::$_stepSizeSeconds['day'];
+			}
+		}
+		else if($interval == 'week') {
+			$day = date('N', $output) - 1;
+			if($roundUp) {
+				$output += self::$_stepSizeSeconds['day'] * (7 - $day);
+			}
+			else {
+				$output -= self::$_stepSizeSeconds['day'] * $day;
+			}
+		}
+
+		return $output;
 	}
 
 	protected static function _closestId($element) {
