@@ -11,16 +11,8 @@ use App\ApiPayload;
 use App\Report;
 
 class ReportController extends Controller {
-    protected $_reportTypes = [
-        'discontinued' => 'Discontinued Monographs',
-        'statuses' => 'Status Breakdown',
-        'edits' => 'Edits',
-        'openAssignments' => 'Open Assignments',
-        'brokenLinks' => 'Broken Links'
-    ];
-
     public function listAction() {
-        return new ApiPayload($this->_reportTypes);
+        return new ApiPayload(Report::$reportTypes);
     }
 
     public function discontinuedAction() {

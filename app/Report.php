@@ -11,6 +11,14 @@ use App\Molecule;
 use App\Assignment;
 
 class Report extends AppModel {
+    public static $reportTypes = [
+        'discontinued' => 'Discontinued Monographs',
+        'statuses' => 'Status Breakdown',
+        'edits' => 'Edits',
+        'openAssignments' => 'Open Assignments',
+        'brokenLinks' => 'Broken Links'
+    ];
+
 	protected static $_stepSizeSeconds = [
 		'day' => 24 * 60 * 60,
 		'week' => 7 * 24 * 60 * 60
