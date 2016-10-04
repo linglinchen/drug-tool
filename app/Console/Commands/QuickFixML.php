@@ -40,7 +40,9 @@ class QuickFixML extends Command {
     }
 
     public static function fixLowercasedML() {
-        $atoms = Atom::whereIn('id', Atom::latestIDs())->get();
+        $atoms = Atom::whereIn('id', function ($q) {
+                    self::buildLatestIDQuery(null, $q);
+                })->get();
         $total_replaced = 0;
         $total_replaced_atoms = 0;
 		$searchreplace = array(
