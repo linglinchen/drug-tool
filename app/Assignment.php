@@ -151,9 +151,10 @@ class Assignment extends AppModel {
 	 * @param object $query The query object to modify
 	 */
 	protected static function _joinAtoms($query) {
-		$currentAtomIds = Atom::latestIDs();
 		$query->leftJoin('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->whereIn('atoms.id', $currentAtomIds);
+				->whereIn('atoms.id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                });
 	}
 
 	/**

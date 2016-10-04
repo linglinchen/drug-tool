@@ -31,7 +31,7 @@ class AtomController extends Controller
      */
     public function listAction() {
         $list = [];
-        $atoms = Atom::whereIn('id', Atom::latestIDs())
+        $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())
             ->orderBy('alpha_title', 'asc')
             ->get();
         foreach($atoms as $atom) {
@@ -64,6 +64,7 @@ class AtomController extends Controller
             }
         }
         $atom->save();
+        $atom->is_current = true;
 
         return new ApiPayload($atom->addAssignments());
     }
@@ -125,6 +126,7 @@ class AtomController extends Controller
             }
         }
         $atom->save();
+        $atom->is_current = true;
 
         return new ApiPayload($atom->addAssignments());
     }
@@ -182,7 +184,9 @@ class AtomController extends Controller
      * @return ApiPayload|Response
      */
     public function historyAction($entityId) {
-        $versions = Atom::where('entity_id', '=', $entityId)->get();
+        $versions = Atom::where('entity_id', '=', $entityId)
+                ->orderBy('id', 'ASC')
+                ->get();
 
         if(!$versions) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');

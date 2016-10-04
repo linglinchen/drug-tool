@@ -68,6 +68,13 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
+
+            Route::get('report', ['uses' => 'ReportController@listAction']);
+            Route::get('report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
+            Route::get('report/statuses', ['uses' => 'ReportController@statusesAction']);
+            Route::get('report/edits', ['uses' => 'ReportController@editsAction']);
+            Route::get('report/openAssignments', ['uses' => 'ReportController@openAssignmentsAction']);
+            Route::get('report/brokenLinks', ['uses' => 'ReportController@brokenLinksAction']);
         });
     });
 });

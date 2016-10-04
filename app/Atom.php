@@ -189,38 +189,63 @@ class Atom extends AppModel {
     }
 
     /**
-     * Get a list of the latest version of every atom that hasn't been deleted.
+     * Build a query to find the latest version of every atom that hasn't been deleted.
      *
      * @param ?integer $statusId (optional) Only return atoms with this status
+     * @param ?object $q (optional) Subquery object
      *
      * @return string[] The IDs of all current atoms
      */
-    public static function latestIDs($statusId = null) {
-        $sql = 'SELECT id
+    public static function buildLatestIDQuery($statusId = null, $q = null) {
+        $table = (new self)->getTable();
+
+        $query = $q ? $q->select('id') : self::select('id');
+        $query->from($table);
+
+        $query->whereIn('id', function ($q) use ($table, $statusId) {
+                    $q->select(DB::raw('MAX(id)'))
+                            ->from($table);
+
+                    if($statusId !== null) {
+                        $q->where('status_id', '=', $statusId);
+                    }
+
+                    $q->groupBy('entity_id');
+                })
+                ->whereNull('deleted_at')
+                ->orderBy('alpha_title', 'ASC');
+
+        return $query;
+    }
+
+    /**
+     * Get a list of discontinued monographs.
+     *
+     * @return object
+     */
+    public static function getDiscontinuedMonographs() {
+        $sql = 'SELECT id, entity_id, title, UNNEST(XPATH(\'//monograph[@status="discontinued"]/mono_name/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))) AS subtitle
                 FROM atoms
-                WHERE id IN (
-                        SELECT MAX(id)
-                        FROM atoms';
+                WHERE id IN(' . self::buildLatestIDQuery()->toSql() . ')
+                    AND XPATH_EXISTS(\'//monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
 
-        if($statusId !== null) {
-            $sql .= '
-                        WHERE status_id = ' . $statusId;
-        }
+        return DB::select($sql);
+    }
 
-        $sql .= '
-                        GROUP BY entity_id
-                    )
-                    AND deleted_at IS NULL
-                ORDER BY alpha_title';
+    /**
+     * Count all monographs inside active atoms, even if they are grouped.
+     *
+     * @return integer
+     */
+    public static function countMonographs() {
+        $sql = 'SELECT COUNT(*)
+                FROM (
+                    SELECT UNNEST(XPATH(\'//monograph/mono_name\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\'))))
+                    FROM atoms
+                    WHERE id IN(' . self::buildLatestIDQuery()->toSql() . ')
+                ) AS subquery';
 
-        $results = DB::select($sql);
-
-        $list = [];
-        foreach($results as $row) {
-            $list[] = $row->id;
-        }
-
-        return $list;
+        return DB::select($sql)[0]->count;
     }
 
     /**
@@ -246,7 +271,9 @@ class Atom extends AppModel {
         }
 
         //need to get the unranked list of candidates first
-        $candidates = self::whereIn('id', self::latestIDs())
+        $candidates = self::whereIn('id', function ($q) {
+                    self::buildLatestIDQuery(null, $q);
+                })
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
@@ -302,7 +329,9 @@ class Atom extends AppModel {
      */
     public static function findNewest($entityId) {
         if(is_array($entityId)) {      //plural
-            return self::whereIn('id', self::latestIDs())
+            return self::whereIn('id', function ($q) {
+                        self::buildLatestIDQuery(null, $q);
+                    })
                     ->whereIn('entity_id', $entityId)
                     ->orderBy('sort', 'ASC');
         }

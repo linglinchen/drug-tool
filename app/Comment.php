@@ -27,7 +27,8 @@ class Comment extends AppModel {
             $comments = self::where('atom_entity_id', '=', $entityId);
         }
 
-        $comments = $comments->get()
+        $comments = $comments->orderBy('id')
+                ->get()
                 ->toArray();
 
         return $comments;
