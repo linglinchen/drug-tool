@@ -26,12 +26,21 @@ sudo service httpd configtest
 sudo service httpd graceful
 ```
 
+# Deploying to the Bedrock servers
+- Switch to u1geogit: ```op u1geogit```
+- Run the modernize script: ```./modernize.sh```
+- Navigate to the directory ```cd /var/www/drugtool/drugtool.elseviermultimedia.us``` (production) or ```cd /var/www/drugtool/drugtool-dev.elseviermultimedia.us``` (development)
+- Update the code: ```git pull```
+- Following a successful update, you should see that Git automatically rebuilt the UI without errors.
+- Update the API if necessary, and then test the site in your browser.
+
 # Updating Bedrock
 
 It is recommended that you run the following commands after every time you pull the API on Bedrock. You might need to run others, but these are a good baseline.
 ```
 php artisan clear-compiled
 composer dump-autoload
+composer install
 php artisan optimize
 php artisan migrate
 ```
@@ -105,3 +114,4 @@ php artisan optimize
 # More documentation
 
 - [Database structure](docs/db.md)
+- [Git Hooks](githooks) - Like the name suggests, Git hooks live here. See the [readme](githooks) for instructions.
