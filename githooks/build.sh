@@ -1,3 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-node_modules/.bin/gulp buildProd
+php artisan clear-compiled
+composer dump-autoload
+composer install
+php artisan optimize
+php artisan migrate

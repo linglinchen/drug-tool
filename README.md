@@ -5,10 +5,22 @@
 - The [Drug Tool development VM](http://wanda.elseviermultimedia.us/Web_Team/Virtual_Machines) if you're installing locally
 - [Composer](https://getcomposer.org/download/) (already installed on the VM)
 
+# Deploying to the Bedrock servers (typical)
+
+- Switch to u1geogit: `op u1geogit`
+- Run the modernize script: `./modernize.sh`
+- Navigate to the directory `cd /var/www/api.drugtool.elseviermultimedia.us` (production) or `cd /var/www/api.drugtool-dev.elseviermultimedia.us` (development)
+- Update the code: `git pull`
+- Following a successful update, you should see that the project is automatically rebuilt and migrated without errors.
+- Update the UI if necessary, and then test the site in your browser.
+
 # Deploying to Bedrock for the first time
 
-- As **u1geogit**, clone the repo into its destination. This command will clone it directly into your current directory: `git clone https://gitlab.et-scm.com/epd/drug-tool.git .`
-- Set up DNS. You might need to update its URL in **settings.js** in the UI.
+- Switch to u1geogit: `op u1geogit`
+- Run the modernize script: `./modernize.sh`
+- Clone the repo into its destination. This command will clone it directly into your current directory: `git clone https://gitlab.et-scm.com/epd/drug-tool.git .`
+- Set up the [Git hooks](githooks).
+- Set up DNS. You might need to update the URL in **settings.js** in the UI.
 - Set up the vhost. Point it at the **public** directory.
 - Test the vhost.
 ```
@@ -18,7 +30,7 @@ sudo service httpd configtest
 - Copy **.env.example** to **.env** -- **.env** should *always live outside of source control*.
 - Alter **.env** to match suit the environment.
 - Navigate to the directory where the project lives (e.g. **/var/www/drug-tool**)
-- Install the Composer packages. You might need to modify this command depending on how you installed Composer (it's `composer.phar` on the VM). `composer install`
+- Install the Composer packages. `composer install`
 - Run the DB migrations: `php artisan migrate`
 - Import data (see below).
 - Restart Apache.
@@ -26,28 +38,10 @@ sudo service httpd configtest
 sudo service httpd graceful
 ```
 
-# Deploying to the Bedrock servers
-- Switch to u1geogit: ```op u1geogit```
-- Run the modernize script: ```./modernize.sh```
-- Navigate to the directory ```cd /var/www/drugtool/drugtool.elseviermultimedia.us``` (production) or ```cd /var/www/drugtool/drugtool-dev.elseviermultimedia.us``` (development)
-- Update the code: ```git pull```
-- Following a successful update, you should see that Git automatically rebuilt the UI without errors.
-- Update the API if necessary, and then test the site in your browser.
-
-# Updating Bedrock
-
-It is recommended that you run the following commands after every time you pull the API on Bedrock. You might need to run others, but these are a good baseline.
-```
-php artisan clear-compiled
-composer dump-autoload
-composer install
-php artisan optimize
-php artisan migrate
-```
-
 # Deploying to a VM
 
 - Clone the repo into **C:\git\www**. `git clone git@gitlab.et-scm.com:epd/drug-tool.git`
+- Set up the [Git hooks](githooks).
 - Add entries to your **hosts** file.
 ```
 127.0.0.1	drugtool.localhost.com
@@ -60,8 +54,8 @@ php artisan migrate
 ```
 cd /var/www/drug-tool
 ```
-- Install the Composer packages. You might need to modify this command depending on how you installed Composer. `composer.phar install`
-- Run the DB migrations: `php artisan migrate` or `php artisan migrate:refresh` (if you don't mind blowing the database away)
+- Install the Composer packages. `composer install`
+- Run the DB migrations: `php artisan migrate`
 - Seed the DB with junk data for testing purposes `php artisan db:seed` or import real data (see below).
 - Restart Apache.
 ```
@@ -72,7 +66,7 @@ sudo service httpd restart
 
 - **All** modifications to the database structure should be handled with migrations. If you make the change with something like pgAdmin or Heidi, *you're doing it wrong!*
 - Most custom code is in the **app** directory.
-- Refresh database by running: `php artisan migrate:refresh`
+- Refresh database by running: `php artisan migrate:refresh` *Never do this on production!!!*
 - See a list of available Artisan commands: `php artisan`
 - You can truncate the various tables with these commands.
 ```

@@ -12,7 +12,7 @@ use App\User;
 /**
  * Expected field headers for users.csv:
  *
- * username,email,firstname,lastname,groupId,password
+ * username,email,firstname,lastname,group_id,password
  */
 class ImportUsers extends Command
 {
