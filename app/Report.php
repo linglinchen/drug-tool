@@ -309,6 +309,13 @@ class Report extends AppModel {
 		return $output;
 	}
 
+	/**
+	 * Find the ID of an element or its closest ancestor.
+	 *
+	 * @param object $element The element to operate on
+	 *
+	 * @return ?string The ID or null if none is found in the element's lineage
+	 */
 	protected static function _closestId($element) {
 		$parent = $element->xpath('..');
 		$parent = $parent ? $parent[0] : null;
@@ -324,6 +331,11 @@ class Report extends AppModel {
 		}
 	}
 
+	/**
+	 * Get a list of all atoms keyed by their entity_id.
+	 *
+	 * @return object[]
+	 */
 	protected static function _getKeyedAtoms() {
 		$results = Atom::select('entity_id', 'title', 'xml')
 				->whereIn('id', function ($q) {
@@ -339,6 +351,11 @@ class Report extends AppModel {
 		return $atoms;
 	}
 
+	/**
+	 * Get a list of all molecules keyed by their code.
+	 *
+	 * @return object[]
+	 */
 	protected static function _getKeyedMolecules() {
 		$results = Molecule::all();
 
@@ -373,7 +390,7 @@ class Report extends AppModel {
 	 * @param integer $startTime Start time of the graph
 	 * @param integer $endTime End time of the graph
 	 *
-	 * @return integer[]
+	 * @return integer[] The re-ordered times
 	 */
 	protected static function _enforceRangeSanity($startTime, $endTime) {
 		$times = [$startTime, $endTime];
