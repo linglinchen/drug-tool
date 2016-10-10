@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddProductIdColumns extends Migration
 {
-    protected $_tablesToAlter = ['molecules', 'atoms', 'boilerplates'];
+    protected $_tablesToAlter = ['molecules', 'atoms', 'boilerplates', 'groups', 'access_controls'];
 
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AddProductIdColumns extends Migration
     public function up()
     {
         foreach($this->_tablesToAlter as $tableName) {
-            Schema::table($tableName, function($table) {
+            Schema::table($tableName, function ($table) {
                 $table->integer('product_id')->nullable();
 
                 $table->index('product_id');
@@ -31,7 +31,7 @@ class AddProductIdColumns extends Migration
     public function down()
     {
         foreach($this->_tablesToAlter as $tableName) {
-            Schema::table($tableName, function($table) {
+            Schema::table($tableName, function ($table) {
                 $table->dropColumn('product_id');
             });
         }
