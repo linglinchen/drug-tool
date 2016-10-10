@@ -339,8 +339,8 @@ class Report extends AppModel {
 	protected static function _getKeyedAtoms() {
 		$results = Atom::select('entity_id', 'title', 'xml')
 				->whereIn('id', function ($q) {
-										Atom::buildLatestIDQuery(null, $q);
-								})
+					Atom::buildLatestIDQuery(null, $q);
+				})
 				->get();
 
 		$atoms = [];
