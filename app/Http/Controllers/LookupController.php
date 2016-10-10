@@ -34,7 +34,7 @@ class LookupController extends Controller
             'boilerplates' => Boilerplate::all(),
             'tasks' => Task::all(),
             'statuses' => Status::orderBy('id')->get(),
-            'products' => Product::orderBy('id')->get()
+            'products' => Product::all()
         ]);
     }
 }
