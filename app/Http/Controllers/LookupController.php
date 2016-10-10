@@ -8,8 +8,9 @@ use App\Http\Controllers\Controller;
 
 use App\Group;
 use App\Boilerplate;
-use App\Status;
 use App\Task;
+use App\Status;
+use App\Product;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -32,7 +33,8 @@ class LookupController extends Controller
             'groups' => Group::all(),
             'boilerplates' => Boilerplate::all(),
             'tasks' => Task::all(),
-            'statuses' => Status::orderBy('id')->get()
+            'statuses' => Status::orderBy('id')->get(),
+            'products' => Product::orderBy('id')->get()
         ]);
     }
 }
