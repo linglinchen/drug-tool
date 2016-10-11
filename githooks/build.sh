@@ -3,5 +3,4 @@
 php artisan clear-compiled
 composer dump-autoload
 composer install
-php artisan optimize
 php artisan migrate
