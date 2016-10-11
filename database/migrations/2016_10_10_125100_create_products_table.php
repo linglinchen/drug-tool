@@ -16,13 +16,13 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('key');
             $table->string('title');
-            $table->string('dtd_key');
+            $table->string('doctype');
         });
 
         DB::table('products')->insert([
             'key' => 'NDR',
             'title' => 'Skidmore NDR',
-            'dtd_key' => 'drug'
+            'doctype' => 'drug'
         ]);
     }
 
