@@ -16,7 +16,7 @@ class AddProductIdColumns extends Migration
     {
         foreach($this->_tablesToAlter as $tableName) {
             Schema::table($tableName, function ($table) {
-                $table->integer('product_id')->nullable();
+                $table->integer('product_id')->default(1);
 
                 $table->index('product_id');
             });
