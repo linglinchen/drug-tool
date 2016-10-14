@@ -56,7 +56,6 @@ cd /var/www/drug-tool
 ```
 - Install the Composer packages. `composer install`
 - Run the DB migrations: `php artisan migrate`
-- Seed the DB with junk data for testing purposes `php artisan db:seed` or import real data (see below).
 - Restart Apache.
 ```
 sudo service httpd restart
