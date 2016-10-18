@@ -33,7 +33,7 @@ class QuickFixXmlns extends Command {
 
         $totalReplaced = 0;
         $totalReplacedAtoms = 0;
-        $detector = '/(?<!<math) xmlns:mml="[^"]*"/';
+        $detector = '/(?<!<mml:math) xmlns:mml="[^"]*"/';
 
         foreach($atoms as $atom) {
             $newTitle = preg_replace($detector, '', $atom->title, -1, $count);
