@@ -46,4 +46,14 @@ class ReportController extends Controller {
     public static function brokenLinksAction() {
         return new ApiPayload(Report::links());
     }
+
+    public function queriesAction(Request $request) {
+        $timezoneOffset = $request->input('timezoneOffset');
+        $startTime = $request->input('startTime');
+        $endTime = $request->input('endTime');
+
+        $queries = Report::queries($timezoneOffset, $startTime, $endTime);
+
+        return new ApiPayload($queries);
+    }
 }

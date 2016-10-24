@@ -7,6 +7,7 @@ use Log;
 
 use App\AppModel;
 use App\Atom;
+use App\Comment;
 use App\Molecule;
 use App\Assignment;
 
@@ -16,7 +17,8 @@ class Report extends AppModel {
         'statuses' => 'Status Breakdown',
         'edits' => 'Edits',
         'openAssignments' => 'Open Assignments',
-        'brokenLinks' => 'Broken Links'
+        'brokenLinks' => 'Broken Links',
+        'queries' => 'Queries'
     ];
 
 	protected static $_stepSizeSeconds = [
@@ -269,6 +271,44 @@ class Report extends AppModel {
 			'brokenLinks' => $brokenLinks,
 			'total' => $total
 		];
+	}
+
+	/**
+	 * Generate a list of comment queries posted during a time period.
+	 *
+	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
+	 * @param ?string $startTime (optional) Start time of the graph
+	 * @param ?string $endTime (optional) End time of the graph
+	 *
+	 * @return array
+	 */
+	public static function queries($timezoneOffset = 0, $startTime = null, $endTime = null) {
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		$atomSubQuery = Atom::select('entity_id', 'title')
+				->whereIn('id', function ($q) {
+					Atom::buildLatestIDQuery(null, $q);
+				});
+
+		$rawAtomSubQuery = DB::raw('(' . $atomSubQuery->toSql() . ') AS atom_subquery');
+
+		$query = Comment::select()
+				->leftJoin($rawAtomSubQuery, function ($join) {
+					$join->on('comments.atom_entity_id', '=', 'atom_subquery.entity_id');
+				});
+
+		if($startTime) {
+			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+		}
+		if($endTime) {
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+		}
+
+		$query->orderBy('comments.id', 'DESC');
+
+		return $query->get();
 	}
 
 	/**
