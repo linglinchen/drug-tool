@@ -113,7 +113,9 @@ class AppModel extends Model {
 			foreach($data as $row) {
 				$preparedRow = $blank;
 				foreach($row as $key => $value) {
-					$preparedRow[$key] = $value;
+					if(array_key_exists($key, $preparedRow)) {
+						$preparedRow[$key] = $value;
+					}
 				}
 
 				fputcsv($out, $preparedRow);
