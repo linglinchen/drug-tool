@@ -52,8 +52,9 @@ class ReportController extends Controller {
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
         $generateCsv = (bool)$request->input('generateCsv');
+        $queryType = $request->input('queryType');
 
-        $queries = Report::queries($timezoneOffset, $startTime, $endTime);
+        $queries = Report::queries($timezoneOffset, $startTime, $endTime, $queryType);
 
         if($generateCsv) {
             if($queries) {

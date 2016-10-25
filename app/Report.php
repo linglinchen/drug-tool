@@ -279,13 +279,22 @@ class Report extends AppModel {
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param ?string $startTime (optional) Start time of the graph
 	 * @param ?string $endTime (optional) End time of the graph
+	 * @param ?string $queryType (optional) Filter down to this type of query
 	 *
 	 * @return array
 	 */
-	public static function queries($timezoneOffset = 0, $startTime = null, $endTime = null) {
+	public static function queries($timezoneOffset = 0, $startTime = null, $endTime = null, $queryType = null) {
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		if($queryType) {
+			$queryType = preg_replace('/[^a-z0-9\-\.]/i', '', $queryType);		//sanitize
+			$queryMatcher = '%<query type="' . $queryType . '">%';
+		}
+		else {
+			$queryMatcher = '%</query>%';
+		}
 
 		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
 				->whereIn('id', function ($q) {
@@ -314,7 +323,7 @@ class Report extends AppModel {
 			$query->where('comments.created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + self::$_stepSizeSeconds['day']) . ')'));
 		}
 
-		$query->where('text', 'LIKE', '%</query>%');
+		$query->where('text', 'LIKE', $queryMatcher);
 
 		$query->orderBy('comments.id', 'DESC');
 
