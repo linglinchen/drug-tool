@@ -84,4 +84,45 @@ class AppModel extends Model {
 
 		return $output;
 	}
+
+	/**
+	 * Converts an associative array into a Laravel Response containing a downloadable CSV file.
+	 *
+	 * @param string $filename The name you'd like to give the file
+	 * @param string[] $headings The CSV's column headings
+	 * @param array $data The data to convert
+	 *
+	 * @return Response
+	 */
+	public static function arrayToCsv($filename, $headings, $data) {
+		$headers = [
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+			'Expires' => '0',
+			'Pragma' => 'public',
+			'Access-Control-Expose-Headers' => 'content-type,content-disposition'
+		];
+
+		$callback = function () use ($headings, $data) {
+			$out = fopen('php://output', 'w');
+
+			$blank = array_fill_keys($headings, null);
+
+			fputcsv($out, $headings);
+			foreach($data as $row) {
+				$preparedRow = $blank;
+				foreach($row as $key => $value) {
+					$preparedRow[$key] = $value;
+				}
+
+				fputcsv($out, $preparedRow);
+			}
+
+			fclose($out);
+		};
+
+
+		return response()->stream($callback, 200, $headers);
+	}
 }

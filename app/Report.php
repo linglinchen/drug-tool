@@ -287,7 +287,7 @@ class Report extends AppModel {
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
-		$atomSubQuery = Atom::select('entity_id', 'title')
+		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title AS atom_title')
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				});

@@ -51,9 +51,23 @@ class ReportController extends Controller {
         $timezoneOffset = $request->input('timezoneOffset');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
+        $generateCsv = (bool)$request->input('generateCsv');
 
         $queries = Report::queries($timezoneOffset, $startTime, $endTime);
 
-        return new ApiPayload($queries);
+        if($generateCsv) {
+            if($queries) {
+                $queriesArray = $queries->toArray();
+                $headings = array_keys((array)$queriesArray[0]);
+
+                return Report::arrayToCsv('queries.csv', $headings, $queriesArray);
+            }
+            else {
+                return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No queries were found in the specified time range.');
+            }
+        }
+        else {
+            return new ApiPayload($queries);
+        }
     }
 }
