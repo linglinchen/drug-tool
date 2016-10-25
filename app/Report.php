@@ -303,7 +303,7 @@ class Report extends AppModel {
 			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
 		if($endTime) {
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + self::$_stepSizeSeconds['day']) . ')'));
 		}
 
 		$query->where('text', 'LIKE', '%</query>%');
