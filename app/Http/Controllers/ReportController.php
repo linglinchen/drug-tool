@@ -58,7 +58,7 @@ class ReportController extends Controller {
         if($generateCsv) {
             if($queries) {
                 $queriesArray = $queries->toArray();
-                $headings = ['atom_title', 'text', 'created_at'];
+                $headings = ['atom_title', 'text', 'firstname', 'lastname', 'created_at'];
 
                 return Report::arrayToCsv('queries.csv', $headings, $queriesArray);
             }

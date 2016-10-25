@@ -287,23 +287,31 @@ class Report extends AppModel {
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
-		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title AS atom_title')
+		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				});
 
 		$rawAtomSubQuery = DB::raw('(' . $atomSubQuery->toSql() . ') AS atom_subquery');
 
-		$query = Comment::select()
+		$query = Comment::select(
+					'comments.*',
+					'atom_subquery.entity_id AS entity_id',
+					'atom_subquery.title AS title',
+					'atom_subquery.alpha_title AS atom_title',
+					'users.firstname AS firstname',
+					'users.lastname AS lastname'
+				)
+				->leftJoin('users', 'comments.user_id', '=', 'users.id')
 				->leftJoin($rawAtomSubQuery, function ($join) {
 					$join->on('comments.atom_entity_id', '=', 'atom_subquery.entity_id');
 				});
 
 		if($startTime) {
-			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+			$query->where('comments.created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
 		if($endTime) {
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + self::$_stepSizeSeconds['day']) . ')'));
+			$query->where('comments.created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + self::$_stepSizeSeconds['day']) . ')'));
 		}
 
 		$query->where('text', 'LIKE', '%</query>%');
