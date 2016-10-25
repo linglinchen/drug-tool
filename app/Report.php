@@ -306,6 +306,8 @@ class Report extends AppModel {
 			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
 		}
 
+		$query->where('text', 'LIKE', '%<query%');
+
 		$query->orderBy('comments.id', 'DESC');
 
 		return $query->get();
