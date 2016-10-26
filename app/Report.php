@@ -18,7 +18,8 @@ class Report extends AppModel {
 		'edits' => 'Edits',
 		'openAssignments' => 'Open Assignments',
 		'brokenLinks' => 'Broken Links',
-		'queries' => 'Queries'
+		'queries' => 'Queries',
+		'comments' => 'Comments'
 	];
 
 	protected static $_stepSizeSeconds = [
@@ -344,6 +345,10 @@ class Report extends AppModel {
 		$queries = self::_extractQueries($comments, $queryType);
 
 		return self::arrayToCsv('queries.csv', $headings, $queries);
+	}
+
+	public static function commentsReport() {
+
 	}
 
 	/**

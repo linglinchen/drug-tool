@@ -68,4 +68,8 @@ class ReportController extends Controller {
             return new ApiPayload($comments);
         }
     }
+
+    public static function commentsAction() {
+        return new ApiPayload(Report::comments());
+    }
 }
