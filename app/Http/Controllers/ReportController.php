@@ -47,14 +47,14 @@ class ReportController extends Controller {
         return new ApiPayload(Report::links());
     }
 
-    public function queriesAction(Request $request) {
+    public function commentsAction(Request $request) {
         $timezoneOffset = $request->input('timezoneOffset');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
         $generateCsv = (bool)$request->input('generateCsv');
         $queryType = $request->input('queryType');
 
-        $comments = Report::queries($timezoneOffset, $startTime, $endTime, $queryType);
+        $comments = Report::comments($timezoneOffset, $startTime, $endTime, $queryType);
 
         if($generateCsv) {
             if($comments) {
@@ -67,9 +67,5 @@ class ReportController extends Controller {
         else {
             return new ApiPayload($comments);
         }
-    }
-
-    public static function commentsAction() {
-        return new ApiPayload(Report::comments());
     }
 }

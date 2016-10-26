@@ -18,7 +18,6 @@ class Report extends AppModel {
 		'edits' => 'Edits',
 		'openAssignments' => 'Open Assignments',
 		'brokenLinks' => 'Broken Links',
-		'queries' => 'Queries',
 		'comments' => 'Comments'
 	];
 
@@ -284,7 +283,7 @@ class Report extends AppModel {
 	 *
 	 * @return array
 	 */
-	public static function queries($timezoneOffset = 0, $startTime = null, $endTime = null, $queryType = null) {
+	public static function comments($timezoneOffset = 0, $startTime = null, $endTime = null, $queryType = null) {
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
@@ -345,10 +344,6 @@ class Report extends AppModel {
 		$queries = self::_extractQueries($comments, $queryType);
 
 		return self::arrayToCsv('queries.csv', $headings, $queries);
-	}
-
-	public static function commentsReport() {
-
 	}
 
 	/**
