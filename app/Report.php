@@ -12,14 +12,14 @@ use App\Molecule;
 use App\Assignment;
 
 class Report extends AppModel {
-    public static $reportTypes = [
-        'discontinued' => 'Discontinued Monographs',
-        'statuses' => 'Status Breakdown',
-        'edits' => 'Edits',
-        'openAssignments' => 'Open Assignments',
-        'brokenLinks' => 'Broken Links',
-        'queries' => 'Queries'
-    ];
+	public static $reportTypes = [
+		'discontinued' => 'Discontinued Monographs',
+		'statuses' => 'Status Breakdown',
+		'edits' => 'Edits',
+		'openAssignments' => 'Open Assignments',
+		'brokenLinks' => 'Broken Links',
+		'queries' => 'Queries'
+	];
 
 	protected static $_stepSizeSeconds = [
 		'day' => 24 * 60 * 60,
@@ -274,7 +274,7 @@ class Report extends AppModel {
 	}
 
 	/**
-	 * Generate a list of comment queries posted during a time period.
+	 * Generate a list of comment containing queries posted during a time period.
 	 *
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param ?string $startTime (optional) Start time of the graph
@@ -289,7 +289,7 @@ class Report extends AppModel {
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
 		if($queryType) {
-			$queryType = preg_replace('/[^a-z0-9\-\.]/i', '', $queryType);		//sanitize
+			$queryType = self::_sanitizeQueryType($queryType);
 			$queryMatcher = '%<query type="' . $queryType . '">%';
 		}
 		else {
@@ -328,6 +328,69 @@ class Report extends AppModel {
 		$query->orderBy('comments.id', 'DESC');
 
 		return $query->get();
+	}
+
+	/**
+	 * Builds a CSV from a list of queries.
+	 *
+	 * @param object[] $comments
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return Response
+	 */
+	public static function buildQueriesCSV($comments, $queryType = null) {
+		$headings = ['atom_title', 'query_type', 'text', 'firstname', 'lastname', 'created_at'];
+
+		$queries = self::_extractQueries($comments, $queryType);
+
+		return self::arrayToCsv('queries.csv', $headings, $queries);
+	}
+
+	/**
+	 * Extracts queries from a list of comments.
+	 *
+	 * @param object[] $comments
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return array
+	 */
+	protected static function _extractQueries($comments, $queryType = null) {
+		$rows = [];
+
+		$queryType = self::_sanitizeQueryType($queryType);
+		$querymatcher = '/<query' . ($queryType ? ' type="' . $queryType . '">' : '[^>]*>') . '(.*?)<\/query>/Ssi';
+		$queryTypeMatcher = '/^<query type="([^"]*)/Si';
+		$commentsArray = $comments->toArray();
+		foreach($commentsArray as $comment) {
+			preg_match_all($querymatcher, $comment['text'], $matches);
+			$queries = [];
+			foreach($matches[1] as $key => $text) {
+				if(preg_match($queryTypeMatcher, $matches[0][$key], $queryTypeMatches)) {
+					$queryType = $queryTypeMatches[1];
+				}
+				else {
+					$queryType = null;
+				}
+
+				$row = $comment;
+				$row['query_type'] = $queryType;
+				$row['text'] = trim($text);
+				$rows[] = $row;
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Remove dangerous characters from a query type string.
+	 *
+	 * @param ?string $queryType
+	 *
+	 * @return ?string
+	 */
+	protected static function _sanitizeQueryType($queryType) {
+		return $queryType ? preg_replace('/[^a-z0-9\-\.]/i', '', $queryType) : $queryType;
 	}
 
 	/**

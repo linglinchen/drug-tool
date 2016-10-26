@@ -54,21 +54,18 @@ class ReportController extends Controller {
         $generateCsv = (bool)$request->input('generateCsv');
         $queryType = $request->input('queryType');
 
-        $queries = Report::queries($timezoneOffset, $startTime, $endTime, $queryType);
+        $comments = Report::queries($timezoneOffset, $startTime, $endTime, $queryType);
 
         if($generateCsv) {
-            if($queries) {
-                $queriesArray = $queries->toArray();
-                $headings = ['atom_title', 'text', 'firstname', 'lastname', 'created_at'];
-
-                return Report::arrayToCsv('queries.csv', $headings, $queriesArray);
+            if($comments) {
+                return Report::buildQueriesCSV($comments, $queryType);
             }
             else {
                 return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No queries were found in the specified time range.');
             }
         }
         else {
-            return new ApiPayload($queries);
+            return new ApiPayload($comments);
         }
     }
 }
