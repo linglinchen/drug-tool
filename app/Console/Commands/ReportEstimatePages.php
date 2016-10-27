@@ -22,7 +22,7 @@ class ReportEstimatePages extends Command {
      *
      * @var string
      */
-    protected $description = 'Estimates page counts per chapter, and caches the results for later use in other reports.';
+    protected $description = 'Estimates printable character counts per chapter, and caches the results for later use in other reports.';
 
     /**
      * Execute the console command.
