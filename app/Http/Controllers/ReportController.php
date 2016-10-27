@@ -69,4 +69,15 @@ class ReportController extends Controller {
             return new ApiPayload($comments);
         }
     }
+
+    public function moleculeStatsAction(Request $request) {
+        try {
+            $stats = Report::moleculeStats();
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No molecule statistics were found.');
+        }
+
+        return new ApiPayload($stats);
+    }
 }

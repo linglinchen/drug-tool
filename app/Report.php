@@ -18,7 +18,8 @@ class Report extends AppModel {
 		'edits' => 'Edits',
 		'openAssignments' => 'Open Assignments',
 		'brokenLinks' => 'Broken Links',
-		'comments' => 'Comments'
+		'comments' => 'Comments',
+		'moleculeStats' => 'Chapter Stats'
 	];
 
 	protected static $_stepSizeSeconds = [
@@ -347,6 +348,29 @@ class Report extends AppModel {
 		$queries = self::_extractQueries($comments, $queryType);
 
 		return self::arrayToCsv('queries.csv', $headings, $queries);
+	}
+
+	/**
+	 * Provide an array of statistics about the molecules.
+	 *
+	 * @return array
+	 */
+	public static function moleculeStats() {
+		$statsFile = base_path() . '/data/cache/moleculeStats.json';
+		if(!file_exists($statsFile)) {
+			throw new Exception('File not found: ' . $statsFile . ' -- run `php artisan report:estimatePages`');
+		}
+
+		$moleculeStats = json_decode(file_get_contents($statsFile), true);
+		$stats = [
+			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
+				'charsMean' => 2826,
+				'charsStdErr' => 445
+			],
+			'molecules' => $moleculeStats
+		];
+
+		return $stats;
 	}
 
 	/**
