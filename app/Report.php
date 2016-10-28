@@ -76,44 +76,43 @@ class Report extends AppModel {
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 
 		$startTime = $startTime ? (int)$startTime : null;
-		$endTime = $endTime ? (int)$endTime : null;
+		$endTime = $endTime ? (int)$endTime : time();
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 		$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
 		$endTime = self::_snapTime($endTime, $timezoneOffset, $stepSize, true);
 
-		$timezoneOffsetPart = $timezoneOffset ?
-				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
-				'';
-		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
 		$query = Atom::select(
+					'entity_id',
 					'modified_by',
-					DB::raw('EXTRACT(EPOCH FROM ' . $datePart . ') AS x'),
-					DB::raw('COUNT(DISTINCT entity_id) AS y')
-				);
-		$query->whereIn('id', function ($q) {
-			$subQuery = DB::table('atoms')
-					->select('id', DB::raw('row_number() over (partition by xml order by id) as row_number'));
+					'title',
+					DB::raw('EXTRACT(EPOCH FROM "created_at") AS x')
+				)
+				->whereIn('id', function ($q) {
+					$subQuery = DB::table('atoms')
+							->select('id', DB::raw('row_number() over (partition by "xml" order by "id") as "row_number"'));
 
-			$q->select('id')
-					->from(DB::raw('(' . $subQuery->toSql() . ') AS sub'))
-					->mergeBindings($subQuery);
-		});
+					$q->select('id')
+							->from(DB::raw('(' . $subQuery->toSql() . ') AS sub'))
+							->mergeBindings($subQuery);
+				});
+
 		if($startTime) {
 			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
 		if($endTime) {
 			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
 		}
-		$query->groupBy(
-					'modified_by',
-					DB::raw($datePart)
-				)
-				->orderBy(DB::raw($datePart));
-		$results = $query->get();
 
+		$query->orderBy('x', 'ASC');
+
+		$results = $query->get();
 		if(sizeof($results)) {
-			$startTime = $startTime ? $startTime : (int)$results[0]->x;
-			$endTime = $endTime ? $endTime : (int)$results[sizeof($results) - 1]->x;
+			if(!$startTime) {
+				$startTime = self::_snapTime($results[0]->x, $timezoneOffset, $stepSize, false);
+			}
+			if(!$endTime) {
+				$endTime = self::_snapTime($results[sizeof($results) - 1]->x, $timezoneOffset, $stepSize, true);
+			}
 			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, self::$_stepSizeSeconds[$stepSize]);
 		}
 
@@ -125,10 +124,8 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			$output[$userId][(int)$row->x] = [
-				'x' => (int)$row->x,
-				'y' => (int)$row->y
-			];
+			$x = self::_snapTime($row->x, $timezoneOffset, $stepSize, false);
+			++$output[$userId][$x]['y'];
 		}
 
 		return $output;
