@@ -126,6 +126,7 @@ class Report extends AppModel {
 
 			$x = self::_snapTime($row->x, $timezoneOffset, $stepSize, false);
 			++$output[$userId][$x]['y'];
+			$output[$userId][$x]['atoms'][$row->entity_id] = $row->title;
 		}
 
 		return $output;
@@ -563,7 +564,8 @@ class Report extends AppModel {
 		for($i = $startTime; $i <= $endTime; $i += $stepSize) {
 			$blankSeries[$i] = [
 				'x' => $i,
-				'y' => 0
+				'y' => 0,
+				'atoms' => []
 			];
 		}
 
