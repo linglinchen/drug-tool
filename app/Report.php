@@ -356,7 +356,7 @@ class Report extends AppModel {
 	public static function moleculeStats() {
 		$statsFile = base_path() . '/data/cache/moleculeStats.json';
 		if(!file_exists($statsFile)) {
-			throw new Exception('File not found: ' . $statsFile . ' -- run `php artisan report:estimatePages`');
+			throw new \Exception('File not found: ' . $statsFile . ' -- run `php artisan report:estimatePages`');
 		}
 
 		$moleculeStats = json_decode(file_get_contents($statsFile), true);
