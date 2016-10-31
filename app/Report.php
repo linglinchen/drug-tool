@@ -588,7 +588,7 @@ class Report extends AppModel {
                 ->mergeBindings($latestIds->getQuery());
 
         $countQuery = DB::table(DB::raw('(' . $wordsQuery->toSql() . ') AS wordsQuery'))
-                ->select('code', DB::raw('sum(char_count)'))
+                ->select('code', DB::raw('sum(char_count) AS chars'))
                 ->mergeBindings($wordsQuery)
                 ->groupBy('code');
 
@@ -597,11 +597,14 @@ class Report extends AppModel {
         $stats = [];
         $molecules = Molecule::all();
         foreach($molecules as $molecule) {
-            $stats[$molecule['code']] = 0;
+            $stats[$molecule['code']] = [
+            	'code' => $molecule['code'],
+            	'chars' => 0
+            ];
         }
 
         foreach($counts as $row) {
-            $stats[$row->code] = $row->sum;
+            $stats[$row->code]['chars'] = $row->chars;
         }
 
         return $stats;
