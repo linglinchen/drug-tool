@@ -363,8 +363,7 @@ class Report extends AppModel {
 		$stats = [
 			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
 				'charsMean' => 2826,
-				'charsStdErr' => 445,
-				'samples' => 26
+				'charsStdErr' => 445
 			],
 			'molecules' => $moleculeStats
 		];
