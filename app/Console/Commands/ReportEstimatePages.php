@@ -67,13 +67,13 @@ class ReportEstimatePages extends Command {
                 });
 
         $wordsQuery = DB::table(DB::raw('(' . $latestIds->toSql() . ') AS latestIds'))
-                ->select(DB::raw("regexp_matches(regexp_replace(regexp_replace(xml, '<[^>]*>', '', 'g'), '^\\s+', ''), '\\s+', 'g')"))
+                ->select(DB::raw("char_length(trim(regexp_replace(regexp_replace(xml, '<[^>]*>', '', 'g'), '[\\r\\n\\t ]+', ' ', 'g'))) as char_count"))
                 ->mergeBindings($latestIds->getQuery());
 
         $countQuery = DB::table(DB::raw('(' . $wordsQuery->toSql() . ') AS wordsQuery'))
-                ->select(DB::raw('COUNT(*)'))
+                ->select(DB::raw('sum(char_count)'))
                 ->mergeBindings($wordsQuery);
 
-        return $countQuery->get()[0]->count;
+        return (int)$countQuery->get()[0]->sum;
     }
 }
