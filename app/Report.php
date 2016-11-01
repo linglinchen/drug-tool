@@ -7,17 +7,20 @@ use Log;
 
 use App\AppModel;
 use App\Atom;
+use App\Comment;
 use App\Molecule;
 use App\Assignment;
 
 class Report extends AppModel {
-    public static $reportTypes = [
-        'discontinued' => 'Discontinued Monographs',
-        'statuses' => 'Status Breakdown',
-        'edits' => 'Edits',
-        'openAssignments' => 'Open Assignments',
-        'brokenLinks' => 'Broken Links'
-    ];
+	public static $reportTypes = [
+		'discontinued' => 'Discontinued Monographs',
+		'statuses' => 'Status Breakdown',
+		'edits' => 'Edits',
+		'openAssignments' => 'Open Assignments',
+		'brokenLinks' => 'Broken Links',
+		'comments' => 'Comments',
+		'moleculeStats' => 'Chapter Stats'
+	];
 
 	protected static $_stepSizeSeconds = [
 		'day' => 24 * 60 * 60,
@@ -73,44 +76,43 @@ class Report extends AppModel {
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 
 		$startTime = $startTime ? (int)$startTime : null;
-		$endTime = $endTime ? (int)$endTime : null;
+		$endTime = $endTime ? (int)$endTime : time();
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 		$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
 		$endTime = self::_snapTime($endTime, $timezoneOffset, $stepSize, true);
 
-		$timezoneOffsetPart = $timezoneOffset ?
-				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
-				'';
-		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
 		$query = Atom::select(
+					'entity_id',
 					'modified_by',
-					DB::raw('EXTRACT(EPOCH FROM ' . $datePart . ') AS x'),
-					DB::raw('COUNT(DISTINCT entity_id) AS y')
-				);
-		$query->whereIn('id', function ($q) {
-			$subQuery = DB::table('atoms')
-					->select('id', DB::raw('row_number() over (partition by xml order by id) as row_number'));
+					'title',
+					DB::raw('EXTRACT(EPOCH FROM "created_at") AS x')
+				)
+				->whereIn('id', function ($q) {
+					$subQuery = DB::table('atoms')
+							->select('id', DB::raw('row_number() over (partition by "xml" order by "id") as "row_number"'));
 
-			$q->select('id')
-					->from(DB::raw('(' . $subQuery->toSql() . ') AS sub'))
-					->mergeBindings($subQuery);
-		});
+					$q->select('id')
+							->from(DB::raw('(' . $subQuery->toSql() . ') AS sub'))
+							->mergeBindings($subQuery);
+				});
+
 		if($startTime) {
 			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
 		if($endTime) {
 			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
 		}
-		$query->groupBy(
-					'modified_by',
-					DB::raw($datePart)
-				)
-				->orderBy(DB::raw($datePart));
-		$results = $query->get();
 
+		$query->orderBy('x', 'ASC');
+
+		$results = $query->get();
 		if(sizeof($results)) {
-			$startTime = $startTime ? $startTime : (int)$results[0]->x;
-			$endTime = $endTime ? $endTime : (int)$results[sizeof($results) - 1]->x;
+			if(!$startTime) {
+				$startTime = self::_snapTime($results[0]->x, $timezoneOffset, $stepSize, false);
+			}
+			if(!$endTime) {
+				$endTime = self::_snapTime($results[sizeof($results) - 1]->x, $timezoneOffset, $stepSize, true);
+			}
 			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, self::$_stepSizeSeconds[$stepSize]);
 		}
 
@@ -122,10 +124,9 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			$output[$userId][(int)$row->x] = [
-				'x' => (int)$row->x,
-				'y' => (int)$row->y
-			];
+			$x = self::_snapTime($row->x, $timezoneOffset, $stepSize, false);
+			++$output[$userId][$x]['y'];
+			$output[$userId][$x]['atoms'][$row->entity_id] = $row->title;
 		}
 
 		return $output;
@@ -269,6 +270,152 @@ class Report extends AppModel {
 			'brokenLinks' => $brokenLinks,
 			'total' => $total
 		];
+	}
+
+	/**
+	 * Generate a list of comment containing queries posted during a time period.
+	 *
+	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
+	 * @param ?string $startTime (optional) Start time of the graph
+	 * @param ?string $endTime (optional) End time of the graph
+	 * @param bool $queriesOnly (optional) Only show queries
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return array
+	 */
+	public static function comments($timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null) {
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
+				->whereIn('id', function ($q) {
+					Atom::buildLatestIDQuery(null, $q);
+				});
+
+		$rawAtomSubQuery = DB::raw('(' . $atomSubQuery->toSql() . ') AS atom_subquery');
+
+		$query = Comment::select(
+					'comments.*',
+					'atom_subquery.entity_id AS entity_id',
+					'atom_subquery.title AS title',
+					'atom_subquery.alpha_title AS atom_title',
+					'users.firstname AS firstname',
+					'users.lastname AS lastname'
+				)
+				->leftJoin('users', 'comments.user_id', '=', 'users.id')
+				->leftJoin($rawAtomSubQuery, function ($join) {
+					$join->on('comments.atom_entity_id', '=', 'atom_subquery.entity_id');
+				});
+
+		if($startTime) {
+			$query->where('comments.created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+		}
+		if($endTime) {
+			$query->where('comments.created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + self::$_stepSizeSeconds['day']) . ')'));
+		}
+
+		if($queriesOnly) {
+			if($queryType) {
+				$queryType = self::_sanitizeQueryType($queryType);
+				$queryMatcher = '%<query type="' . $queryType . '">%';
+			}
+			else {
+				$queryMatcher = '%</query>%';
+			}
+
+			$query->where('text', 'LIKE', $queryMatcher);
+		}
+
+		$query->orderBy('comments.id', 'DESC');
+
+		return $query->get();
+	}
+
+	/**
+	 * Builds a CSV from a list of queries.
+	 *
+	 * @param object[] $comments
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return Response
+	 */
+	public static function buildQueriesCSV($comments, $queryType = null) {
+		$headings = ['atom_title', 'query_type', 'text', 'firstname', 'lastname', 'created_at'];
+
+		$queries = self::_extractQueries($comments, $queryType);
+
+		return self::arrayToCsv('queries.csv', $headings, $queries);
+	}
+
+	/**
+	 * Provide an array of statistics about the molecules.
+	 *
+	 * @return array
+	 */
+	public static function moleculeStats() {
+		$statsFile = base_path() . '/data/cache/moleculeStats.json';
+		if(!file_exists($statsFile)) {
+			throw new \Exception('File not found: ' . $statsFile . ' -- run `php artisan report:estimatePages`');
+		}
+
+		$moleculeStats = json_decode(file_get_contents($statsFile), true);
+		$stats = [
+			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
+				'charsMean' => 2826,
+				'charsStdErr' => 445
+			],
+			'molecules' => $moleculeStats
+		];
+
+		return $stats;
+	}
+
+	/**
+	 * Extracts queries from a list of comments.
+	 *
+	 * @param object[] $comments
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return array
+	 */
+	protected static function _extractQueries($comments, $queryType = null) {
+		$rows = [];
+
+		$queryType = self::_sanitizeQueryType($queryType);
+		$querymatcher = '/<query' . ($queryType ? ' type="' . $queryType . '">' : '[^>]*>') . '(.*?)<\/query>/Ssi';
+		$queryTypeMatcher = '/^<query type="([^"]*)/Si';
+		$commentsArray = $comments->toArray();
+		foreach($commentsArray as $comment) {
+			preg_match_all($querymatcher, $comment['text'], $matches);
+			$queries = [];
+			foreach($matches[1] as $key => $text) {
+				if(preg_match($queryTypeMatcher, $matches[0][$key], $queryTypeMatches)) {
+					$queryType = $queryTypeMatches[1];
+				}
+				else {
+					$queryType = null;
+				}
+
+				$row = $comment;
+				$row['query_type'] = $queryType;
+				$row['text'] = trim($text);
+				$rows[] = $row;
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Remove dangerous characters from a query type string.
+	 *
+	 * @param ?string $queryType
+	 *
+	 * @return ?string
+	 */
+	protected static function _sanitizeQueryType($queryType) {
+		return $queryType ? preg_replace('/[^a-z0-9\-\.]/i', '', $queryType) : $queryType;
 	}
 
 	/**
@@ -417,7 +564,8 @@ class Report extends AppModel {
 		for($i = $startTime; $i <= $endTime; $i += $stepSize) {
 			$blankSeries[$i] = [
 				'x' => $i,
-				'y' => 0
+				'y' => 0,
+				'atoms' => []
 			];
 		}
 

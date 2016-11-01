@@ -46,4 +46,38 @@ class ReportController extends Controller {
     public static function brokenLinksAction() {
         return new ApiPayload(Report::links());
     }
+
+    public function commentsAction(Request $request) {
+        $timezoneOffset = $request->input('timezoneOffset');
+        $startTime = $request->input('startTime');
+        $endTime = $request->input('endTime');
+        $queriesOnly = (bool)$request->input('queriesOnly');
+        $generateCsv = (bool)$request->input('generateCsv') && $queriesOnly;
+        $queryType = $request->input('queryType');
+
+        $comments = Report::comments($timezoneOffset, $startTime, $endTime, $queriesOnly, $queryType);
+
+        if($generateCsv) {
+            if($comments) {
+                return Report::buildQueriesCSV($comments, $queryType);
+            }
+            else {
+                return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No queries were found in the specified time range.');
+            }
+        }
+        else {
+            return new ApiPayload($comments);
+        }
+    }
+
+    public function moleculeStatsAction(Request $request) {
+        try {
+            $stats = Report::moleculeStats();
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No molecule statistics were found.');
+        }
+
+        return new ApiPayload($stats);
+    }
 }

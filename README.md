@@ -56,7 +56,6 @@ cd /var/www/drug-tool
 ```
 - Install the Composer packages. `composer install`
 - Run the DB migrations: `php artisan migrate`
-- Seed the DB with junk data for testing purposes `php artisan db:seed` or import real data (see below).
 - Restart Apache.
 ```
 sudo service httpd restart
@@ -98,6 +97,7 @@ composer dump-autoload
 php artisan optimize
 ```
 - By default, Laravel logs to **storage/logs/laravel.log**
+- Counting all of the characters in each chapter is a moderately expensive operation, so it has been rolled into an Artisan command. On dev and prod servers, it should be run as a nightly cron job: `php artisan report:estimatePages`
 
 # Third Party Libraries and Frameworks
 

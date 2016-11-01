@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,
+        Commands\QuickFixXmlns::class,
+        Commands\ReportEstimatePages::class,
     ];
 
     /**
