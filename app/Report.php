@@ -183,7 +183,7 @@ class Report extends AppModel {
 		$results = $query->get();
 		if(sizeof($results)) {
 			if(!$startTime) {
-				$startTime = $results[0]->start ? $startTime : $results[0]->start;
+				$startTime = $results[0]->start ? $results[0]->start : $startTime;
 				$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
 			}
 
