@@ -74,6 +74,7 @@ class Report extends AppModel {
 	public static function edits($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
+		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
 
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : time();
@@ -100,7 +101,7 @@ class Report extends AppModel {
 			$query->where('created_at', '>', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
 		}
 		if($endTime) {
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSize) . ')'));
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . ($endTime + $stepSizeSeconds) . ')'));
 		}
 
 		$query->orderBy('x', 'ASC');
@@ -113,7 +114,11 @@ class Report extends AppModel {
 			if(!$endTime) {
 				$endTime = self::_snapTime($results[sizeof($results) - 1]->x, $timezoneOffset, $stepSize, true);
 			}
+
 			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, self::$_stepSizeSeconds[$stepSize]);
+			foreach($blankSeries as &$step) {
+				$step['atoms'] = [];
+			}
 		}
 
 		$output = [];
@@ -148,7 +153,7 @@ class Report extends AppModel {
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
 
 		$startTime = $startTime ? (int)$startTime : null;
-		$endTime = $endTime ? (int)$endTime : null;
+		$endTime = $endTime ? (int)$endTime : time();
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 		$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
 		$endTime = self::_snapTime($endTime, $timezoneOffset, $stepSize, true);
@@ -156,39 +161,32 @@ class Report extends AppModel {
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 
-		$timezoneOffsetPart = $timezoneOffset ?
-				' AT TIME ZONE INTERVAL \'' . (int)$timezoneOffset . ':00\'' :
-				'';
-		$datePart = 'DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')';
 		$query = Assignment::select(
 					'user_id',
-					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', created_at' . $timezoneOffsetPart . ')) AS opened'),
-					DB::raw('EXTRACT(EPOCH FROM DATE_TRUNC(\'' . $stepSize . '\', task_end' . $timezoneOffsetPart . ')) AS closed')
+					DB::raw('EXTRACT(EPOCH FROM "created_at") AS start'),
+					DB::raw('EXTRACT(EPOCH FROM "task_end") AS end')
 				)
 				->whereNotNull('created_at');	 //filter out missing timestamps
-		if($endTime) {
-			$cutoff = $endTime + $stepSizeSeconds;
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . $cutoff . ')'));
-			$query->where(function ($q) use ($cutoff) {
-				$q->whereNull('task_end')
-						->orWhere('task_end', '<', DB::raw('TO_TIMESTAMP(' . $cutoff . ')'));
-			});
 
-			if($startTime) {
-				$query->where(function ($q) use ($startTime) {
-					$q->whereNull('task_end')
-							->orWhere('task_end', '>=', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
-				});
-			}
+		if($endTime) {
+			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . $endTime . ')'));
 		}
+		if($startTime) {
+			$query->where(function ($q) use ($startTime) {
+				$q->whereNull('task_end')
+						->orWhere('task_end', '>=', DB::raw('TO_TIMESTAMP(' . $startTime . ')'));
+			});
+		}
+
 		$query->orderBy('created_at', 'ASC');
 
 		$results = $query->get();
 		if(sizeof($results)) {
-			$startTime = $startTime ? $startTime : (int)$results[0]->opened;
-			$endTime = $endTime ?
-					$endTime :
-					strtotime(date('Y-m-d 00:00:00 ' . ($timezoneOffset >= 0 ? '+' : '') . $timezoneOffset . ':00'));
+			if(!$startTime) {
+				$startTime = $results[0]->start ? $results[0]->start : $startTime;
+				$startTime = self::_snapTime($startTime, $timezoneOffset, $stepSize, false);
+			}
+
 			$blankSeries = self::_buildBlankTimeSeries($startTime, $endTime, $stepSizeSeconds);
 		}
 
@@ -199,11 +197,10 @@ class Report extends AppModel {
 				$output[$userId] = $blankSeries;
 			}
 
-			//ensure that the bookends are within the specified time range
-			$start = $row->opened < $startTime ? $startTime : (int)$row->opened;
-			$end = $row->closed ? (int)$row->closed : $endTime;
+			$start = $row['start'];
+			$end = $row['end'] ? $row['end'] : $endTime;
 
-			self::_applyAssignmentToSeries($output[$userId], $stepSizeSeconds, $start, $end);
+			self::_applyAssignmentToSeries($output[$userId], $timezoneOffset, $stepSizeSeconds, $start, $end);
 		}
 
 		return $output;
@@ -518,11 +515,17 @@ class Report extends AppModel {
 	 * Expand an assignment to cover a time range in a series.
 	 *
 	 * @param array $series The user's series
+	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param string $stepSizeSeconds How much time between steps?
 	 * @param integer $start The start of the assignment
 	 * @param integer $end The end of the assignment
 	 */
-	protected static function _applyAssignmentToSeries(&$series, $stepSizeSeconds, $start, $end) {
+	protected static function _applyAssignmentToSeries(&$series, $timezoneOffset, $stepSizeSeconds, $start, $end) {
+		reset($series);
+		$seriesStart = key($series);
+		$start = $seriesStart > $start ? $seriesStart : self::_snapTime($start, $timezoneOffset, $stepSizeSeconds, false);
+		$end = self::_snapTime($end, $timezoneOffset, $stepSizeSeconds, true);
+
 		for($i = $start; $i <= $end; $i += $stepSizeSeconds) {
 			if(!isset($series[$i])) {
 				return;
@@ -564,8 +567,7 @@ class Report extends AppModel {
 		for($i = $startTime; $i <= $endTime; $i += $stepSize) {
 			$blankSeries[$i] = [
 				'x' => $i,
-				'y' => 0,
-				'atoms' => []
+				'y' => 0
 			];
 		}
 
