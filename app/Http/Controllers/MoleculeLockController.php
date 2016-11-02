@@ -18,7 +18,7 @@ use App\ApiPayload;
  * This controller is responsible for locking and unlocking molecules.
  * All endpoint methods should return an ApiPayload or Response.
  */
-class MoleculeExportController extends Controller {
+class MoleculeLockController extends Controller {
     /**
      * Lock a molecule.
      *
