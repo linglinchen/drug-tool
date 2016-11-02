@@ -351,12 +351,8 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function moleculeStats() {
-		$statsFile = base_path() . '/data/cache/moleculeStats.json';
-		if(!file_exists($statsFile)) {
-			throw new \Exception('File not found: ' . $statsFile . ' -- run `php artisan report:estimatePages`');
-		}
+		$moleculeStats = self::_countCharsPerMolecule();
 
-		$moleculeStats = json_decode(file_get_contents($statsFile), true);
 		$stats = [
 			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
 				'charsMean' => 2826,
@@ -573,4 +569,46 @@ class Report extends AppModel {
 
 		return $blankSeries;
 	}
+
+    /**
+     * Estimate the number of printable characters in each chapter.
+     *
+     * @return integer[]
+     */
+    protected static function _countCharsPerMolecule() {
+        $latestIds = Atom::select()
+                ->whereNotNull('molecule_code')
+                ->whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                });
+
+        $wordsQuery = DB::table(DB::raw('(' . $latestIds->toSql() . ') AS latestIds'))
+                ->select(
+                    'molecule_code AS code',
+                    DB::raw("char_length(trim(regexp_replace(regexp_replace(xml, '<[^>]*>', '', 'g'), '[\\r\\n\\t ]+', ' ', 'g'))) as char_count")
+                )
+                ->mergeBindings($latestIds->getQuery());
+
+        $countQuery = DB::table(DB::raw('(' . $wordsQuery->toSql() . ') AS wordsQuery'))
+                ->select('code', DB::raw('sum(char_count) AS chars'))
+                ->mergeBindings($wordsQuery)
+                ->groupBy('code');
+
+        $counts = $countQuery->get();
+
+        $stats = [];
+        $molecules = Molecule::all();
+        foreach($molecules as $molecule) {
+            $stats[$molecule['code']] = [
+            	'code' => $molecule['code'],
+            	'chars' => 0
+            ];
+        }
+
+        foreach($counts as $row) {
+            $stats[$row->code]['chars'] = $row->chars;
+        }
+
+        return $stats;
+    }
 }
