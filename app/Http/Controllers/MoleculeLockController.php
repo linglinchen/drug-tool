@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use DB;
 
 use App\Molecule;
+use App\AccessControl;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -29,19 +30,9 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function lockAction($code, Request $request) {
-        $molecule = Molecule::where('code', '=', $code)
-                ->get()
-                ->first();
-
-        if(!$molecule) {
-            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-        }
-
-        $molecule->locked = true;
-        $molecule->save();
-
-        new ApiPayload($molecule);
+        return $this->_changeLockState($code, $request, true);
     }
+
     /**
      * Unlock a molecule.
      *
@@ -53,6 +44,26 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function unlockAction($code, Request $request) {
+        return $this->_changeLockState($code, $request, false);
+    }
+
+    /**
+     * Lock or unlock a molecule.
+     *
+     * @api
+     *
+     * @param string $code The molecule code
+     * @param Request $request The Laravel Request object
+     * @param boolean $lock Lock or unlock the molecule
+     *
+     * @return ApiPayload|Response
+     */
+    protected function _changeLockState($code, $request, $lock) {
+        $accessControl = new AccessControl();
+        if(!$accessControl->can('lock_molecules')) {
+            return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have access to this resource.');
+        }
+
         $molecule = Molecule::where('code', '=', $code)
                 ->get()
                 ->first();
@@ -61,9 +72,9 @@ class MoleculeExportController extends Controller {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
         }
 
-        $molecule->locked = false;
+        $molecule->locked = $lock;
         $molecule->save();
 
-        new ApiPayload($molecule);
+        return new ApiPayload($molecule);
     }
 }
