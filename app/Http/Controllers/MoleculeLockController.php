@@ -50,8 +50,6 @@ class MoleculeLockController extends Controller {
     /**
      * Lock or unlock a molecule.
      *
-     * @api
-     *
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      * @param boolean $lock Lock or unlock the molecule
