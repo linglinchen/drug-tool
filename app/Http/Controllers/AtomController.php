@@ -57,8 +57,9 @@ class AtomController extends Controller
     public function postAction(Request $request) {
         $input = $request->all();
 
-        if(isset($input['molecule_code']) && Molecule::isLocked($input['molecule_code'])) {
-            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That chapter is locked, and cannot be modified at this time.');
+        $locked = current(Molecule::locked($input['molecule_code']));
+        if(isset($input['molecule_code']) && $locked) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
         $atom = new Atom();
@@ -119,8 +120,9 @@ class AtomController extends Controller
     public function putAction($entityId, Request $request) {
         $input = $request->all();
 
-        if(isset($input['molecule_code']) && Molecule::isLocked($input['molecule_code'])) {
-            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That chapter is locked, and cannot be modified at this time.');
+        $locked = current(Molecule::locked($input['molecule_code']));
+        if(isset($input['molecule_code']) && $locked) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
         $atom = Atom::findNewest($entityId);
@@ -158,7 +160,7 @@ class AtomController extends Controller
         try {
             \DB::transaction(function () use($atoms, $updates) {
                 foreach($atoms as $atomKey => $atom) {
-                    if(Molecule::isLocked($atom->molecule_code)) {
+                    if(Molecule::locked($atom->molecule_code)) {
                         $molecule = Molecule::where('code', '=', $atom->molecule_code)->first();
                         $moleculeTitle = $molecule ? $molecule->title : '';
 

@@ -32,6 +32,13 @@ class AtomPromotionController extends Controller {
         $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
         $promotion = $request->input('promotion');
 
-        return new ApiPayload(Atom::promote($atomEntityIds, $promotion));
+        try {
+            $assignments = Atom::promote($atomEntityIds, $promotion);
+        }
+        catch(\Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
+        }
+
+        return new ApiPayload($assignments);
     }
 }

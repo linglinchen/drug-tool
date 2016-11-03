@@ -92,16 +92,26 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Check if a molecule is locked.
+     * Check if one or more molecules are locked.
      *
-     * @param ?string $code The molecule's code
+     * @param ?string|string[] $codes The molecule code(s) to check
      *
-     * @return boolean
+     * @return object[] An associative array containing locked molecules
      */
-    public static function isLocked($code) {
-        $molecule = self::where('code', '=', $code)->first();
+    public static function locked($codes) {
+        if($codes === null) {
+            return [];
+        }
 
-        return $molecule ? (bool)$molecule->locked : false;
+        $codes = is_array($codes) ? $codes : [$codes];
+        $codes = array_unique($codes);
+        $locks = array_fill_keys($codes, false);
+        $molecules = self::where('locked', '=', true)->whereIn('code', $codes)->get();
+        foreach($molecules as $molecule) {
+            $locks[$molecule->code] = $molecule;
+        }
+
+        return array_filter($locks);
     }
 
     /**
