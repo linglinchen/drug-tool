@@ -92,6 +92,19 @@ class Molecule extends AppModel {
     }
 
     /**
+     * Check if a molecule is locked.
+     *
+     * @param ?string $code The molecule's code
+     *
+     * @return boolean
+     */
+    public static function isLocked($code) {
+        $molecule = self::where('code', '=', $code)->first();
+
+        return $molecule ? (bool)$molecule->locked : false;
+    }
+
+    /**
      * Get the molecule's ordered atom IDs.
      *
      * @param ?integer $statusId (optional) Only export atoms with this status

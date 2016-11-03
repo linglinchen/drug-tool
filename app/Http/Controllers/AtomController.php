@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 use App\Atom;
+use App\Molecule;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -55,6 +56,10 @@ class AtomController extends Controller
      */
     public function postAction(Request $request) {
         $input = $request->all();
+
+        if(isset($input['molecule_code']) && Molecule::isLocked($input['molecule_code'])) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That chapter is locked, and cannot be modified at this time.');
+        }
 
         $atom = new Atom();
         $atom->entity_id = Atom::makeUID();
@@ -114,6 +119,10 @@ class AtomController extends Controller
     public function putAction($entityId, Request $request) {
         $input = $request->all();
 
+        if(isset($input['molecule_code']) && Molecule::isLocked($input['molecule_code'])) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That chapter is locked, and cannot be modified at this time.');
+        }
+
         $atom = Atom::findNewest($entityId);
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
@@ -144,19 +153,32 @@ class AtomController extends Controller
         $entityIds = $request->input('entityIds');
         $updates = $request->input('updates');
 
-        $atoms = Atom::findNewest($entityIds)
-                ->get();
+        $atoms = Atom::findNewest($entityIds)->get();
 
-        foreach($atoms as $atomKey => $atom) {
-            $atom = $atom->replicate();
-            foreach($this->_allowedMassUpdateProperties as $allowed) {
-                if(array_key_exists($allowed, $updates)) {
-                    $atom->$allowed = $updates[$allowed];
+        try {
+            DB::transaction(function () use($atoms, $input) {
+                foreach($atoms as $atomKey => $atom) {
+                    if(Molecule::isLocked($atom->molecule_code)) {
+                        $molecule = Molecule::where('code', '=', $atom->molecule_code)->first();
+                        $moleculeTitle = $molecule ? $molecule->title : '';
+
+                        throw new Exception('Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
+                    }
+
+                    $atom = $atom->replicate();
+                    foreach($this->_allowedMassUpdateProperties as $allowed) {
+                        if(array_key_exists($allowed, $updates)) {
+                            $atom->$allowed = $updates[$allowed];
+                        }
+                    }
+                    $atom->save();
+
+                    $atoms[$atomKey] = $atom->addAssignments();
                 }
-            }
-            $atom->save();
-
-            $atoms[$atomKey] = $atom->addAssignments();
+            });
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
         return new ApiPayload($atoms);
