@@ -37,6 +37,10 @@ class MoleculeSortController extends Controller {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
         }
 
+        if($molecule->locked) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
+        }
+
         $atomEntityIds = $request->input('atomEntityIds');
         if(!$atomEntityIds || !is_array($atomEntityIds)) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing atomEntityIds.');
