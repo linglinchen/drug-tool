@@ -156,13 +156,13 @@ class AtomController extends Controller
         $atoms = Atom::findNewest($entityIds)->get();
 
         try {
-            DB::transaction(function () use($atoms, $input) {
+            \DB::transaction(function () use($atoms, $updates) {
                 foreach($atoms as $atomKey => $atom) {
                     if(Molecule::isLocked($atom->molecule_code)) {
                         $molecule = Molecule::where('code', '=', $atom->molecule_code)->first();
                         $moleculeTitle = $molecule ? $molecule->title : '';
 
-                        throw new Exception('Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
+                        throw new \Exception('Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
                     }
 
                     $atom = $atom->replicate();
@@ -177,7 +177,7 @@ class AtomController extends Controller
                 }
             });
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
