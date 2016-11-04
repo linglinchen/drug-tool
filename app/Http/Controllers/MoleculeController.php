@@ -24,7 +24,9 @@ class MoleculeController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction() {
-        return new ApiPayload(Molecule::all());
+        $molecules = Molecule::select()->orderBy('sort', 'ASC')->get();
+
+        return new ApiPayload($molecules);
     }
 
     /**

@@ -10,6 +10,7 @@ use App\AppModel;
 use App\FuzzyRank;
 use App\Assignment;
 use App\Comment;
+use App\Molecule;
 
 class Atom extends AppModel {
     use SoftDeletes;
@@ -427,6 +428,14 @@ class Atom extends AppModel {
     public static function promote($atomEntityIds, $promotion) {
         $atomEntityIds = array_unique($atomEntityIds);      //no need to promote twice
 
+        $locks = self::_locked($atomEntityIds);
+        if($locks) {
+            $molecule = current($locks);
+            $moleculeTitle = $molecule ? $molecule->title : '';
+
+            throw new \Exception('Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
+        }
+
         foreach($promotion as $key => $value) {
             $promotion[$key] = $value === '' ? null : $value;
         }
@@ -467,5 +476,24 @@ class Atom extends AppModel {
         $xml = preg_replace('/^\s*<([^>]+)/i', '<$1 id="' . $id . '"', $xml);
 
         return $xml;
+    }
+
+    /**
+     * Check if one or more atoms belong to a locked molecule.
+     *
+     * @param ?string|string[] $atomEntityIds The molecule code(s) to check
+     *
+     * @return object[]
+     */
+    protected static function _locked($atomEntityIds) {
+        $moleculeCodes = [];
+        $atomEntityIds = is_array($atomEntityIds) ? $atomEntityIds : [$atomEntityIds];
+        $atoms = self::whereIn('entity_id', $atomEntityIds)->get();
+        foreach($atoms as $atom) {
+            $moleculeCodes[] = $atom->molecule_code;
+        }
+        $moleculeCodes = array_unique($moleculeCodes);
+
+        return Molecule::locked($moleculeCodes);
     }
 }
