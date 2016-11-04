@@ -158,15 +158,18 @@ class AtomController extends Controller
         $atoms = Atom::findNewest($entityIds)->get();
 
         try {
+            $moleculeCodes = [];
+            foreach($atoms as $atom) {
+                $moleculeCodes[] = $atom->molecule_code;
+            }
+
+            $locked = current(Molecule::locked($moleculeCodes));
+            if($locked) {
+                throw new \Exception('Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
+            }
+
             \DB::transaction(function () use($atoms, $updates) {
                 foreach($atoms as $atomKey => $atom) {
-                    if(Molecule::locked($atom->molecule_code)) {
-                        $molecule = Molecule::where('code', '=', $atom->molecule_code)->first();
-                        $moleculeTitle = $molecule ? $molecule->title : '';
-
-                        throw new \Exception('Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
-                    }
-
                     $atom = $atom->replicate();
                     foreach($this->_allowedMassUpdateProperties as $allowed) {
                         if(array_key_exists($allowed, $updates)) {
