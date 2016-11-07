@@ -92,6 +92,29 @@ class Molecule extends AppModel {
     }
 
     /**
+     * Check if one or more molecules are locked.
+     *
+     * @param ?string|string[] $codes The molecule code(s) to check
+     *
+     * @return object[] An associative array containing locked molecules
+     */
+    public static function locked($codes) {
+        if($codes === null) {
+            return [];
+        }
+
+        $codes = is_array($codes) ? $codes : [$codes];
+        $codes = array_unique($codes);
+        $locks = array_fill_keys($codes, false);
+        $molecules = self::where('locked', '=', true)->whereIn('code', $codes)->get();
+        foreach($molecules as $molecule) {
+            $locks[$molecule->code] = $molecule;
+        }
+
+        return array_filter($locks);
+    }
+
+    /**
      * Get the molecule's ordered atom IDs.
      *
      * @param ?integer $statusId (optional) Only export atoms with this status
