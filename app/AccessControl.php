@@ -41,10 +41,12 @@ class AccessControl extends AppModel {
 			$user = \Auth::user();
 		}
 
-		$permissions = self::where('user_id', '=', $user['id'])
-				->orWhere('group_id', '=', $user['group_id'])
-				->get();
+		$query = self::where('user_id', '=', $user['id']);
+		if($user['group_id']) {
+			$query->orWhere('group_id', '=', $user['group_id']);
+		}
 
+		$permissions = $query->get();
 		$accessControlStructure = new AccessControlStructure();
 		$structure = $accessControlStructure->getStructure();
 		$this->permissions = self::_applyPermissions($structure, $permissions);
