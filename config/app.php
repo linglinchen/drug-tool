@@ -155,6 +155,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+		
+		/*
+         * Ldap Service Providers...
+         */
+		Adldap\Laravel\AdldapAuthServiceProvider::class,
     ],
 
     /*
