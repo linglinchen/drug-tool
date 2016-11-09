@@ -6,6 +6,7 @@ Homestead.json
 .env
 
 /tests/_output/*
+/data/cache/*
 /data/import/*
 
 !empty
