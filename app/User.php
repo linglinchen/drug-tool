@@ -36,7 +36,7 @@ class User extends Authenticatable {
             unset($user['password'], $user['remember_token']);
             $output[$user['id']] = $user;
         }
-
+			
         return $output;
     }
 }

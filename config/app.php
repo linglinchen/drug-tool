@@ -160,6 +160,7 @@ return [
          * Ldap Service Providers...
          */
 		Adldap\Laravel\AdldapAuthServiceProvider::class,
+		Adldap\Laravel\AdldapServiceProvider::class,
     ],
 
     /*
