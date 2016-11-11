@@ -102,7 +102,7 @@ return [
                 |
                 */
 
-                'account_suffix' => '@acme.org',
+                'account_suffix' => '@science.regn.net',
 
                 /*
                 |--------------------------------------------------------------------------
@@ -118,7 +118,7 @@ return [
                 |
                 */
 
-                'domain_controllers' => ['corp-dc1.corp.acme.org', 'corp-dc2.corp.acme.org'],
+                'domain_controllers' => ['napdaydcxp021.regn.net', 'lbgc-ldapsus.regn.net'],
 
                 /*
                 |--------------------------------------------------------------------------
@@ -129,7 +129,7 @@ return [
                 |
                 */
 
-                'port' => 389,
+                'port' => 3269,
 
                 /*
                 |--------------------------------------------------------------------------
@@ -158,7 +158,7 @@ return [
                 |
                 */
 
-                'base_dn' => 'dc=corp,dc=acme,dc=org',
+                'base_dn' => 'dc=science,dc=regn,dc=net',
 
                 /*
                 |--------------------------------------------------------------------------
@@ -172,7 +172,7 @@ return [
                 |
                 */
 
-                'admin_account_suffix' => '@acme.org',
+                'admin_account_suffix' => '@science.regn.net',
 
                 /*
                 |--------------------------------------------------------------------------
@@ -187,8 +187,8 @@ return [
                 |
                 */
 
-                'admin_username' => env('ADLDAP_ADMIN_USERNAME', 'username'),
-                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', 'password'),
+                'admin_username' => env('ADLDAP_ADMIN_USERNAME', 'svc-ucdfeedback'),
+                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', 'U@df33db@ck'),
 
                 /*
                 |--------------------------------------------------------------------------

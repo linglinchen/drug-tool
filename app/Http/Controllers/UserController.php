@@ -37,6 +37,7 @@ class UserController extends Controller
      * @return ApiPayload|Response
 	 */
 	public function loginAction() {
+		
 		$user = \Auth::user();
 		$accessControl = new AccessControl();
 		$permissions = $accessControl->loadPermissions($user);
@@ -45,6 +46,8 @@ class UserController extends Controller
 			'user'			=> $user,
 			'permissions'	=> $permissions
 		]);
+		
+		
 	}
 
 	/**

@@ -30,7 +30,7 @@ class User extends Authenticatable {
      */
     public static function publicList() {
         $output = [];
-
+		
         $users = self::all();
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
