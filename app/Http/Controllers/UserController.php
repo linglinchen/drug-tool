@@ -38,12 +38,10 @@ class UserController extends Controller
 	 */
 	public function loginAction() {
 		$user = \Auth::user();
-		$accessControl = new AccessControl();
-		$permissions = $accessControl->loadPermissions($user);
 
 		return new ApiPayload([
 			'user'			=> $user,
-			'permissions'	=> $permissions
+			'permissions'	=> $user->ACL->permissions
 		]);
 	}
 
