@@ -4,6 +4,7 @@ namespace App;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Http\Response;
 
 class ApiAuthenticate {
     /**
@@ -32,8 +33,32 @@ class ApiAuthenticate {
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null) {
-        $authorized = $this->auth->guard($guard)->basic() ?: $next($request);
+        $unauthorized = $this->auth->guard($guard)->basic();
+        if($unauthorized) {
+            return response('Invalid credentials.', Response::HTTP_UNAUTHORIZED);
+        }
+        
+        if(!self::_productIsAccessible()) {
+            return response('You do not have access to this product.', Response::HTTP_FORBIDDEN);
+        }
 
-        return $this->auth->guard($guard)->basic() ?: $next($request);
+        return $next($request);
+    }
+
+    /**
+     * Check if the user has access to the product if one is being requested.
+     *
+     * @return boolean
+     */
+    protected static function _productIsAccessible() {
+        $params = \Route::current()->parameters();
+        if(isset($params['productId'])) {
+            $productId = (int)$params['productId'];
+            $accessibleProductIds = $user->userProducts->pluck('product_id')->all();
+            
+            return in_array($productId, $accessibleProductIds);
+        }
+
+        return true;
     }
 }
