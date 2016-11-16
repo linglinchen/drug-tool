@@ -54,7 +54,7 @@ class ApiAuthenticate {
         $params = \Route::current()->parameters();
         if(isset($params['productId'])) {
             $productId = (int)$params['productId'];
-            $accessibleProductIds = $user->userProducts->pluck('product_id')->all();
+            $accessibleProductIds = \Auth::user()->userProducts->pluck('product_id')->all();
             
             return in_array($productId, $accessibleProductIds);
         }
