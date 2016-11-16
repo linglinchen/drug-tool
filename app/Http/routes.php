@@ -37,7 +37,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('logout', ['uses' => 'UserController@logoutAction']);
         });
 
-        Route::group(['middleware' => 'auth.basic'], function () {		//secured endpoints
+        Route::group(['middleware' => 'auth.api'], function () {		//secured endpoints
             Route::get('atom', ['uses' => 'AtomController@listAction']);
             Route::post('atom', ['uses' => 'AtomController@postAction']);
             Route::get('atom/search', ['uses' => 'AtomController@searchAction']);

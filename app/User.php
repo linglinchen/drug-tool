@@ -91,4 +91,17 @@ class User extends Authenticatable {
 				})
 				->get();
     }
+
+    /**
+     * Check if this user has access to the given product.
+     *
+     * @param integer $productId The product ID to check
+     *
+     * @return boolean
+     */
+    public function canAccessProduct($productId) {
+        $productIds = $this->userProducts->pluck('product_id')->all();
+
+        return in_array($productId, $productIds);
+    }
 }
