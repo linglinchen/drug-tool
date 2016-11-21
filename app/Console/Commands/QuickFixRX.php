@@ -35,10 +35,10 @@ class QuickFixRX extends Command {
      * @return mixed
      */
     public function handle() {
-        self::fixLowercasedRX();
+        self::fixRX();
     }
 
-    public static function fixLowercasedRX() {
+    public static function fixRX() {
         $atoms = Atom::whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })->get();
@@ -53,14 +53,10 @@ class QuickFixRX extends Command {
             $newXml = preg_replace(array_keys($searchreplace), array_values($searchreplace), $atom->xml, -1, $count);
             $total_replaced += $count;
             if($newXml != $atom->xml) {
-                if ($atom->id === 1991){
-                    echo $newXml;
-                    exit;
-                }
                 $newAtom = $atom->replicate();
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
-               // $newAtom->save();
+                $newAtom->save();
                 $total_replaced_atoms++;
             }
         }
