@@ -33,7 +33,7 @@ class LookupController extends Controller
             'groups' => Group::allForCurrentProduct(),
             'boilerplates' => Boilerplate::allForCurrentProduct(),
             'tasks' => Task::allForCurrentProduct(),
-            'statuses' => Status::allForCurrentProduct()::orderBy('id')->get(),
+            'statuses' => Status::allForCurrentProduct()->orderBy('id')->get(),
             'products' => Product::allForCurrentProduct()
         ]);
     }
