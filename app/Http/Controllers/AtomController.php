@@ -57,8 +57,9 @@ class AtomController extends Controller
     public function postAction(Request $request) {
         $input = $request->all();
 
-        $locked = current(Molecule::locked($input['molecule_code']));
-        if(isset($input['molecule_code']) && $locked) {
+        $moleculeCode = isset($input['molecule_code']) ? $input['molecule_code'] : null;
+        $locked = current(Molecule::locked($moleculeCode));
+        if($moleculeCode && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
