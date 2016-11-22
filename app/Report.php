@@ -171,14 +171,15 @@ class Report extends AppModel {
 
 		$query = Assignment::select(
 					'user_id',
-					DB::raw('EXTRACT(EPOCH FROM "created_at") AS start'),
+					DB::raw('EXTRACT(EPOCH FROM "assignments"."created_at") AS start'),
 					DB::raw('EXTRACT(EPOCH FROM "task_end") AS end')
 				)
+				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
                 ->where('product_id', '=', $productId)
-				->whereNotNull('created_at');	 //filter out missing timestamps
+				->whereNotNull('assignments.created_at');	 //filter out missing timestamps
 
 		if($endTime) {
-			$query->where('created_at', '<', DB::raw('TO_TIMESTAMP(' . $endTime . ')'));
+			$query->where('assignments.created_at', '<', DB::raw('TO_TIMESTAMP(' . $endTime . ')'));
 		}
 		if($startTime) {
 			$query->where(function ($q) use ($startTime) {
@@ -187,7 +188,7 @@ class Report extends AppModel {
 			});
 		}
 
-		$query->orderBy('created_at', 'ASC');
+		$query->orderBy('assignments.created_at', 'ASC');
 
 		$results = $query->get();
 		if(sizeof($results)) {
