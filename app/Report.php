@@ -620,7 +620,9 @@ class Report extends AppModel {
         $counts = $countQuery->get();
 
         $stats = [];
-        $molecules = Molecule::where('product_id', '=', $productId);
+        $molecules = Molecule::where('product_id', '=', $productId)
+				->orderBy('sort', 'ASC')
+				->get();
         foreach($molecules as $molecule) {
             $stats[$molecule['code']] = [
             	'code' => $molecule['code'],
