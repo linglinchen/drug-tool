@@ -61,7 +61,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/molecule/{code}/lock', ['uses' => 'MoleculeLockController@lockAction']);
             Route::get('{productId}/molecule/{code}/unlock', ['uses' => 'MoleculeLockController@unlockAction']);
 
-            Route::get('lookup', ['uses' => 'LookupController@listAction']);
+            Route::get('{productId}/lookup', ['uses' => 'LookupController@listAction']);
 
             Route::get('{productId}/assignment', ['uses' => 'AssignmentController@listAction']);
             Route::post('{productId}/assignment', ['uses' => 'AssignmentController@postAction']);
