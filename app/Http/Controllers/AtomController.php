@@ -196,9 +196,11 @@ class AtomController extends Controller
      * @todo Implement this.
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @param string $entityId The entityId of the atom to delete
      */
-    public function deleteAction($entityId) {
+    public function deleteAction($productId, $entityId) {
         //
     }
 
@@ -207,12 +209,14 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to examine
      *
      * @return ApiPayload|Response
      */
-    public function historyAction($entityId) {
+    public function historyAction($productId, $entityId) {
         $versions = Atom::where('entity_id', '=', $entityId)
+                ->where('product_id', '=', $productId)
                 ->orderBy('id', 'ASC')
                 ->get();
 
