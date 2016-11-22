@@ -298,7 +298,7 @@ class Report extends AppModel {
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
 		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
-                ->where('product_id', '=', $productId)
+                ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				});
