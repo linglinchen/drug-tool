@@ -30,22 +30,27 @@ class Report extends AppModel {
 	/**
 	 * Get a list of discontinued monographs and a count of the total.
 	 *
+     * @param integer $productId Limit to this product
+	 *
 	 * @return mixed[]
 	 */
-	public static function discontinued() {
+	public static function discontinued($productId) {
 		return [
-			'totalCount' => Atom::countMonographs(),
-			'discontinued' => Atom::getDiscontinuedMonographs()
+			'totalCount' => Atom::countMonographs($productId),
+			'discontinued' => Atom::getDiscontinuedMonographs($productId)
 		];
 	}
 
 	/**
 	 * Get a count of atoms in each status.
 	 *
+     * @param integer $productId Limit to this product
+	 *
 	 * @return integer[]
 	 */
-	public static function statuses() {
+	public static function statuses($productId) {
 		$results = Atom::select('status_id', DB::raw('COUNT(status_id)'))
+                ->where('product_id', '=', $productId)
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				})
@@ -64,6 +69,7 @@ class Report extends AppModel {
 	 * Get a count of how many atoms were edited per day by each user. Multiple edits to an atom on the same day
 	 * count as one.
 	 *
+     * @param integer $productId Limit to this product
 	 * @param string $stepSize How much time between steps?
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param ?string $startTime (optional) Start time of the graph
@@ -71,7 +77,7 @@ class Report extends AppModel {
 	 *
 	 * @return array
 	 */
-	public static function edits($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+	public static function edits($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
@@ -88,6 +94,7 @@ class Report extends AppModel {
 					'title',
 					DB::raw('EXTRACT(EPOCH FROM "created_at") AS x')
 				)
+                ->where('product_id', '=', $productId)
 				->whereIn('id', function ($q) {
 					$subQuery = DB::table('atoms')
 							->select('id', DB::raw('row_number() over (partition by "xml" order by "id") as "row_number"'));
@@ -140,6 +147,7 @@ class Report extends AppModel {
 	/**
 	 * Determine how many assignments were open during a time period.
 	 *
+     * @param integer $productId Limit to this product
 	 * @param string $stepSize How much time between steps?
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param ?string $startTime (optional) Start time of the graph
@@ -147,7 +155,7 @@ class Report extends AppModel {
 	 *
 	 * @return array
 	 */
-	public static function openAssignments($stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+	public static function openAssignments($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
@@ -166,6 +174,7 @@ class Report extends AppModel {
 					DB::raw('EXTRACT(EPOCH FROM "created_at") AS start'),
 					DB::raw('EXTRACT(EPOCH FROM "task_end") AS end')
 				)
+                ->where('product_id', '=', $productId)
 				->whereNotNull('created_at');	 //filter out missing timestamps
 
 		if($endTime) {
@@ -209,13 +218,15 @@ class Report extends AppModel {
 	/**
 	 * Generate a list of broken links, and get the total.
 	 *
+     * @param integer $productId Limit to this product
+	 *
 	 * @return array
 	 */
-	public static function links() {
+	public static function links($productId) {
 		$brokenLinks = [];
 		$total = 0;
-		$atoms = self::_getKeyedAtoms();
-		$molecules = self::_getKeyedMolecules();
+		$atoms = self::_getKeyedAtoms($productId);
+		$molecules = self::_getKeyedMolecules($productId);
 		foreach($atoms as $atom) {
 			$atom->xml = simplexml_load_string($atom->xml);
 		}
@@ -272,6 +283,7 @@ class Report extends AppModel {
 	/**
 	 * Generate a list of comment containing queries posted during a time period.
 	 *
+	 * @param integer $productId Limit to this product
 	 * @param ?integer $timezoneOffset (optional) Timezone offset in hours
 	 * @param ?string $startTime (optional) Start time of the graph
 	 * @param ?string $endTime (optional) End time of the graph
@@ -280,12 +292,13 @@ class Report extends AppModel {
 	 *
 	 * @return array
 	 */
-	public static function comments($timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null) {
+	public static function comments($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null) {
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
 		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
+                ->where('product_id', '=', $productId)
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				});
@@ -348,10 +361,12 @@ class Report extends AppModel {
 	/**
 	 * Provide an array of statistics about the molecules.
 	 *
+	 * @param integer $productId Limit to this product
+	 *
 	 * @return array
 	 */
-	public static function moleculeStats() {
-		$moleculeStats = self::_countCharsPerMolecule();
+	public static function moleculeStats($productId) {
+		$moleculeStats = self::_countCharsPerMolecule($productId);
 
 		$stats = [
 			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
@@ -474,10 +489,13 @@ class Report extends AppModel {
 	/**
 	 * Get a list of all atoms keyed by their entity_id.
 	 *
+	 * @param integer $productId Limit to this product
+	 *
 	 * @return object[]
 	 */
-	protected static function _getKeyedAtoms() {
+	protected static function _getKeyedAtoms($productId) {
 		$results = Atom::select('entity_id', 'title', 'xml')
+                ->where('product_id', '=', $productId)
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
 				})
@@ -494,10 +512,12 @@ class Report extends AppModel {
 	/**
 	 * Get a list of all molecules keyed by their code.
 	 *
+	 * @param integer $productId Limit to this product
+	 *
 	 * @return object[]
 	 */
-	protected static function _getKeyedMolecules() {
-		$results = Molecule::all();
+	protected static function _getKeyedMolecules($productId) {
+		$results = Molecule::where('product_id', '=', $productId);
 
 		$molecules = $results;
 		foreach($results as $molecule) {
@@ -572,11 +592,14 @@ class Report extends AppModel {
 
     /**
      * Estimate the number of printable characters in each chapter.
+	 *
+	 * @param integer $productId Limit to this product
      *
      * @return integer[]
      */
-    protected static function _countCharsPerMolecule() {
+    protected static function _countCharsPerMolecule($productId) {
         $latestIds = Atom::select()
+				->where('product_id', '=', $productId)
                 ->whereNotNull('molecule_code')
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
@@ -597,7 +620,7 @@ class Report extends AppModel {
         $counts = $countQuery->get();
 
         $stats = [];
-        $molecules = Molecule::all();
+        $molecules = Molecule::where('product_id', '=', $productId);
         foreach($molecules as $molecule) {
             $stats[$molecule['code']] = [
             	'code' => $molecule['code'],
