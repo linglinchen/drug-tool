@@ -73,7 +73,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
 
-            Route::get('{productId}/report', ['uses' => 'ReportController@listAction']);
+            Route::get('report', ['uses' => 'ReportController@listAction']);
             Route::get('{productId}/report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
             Route::get('{productId}/report/statuses', ['uses' => 'ReportController@statusesAction']);
             Route::get('{productId}/report/edits', ['uses' => 'ReportController@editsAction']);
