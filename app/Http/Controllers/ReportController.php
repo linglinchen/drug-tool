@@ -15,39 +15,39 @@ class ReportController extends Controller {
         return new ApiPayload(Report::$reportTypes);
     }
 
-    public function discontinuedAction() {
-        return new ApiPayload(Report::discontinued());
+    public function discontinuedAction($productId) {
+        return new ApiPayload(Report::discontinued($productId));
     }
 
-    public function statusesAction() {
-        return new ApiPayload(Report::statuses());
+    public function statusesAction($productId) {
+        return new ApiPayload(Report::statuses($productId));
     }
 
-    public function editsAction(Request $request) {
+    public function editsAction($productId, Request $request) {
         $validStepSizes = ['day', 'week'];
         $timezoneOffset = $request->input('timezoneOffset');
         $stepSize = $request->input('stepSize');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
 
-        return new ApiPayload(Report::edits($stepSize, $timezoneOffset, $startTime, $endTime));
+        return new ApiPayload(Report::edits($productId, $stepSize, $timezoneOffset, $startTime, $endTime));
     }
 
-    public function openAssignmentsAction(Request $request) {
+    public function openAssignmentsAction($productId, Request $request) {
         $validStepSizes = ['day', 'week'];
         $timezoneOffset = $request->input('timezoneOffset');
         $stepSize = $request->input('stepSize');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
 
-        return new ApiPayload(Report::openAssignments($stepSize, $timezoneOffset, $startTime, $endTime));
+        return new ApiPayload(Report::openAssignments($productId, $stepSize, $timezoneOffset, $startTime, $endTime));
     }
 
-    public static function brokenLinksAction() {
-        return new ApiPayload(Report::links());
+    public static function brokenLinksAction($productId) {
+        return new ApiPayload(Report::links($productId));
     }
 
-    public function commentsAction(Request $request) {
+    public function commentsAction($productId, Request $request) {
         $timezoneOffset = $request->input('timezoneOffset');
         $startTime = $request->input('startTime');
         $endTime = $request->input('endTime');
@@ -55,7 +55,7 @@ class ReportController extends Controller {
         $generateCsv = (bool)$request->input('generateCsv') && $queriesOnly;
         $queryType = $request->input('queryType');
 
-        $comments = Report::comments($timezoneOffset, $startTime, $endTime, $queriesOnly, $queryType);
+        $comments = Report::comments($productId, $timezoneOffset, $startTime, $endTime, $queriesOnly, $queryType);
 
         if($generateCsv) {
             if($comments) {
@@ -70,9 +70,9 @@ class ReportController extends Controller {
         }
     }
 
-    public function moleculeStatsAction(Request $request) {
+    public function moleculeStatsAction($productId, Request $request) {
         try {
-            $stats = Report::moleculeStats();
+            $stats = Report::moleculeStats($productId);
         }
         catch(Exception $e) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No molecule statistics were found.');
