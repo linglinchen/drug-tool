@@ -113,20 +113,21 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to retrieve
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function putAction($entityId, Request $request) {
+    public function putAction($productId, $entityId, Request $request) {
         $input = $request->all();
 
-        $locked = current(Molecule::locked($input['molecule_code']));
+        $locked = current(Molecule::locked($input['molecule_code'], $productId));
         if(isset($input['molecule_code']) && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
-        $atom = Atom::findNewest($entityId);
+        $atom = Atom::findNewest($entityId, $productId);
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
@@ -148,15 +149,16 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function massUpdateAction(Request $request) {
+    public function massUpdateAction($productId, Request $request) {
         $entityIds = $request->input('entityIds');
         $updates = $request->input('updates');
 
-        $atoms = Atom::findNewest($entityIds)->get();
+        $atoms = Atom::findNewest($entityIds, $productId)->get();
 
         try {
             $moleculeCodes = [];
@@ -164,7 +166,7 @@ class AtomController extends Controller
                 $moleculeCodes[] = $atom->molecule_code;
             }
 
-            $locked = current(Molecule::locked($moleculeCodes));
+            $locked = current(Molecule::locked($moleculeCodes, $productId));
             if($locked) {
                 throw new \Exception('Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
             }
