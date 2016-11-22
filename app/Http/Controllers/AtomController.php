@@ -50,21 +50,22 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function postAction(Request $request) {
+    public function postAction($productId, Request $request) {
         $input = $request->all();
 
-        $locked = current(Molecule::locked($input['molecule_code']));
+        $locked = current(Molecule::locked($input['molecule_code'], $productId));
         if(isset($input['molecule_code']) && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
         $atom = new Atom();
         $atom->entity_id = Atom::makeUID();
-        $atom->product_id = Atom::getCurrentProductId();
+        $atom->product_id = $productId;
         foreach($this->_allowedProperties as $allowed) {
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];
@@ -95,10 +96,10 @@ class AtomController extends Controller
                     ->get()
                     ->first();
 
-            $currentAtom = Atom::findNewestIfNotDeleted($entityId);
+            $currentAtom = Atom::findNewestIfNotDeleted($entityId, $productId);
         }
         else {
-            $atom = Atom::findNewestIfNotDeleted($entityId);
+            $atom = Atom::findNewestIfNotDeleted($entityId, $productId);
         }
 
         if(!$atom) {
