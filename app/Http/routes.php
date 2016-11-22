@@ -63,6 +63,8 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('{productId}/lookup', ['uses' => 'LookupController@listAction']);
 
+            Route::get('product', ['uses' => 'ProductController@listAction']);
+
             Route::get('{productId}/assignment', ['uses' => 'AssignmentController@listAction']);
             Route::post('{productId}/assignment', ['uses' => 'AssignmentController@postAction']);
             Route::get('{productId}/assignment/{atomEntityId}/next', ['uses' => 'AssignmentController@nextAction']);

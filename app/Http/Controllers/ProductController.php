@@ -16,24 +16,18 @@ use App\ApiError;
 use App\ApiPayload;
 
 /**
- * This controller exists to serve up the lookup tables.
  * All endpoint methods should return an ApiPayload or Response.
  */
-class LookupController extends Controller
+class ProductController extends Controller
 {
     /**
-     * GET a list of all statuses.
+     * GET a list of all products.
      *
      * @api
      *
      * @return ApiPayload|Response
      */
     public function listAction() {
-        return new ApiPayload([
-            'groups' => Group::allForCurrentProduct(),
-            'boilerplates' => Boilerplate::allForCurrentProduct(),
-            'tasks' => Task::allForCurrentProduct(),
-            'statuses' => Status::allForCurrentProduct()->orderBy('id')->get()
-        ]);
+        return new ApiPayload(Product::all());
     }
 }
