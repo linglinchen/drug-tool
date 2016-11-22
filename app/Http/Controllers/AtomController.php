@@ -28,13 +28,16 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @return ApiPayload|Response
      */
-    public function listAction() {
+    public function listAction($productId) {
         $list = [];
         $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())
-            ->orderBy('alpha_title', 'asc')
-            ->get();
+                ->where('product_id', '=', $productId)
+                ->orderBy('alpha_title', 'asc')
+                ->get();
         foreach($atoms as $atom) {
             $list[] = [
                 'entity_id' => $atom->entityId,
