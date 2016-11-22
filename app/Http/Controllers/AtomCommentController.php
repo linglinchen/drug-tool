@@ -12,16 +12,16 @@ use App\Atom;
 use App\Comment;
 
 class AtomCommentController extends Controller {
-    public function getAction($atomEntityId) {
-        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
+    public function getAction($productId, $atomEntityId) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
-        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId));
+        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
 
-    public function postAction($atomEntityId, Request $request) {
-        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
+    public function postAction($productId, $atomEntityId, Request $request) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 
@@ -39,11 +39,11 @@ class AtomCommentController extends Controller {
             'text' => $text
         ]);
 
-        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId));
+        return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
 
-    public function deleteAction($atomEntityId, $commentId) {
-        if(!Atom::findNewestIfNotDeleted($atomEntityId)) {
+    public function deleteAction($productId, $atomEntityId, $commentId, $productId) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 

@@ -44,7 +44,7 @@ class Molecule extends AppModel {
                 })
                 ->orderBy('sort', 'ASC')
                 ->get();
-        Comment::addSummaries($atoms);
+        Comment::addSummaries($atoms, $productId);
 
         foreach($atoms as $key => $atom) {
             $atom->addAssignments();
