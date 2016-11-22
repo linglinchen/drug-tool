@@ -81,14 +81,16 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to retrieve
      * @param ?string $id (optional) The ID of the specific version to retrieve
      *
      * @return ApiPayload|Response
      */
-    public function getAction($entityId, $id = null) {
+    public function getAction($productId, $entityId, $id = null) {
         if($id) {
             $atom = Atom::where('id', '=', $id)
+                    ->where('product_id', '=', $productId)
                     ->where('entity_id', '=', $entityId)
                     ->get()
                     ->first();
