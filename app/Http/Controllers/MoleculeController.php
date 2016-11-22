@@ -21,6 +21,8 @@ class MoleculeController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @return ApiPayload|Response
      */
     public function listAction($productId) {
@@ -34,6 +36,7 @@ class MoleculeController extends Controller
      *
      * @api
      *
+     * @param string $productId The current product's id
      * @param string $code The code of the molecule to retrieve
      *
      * @return ApiPayload|Response

@@ -64,6 +64,7 @@ class AtomController extends Controller
 
         $atom = new Atom();
         $atom->entity_id = Atom::makeUID();
+        $atom->product_id = Atom::getCurrentProductId();
         foreach($this->_allowedProperties as $allowed) {
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];
@@ -227,17 +228,18 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function searchAction(Request $request) {
+    public function searchAction($productId, Request $request) {
         $q = strtolower($request->input('q', ''));
         $filters = $request->input('filters', []);
         $limit = max((int)$request->input('limit', 10), 1);
         $page = max((int)$request->input('page', 1), 1);
 
-        $results = $q ? Atom::search($q, $filters, $limit, $page) : [];
+        $results = $q ? Atom::search($q, $productId, $filters, $limit, $page) : [];
 
         return new ApiPayload($results);
     }

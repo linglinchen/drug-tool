@@ -195,7 +195,7 @@ class Atom extends AppModel {
      * @param ?integer $statusId (optional) Only return atoms with this status
      * @param ?object $q (optional) Subquery object
      *
-     * @return string[] The IDs of all current atoms
+     * @return object The constructed query object
      */
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
@@ -222,12 +222,15 @@ class Atom extends AppModel {
     /**
      * Get a list of discontinued monographs.
      *
+     * @param integer $productId Limit to this product
+     *
      * @return object
      */
-    public static function getDiscontinuedMonographs() {
+    public static function getDiscontinuedMonographs($productId) {
         $sql = 'SELECT id, entity_id, title, UNNEST(XPATH(\'//monograph[@status="discontinued"]/mono_name/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))) AS subtitle
                 FROM atoms
                 WHERE id IN(' . self::buildLatestIDQuery()->toSql() . ')
+                    AND product_id=' . $productId . '
                     AND XPATH_EXISTS(\'//monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
 
         return DB::select($sql);
@@ -236,14 +239,17 @@ class Atom extends AppModel {
     /**
      * Count all monographs inside active atoms, even if they are grouped.
      *
+     * @param integer $productId Limit to this product
+     *
      * @return integer
      */
-    public static function countMonographs() {
+    public static function countMonographs($productId) {
         $sql = 'SELECT COUNT(*)
                 FROM (
                     SELECT UNNEST(XPATH(\'//monograph/mono_name\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\'))))
                     FROM atoms
                     WHERE id IN(' . self::buildLatestIDQuery()->toSql() . ')
+                        AND product_id=' . $productId . '
                 ) AS subquery';
 
         return DB::select($sql)[0]->count;
@@ -253,13 +259,14 @@ class Atom extends AppModel {
      * Get a list of the latest version of every atom that hasn't been deleted.
      *
      * @param string $query The user's search query
+     * @param integer $productId Limit to this product
      * @param mixed[] $filters (optional) Filter the search with these key => value pairs
      * @param int $limit (optional) Max number of results per page
      * @param int $page (optional) The results page to retrieve
      *
      * @return string[] The IDs of all current atoms
      */
-    public static function search($query, $filters = [], $limit = 10, $page = 1) {
+    public static function search($query, $productId, $filters = [], $limit = 10, $page = 1) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
@@ -275,6 +282,7 @@ class Atom extends AppModel {
         $candidates = self::whereIn('id', function ($q) {
                     self::buildLatestIDQuery(null, $q);
                 })
+                ->where('product_id', '=', $productId)
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
@@ -325,51 +333,30 @@ class Atom extends AppModel {
      * Get the latest version of an atom regardless of whether or not it has been deleted.
      *
      * @param string|string $entityId The entityId(s) of the atom
+     * @param integer $productId Limit to this product
      *
      * @return mixed|mixed[]|null The atom(s)
      */
-    public static function findNewest($entityId) {
-        if(is_array($entityId)) {      //plural
-            return self::whereIn('id', function ($q) {
-                        self::buildLatestIDQuery(null, $q);
-                    })
-                    ->whereIn('entity_id', $entityId)
-                    ->orderBy('sort', 'ASC');
-        }
-        else {      //singular
-            return self::withTrashed()
-                    ->where('entity_id', '=', $entityId)
-                    ->orderBy('id', 'desc')
-                    ->first();
-        }
-    }
-
-    /**
-     * Get the latest versions of a list of atoms regardless of whether or not it has been deleted.
-     *
-     * @param string[] $entityIds The entityId of the atom
-     *
-     * @return mixed[]|null The atom
-     */
-    public static function findNewestInList($entityIds) {
-        $atom = self::withTrashed()
+    public static function findNewest($entityId, $productId) {
+        return self::withTrashed()
                 ->where('entity_id', '=', $entityId)
+                ->where('product_id', '=', $productId)
                 ->orderBy('id', 'desc')
                 ->first();
-
-        return $atom;
     }
 
     /**
      * Get the latest version of an atom or null if it has been deleted.
      *
      * @param string $entityId The entityId of the atom
+     * @param integer $productId Limit to this product
      *
      * @return mixed[]|null The atom
      */
-    public static function findNewestIfNotDeleted($entityId) {
+    public static function findNewestIfNotDeleted($entityId, $productId) {
         $atom = self::withTrashed()
                 ->where('entity_id', '=', $entityId)
+                ->where('product_id', '=', $productId)
                 ->orderBy('id', 'desc')
                 ->first();
 
@@ -422,10 +409,11 @@ class Atom extends AppModel {
      *
      * @param string[] $atomEntityIds The atoms' entityIds
      * @param mixed[] $promotion The promotion we're going to perform
+     * @param integer $productId Limit to this product
      *
      * @return mixed[] The updated atoms with their assignments
      */
-    public static function promote($atomEntityIds, $promotion) {
+    public static function promote($atomEntityIds, $promotion, $productId) {
         $atomEntityIds = array_unique($atomEntityIds);      //no need to promote twice
 
         $locks = self::_locked($atomEntityIds);
@@ -442,9 +430,9 @@ class Atom extends AppModel {
 
         $atoms = [];
         foreach($atomEntityIds as $atomEntityId) {
-            $atom = Atom::findNewest($atomEntityId);
+            $atom = Atom::findNewest($atomEntityId, $productId);
             if(!$atom) {
-                continue;       //skip atoms that don't exist
+                continue;       //skip atoms that don't exist or aren't in this product
             }
 
             Assignment::updateAssignments($atomEntityId, $promotion);
