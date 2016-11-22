@@ -30,9 +30,9 @@ class LookupController extends Controller
      */
     public function listAction() {
         return new ApiPayload([
-            'groups' => Group::allForCurrentProduct(),
-            'boilerplates' => Boilerplate::allForCurrentProduct(),
-            'tasks' => Task::allForCurrentProduct(),
+            'groups' => Group::allForCurrentProduct()->get(),
+            'boilerplates' => Boilerplate::allForCurrentProduct()->get(),
+            'tasks' => Task::allForCurrentProduct()->get(),
             'statuses' => Status::allForCurrentProduct()->orderBy('id')->get()
         ]);
     }
