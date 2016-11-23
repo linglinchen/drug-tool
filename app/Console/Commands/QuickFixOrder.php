@@ -49,16 +49,15 @@ class QuickFixOrder extends Command {
 					if (preg_match("/<group_title>(.*)<\/group_title>/i", $line,$match ) || 
 					    preg_match("/<mono_name>(.*)<\/mono_name>/i", $line,$match )){
 						$order ++;
-						$import_order_arr[$dir_file][$match[1]] = $order;
-						//print_r($match); exit;
-						//  if ($match[0] == '<group_title>Calcium Salts</group_title>'){
-						//  	print_r($match); exit;
-						//  }
+						$atom_name = trim($match[1]);
+						$import_order_arr[$dir_file][$atom_name] = $order;
 					}
 				}
 				fclose($fh);
 			}
 		}	
+
+		//print_r($import_order_arr['letter_k_2017.xml']); exit;
 
         $atoms = Atom::whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
@@ -113,9 +112,7 @@ class QuickFixOrder extends Command {
 				
 
 				foreach ($info as $mono_name => $order){
-					// if ( $atom->molecule_code == 'appendix_a' ){
-					// 		echo "chapter: $chapter\tmc: $atom->molecule_code\r\n";
-					// 	}
+					
 					if ($mono_name == $atom->title && $chapter == $atom->molecule_code){
 						$newAtom->sort = $order;
 						$total_imported++;
@@ -133,7 +130,7 @@ class QuickFixOrder extends Command {
 			if ($flag == 1){   //there is match in xml
 				if ($newAtom->sort != $atom->sort){
 					$newAtom->modified_by = NULL;
-					//$newAtom->save();
+					$newAtom->save();
 					
 					fwrite($log_arr[$atom->molecule_code]['diff'], "new order for atom ".$atom->id.' '.$atom->entity_id.' '.$atom->title." has been updated! $atom->sort => $newAtom->sort\r\n");
 				
@@ -152,7 +149,7 @@ class QuickFixOrder extends Command {
 				if (!is_null($atom->sort)){
 						$newAtom->sort = NULL;
 						$newAtom->modified_by = NULL;
-						//$newAtom->save();
+						$newAtom->save();
 					
 				}
 			}
