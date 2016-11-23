@@ -211,10 +211,10 @@ class Assignment extends AppModel {
 	 * @return ?object
 	 */
 	public static function next($userId, $atomEntityId, $productId) {
-		$assignments = Assignment::allForProduct($productId)
+		$query = Assignment::allForProduct($productId)
 				->where('user_id' , '=', $userId)
-				->orderBy('id', 'ASC')
-				->get();
+				->orderBy('assignments.id', 'ASC');
+		$assignments = $query->get();
 
 		//find the current assignment
 		$found = 0;
