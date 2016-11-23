@@ -12,7 +12,7 @@ use App\Status;
 /**
  * Expected field headers for statuses.csv:
  *
- * id,title
+ * id,title,product_id
  */
 class ImportStatuses extends Command
 {
