@@ -47,9 +47,9 @@ class Assignment extends AppModel {
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
-			$atoms = Atom::findNewest($entityIds)
+			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
-			Comment::addSummaries($atoms);
+			Comment::addSummaries($atoms, $productId);
 			$atoms = $atoms->toArray();
 
 			//remove xml
@@ -100,8 +100,6 @@ class Assignment extends AppModel {
 		$validFilters = ['task_id', 'atoms.molecule_code', 'user_id', 'atom_entity_id', 'task_ended'];
 
 		if($filters) {
-			self::_joinAtoms($query);
-
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
@@ -145,18 +143,6 @@ class Assignment extends AppModel {
 
 		$query->orderBy($order['column'], $order['direction'])
 				->groupBy($order['column']);
-	}
-
-	/**
-	 * Join in the current versions of the atoms.
-	 *
-	 * @param object $query The query object to modify
-	 */
-	protected static function _joinAtoms($query) {
-		$query->leftJoin('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->whereIn('atoms.id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                });
 	}
 
 	/**

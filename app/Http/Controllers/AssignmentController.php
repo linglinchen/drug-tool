@@ -35,7 +35,7 @@ class AssignmentController extends Controller {
         $limit = $request->input('limit') ? max((int)$request->input('limit', 10), 1) : null;
         $page = $request->input('page') ? max((int)$request->input('page', 1), 1) : null;
 
-        $payload = (new Assignment)->getList($request->input('filters'), $request->input('order'), $limit, $page, true);
+        $payload = (new Assignment)->getList($productId, $request->input('filters'), $request->input('order'), $limit, $page, true);
 
         return new ApiPayload($payload);
     }
