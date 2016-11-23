@@ -77,11 +77,12 @@ class Assignment extends AppModel {
 	 * Get the specified atom's currently active assignment.
 	 *
 	 * @param string $atomEntityId The atom's entityId
+	 * @param integer $productId Limit query to this product
 	 *
 	 * @return ?object The assignment (if found)
 	 */
-	public static function getCurrentAssignment($atomEntityId) {
-		$assignment = self::select()
+	public static function getCurrentAssignment($atomEntityId, $productId) {
+		$assignment = self::allForProduct($productId)
 				->orderBy('id', 'DESC')
 				->where('atom_entity_id', '=', $atomEntityId)
 				->limit(1)
@@ -150,13 +151,14 @@ class Assignment extends AppModel {
 	 *
 	 * @param string $atomEntityId The atom's entityId
 	 * @param mixed[] $promotion The promotion we're going to perform
+	 * @param integer $productId Limit query to this product
 	 */
-	public static function updateAssignments($atomEntityId, $promotion) {
+	public static function updateAssignments($atomEntityId, $promotion, $productId) {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
 
 		$user = \Auth::user();
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			self::_endCurrentAssignment($atomEntityId);
+			self::_endCurrentAssignment($atomEntityId, $productId);
 
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
@@ -174,9 +176,9 @@ class Assignment extends AppModel {
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
-			$assignment = self::getCurrentAssignment($atomEntityId);
+			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
-				self::_endCurrentAssignment($atomEntityId);
+				self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
 				$assignment->user_id = $promotion['user_id'];
@@ -189,9 +191,10 @@ class Assignment extends AppModel {
 	 * End the current task if it's still open.
 	 *
 	 * @param string $atomEntityId The atom's entityId
+	 * @param integer $productId Limit query to this product
 	 */
-	protected static function _endCurrentAssignment($atomEntityId) {
-		$currentAssignment = self::getCurrentAssignment($atomEntityId);
+	protected static function _endCurrentAssignment($atomEntityId, $productId) {
+		$currentAssignment = self::getCurrentAssignment($atomEntityId, $productId);
 		if($currentAssignment && !$currentAssignment->task_end) {
 			$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
 			$currentAssignment->save();
