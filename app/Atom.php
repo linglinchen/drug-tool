@@ -416,7 +416,7 @@ class Atom extends AppModel {
     public static function promote($atomEntityIds, $promotion, $productId) {
         $atomEntityIds = array_unique($atomEntityIds);      //no need to promote twice
 
-        $locks = self::_locked($atomEntityIds);
+        $locks = self::_locked($atomEntityIds, $productId);
         if($locks) {
             $molecule = current($locks);
             $moleculeTitle = $molecule ? $molecule->title : '';
@@ -470,10 +470,11 @@ class Atom extends AppModel {
      * Check if one or more atoms belong to a locked molecule.
      *
      * @param ?string|string[] $atomEntityIds The molecule code(s) to check
+     * @param integer $productId The product's ID
      *
      * @return object[]
      */
-    protected static function _locked($atomEntityIds) {
+    protected static function _locked($atomEntityIds, $productId) {
         $moleculeCodes = [];
         $atomEntityIds = is_array($atomEntityIds) ? $atomEntityIds : [$atomEntityIds];
         $atoms = self::whereIn('entity_id', $atomEntityIds)->get();
@@ -482,6 +483,6 @@ class Atom extends AppModel {
         }
         $moleculeCodes = array_unique($moleculeCodes);
 
-        return Molecule::locked($moleculeCodes);
+        return Molecule::locked($moleculeCodes, $productId);
     }
 }
