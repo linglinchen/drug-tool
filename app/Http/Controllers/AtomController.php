@@ -34,8 +34,8 @@ class AtomController extends Controller
      */
     public function listAction($productId) {
         $list = [];
-        $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())
-                ->where('product_id', '=', $productId)
+        $atoms = Atom::allForCurrentProduct()
+                ->whereIn('id', Atom::buildLatestIDQuery())
                 ->orderBy('alpha_title', 'asc')
                 ->get();
         foreach($atoms as $atom) {
@@ -94,8 +94,8 @@ class AtomController extends Controller
      */
     public function getAction($productId, $entityId, $id = null) {
         if($id) {
-            $atom = Atom::where('id', '=', $id)
-                    ->where('product_id', '=', $productId)
+            $atom = Atom::allForCurrentProduct()
+                    ->where('id', '=', $id)
                     ->where('entity_id', '=', $entityId)
                     ->get()
                     ->first();
@@ -112,7 +112,7 @@ class AtomController extends Controller
 
         $atom->is_current = !$id || $atom->id == $currentAtom->id;
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments($productId));
     }
 
     /**

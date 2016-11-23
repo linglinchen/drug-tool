@@ -45,13 +45,14 @@ class AssignmentController extends Controller {
      *
      * @api
      *
+     * @param integer $productId The current product's ID
      * @param string $atomEntityId The current assignment's atomEntityId
      *
      * @return ApiPayload|Response
      */
-    public function nextAction($atomEntityId) {
+    public function nextAction($productId, $atomEntityId) {
         $user = \Auth::user();
 
-        return Assignment::next($user->id, $atomEntityId);
+        return Assignment::next($user->id, $atomEntityId, $productId);
     }
 }

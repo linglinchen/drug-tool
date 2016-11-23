@@ -206,11 +206,13 @@ class Assignment extends AppModel {
 	 *
 	 * @param integer $userId The user's ID
 	 * @param string $atomEntityId The atomEntityId the user is currently on
+	 * @param integer $productId Limit query to this product
 	 *
 	 * @return ?object
 	 */
-	public static function next($userId, $atomEntityId) {
-		$assignments = Assignment::where('user_id' , '=', $userId)
+	public static function next($userId, $atomEntityId, $productId) {
+		$assignments = Assignment::allForProduct($productId)
+				->where('user_id' , '=', $userId)
 				->orderBy('id', 'ASC')
 				->get();
 

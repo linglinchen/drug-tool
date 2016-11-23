@@ -376,10 +376,12 @@ class Atom extends AppModel {
     /**
      * Add active assignments to the atom.
      *
+     * @param integer $productId Limit to this product
+     *
      * @return object This object
      */
-    public function addAssignments() {
-        $this->assignments = self::getAssignments($this->entity_id)['assignments'];
+    public function addAssignments($productId) {
+        $this->assignments = self::getAssignments($this->entity_id, $productId)['assignments'];
 
         return $this;
     }
@@ -388,11 +390,13 @@ class Atom extends AppModel {
      * Get active assignments for the given atom entityId.
      *
      * @param string $entityId The atom's entityId
+     * @param integer $productId Limit to this product
      *
      * @return object[] The assignments
      */
-    public static function getAssignments($entityId) {
+    public static function getAssignments($entityId, $productId) {
         return (new Assignment)->getList(
+            $productId,
             [
                 'atom_entity_id' => $entityId
             ],
