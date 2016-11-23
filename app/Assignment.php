@@ -17,8 +17,7 @@ class Assignment extends AppModel {
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
 	 * Adds the appropriate atoms.
 	 *
-	 * @api
-	 *
+	 * @param integer $productId Limit query to this product
 	 * @param ?array $filters The filters as key => value pairs
 	 * @param ?array $order (optional) The order column and direction
 	 * @param ?int $limit (optional) Max number of results per page
@@ -27,9 +26,9 @@ class Assignment extends AppModel {
 	 *
 	 * @return array The list of assignments
 	 */
-	public function getList($filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
-		$query = self::select($columns);
+		$query = self::allForProduct($productId)->select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
@@ -243,5 +242,17 @@ class Assignment extends AppModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
+		return self::join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
+				->where('atoms.product_id', '=', (int)$productId);
 	}
 }

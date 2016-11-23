@@ -139,10 +139,23 @@ class AppModel extends Model {
 
 	/**
 	 * Select all that belong to the current product.
+	 *
+	 * @return {object} The query object
 	 */
 	public static function allForCurrentProduct() {
 		$productId = \Auth::user()->ACL->productId;
 
+		return self::allForProduct($productId);
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
 		return self::where('product_id', '=', $productId);
 	}
 }

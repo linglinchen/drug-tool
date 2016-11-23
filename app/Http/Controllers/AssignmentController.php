@@ -26,11 +26,12 @@ class AssignmentController extends Controller {
      *
      * @api
      *
+     * @param integer $productId The current product's ID
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function listAction(Request $request) {
+    public function listAction($productId, Request $request) {
         $limit = $request->input('limit') ? max((int)$request->input('limit', 10), 1) : null;
         $page = $request->input('page') ? max((int)$request->input('page', 1), 1) : null;
 
