@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
         });
 
         DB::table('products')->insert([
-            'key' => 'NDR',
+            'key' => 'ndr',
             'title' => 'Skidmore NDR',
             'doctype' => 'drug'
         ]);
