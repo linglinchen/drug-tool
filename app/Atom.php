@@ -219,6 +219,7 @@ class Atom extends AppModel {
         return $query;
     }
 
+    
     /**
      * Get a list of discontinued monographs.
      *
@@ -342,6 +343,16 @@ class Atom extends AppModel {
                     ->orderBy('id', 'desc')
                     ->first();
         }
+    }
+
+    //Get the first version of an atom
+     public static function findFirst($entityId) {
+       
+        return self::withTrashed()
+                ->where('entity_id', '=', $entityId)
+                ->orderBy('id')
+                ->first();
+        
     }
 
     /**
