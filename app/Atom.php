@@ -330,19 +330,29 @@ class Atom extends AppModel {
     }
 
     /**
-     * Get the latest version of an atom regardless of whether or not it has been deleted.
+     * Get the latest version of the atom(s) regardless of whether or not it has been deleted.
      *
-     * @param string|string $entityId The entityId(s) of the atom
+     * @param string|string[] $entityId The entityId(s) of the atom
      * @param integer $productId Limit to this product
      *
-     * @return mixed|mixed[]|null The atom(s)
+     * @return object|object[]|null The atom(s)
      */
     public static function findNewest($entityId, $productId) {
-        return self::withTrashed()
-                ->where('entity_id', '=', $entityId)
-                ->where('product_id', '=', $productId)
-                ->orderBy('id', 'desc')
-                ->first();
+        if(is_array($entityId)) {      //plural
+            return self::allForProduct($productId)
+                    ->whereIn('id', function ($q) {
+                        self::buildLatestIDQuery(null, $q);
+                    })
+                    ->whereIn('entity_id', $entityId)
+                    ->orderBy('sort', 'ASC');
+        }
+        else {      //singular
+            return self::allForProduct($productId)
+                    ->withTrashed()
+                    ->where('entity_id', '=', $entityId)
+                    ->orderBy('id', 'desc')
+                    ->first();
+        }
     }
 
     /**
