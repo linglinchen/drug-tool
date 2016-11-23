@@ -65,10 +65,10 @@ class AccessControl extends AppModel {
 		$user = User::find($user['id']);
 
 		$accessControlStructure = new AccessControlStructure();
-		$structure = $accessControlStructure->getStructure();
+		$structure = $accessControlStructure->getStructure()->toArray();
 		
 		$this->permissions = [];
-		$permissions = $user->getPermissions();
+		$permissions = $user->getPermissions()->toArray();
 		$productIds = $user->userProducts->pluck('product_id')->all();
 		foreach($productIds as $productId) {
 			$this->permissions[$productId] = self::_applyPermissions($structure, $permissions, $productId);
@@ -114,7 +114,6 @@ class AccessControl extends AppModel {
 	 * @return array[] The ACL
 	 */
 	protected static function _applyPermissions($structure, $permissions, $productId) {
-		$permissions = $permissions->toArray();
 		foreach($permissions as $permission) {
 			if($permission['product_id'] == $productId) {
 				$structure[$permission['access_control_structure_id']]['permitted'] = (bool)$permission['permitted'];

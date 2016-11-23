@@ -82,14 +82,27 @@ class User extends Authenticatable {
     public function getPermissions() {
 		$userProducts = $this->userProducts;
         $productIds = $userProducts->pluck('product_id')->all();
+
+        //ORMs make everything so easy!
+        $query = AccessControl::select();
+        foreach($userProducts as $key => $userProduct) {
+            $subQueryFunction = function ($subQuery) use ($userProduct) {
+                $subQuery->where('product_id', '=', $userProduct->product_id)
+                        ->where(function ($subQuery) use ($userProduct) {
+                            $subQuery->where('user_id', '=', $userProduct->user_id)
+                                    ->orWhere('group_id', '=', $userProduct->group_id);
+                        });
+            };
+
+            if($key) {
+                $query->orWhere($subQueryFunction);
+            }
+            else {
+                $query->where($subQueryFunction);
+            }
+        }
         
-		return AccessControl::whereIn('product_id', $productIds)
-				->where(function ($q) {
-                    $groupIds = $this->userProducts->pluck('group_id')->all();
-					$q->where('user_id', '=', $this->id)
-							->orWhereIn('group_id', $groupIds);
-				})
-				->get();
+        return $query->get();
     }
 
     /**
