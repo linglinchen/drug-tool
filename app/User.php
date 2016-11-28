@@ -53,9 +53,10 @@ class User extends Authenticatable {
     public static function publicList() {
         $output = [];
 
-        $users = self::all();
+        $users = self::select()->get();
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
+            $user->userProducts;
             $output[$user['id']] = $user;
         }
 
