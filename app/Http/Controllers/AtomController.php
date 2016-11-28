@@ -178,7 +178,7 @@ class AtomController extends Controller
                 throw new \Exception('Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
             }
 
-            \DB::transaction(function () use($atoms, $updates) {
+            \DB::transaction(function () use ($atoms, $updates, $productId) {
                 foreach($atoms as $atomKey => $atom) {
                     $atom = $atom->replicate();
                     foreach($this->_allowedMassUpdateProperties as $allowed) {
@@ -188,7 +188,7 @@ class AtomController extends Controller
                     }
                     $atom->save();
 
-                    $atoms[$atomKey] = $atom->addAssignments();
+                    $atoms[$atomKey] = $atom->addAssignments($productId);
                 }
             });
         }
