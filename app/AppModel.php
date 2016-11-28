@@ -143,7 +143,7 @@ class AppModel extends Model {
 	 * @return {object} The query object
 	 */
 	public static function allForCurrentProduct() {
-		$productId = \Auth::user()->ACL->productId;
+		$productId = self::getCurrentProductId();
 
 		return self::allForProduct($productId);
 	}

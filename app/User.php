@@ -118,4 +118,27 @@ class User extends Authenticatable {
 
         return in_array($productId, $productIds);
     }
+
+	/**
+	 * Select all that belong to the current product.
+	 *
+	 * @return {object} The query object
+	 */
+	public static function allForCurrentProduct() {
+		$productId = \Auth::user()->ACL->productId;
+
+		return self::allForProduct($productId);
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
+		return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+				->where('user_products.product_id', '=', (int)$productId);
+	}
 }

@@ -83,7 +83,7 @@ class Assignment extends AppModel {
 	 */
 	public static function getCurrentAssignment($atomEntityId, $productId) {
 		$assignment = self::allForProduct($productId)
-				->orderBy('id', 'DESC')
+				->orderBy('assignments.id', 'DESC')
 				->where('atom_entity_id', '=', $atomEntityId)
 				->limit(1)
 				->first();

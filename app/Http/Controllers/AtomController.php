@@ -78,7 +78,7 @@ class AtomController extends Controller
         $atom->save();
         $atom->is_current = true;
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments($productId));
     }
 
     /**

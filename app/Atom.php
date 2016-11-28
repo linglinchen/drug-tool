@@ -11,6 +11,7 @@ use App\FuzzyRank;
 use App\Assignment;
 use App\Comment;
 use App\Molecule;
+use App\User;
 
 class Atom extends AppModel {
     use SoftDeletes;
@@ -442,6 +443,13 @@ class Atom extends AppModel {
             $promotion[$key] = $value === '' ? null : $value;
         }
 
+        if(isset($promotion['user_id'])) {
+            $userIds = User::allForCurrentProduct()->get()->pluck('user_id')->all();
+            if(!in_array((int)$promotion['user_id'], $userIds)) {
+                throw new \Exception('Invalid user ID.');
+            }
+        }
+
         $atoms = [];
         foreach($atomEntityIds as $atomEntityId) {
             $atom = Atom::findNewest($atomEntityId, $productId);
@@ -449,7 +457,7 @@ class Atom extends AppModel {
                 continue;       //skip atoms that don't exist or aren't in this product
             }
 
-            Assignment::updateAssignments($atomEntityId, $promotion);
+            Assignment::updateAssignments($atomEntityId, $promotion, $productId);
 
             //we might need to update the atom
             if(isset($promotion['status_id'])) {
@@ -457,7 +465,7 @@ class Atom extends AppModel {
                 $atom->save();
             }
 
-            $atom = $atom->addAssignments()->toArray();
+            $atom = $atom->addAssignments($productId)->toArray();
             $atoms[] = $atom;
         }
 
