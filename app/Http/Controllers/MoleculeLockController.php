@@ -24,13 +24,14 @@ class MoleculeLockController extends Controller {
      *
      * @api
      *
+     * @param string $productId The current product's id
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function lockAction($code, Request $request) {
-        return $this->_changeLockState($code, $request, true);
+    public function lockAction($productId, $code, Request $request) {
+        return $this->_changeLockState($productId, $code, $request, true);
     }
 
     /**
@@ -38,31 +39,34 @@ class MoleculeLockController extends Controller {
      *
      * @api
      *
+     * @param string $productId The current product's id
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function unlockAction($code, Request $request) {
-        return $this->_changeLockState($code, $request, false);
+    public function unlockAction($productId, $code, Request $request) {
+        return $this->_changeLockState($productId, $code, $request, false);
     }
 
     /**
      * Lock or unlock a molecule.
      *
+     * @param string $productId The current product's id
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      * @param boolean $lock Lock or unlock the molecule
      *
      * @return ApiPayload|Response
      */
-    protected function _changeLockState($code, $request, $lock) {
+    protected function _changeLockState($productId, $code, $request, $lock) {
         $accessControl = new AccessControl();
-        if(!$accessControl->can('lock_molecules')) {
+        if(!\Auth::user()->ACL->can('lock_molecules')) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have access to this resource.');
         }
 
-        $molecule = Molecule::where('code', '=', $code)
+        $molecule = Molecule::allForCurrentProduct()
+                ->where('code', '=', $code)
                 ->get()
                 ->first();
 
