@@ -200,7 +200,7 @@ class Atom extends AppModel {
      */
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
-        $statusId = is_array($statusId) ? $statusId : [$statusId];
+        $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
 
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);

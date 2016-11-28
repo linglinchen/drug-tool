@@ -47,7 +47,7 @@ class Molecule extends AppModel {
         Comment::addSummaries($atoms, $productId);
 
         foreach($atoms as $key => $atom) {
-            $atom->addAssignments();
+            $atom->addAssignments($productId);
             $atom = $atom->toArray();
             unset($atom['xml']);
             $atoms[$key] = $atom;
