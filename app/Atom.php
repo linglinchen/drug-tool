@@ -193,13 +193,14 @@ class Atom extends AppModel {
     /**
      * Build a query to find the latest version of every atom that hasn't been deleted.
      *
-     * @param ?integer $statusId (optional) Only return atoms with this status
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
      * @param ?object $q (optional) Subquery object
      *
      * @return object The constructed query object
      */
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
+        $statusId = is_array($statusId) ? $statusId : [$statusId];
 
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
@@ -208,8 +209,8 @@ class Atom extends AppModel {
                     $q->select(DB::raw('MAX(id)'))
                             ->from($table);
 
-                    if($statusId !== null) {
-                        $q->where('status_id', '=', $statusId);
+                    if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
+                        $q->whereIn('status_id', $statusId);
                     }
 
                     $q->groupBy('entity_id');
