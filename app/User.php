@@ -32,11 +32,12 @@ class User extends Authenticatable {
         $output = [];
 		
         $users = self::all();
-        foreach($users as $user) {
+		foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $output[$user['id']] = $user;
         }
 			
         return $output;
     }
+	
 }
