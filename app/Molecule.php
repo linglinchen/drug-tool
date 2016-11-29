@@ -44,8 +44,8 @@ class Molecule extends AppModel {
      * @param mixed[] $molecule The molecule
      */
     public static function addAtoms($molecule, $productId) {
-        $atoms = Atom::where('molecule_code', '=', $molecule['code'])
-                ->where('product_id', '=', $productId)
+        $atoms = Atom::allForProduct($productId)
+                ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
@@ -147,8 +147,8 @@ class Molecule extends AppModel {
         $codes = is_array($codes) ? $codes : [$codes];
         $codes = array_unique($codes);
         $locks = array_fill_keys($codes, false);
-        $molecules = self::where('locked', '=', true)
-                ->where('product_id', '=', $productId)
+        $molecules = self::allForProduct($productId)
+                ->where('locked', '=', true)
                 ->whereIn('code', $codes)->get();
         foreach($molecules as $molecule) {
             $locks[$molecule->code] = $molecule;
@@ -166,8 +166,8 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getSortOrder($productId, $statusId = null) {
-        $atoms = Atom::where('molecule_code', '=', $this->code)
-                ->where('product_id', '=', $productId)
+        $atoms = Atom::allForProduct($productId)
+                ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
