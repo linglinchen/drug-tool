@@ -224,8 +224,8 @@ class AtomController extends Controller
      * @return ApiPayload|Response
      */
     public function historyAction($productId, $entityId) {
-        $versions = Atom::where('entity_id', '=', $entityId)
-                ->where('product_id', '=', $productId)
+        $versions = Atom::allForCurrentProduct()
+                ->where('entity_id', '=', $entityId)
                 ->orderBy('id', 'ASC')
                 ->get();
 

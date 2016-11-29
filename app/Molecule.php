@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use DB;
+
 use App\AppModel;
 use App\Atom;
 use App\Comment;
+use App\Status;
 
 class Molecule extends AppModel {
     use SoftDeletes;
@@ -61,20 +64,12 @@ class Molecule extends AppModel {
     /**
      * Export the molecule to XML. Takes the LATEST VERSION of each atom that matches the statusId (if passed).
      *
-     * @param integer $productId Limit to this product
-     * @param ?integer $statusId (optional) Only export atoms with this status
-     *
      * @returns string
      */
-    public function export($productId, $statusId = null) {
-        $orderedIds = $this->_getSortOrder($productId, $statusId);
+    public function export($statusId = null) {
+        $orderedIds = $this->_getSortOrder($this->product_id, $statusId);
 
-        $unorderedAtoms = Atom::where('molecule_code', '=', $this->code)
-                ->where('product_id', '=', $productId)
-                ->whereIn('id', function ($q) use ($statusId) {
-                    Atom::buildLatestIDQuery($statusId, $q);
-                })
-                ->get();
+        $unorderedAtoms = $this->_getMyPublishedAtoms();
 
         //postgres doesn't support ORDER BY FIELD, so...
         $atoms = array_flip($orderedIds);
@@ -94,6 +89,42 @@ class Molecule extends AppModel {
         $xml .= "\t" . '</alpha>' . "\n";
 
         return $xml;
+    }
+
+    /**
+     * Gets a list of atoms that are ready for publication.
+     *
+     * @return object[]
+     */
+    protected function _getMyPublishedAtoms() {
+        $atoms = [];
+
+        $publishedStatuses = Status::getReadyForPublicationStatuses($this->product_id);
+        $trashedStatuses = Status::getTrashedStatuses($this->product_id);
+
+        $entityIds = Atom::allForProduct($this->product_id)
+                ->select(DB::raw('DISTINCT entity_id'))
+                ->where('molecule_code', '=', $this->code)
+                ->get()
+                ->pluck('entity_id')
+                ->all();
+        foreach($entityIds as $entityId) {
+            $versions = Atom::allForCurrentProduct()
+                    ->where('entity_id', '=', $entityId)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+            foreach($versions as $version) {
+                if(in_array($version->status_id, $publishedStatuses)) {
+                    $atoms[] = $version;
+                    break;
+                }
+                else if(in_array($version->status_id, $trashedStatuses)) {
+                    break;      //a trashed version takes precedence over previously published versions
+                }
+            }
+        }
+
+        return $atoms;
     }
 
     /**

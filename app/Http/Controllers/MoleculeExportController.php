@@ -23,16 +23,18 @@ class MoleculeExportController extends Controller {
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function getAction($code, Request $request) {
+    public function getAction($productId, $code, Request $request) {
         $statusId = $request->input('statusId');
         $statusId = $statusId === '' ? null : $statusId;
 
-        $molecule = Molecule::where('code', '=', $code)
+        $molecule = Molecule::allForCurrentProduct()
+                ->where('code', '=', $code)
                 ->get()
                 ->first();
 
