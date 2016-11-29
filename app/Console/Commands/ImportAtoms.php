@@ -55,7 +55,7 @@ class ImportAtoms extends Command
     public function handle() {
         $productId = (int)$this->argument('productId');
         if(!$productId || !Product::find($productId)) {
-            throw new Exception('Invalid product ID.');
+            throw new \Exception('Invalid product ID.');
         }
         $this->productId = $productId;
 
@@ -63,8 +63,8 @@ class ImportAtoms extends Command
         $statusCount = Status::allForProduct($productId)
                 ->where('id', '=', $statusId)
                 ->count();
-        if(!$statusId || $statusCount) {
-            throw new Exception('Invalid status ID.');
+        if(!$statusId || !$statusCount) {
+            throw new \Exception('Invalid status ID.');
         }
         $this->statusId = $statusId;
 
@@ -221,7 +221,7 @@ class ImportAtoms extends Command
                 $timestamp = $atom->freshTimestampString();
                 
                 $entityId = Atom::detectAtomIDFromXML($atomString);
-                $entityId === null ? Atom::makeUID() : $entityId;
+                $entityId = $entityId ?: Atom::makeUID();
                 
                 $atomString = Atom::assignXMLIds(trim($atomString));
 
