@@ -7,6 +7,8 @@ use DB;
 
 use App\Atom;
 use App\Molecule;
+use App\Product;
+use App\Status;
 
 /**
  * Imports atoms from XML file(s) in the data/import/atoms directory. Automatically applies tallman tags to text.
@@ -22,14 +24,14 @@ class ImportAtoms extends Command
      *
      * @var string
      */
-    protected $signature = 'import:atoms';
+    protected $signature = 'import:atoms {productId} {statusId}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import atoms from XML file(s) in the data/import/atoms directory. Do not run without importing or adding molecules first.';
+    protected $description = 'Import atoms from XML file(s) in the data/import/atoms directory, and place them into the specified product. Do not run without first importing or adding molecules.';
 
     /**
      * The contents of the molecules table
@@ -51,7 +53,22 @@ class ImportAtoms extends Command
      * @return mixed
      */
     public function handle() {
-        $this->moleculeLookups = Molecule::getLookups();
+        $productId = (int)$this->argument('productId');
+        if(!$productId || !Product::find($productId)) {
+            throw new Exception('Invalid product ID.');
+        }
+        $this->productId = $productId;
+
+        $statusId = (int)$this->argument('statusId');
+        $statusCount = Status::allForProduct($productId)
+                ->where('id', '=', $statusId)
+                ->count();
+        if(!$statusId || $statusCount) {
+            throw new Exception('Invalid status ID.');
+        }
+        $this->statusId = $statusId;
+
+        $this->moleculeLookups = Molecule::getLookups($productId);
 
         $dataPath = base_path() . '/data/import/atoms/';
         $files = scandir($dataPath);
@@ -202,17 +219,22 @@ class ImportAtoms extends Command
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
                 $alphaTitle = strip_tags($title);
                 $timestamp = $atom->freshTimestampString();
+                
                 $entityId = Atom::detectAtomIDFromXML($atomString);
+                $entityId === null ? Atom::makeUID() : $entityId;
+                
+                $atomString = Atom::assignXMLIds(trim($atomString));
 
                 $atomData = [
-                    'entity_id' => $entityId === null ? Atom::makeUID() : $entityId,
+                    'entity_id' => $entityId,
                     'title' => $title,
                     'alpha_title' => $alphaTitle,
                     'molecule_code' => $moleculeCode,
-                    'xml' => Atom::assignXMLIds(trim($atomString)),
+                    'xml' => $atomString,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
-                    'status_id' => 200
+                    'status_id' => $this->statusId,
+                    'product_id' => $this->productId
                 ];
 
                 DB::table('atoms')->insert($atomData);

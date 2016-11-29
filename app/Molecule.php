@@ -21,10 +21,14 @@ class Molecule extends AppModel {
     /*
      * Returns all molecule titles as an associative array.
      * code => title
+     *
+     * @param integer $productId Limit to this product
+     *
+     * @return string[]
      */
-    public static function getLookups() {
+    public static function getLookups($productId) {
     	$output = [];
-    	$molecules = self::all();
+    	$molecules = self::allForProduct($productId);
     	foreach($molecules as $molecule) {
     		$output[$molecule['code']] = $molecule['title'];
     	}
