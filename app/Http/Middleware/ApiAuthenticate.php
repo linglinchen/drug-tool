@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Http\Response;
 
+use App\ApiError;
+
 class ApiAuthenticate {
     /**
      * The guard factory instance.
@@ -35,14 +37,21 @@ class ApiAuthenticate {
     public function handle($request, Closure $next, $guard = null) {
         $unauthorized = $this->auth->guard($guard)->basic();
         if($unauthorized) {
-            return response('Invalid credentials.', Response::HTTP_UNAUTHORIZED);
+            return ApiError::buildResponse(Response::HTTP_UNAUTHORIZED, 'Invalid credentials.');
         }
         
         if(!self::_productIsAccessible()) {
-            return response('You do not have access to this product.', Response::HTTP_FORBIDDEN);
+            return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have access to this product.');
         }
 
-        return $next($request);
+        try {
+            $result = $next($request);
+        }
+        catch(\Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+        }
+
+        return $result;
     }
 
     /**
