@@ -57,6 +57,15 @@ class Atom extends AppModel {
         $this->updateTitle();
         $this->xml = self::assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
+        
+        if(!$this->alpha_title) {
+            throw new \Exception('Missing title.');
+        }
+
+        if($this->_isTitleInUse()) {
+            throw new \Exception('That title is already used by another atom within this product.');
+        }
+
         parent::save($options);
     }
 
@@ -507,5 +516,19 @@ class Atom extends AppModel {
         $moleculeCodes = array_unique($moleculeCodes);
 
         return Molecule::locked($moleculeCodes, $productId);
+    }
+
+    /**
+     * Checks if there are any other atoms in this product that already use this title.
+     *
+     * @return boolean
+     */
+    protected function _isTitleInUse() {
+        $count = self::allForProduct($this->product_id)
+                ->where('entity_id', '<>', $this->entity_id)
+                ->where('alpha_title', 'like', $this->alpha_title)
+                ->count();
+
+        return $count > 0;
     }
 }
