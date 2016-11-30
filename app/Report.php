@@ -581,7 +581,7 @@ class Report extends AppModel {
 	 */
 	protected static function _buildBlankTimeSeries($startTime, $endTime, $stepSize) {
 		$blankSeries = [];
-		for($i = $startTime; $i <= $endTime; $i += $stepSize) {
+		for($i = $startTime; $i < $endTime; $i += $stepSize) {
 			$blankSeries[$i] = [
 				'x' => $i,
 				'y' => 0
