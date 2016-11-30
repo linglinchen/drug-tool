@@ -1,0 +1,80 @@
+new order for atom 1558 57b74358cbf61412648649 darbepoetin (Rx) has been updated!  => 10
+new order for atom 1559 57b74358ccff0612210075 darifenacin has been updated!  => 11
+new order for atom 1560 57b74358cd8fd855291452 darunavir (Rx) has been updated!  => 12
+new order for atom 1561 57b74358d017f449103616 dasatinib (Rx) has been updated!  => 13
+new order for atom 1562 57b74358d1cbc650594346 <emphasis style="tallman">DAUNO</emphasis>rubicin (Rx) has been updated!  => 14
+new order for atom 1563 57b74358d2302840440819 <emphasis style="tallman">DAUNO</emphasis>rubicin citrate liposomal (Rx) has been updated!  => 15
+new order for atom 1564 57b74358d2ab2309141811 DaunoXome has been updated!  => 16
+new order for atom 1589 57b74358ea329431850290 diclofenac epolamine (Rx) has been updated!  => 38
+new order for atom 1590 57b74358ea6e9040820676 diclofenac potassium (Rx) has been updated!  => 39
+new order for atom 1591 57b74358eaaaf287069100 diclofenac sodium (Rx) has been updated!  => 40
+new order for atom 1592 57b74358ec8d9172852536 diclofenac ophthalmic has been updated!  => 41
+new order for atom 1621 57b74359162b7882910733 doxycycline calcium has been updated!  => 73
+new order for atom 1549 57b74358c36b0053269442 dabigatran has been updated!  => 1
+new order for atom 1550 57b74358c48ec817391483 dabrafenib has been updated!  => 2
+new order for atom 1551 57b74358c51c0207465032 dacarbazine (Rx) has been updated!  => 3
+new order for atom 1552 57b74358c62a7300200943 dalbavancin has been updated!  => 4
+new order for atom 1553 57b74358c6e69610900128 dalfampridine (Rx) has been updated!  => 5
+new order for atom 1554 57b74358c79ea708278037 dalteparin (Rx) has been updated!  => 6
+new order for atom 1555 57b74358c8b11151192298 dantrolene (Rx) has been updated!  => 7
+new order for atom 1556 57b74358c9e7a561067477 dapagliflozin has been updated!  => 8
+new order for atom 1557 57b74358caa42042962733 <emphasis style="tallman">DAPTO</emphasis>mycin (Rx) has been updated!  => 9
+new order for atom 1565 57b74358d6590789477372 deferasirox (Rx) has been updated!  => 17
+new order for atom 1566 57b74358d6e2c108094169 degarelix has been updated!  => 18
+new order for atom 1567 57b74358d7c29170475902 delavirdine (Rx) has been updated!  => 19
+new order for atom 1568 57b74358d8ac1909544380 denosumab (Rx) has been updated!  => 20
+new order for atom 1569 57b74358d9c40897336126 desipramine (Rx) has been updated!  => 21
+new order for atom 1570 57b74358dbbb4697221921 desirudin has been updated!  => 22
+new order for atom 1571 57b74358dd050943450856 desloratadine (Rx) has been updated!  => 23
+new order for atom 1572 57b74358dda21473806300 desmopressin (Rx) has been updated!  => 24
+new order for atom 1573 57b74358def44790025136 desonide topical has been updated!  => 25
+new order for atom 1574 57b74358df315378710076 desoximetasone has been updated!  => 26
+new order for atom 1575 57b74358dfd36390613528 desvenlafaxine has been updated!  => 27
+new order for atom 1576 57b74358e0a8b307106242 dexamethasone (Rx) has been updated!  => 28
+new order for atom 1577 57b74358e0ea9572402766 dexamethasone sodium phosphate (Rx) has been updated!  => 29
+new order for atom 1578 57b74358e3481883766905 dexamethasone (ophthalmic) has been updated!  => 30
+new order for atom 1579 57b74358e3d2e541912805 dexlansoprazole (Rx) has been updated!  => 31
+new order for atom 1580 57b74358e4b75992927161 dexmethylphenidate (Rx) has been updated!  => 32
+new order for atom 1581 57b74358e5ccb240923372 dextroamphetamine (Rx) has been updated!  => 33
+new order for atom 1582 57b74358e6ccf357949104 dextromethorphan (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 34
+new order for atom 1583 57b7435904010582795906 diphenhydr<emphasis style="tallman">AMINE</emphasis> (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 52
+new order for atom 1584 57b74359058f8567717647 diphenoxylate/atropine (Rx) has been updated!  => 53
+new order for atom 1585 57b7435905c9b092841038 difenoxin/atropine (Rx) has been updated!  => 54
+new order for atom 1586 57b74358e774d644353856 dextrose (<emphasis style="smallcaps">d</emphasis>-glucose) (Rx) has been updated!  => 35
+new order for atom 1587 57b74358e7c84130359055 diaze<emphasis style="tallman">pam</emphasis> (Rx) has been updated!  => 36
+new order for atom 1588 57b74358e9f40426986133 dibucaine topical has been updated!  => 37
+new order for atom 1593 57b74358ecca0591515945 dicyclomine (Rx) has been updated!  => 42
+new order for atom 1594 57b74358ed181221141411 didanosine (Rx) has been updated!  => 43
+new order for atom 1595 57b74358ee7d4762921188 difluprednate (ophthalmic) has been updated!  => 44
+new order for atom 1596 57b74358ef021622893986 digoxin (Rx) has been updated!  => 45
+new order for atom 1597 57b74358f363e667066713 digoxin immune FAB (ovine) (Rx) has been updated!  => 46
+new order for atom 1598 57b74358f3cb0168380778 diltia<emphasis style="tallman">zem</emphasis> (Rx) has been updated!  => 47
+new order for atom 1599 57b7435901a70418594868 dimenhy<emphasis style="tallman">DRINATE</emphasis> (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 48
+new order for atom 1600 57b7435901e66933748943 Motion Sickness has been updated!  => 49
+new order for atom 1601 57b743590293d819444722 dimethyl fumarate (Rx) has been updated!  => 50
+new order for atom 1602 57b74359031eb458831057 dinoprostone (Rx) has been updated!  => 51
+new order for atom 1603 57b7435906872033795576 dipyridamole (Rx) has been updated!  => 55
+new order for atom 1604 57b743590726d458172448 <emphasis style="tallman">DOBUT</emphasis>amine (Rx) has been updated!  => 56
+new order for atom 1605 57b743590825c265352724 <emphasis style="tallman">DOCE</emphasis>taxel (Rx) has been updated!  => 57
+new order for atom 1606 57b7435909ff8890555901 docosanol topical has been updated!  => 58
+new order for atom 1607 57b743590a3fc403922299 docusate calcium (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 59
+new order for atom 1608 57b743590a7e8982998947 docusate sodium (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 60
+new order for atom 1609 57b743590b28f078293486 dofetilide (Rx) has been updated!  => 61
+new order for atom 1610 57b743590c0ea664452857 dolasetron (Rx) has been updated!  => 62
+new order for atom 1611 57b743590caa8496848299 dolutegravir has been updated!  => 63
+new order for atom 1612 57b743590d3a9505609457 donepezil (Rx) has been updated!  => 64
+new order for atom 1613 57b743590defa214398086 <emphasis style="tallman">DOP</emphasis>amine (Rx) has been updated!  => 65
+new order for atom 1614 57b743590f04a998026733 doripenem (Rx) has been updated!  => 66
+new order for atom 1615 57b7435910381218277126 dorzolamide (ophthalmic) has been updated!  => 67
+new order for atom 1616 57b7435910bf3137672331 doxazosin (Rx) has been updated!  => 68
+new order for atom 1617 57b743591174c795617462 doxepin (Rx) has been updated!  => 69
+new order for atom 1618 57b7435912cf8707557689 <emphasis style="tallman">DOXO</emphasis>rubicin has been updated!  => 70
+new order for atom 1619 57b7435914380597145609 <emphasis style="tallman">DOXO</emphasis>rubicin liposomal has been updated!  => 71
+new order for atom 1620 57b7435915eab317287918 doxycycline (Rx) has been updated!  => 72
+new order for atom 1622 57b7435916678320876388 doxycycline hyclate has been updated!  => 74
+new order for atom 1623 57b7435916a6e734818358 doxycycline monohydrate has been updated!  => 75
+new order for atom 1624 57b7435918cde853825788 doxylamine/pyridoxine has been updated!  => 76
+new order for atom 1625 57b743591939c816169926 dronedarone (Rx) has been updated!  => 77
+new order for atom 1626 57b743591a166311328234 droxidopa has been updated!  => 78
+new order for atom 1627 57b743591a9e3829732788 <emphasis style="tallman">DUL</emphasis>oxetine (Rx) has been updated!  => 79
+new order for atom 1628 57b743591bcfc970998125 dutasteride (Rx) has been updated!  => 80

@@ -1,0 +1,44 @@
+atom 2592 57b743571b0ab974606300 basiliximab (Rx) order remains the same: 3
+atom 2593 57b743571bc3b281010576 beclomethasone (Rx) order remains the same: 4
+atom 2594 57b743571c712931139878 beclomethasone (nasal) order remains the same: 5
+atom 2595 57b743571d1a9554600930 bedaquiline order remains the same: 6
+atom 2596 57b743573db23094117894 busulfan (Rx) order remains the same: 46
+atom 2597 57b743573f466252837945 butorphanol (Rx) order remains the same: 48
+atom 2598 57b743571965f227204751 bacitracin topical order remains the same: 1
+atom 2599 57b743571db73448359246 belatacept order remains the same: 7
+atom 2600 57b743571e8d5546342272 belimumab order remains the same: 8
+atom 2601 57b743571f527826006832 belinostat order remains the same: 9
+atom 2602 57b7435720581842523783 benazepril (Rx) order remains the same: 10
+atom 2603 57b74357217ed522840063 bendamustine (Rx) order remains the same: 11
+atom 2604 57b7435722c7e710148090 benzocaine topical order remains the same: 12
+atom 2605 57b743573efc9522149246 butoconazole vaginal antifungal order remains the same: 47
+atom 2606 57b743572303f483169595 benzonatate (Rx) order remains the same: 13
+atom 2607 57b7435723439183398927 benztropine (Rx) order remains the same: 14
+atom 2608 57b7435724484740055735 bepotastine order remains the same: 15
+atom 2609 57b7435724c4b014648142 beractant (Rx) order remains the same: 16
+atom 2610 57b7435725018376367840 betamethasone (topical) order remains the same: 17
+atom 2611 57b74357253a8068320195 betamethasone dipropionate order remains the same: 18
+atom 2612 57b74357256f7607325895 betamethasone augmented dipropionate order remains the same: 19
+atom 2613 57b7435725a4d662899302 betamethasone valerate order remains the same: 20
+atom 2614 57b74357261b2586273116 betamethasone (augmented) topical order remains the same: 21
+atom 2615 57b743572656c586936213 betaxolol (ophthalmic) order remains the same: 22
+atom 2616 57b7435726d16182291220 bethanechol (Rx) order remains the same: 23
+atom 2617 57b743572779e247993008 bevacizumab (Rx) order remains the same: 24
+atom 2618 57b7435728d3d293404043 bimatoprost (ophthalmic/topical) order remains the same: 25
+atom 2621 57b743572ae98422103784 bisoprolol (Rx) order remains the same: 28
+atom 2622 57b743572c164537631236 bivalirudin (Rx) order remains the same: 29
+atom 2623 57b743572d275385381039 bleomycin (Rx) order remains the same: 30
+atom 2624 57b743572ebe3369402555 boceprevir order remains the same: 31
+atom 2625 57b743573077b543945630 bortezomib (Rx) order remains the same: 32
+atom 2626 57b7435731a0c049899558 bosentan (Rx) order remains the same: 33
+atom 2627 57b7435732709560078064 bosutinib order remains the same: 34
+atom 2628 57b74357332fa937902754 brentuximab order remains the same: 35
+atom 2629 57b743573413d785900470 brimonidine (ophthalmic) order remains the same: 36
+atom 2630 57b7435734ad3100395321 brinzolamide ophthalmic order remains the same: 37
+atom 2631 57b7435734f26522612444 bromfenac (ophthalmic) order remains the same: 38
+atom 2632 57b7435735811447240285 bromocriptine (Rx) order remains the same: 39
+atom 2633 57b7435736924786524399 budesonide (Rx) order remains the same: 40
+atom 2634 57b74357378df095434324 budesonide nasal agent order remains the same: 41
+atom 2635 57b7435737d39065144585 bumetanide (Rx) order remains the same: 42
+atom 2636 57b743573956f450554400 buprenorphine (Rx) order remains the same: 43
+atom 2637 57b7435719be9145166873 baclofen (Rx) order remains the same: 2

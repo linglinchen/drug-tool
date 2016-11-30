@@ -1,0 +1,41 @@
+atom 2335 57b7435c546f8704936557 megestrol (Rx) order remains the same: 17
+atom 2336 57b7435c55e8b550384383 melphalan (Rx) order remains the same: 18
+atom 2326 57b7435c43ed6707552314 Magnesium Salts order remains the same: 3
+atom 2327 57b7435c47368333603451 macitentan order remains the same: 1
+atom 2337 57b7435c57721358885695 memantine (Rx) order remains the same: 19
+atom 2328 57b7435c47deb515212101 mafenide topical order remains the same: 2
+atom 2330 57b7435c49b9f341168582 mannitol (Rx) order remains the same: 11
+atom 2331 57b7435c4b218304137977 maraviroc (Rx) order remains the same: 12
+atom 2332 57b7435c4e369532249316 mebendazole (Rx) order remains the same: 13
+atom 2333 57b7435c50098086702069 mecasermin (Rx) order remains the same: 14
+atom 2317 57b7435c69442994609946 methylergonovine (Rx) order remains the same: 29
+atom 2338 57b7435c585d3175953187 meperidine (Rx) order remains the same: 20
+atom 2339 57b7435c5a4fe436225367 mercaptopurine (6-MP) (Rx) order remains the same: 21
+atom 2340 57b7435c5b822345105063 meropenem (Rx) order remains the same: 22
+atom 2341 57b7435c5d60d131377962 mesalamine, 5-ASA (Rx) order remains the same: 23
+atom 2342 57b7435c5fce9678980821 methadone (Rx) order remains the same: 25
+atom 2343 57b7435c636bd179757052 methotrexate (Rx) order remains the same: 27
+atom 2344 57b7435c675d1319333179 methyldopa/methyldopate (Rx) order remains the same: 28
+atom 2345 57b7435c6a1cd353940299 methylnaltrexone (Rx) order remains the same: 30
+atom 2346 57b7435c6affd869224279 methylphenidate (Rx) order remains the same: 31
+atom 2347 57b7435c77561421088826 metipranolol ophthalmic order remains the same: 33
+atom 2348 57b7435c77ae8480789791 metoclopramide (Rx) order remains the same: 34
+atom 2349 57b7435c7d153934859881 metoprolol (Rx) order remains the same: 36
+atom 2350 57b7435c863c0955865812 micafungin (Rx) order remains the same: 39
+atom 2351 57b7435c88368115232276 miconazole order remains the same: 40
+atom 2352 57b7435c88cb4323644673 miconazole nitrate order remains the same: 41
+atom 2353 57b7435c8b018387540796 midazolam (Rx) order remains the same: 42
+atom 2354 57b7435c8d5c0660196087 miglitol (Rx) order remains the same: 43
+atom 2355 57b7435c8f221792750423 milrinone (Rx) order remains the same: 44
+atom 2356 57b7435c90a7a726855207 minocycline (Rx) order remains the same: 45
+atom 2358 57b7435c95be0127853276 mipomersen order remains the same: 47
+atom 2359 57b7435c96f83588459663 mirabegron order remains the same: 48
+atom 2360 57b7435c9893c657577429 mirtazapine (Rx) order remains the same: 49
+atom 2361 57b7435ca0e18749720674 modafinil (Rx) order remains the same: 53
+atom 2362 57b7435ca1fe4613473370 moexipril (Rx) order remains the same: 54
+atom 2363 57b7435ca328c490465542 montelukast (Rx) order remains the same: 55
+atom 2364 57b7435ca445c496702301 morphine (Rx) order remains the same: 56
+atom 2365 57b7435ca9078449645759 moxifloxacin (Rx) order remains the same: 57
+atom 2366 57b7435caac9d125530852 moxifloxacin (ophthalmic) order remains the same: 58
+atom 2367 57b7435cab803685098378 mupirocin (topical, nasal) order remains the same: 59
+atom 2368 57b7435cac77a062343704 mycophenolate mofetil (Rx) order remains the same: 60

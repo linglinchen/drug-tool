@@ -1,0 +1,14 @@
+atom 4 57b74355b3e5b408603838 cangrelor (Rx) not found in XML: 
+atom 5 57b74355b4984721077503 ceritinib (Rx) not found in XML: 
+atom 222 57b743582e451372321386 CISplatin (Rx) not found in XML: 
+atom 2021 57b74357d8ecd712142625 Cephalosporins?1st Generation not found in XML: 45
+atom 2022 57b74357dba86662579994 Cephalosporins?2nd Generation not found in XML: 49
+atom 2023 57b74357df70d306935993 Cephalosporins?3rd/4th Generation not found in XML: 55
+atom 2026 57b74358032f5525063227 calcitriol vitamin D3 (Rx) not found in XML: 2
+atom 2027 57b7435804cdb474930363 calcium carbonate (po-otc) not found in XML: 3
+atom 2028 57b74358051b0291072904 calcium acetate (otc) not found in XML: 4
+atom 2059 57b743581d7a4305451170 cetirizine (Rx, otc) not found in XML: 67
+atom 2063 57b74358228b2201780636 chlorpheniramine (otc, Rx) not found in XML: 72
+atom 2067 57b743582857b768738332 cimetidine (otc, Rx) not found in XML: 77
+atom 2088 57b743584f054130898767 cyanocobalamin (vit?B12) (OTC, Rx) not found in XML: 140
+atom 2089 57b743584f510291663731 hydroxocobalamin (otc, Rx) not found in XML: 141

@@ -1,0 +1,866 @@
+a	1	abacavir (Rx)
+a	2	abatacept (Rx)
+a	3	abiraterone
+a	4	acamprosate
+a	5	acarbose (Rx)
+a	6	acetaminophen (OTC) (Paracetamol)
+a	8	acetylcholine ophthalmic
+a	9	acetylcysteine (Rx)
+a	10	aclidinium
+a	11	acyclovir (Rx)
+a	12	adalimumab (Rx)
+a	13	adefovir (Rx)
+a	14	adenosine (Rx)
+a	15	ado-trastuzumab
+a	16	afatinib
+a	17	aflibercept
+a	18	albumin, human 5% (Rx)
+a	19	albumin, human 25%
+a	20	albuterol (Rx)
+a	21	alemtuzumab
+a	22	alendronate (Rx)
+a	23	alfuzosin (Rx)
+a	24	aliskiren (Rx)
+a	25	allopurinol (Rx)
+a	26	almotriptan (Rx)
+a	27	alogliptin
+a	28	alosetron
+a	30	alprostadil (Rx)
+a	31	alteplase (Rx)
+a	32	aluminum hydroxide (OTC)
+a	33	alvimopan
+a	34	amantadine (Rx)
+a	35	ambrisentan (Rx)
+a	36	amikacin (Rx)
+a	38	amino acids
+a	39	amino acid infusions (crystalline)
+a	40	amino acid infusions/dextrose
+a	41	aminosyn with electrolytes
+a	42	amino acid infusions/electrolytes/dextrose
+a	43	amino acid infusions (hepatic failure)
+a	44	amino acid infusions (high metabolic stress)
+a	45	amino acid infusions (renal failure)
+a	46	amiodarone (Rx)
+a	47	amitriptyline (Rx)
+a	49	amoxicillin (Rx)
+a	50	amoxicillin/clavulanate (Rx)
+a	51	amphotericin B lipid complex (ABLC)
+a	52	amphotericin B liposomal (LAmB)
+a	53	ampicillin (Rx)
+a	54	ampicillin, sulbactam (Rx)
+a	55	anakinra (Rx)
+a	56	anastrozole (Rx)
+a	57	anidulafungin (Rx)
+a	58	antihemophilic factor Fc fusion protein
+a	59	antithymocyte
+a	60	apixaban
+a	61	apomorphine
+a	62	apraclonidine ophthalmic
+a	63	apremilast
+a	64	aprepitant (Rx)
+a	65	fosaprepitant
+a	66	arformoterol (Rx)
+a	67	argatroban (Rx)
+a	69	armodafinil (Rx)
+a	70	asenapine (Rx)
+a	71	asparaginase Erwinia chrysanthemi
+a	72	aspirin (otc)
+a	73	atazanavir (Rx)
+a	74	atenolol (Rx)
+a	75	atomoxetine (Rx)
+a	76	atorvastatin (Rx)
+a	77	atovaquone (Rx)
+a	78	atovaquone/proguanil
+a	79	atracurium (Rx)
+a	80	atropine (Rx)
+a	81	atropine ophthalmic
+a	82	avanafil
+a	83	axitinib
+a	86	azelaic acid
+a	87	azelastine (ophthalmic)
+a	88	azelastine nasal agent
+a	89	azilsartan
+a	90	azithromycin (Rx)
+a	91	azithromycin ophthalmic
+a	92	aztreonam (Rx)
+b	1	bacitracin topical
+b	2	baclofen (Rx)
+b	3	basiliximab (Rx)
+b	4	beclomethasone (Rx)
+b	5	beclomethasone (nasal)
+b	6	bedaquiline
+b	7	belatacept
+b	8	belimumab
+b	9	belinostat
+b	10	benazepril (Rx)
+b	11	bendamustine (Rx)
+b	12	benzocaine topical
+b	13	benzonatate (Rx)
+b	14	benztropine (Rx)
+b	15	bepotastine
+b	16	beractant (Rx)
+b	17	betamethasone (topical)
+b	18	betamethasone dipropionate
+b	19	betamethasone augmented dipropionate
+b	20	betamethasone valerate
+b	21	betamethasone (augmented) topical
+b	22	betaxolol (ophthalmic)
+b	23	bethanechol (Rx)
+b	24	bevacizumab (Rx)
+b	25	bimatoprost (ophthalmic/topical)
+b	26	bisacodyl (Rx, otc)
+b	27	bismuth subsalicylate (otc)
+b	28	bisoprolol (Rx)
+b	29	bivalirudin (Rx)
+b	30	bleomycin (Rx)
+b	31	boceprevir
+b	32	bortezomib (Rx)
+b	33	bosentan (Rx)
+b	34	bosutinib
+b	35	brentuximab
+b	36	brimonidine (ophthalmic)
+b	37	brinzolamide ophthalmic
+b	38	bromfenac (ophthalmic)
+b	39	bromocriptine (Rx)
+b	40	budesonide (Rx)
+b	41	budesonide nasal agent
+b	42	bumetanide (Rx)
+b	43	buprenorphine (Rx)
+b	46	busulfan (Rx)
+b	47	butoconazole vaginal antifungal
+b	48	butorphanol (Rx)
+c	1	calcitonin (salmon) (Rx)
+c	2	calcitriol vitamin D3 (Rx)
+c	3	calcium carbonate (po-otc)
+c	4	calcium acetate (otc)
+c	5	Calcium Salts
+c	10	canagliflozin
+c	11	candesartan (Rx)
+c	12	capecitabine (Rx)
+c	13	captopril (Rx)
+c	14	carbachol ophthalmic
+c	17	carboprost (Rx)
+c	18	carfilzomib
+c	19	carglumic acid
+c	20	carisoprodol (Rx)
+c	21	carmustine (Rx)
+c	22	carteolol (ophthalmic)
+c	23	carvedilol (Rx)
+c	24	caspofungin (Rx)
+c	25	cefaclor
+c	26	cefadroxil
+c	28	cefdinir
+c	29	cefditoren pivoxil
+c	30	cefepime
+c	31	cefixime
+c	32	cefotaxime
+c	33	cefoTEtan
+c	35	cefpodoxime
+c	36	cefprozil
+c	38	ceftibuten
+c	39	ceftizoxime
+c	41	cefuroxime
+c	42	ceftaroline (Rx)
+c	43	celecoxib (Rx)
+c	44	cephalexin
+c	45	Cephalosporins?1st Generation
+c	49	Cephalosporins?2nd Generation
+c	55	Cephalosporins?3rd/4th Generation
+c	65	cephradine
+c	66	certolizumab pegol (Rx)
+c	67	cetirizine (Rx, otc)
+c	68	cetrorelix (Rx)
+c	69	cetuximab (Rx)
+c	71	chloroquine (Rx)
+c	72	chlorpheniramine (otc, Rx)
+c	74	cholestyramine (Rx)
+c	75	cidofovir (Rx)
+c	76	cilostazol (Rx)
+c	77	cimetidine (otc, Rx)
+c	78	cinacalcet (Rx)
+c	79	ciprofloxacin (Rx)
+c	80	ciprofloxacin (ophthalmic)
+c	81	cisatracurium
+c	83	citalopram (Rx)
+c	84	clarithromycin (Rx)
+c	85	clevidipine (Rx)
+c	86	clindamycin HCI (Rx)
+c	87	clindamycin palmitate (Rx)
+c	88	clindamycin phosphate (Rx)
+c	89	clindamycin (topical, vaginal)
+c	90	clobetasol
+c	95	clopidogrel (Rx)
+c	96	clotrimazole (topical, vaginal, oral)
+c	98	codeine (Rx)
+c	99	colchicine (Rx)
+c	100	colesevelam (Rx)
+c	101	conivaptan (Rx)
+c	102	Contraceptives, Hormonal
+c	137	crizotinib
+c	138	crofelemer
+c	139	crotamiton
+c	140	cyanocobalamin (vit?B12) (OTC, Rx)
+c	141	hydroxocobalamin (otc, Rx)
+c	142	cyclobenzaprine (Rx)
+c	143	cyclopentolate ophthalmic
+c	144	cyclophosphamide (Rx)
+c	146	cytarabine (Rx)
+c	147	cytarabine liposomal (Rx)
+d	1	dabigatran
+d	2	dabrafenib
+d	3	dacarbazine (Rx)
+d	4	dalbavancin
+d	5	dalfampridine (Rx)
+d	6	dalteparin (Rx)
+d	7	dantrolene (Rx)
+d	8	dapagliflozin
+d	10	darbepoetin (Rx)
+d	11	darifenacin
+d	12	darunavir (Rx)
+d	13	dasatinib (Rx)
+d	16	DaunoXome
+d	17	deferasirox (Rx)
+d	18	degarelix
+d	19	delavirdine (Rx)
+d	20	denosumab (Rx)
+d	21	desipramine (Rx)
+d	22	desirudin
+d	23	desloratadine (Rx)
+d	24	desmopressin (Rx)
+d	25	desonide topical
+d	26	desoximetasone
+d	27	desvenlafaxine
+d	28	dexamethasone (Rx)
+d	29	dexamethasone sodium phosphate (Rx)
+d	30	dexamethasone (ophthalmic)
+d	31	dexlansoprazole (Rx)
+d	32	dexmethylphenidate (Rx)
+d	33	dextroamphetamine (Rx)
+d	34	dextromethorphan (otc)
+d	35	dextrose (d-glucose) (Rx)
+d	37	dibucaine topical
+d	38	diclofenac epolamine (Rx)
+d	39	diclofenac potassium (Rx)
+d	40	diclofenac sodium (Rx)
+d	41	diclofenac ophthalmic
+d	42	dicyclomine (Rx)
+d	43	didanosine (Rx)
+d	44	difluprednate (ophthalmic)
+d	45	digoxin (Rx)
+d	46	digoxin immune FAB (ovine) (Rx)
+d	49	Motion Sickness
+d	50	dimethyl fumarate (Rx)
+d	51	dinoprostone (Rx)
+d	53	diphenoxylate/atropine (Rx)
+d	54	difenoxin/atropine (Rx)
+d	55	dipyridamole (Rx)
+d	58	docosanol topical
+d	59	docusate calcium (otc)
+d	60	docusate sodium (otc)
+d	61	dofetilide (Rx)
+d	62	dolasetron (Rx)
+d	63	dolutegravir
+d	64	donepezil (Rx)
+d	66	doripenem (Rx)
+d	67	dorzolamide (ophthalmic)
+d	68	doxazosin (Rx)
+d	69	doxepin (Rx)
+d	72	doxycycline (Rx)
+d	73	doxycycline calcium
+d	74	doxycycline hyclate
+d	75	doxycycline monohydrate
+d	76	doxylamine/pyridoxine
+d	77	dronedarone (Rx)
+d	78	droxidopa
+d	80	dutasteride (Rx)
+e	1	ecallantide
+e	2	econazole
+e	3	econazole topical
+e	4	edetate calcium disodium (Rx)
+e	5	efavirenz (Rx)
+e	6	efinaconazole topical
+e	7	eletriptan (Rx)
+e	8	elvitegravir/cobicistat/emtricitabine/tenofovir
+e	9	eltrombopag
+e	10	emedastine ophthalmic
+e	11	empagliflozin
+e	12	emtricitabine (Rx)
+e	13	enalapril/enalaprilat (Rx)
+e	14	enfuvirtide (Rx)
+e	15	enoxaparin (Rx)
+e	16	entacapone (Rx)
+e	17	entecavir (Rx)
+e	18	enzalutamide
+e	19	epinastine (ophthalmic)
+e	24	eplerenone (Rx)
+e	25	epoetin alfa (Rx)
+e	26	eprosartan (Rx)
+e	27	eptifibatide (Rx)
+e	29	erlotinib (Rx)
+e	30	ertapenem (Rx)
+e	31	erythromycin (ophthalmic)
+e	32	erythromycin base (Rx)
+e	33	erythromycin ethylsuccinate (Rx)
+e	34	erythromycin lactobionate (Rx)
+e	35	erythromycin stearate (Rx)
+e	36	erythromycin (topical)
+e	37	escitalopram (Rx)
+e	38	eslicarbazepine
+e	39	esmolol (Rx)
+e	40	esomeprazole (Rx)
+e	41	estradiol (Rx)
+e	42	estradiol cypionate (Rx)
+e	43	estradiol gel (Rx)
+e	44	estradiol spray (Rx)
+e	45	estradiol topical emulsion (Rx)
+e	46	estradiol valerate (Rx)
+e	47	estradiol transdermal system (Rx)
+e	48	estradiol vaginal tablet (Rx)
+e	49	estradiol vaginal ring (Rx)
+e	50	estrogens, conjugated (Rx)
+e	51	estrogens, conjugated synthetic B (Rx)
+e	52	eszopiclone (Rx)
+e	53	etanercept (Rx)
+e	54	ethambutol (Rx)
+e	55	etodolac
+e	56	etoposide (Rx)
+e	57	etoposide phosphate (Rx)
+e	58	etravirine (Rx)
+e	59	everolimus (Rx)
+e	60	exemestane (Rx)
+e	61	exenatide (Rx)
+e	62	ezetimibe (Rx)
+e	63	ezogabine
+f	1	factor IX complex (human) (Rx)
+f	2	factor IX Fc fusion protein, recombinant
+f	3	famciclovir (Rx)
+f	4	famotidine (otc, Rx)
+f	5	fat emulsions (Rx)
+f	6	febuxostat (Rx)
+f	7	felodipine (Rx)
+f	8	fenofibrate (Rx)
+f	16	ferric carboxymaltose
+f	17	ferrous fumarate (Rx)
+f	18	ferrous gluconate (Rx)
+f	19	ferrous sulfate (Rx)
+f	20	ferrous sulfate, dried (Rx)
+f	21	carbonyl iron (otc)
+f	22	iron polysaccharide (otc)
+f	23	fesoterodine (Rx)
+f	24	fexofenadine (Rx, otc)
+f	25	fidaxomicin
+f	26	filgrastim (Rx)
+f	27	finasteride (Rx)
+f	28	fingolimod (Rx)
+f	29	flecainide (Rx)
+f	30	fluconazole (Rx)
+f	31	fludarabine (Rx)
+f	32	fludrocortisone (Rx)
+f	33	flumazenil (Rx)
+f	34	flunisolide nasal agent
+f	35	fluocinolone topical
+f	36	fluorometholone ophthalmic
+f	37	fluorouracil (Rx)
+f	41	flurandrenolide topical
+f	42	flurbiprofen ophthalmic
+f	43	flutamide (Rx)
+f	44	fluticasone (Rx)
+f	45	fluticasone (topical)
+f	46	fluticasone/salmeterol
+f	47	fluvastatin (Rx)
+f	49	folic acid (vit B9) (otc)
+f	50	fondaparinux (Rx)
+f	51	formoterol (Rx)
+f	52	fosamprenavir (Rx)
+f	53	foscarnet (Rx)
+f	54	fosinopril (Rx)
+f	55	fosphenytoin (Rx)
+f	56	frovatriptan (Rx)
+f	57	fulvestrant (Rx)
+g	1	gabapentin (Rx)
+g	2	galantamine (Rx)
+g	3	ganciclovir (Rx)
+g	4	ganciclovir ophthalmic
+g	5	gatifloxacin
+g	6	gemcitabine (Rx)
+g	7	gemfibrozil (Rx)
+g	8	gemifloxacin (Rx)
+g	9	gentamicin (Rx)
+g	10	gentamicin (ophthalmic)
+g	11	gentamicin (topical)
+g	12	glatiramer (Rx)
+g	13	glimepiride (Rx)
+g	15	glucagon
+g	16	glucarpidase
+g	18	golimumab (Rx)
+g	19	goserelin (Rx)
+g	20	granisetron (Rx)
+h	1	halcinonide topical
+h	2	haloperidol (Rx)
+h	3	haloperidol decanoate (Rx)
+h	4	haloperidol lactate (Rx)
+h	5	heparin (Rx)
+h	6	hepatitis B immune globulin (HBIG) (Rx)
+h	7	homatropine ophthalmic
+h	13	hydrocortisone (Rx)
+h	14	hydrocortisone acetate (Rx)
+h	15	hydrocortisone sodium succinate (Rx)
+h	16	hydrocortisone nasal
+h	17	hydrocortisone (topical)
+h	18	hydrocortisone acetate
+h	19	hydrocortisone butyrate
+h	20	hydrocortisone probutate
+h	21	hydrocortisone valerate
+h	23	hydroxychloroquine (Rx)
+h	24	hydroxyurea (Rx)
+h	26	hyoscyamine (Rx)
+i	1	ibandronate (Rx)
+i	2	ibrutinib
+i	3	ibuprofen (otc, Rx)
+i	4	ibuprofen lysine (Rx)
+i	5	ibutilide (Rx)
+i	6	icosapent
+i	8	idelalisib
+i	9	ifosfamide (Rx)
+i	10	iloperidone (Rx)
+i	11	imatinib (Rx)
+i	12	imipenem/cilastatin (Rx)
+i	13	imipramine (Rx)
+i	14	immune globulin IM (IMIG/IGIM) (Rx)
+i	15	immune globulin IV (IGIV, IVIG) (Rx)
+i	16	immune globulin SC (SCIG/IGSC)
+i	17	indacaterol
+i	18	indapamide (Rx)
+i	19	indinavir (Rx)
+i	20	indomethacin (Rx)
+i	22	insulin, inhaled
+i	23	Insulins
+i	41	interferon alfacon-1 (Rx)
+i	42	interferon beta-1a (Rx)
+i	43	interferon beta-1b (Rx)
+i	44	interferon gamma-1b (Rx)
+i	45	ipilimumab
+i	46	ipratropium (Rx)
+i	47	irbesartan (Rx)
+i	48	irinotecan (Rx)
+i	49	iron dextran (Rx)
+i	50	iron sucrose (Rx)
+i	51	isoniazid (Rx)
+i	52	isosorbide dinitrate (Rx)
+i	53	isosorbide mononitrate (Rx)
+i	55	itraconazole (Rx)
+i	56	ivacaftor
+i	57	ixabepilone (Rx)
+k	1	ketoconazole (Rx)
+k	2	ketoconazole (topical)
+k	3	ketoprofen (otc, Rx)
+k	4	ketorolac (ophthalmic)
+k	5	ketorolac (systemic, nasal) (Rx)
+k	6	ketotifen (ophthalmic)
+l	1	labetalol (Rx)
+l	2	lacosamide (Rx)
+l	3	lactulose (Rx)
+l	6	lansoprazole (Rx, otc)
+l	7	lanthanum (Rx)
+l	8	lapatinib (Rx)
+l	9	latanoprost (ophthalmic)
+l	10	ledipasvir/sofosbuvir
+l	11	leflunomide (Rx)
+l	12	letrozole (Rx)
+l	13	leucovorin (Rx)
+l	14	leuprolide (Rx)
+l	15	levalbuterol (Rx)
+l	17	levobetaxolol ophthalmic
+l	18	levobunolol (ophthalmic)
+l	19	levocabastine ophthalmic
+l	20	levocetirizine (Rx)
+l	21	levodopa-carbidopa (Rx)
+l	24	levomilnacipran
+l	25	levothyroxine (T4) (Rx)
+l	26	lidocaine (parenteral) (Rx)
+l	27	lidocaine ophthalmic
+l	28	lidocaine topical
+l	29	linaclotide
+l	30	linagliptin
+l	31	lindane (Rx)
+l	32	linezolid (Rx)
+l	33	liothyronine (T3) (Rx)
+l	34	liotrix (Rx)
+l	35	liraglutide (Rx)
+l	36	lisdexamfetamine (Rx)
+l	37	lisinopril (Rx)
+l	38	lithium (Rx)
+l	39	lodoxamide ophthalmic
+l	40	loperamide (otc, Rx)
+l	41	lopinavir/ritonavir
+l	42	loratadine (otc, Rx)
+l	44	lorcaserin
+l	45	losartan
+l	46	loteprednol ophthalmic
+l	47	lovastatin (Rx)
+l	48	loxapine (Rx)
+l	49	lubiprostone (Rx)
+l	50	lucinactant
+l	51	luliconazole topical
+l	52	lurasidone (Rx)
+l	53	lymphocyte immune globulin (anti-thymocyte, equine) (Rx)
+m	1	macitentan
+m	2	mafenide topical
+m	3	Magnesium Salts
+m	10	magnesium sulfate (otc, Rx)
+m	11	mannitol (Rx)
+m	12	maraviroc (Rx)
+m	13	mebendazole (Rx)
+m	14	mecasermin (Rx)
+m	15	meclizine (otc, Rx)
+m	17	megestrol (Rx)
+m	18	melphalan (Rx)
+m	19	memantine (Rx)
+m	20	meperidine (Rx)
+m	21	mercaptopurine (6-MP) (Rx)
+m	22	meropenem (Rx)
+m	23	mesalamine, 5-ASA (Rx)
+m	25	methadone (Rx)
+m	27	methotrexate (Rx)
+m	28	methyldopa/methyldopate (Rx)
+m	29	methylergonovine (Rx)
+m	30	methylnaltrexone (Rx)
+m	31	methylphenidate (Rx)
+m	33	metipranolol ophthalmic
+m	34	metoclopramide (Rx)
+m	36	metoprolol (Rx)
+m	39	micafungin (Rx)
+m	40	miconazole
+m	41	miconazole nitrate
+m	42	midazolam (Rx)
+m	43	miglitol (Rx)
+m	44	milrinone (Rx)
+m	45	minocycline (Rx)
+m	46	minoxidil (Rx, otc)
+m	47	mipomersen
+m	48	mirabegron
+m	49	mirtazapine (Rx)
+m	53	modafinil (Rx)
+m	54	moexipril (Rx)
+m	55	montelukast (Rx)
+m	56	morphine (Rx)
+m	57	moxifloxacin (Rx)
+m	58	moxifloxacin (ophthalmic)
+m	59	mupirocin (topical, nasal)
+m	60	mycophenolate mofetil (Rx)
+n	1	nabumetone (Rx)
+n	2	nadolol (Rx)
+n	3	nafcillin (Rx)
+n	4	nalbuphine (Rx)
+n	5	naloxone (Rx)
+n	6	naltrexone (Rx)
+n	7	naphazoline (ophthalmic)
+n	8	naproxen (Rx, otc)
+n	9	naratriptan (Rx)
+n	10	natalizumab (Rx)
+n	11	natamycin ophthalmic
+n	12	nebivolol (Rx)
+n	13	nelfinavir (Rx)
+n	14	neomycin (Rx)
+n	15	nepafenac ophthalmic
+n	16	nesiritide (Rx)
+n	17	nevirapine (Rx)
+n	18	niacin (otc, Rx)
+n	19	niacinamide (otc, Rx)
+n	21	nicotine
+n	22	nicotine chewing gum
+n	23	nicotine inhaler (otc, Rx)
+n	24	nicotine lozenge (otc)
+n	25	nicotine nasal spray (Rx)
+n	26	nicotine transdermal (otc, Rx)
+n	28	nilotinib (Rx)
+n	29	nisoldipine (Rx)
+n	30	nitazoxanide (Rx)
+n	31	nitrofurantoin (Rx)
+n	32	nitroglycerin (Rx)
+n	33	extended release caps (Rx)
+n	34	topical ointment (Rx)
+n	35	rectal ointment
+n	36	SL (Rx)
+n	37	translingual spray (Rx)
+n	38	transdermal (Rx)
+n	39	nitroprusside (Rx)
+n	40	nizatidine (otc, Rx)
+n	41	norepinephrine (Rx)
+n	42	norethindrone (Rx)
+n	43	nortriptyline (Rx)
+n	44	nystatin (Rx)
+n	45	nystatin topical
+o	1	obinutuzumab
+o	2	octreotide (Rx)
+o	3	ofloxacin (Rx)
+o	4	ofloxacin ophthalmic
+o	6	olaparib
+o	7	olmesartan (Rx)
+o	8	olopatadine nasal agent
+o	9	olopatadine ophthalmic
+o	10	olsalazine (Rx)
+o	11	omacetaxine
+o	12	omalizumab (Rx)
+o	13	omeprazole (otc, Rx)
+o	14	ondansetron (Rx)
+o	15	oritavancin
+o	16	orlistat (Rx, otc)
+o	17	oseltamivir (Rx)
+o	18	oxaliplatin (Rx)
+o	19	oxazepam (Rx)
+o	21	oxybutynin (Rx, otc)
+o	26	oxymetazoline nasal agent
+o	27	oxymetazoline ophthalmic
+o	29	oxytocin (Rx)
+p	3	palbociclib
+p	4	paliperidone (Rx)
+p	5	palonosetron (Rx)
+p	6	pamidronate (Rx)
+p	7	pancrelipase (Rx)
+p	8	pancuronium (Rx)
+p	9	panitumumab (Rx)
+p	10	pantoprazole (Rx)
+p	11	paricalcitol (Rx)
+p	14	pegfilgrastim (Rx)
+p	15	peginterferon alfa-2a (Rx)
+p	16	peginterferon alfa-2b (Rx)
+p	17	pegloticase (Rx)
+p	19	pembrolizumab
+p	20	penciclovir topical
+p	21	Penicillins
+p	26	pentamidine (Rx)
+p	27	pentazocine (Rx)
+p	28	peramivir
+p	29	perindopril (Rx)
+p	30	pertuzumab
+p	31	phentolamine (Rx)
+p	32	phenylephrine nasal agent
+p	33	phenylephrine ophthalmic
+p	34	phenytoin (Rx)
+p	35	phosphate/biphosphate (otc)
+p	36	physostigmine ophthalmic
+p	37	phytonadione (Rx)
+p	38	pilocarpine ophthalmic
+p	39	pimecrolimus topical
+p	40	pioglitazone (Rx)
+p	41	piperacillin/tazobactam (Rx)
+p	42	pirbuterol (Rx)
+p	43	pirfenidone
+p	44	pitavastatin (Rx)
+p	45	plasma protein fraction (Rx)
+p	46	plerixafor (Rx)
+p	47	pomalidomide
+p	48	posaconazole (Rx)
+p	49	potassium acetate
+p	50	potassium bicarbonate (otc, Rx)
+p	51	potassium bicarbonate and potassium chloride (otc, Rx)
+p	52	potassium bicarbonate and potassium citrate (otc, Rx)
+p	53	potassium chloride (otc, Rx)
+p	54	potassium gluconate (otc, Rx)
+p	55	potassium iodide (Rx)
+p	56	pramipexole (Rx)
+p	57	pramlintide (Rx)
+p	58	pramoxine topical
+p	59	prasugrel (Rx)
+p	60	pravastatin (Rx)
+p	61	prazosin (Rx)
+p	65	pregabalin (Rx)
+p	66	primaquine (Rx)
+p	67	primidone (Rx)
+p	68	probenecid (Rx)
+p	69	procainamide (Rx)
+p	70	procarbazine (Rx)
+p	71	prochlorperazine (Rx)
+p	72	progesterone (Rx)
+p	73	promethazine (Rx)
+p	74	propafenone (Rx)
+p	75	proparacaine ophthalmic
+p	76	propofol (Rx)
+p	77	propranolol (Rx)
+p	78	propylthiouracil (Rx)
+p	79	protamine (Rx)
+p	80	pseudoephedrine (otc, Rx)
+p	81	psyllium (otc, Rx)
+p	82	pyridostigmine (Rx)
+p	83	pyridoxine (vit B6) (Rx, otc)
+p	84	pyrimethamine (Rx)
+q	2	quinapril (Rx)
+r	2	radioactive iodine (sodium iodide) 131I (Rx)
+r	3	raloxifene (Rx)
+r	4	raltegravir (Rx)
+r	5	ramelteon (Rx)
+r	6	ramipril (Rx)
+r	7	ranibizumab (Rx)
+r	9	ranolazine (Rx)
+r	10	rasagiline (Rx)
+r	11	rasburicase (Rx)
+r	12	regorafenib
+r	13	remifentanil (Rx)
+r	14	repaglinide (Rx)
+r	15	retapamulin (topical)
+r	16	Rho(D) immune globulin standard dose IM?(Rx)
+r	17	Rho(D) immune globulin microdose IM (Rx)
+r	18	Rho(D) immune globulin IV (Rx)
+r	19	riboflavin (vit B2) (otc)
+r	20	rifabutin (Rx)
+r	22	rifapentine (Rx)
+r	24	rilpivirine
+r	25	riluzole (Rx)
+r	26	rimexolone ophthalmic
+r	27	riociguat
+r	28	risedronate (Rx)
+r	30	ritonavir (Rx)
+r	32	rivaroxaban
+r	33	rivastigmine (Rx)
+r	34	rizatriptan (Rx)
+r	35	roflumilast
+r	38	rosiglitazone (Rx)
+r	39	rosuvastatin (Rx)
+r	40	rufinamide (Rx)
+s	1	salicylic acid topical
+s	2	salmeterol (Rx)
+s	3	sargramostim (GM-CSF) (Rx)
+s	5	scopolamine (Rx)
+s	6	selegiline (Rx)
+s	7	selenium topical
+s	8	sertraline (Rx)
+s	9	sildenafil (Rx)
+s	10	silodosin (Rx)
+s	11	silver nitrate 1% ophthalmic
+s	12	silver nitrate 1% sulfacetamide sodium ophthalmic
+s	14	simeprevir
+s	15	simethicone (otc, Rx)
+s	16	simvastatin (Rx)
+s	17	sirolimus (Rx)
+s	19	sodium bicarbonate (Rx, otc)
+s	20	sodium polystyrene sulfonate (Rx)
+s	21	sofosbuvir
+s	22	solifenacin (Rx)
+s	23	somatropin (Rx)
+s	24	sotalol (Rx)
+s	25	spironolactone (Rx)
+s	26	stavudine (d4T) (Rx)
+s	27	succinylcholine (Rx)
+s	28	sucralfate (Rx)
+s	29	sulfamethoxazole-trimethoprim (Rx)
+s	33	suvorexant
+t	1	tacrolimus (Rx) (po, iv)
+t	2	tacrolimus (topical) (Rx)
+t	3	tadalafil (Rx)
+t	4	tamoxifen (Rx)
+t	5	tamsulosin (Rx)
+t	6	tapentadol (Rx)
+t	7	tasimelteon
+t	8	tavaborole topical
+t	9	tbo-filgrastim
+t	10	teduglutide
+t	11	telaprevir
+t	12	telavancin (Rx)
+t	13	telbivudine (Rx)
+t	14	telmisartan (Rx)
+t	15	temazepam (Rx)
+t	16	temozolomide (Rx)
+t	17	temsirolimus (Rx)
+t	18	tenecteplase (TNK-tPA) (Rx)
+t	19	tenofovir (Rx)
+t	20	terazosin (Rx)
+t	21	terbinafine oral (Rx)
+t	22	terbinafine topical
+t	23	terbutaline (Rx)
+t	24	terconazole vaginal antifungal
+t	25	teriflunomide
+t	26	teriparatide (Rx)
+t	27	tesamorelin
+t	28	testosterone cypionate (Rx)
+t	29	testosterone enanthate (Rx)
+t	30	testosterone gel (Rx)
+t	31	testosterone pellets (Rx)
+t	32	testosterone transdermal (Rx)
+t	33	testosterone buccal (Rx)
+t	34	testosterone topical solution, gel
+t	35	testosterone nasal gel
+t	36	tetracaine ophthalmic
+t	37	tetracaine topical
+t	38	tetracycline (Rx)
+t	39	tetrahydrozoline nasal agent
+t	40	tetrahydrozoline ophthalmic
+t	41	theophylline (Rx)
+t	42	thiamine (vit B1) (po-otc; iv, im-Rx)
+t	43	thioridazine (Rx)
+t	44	thyroid USP (desiccated) (Rx)
+t	46	ticagrelor
+t	47	ticarcillin/clavulanate (Rx)
+t	48	ticlopidine (Rx)
+t	49	tigecycline (Rx)
+t	50	timolol (Rx)
+t	51	timolol (ophthalmic)
+t	52	tinidazole (Rx)
+t	53	tioconazole vaginal antifungal
+t	54	tiotropium (Rx)
+t	55	tipranavir (Rx)
+t	56	tirofiban (Rx)
+t	58	tobramycin (Rx)
+t	59	tobramycin ophthalmic
+t	60	tocilizumab (Rx)
+t	61	tofacitinib
+t	62	tolcapone (Rx)
+t	63	tolnaftate topical
+t	64	tolterodine (Rx)
+t	65	tolvaptan (Rx)
+t	66	topiramate (Rx)
+t	67	topotecan (Rx)
+t	68	toremifene (Rx)
+t	69	torsemide (Rx)
+t	71	trametinib
+t	72	trandolapril (Rx)
+t	73	trastuzumab (Rx)
+t	74	travoprost ophthalmic
+t	76	treprostinil (Rx)
+t	77	tretinoin (vit A acid, retinoic acid) (Rx)
+t	78	tretinoin topical
+t	79	triamcinolone (ophthalmic)
+t	80	triamcinolone (Rx)
+t	81	triamcinolone nasal agent
+t	82	triamcinolone (topical)
+t	83	triamcinolone (topical-oral) (Rx, otc)
+t	84	triazolam (Rx)
+t	85	trifluridine ophthalmic
+t	86	trimethobenzamide (Rx)
+t	87	trospium (Rx)
+u	1	undecylenic acid topical
+u	2	unoprostone ophthalmic
+u	3	ustekinumab (Rx)
+v	3	valproate (Rx)
+v	4	valproic acid (Rx)
+v	5	divalproex sodium (Rx)
+v	6	valsartan (Rx)
+v	7	vancomycin (Rx)
+v	8	vardenafil (Rx)
+v	9	varenicline (Rx)
+v	10	vasopressin (Rx)
+v	11	vedolizumab
+v	12	vemurafenib
+v	13	venlafaxine (Rx)
+v	14	verapamil (Rx)
+v	15	vigabatrin (Rx)
+v	16	vilazodone (Rx)
+v	20	vinorelbine (Rx)
+v	21	vismodegib
+v	22	vitamin A (Rx, po-otc, Rx-IM)
+v	23	vitamin C (ascorbic acid) (otc, Rx)
+v	24	vitamin E (otc)
+v	25	vorapaxar
+v	26	voriconazole (Rx)
+v	27	vortioxetine
+w	1	warfarin (Rx)
+z	1	zafirlukast (Rx)
+z	2	zaleplon (Rx)
+z	3	zanamivir (Rx)
+z	4	zidovudine (Rx)
+z	5	zinc (Rx, otc)
+z	6	ziprasidone (Rx)
+z	7	ziv-aflibercept
+z	8	zoledronic acid (Rx)
+z	10	zolpidem (Rx)
+z	11	zonisamide (Rx)

@@ -37,7 +37,8 @@ class QuickFixOrder extends Command {
     public static function fixOrder() {
 		//get order from xml
 		$import_order_arr = [];
-		$dir= "/var/www/files/Skidmore_NDR_2017_4_all";
+		$dir = base_path() . '/data/import/Skidmore_NDR_2017_4_all/';
+		//$dir= "/var/www/files/Skidmore_NDR_2017_4_all";
 		$dir_arr = scandir($dir);
 		foreach ($dir_arr as $dir_file){
 			if($dir_file != '.' && $dir_file !='..'){
@@ -72,7 +73,11 @@ class QuickFixOrder extends Command {
 		array_push($chapter_arr, 'appendix_c');
 	
 		$log_arr = [];
-		$testing_dir = "/var/www/files/testing";
+		$testing_dir = base_path() . '/data/testing';
+		if (!is_dir($testing_dir)){
+			mkdir($testing_dir, 0777, true);
+		}
+		//$testing_dir = "/var/www/files/testing";
 		foreach ($chapter_arr as $chap){
 			$new_order_log = fopen("$testing_dir/".$chap."_changed.txt", "w");
 				$same_log = fopen("$testing_dir/".$chap."_same.txt", "w");
@@ -112,8 +117,8 @@ class QuickFixOrder extends Command {
 				
 
 				foreach ($info as $mono_name => $order){
-					
-					if ($mono_name == $atom->title && $chapter == $atom->molecule_code){
+        				$mono_name_formatted =  Atom::makeAlphaTitle($mono_name);
+					if ($mono_name_formatted == $atom->alpha_title && $chapter == $atom->molecule_code){
 						$newAtom->sort = $order;
 						$total_imported++;
 						$flag = 1; //found match in xml
@@ -157,7 +162,8 @@ class QuickFixOrder extends Command {
         }
 
 		//print out the xml mono list
-		$xml_mono_list_fh = fopen("/var/www/files/xml_mono_list.txt", 'w');
+		
+		$xml_mono_list_fh = fopen(base_path() . '/data/xml_mono_list.txt', 'w');
 		ksort($xml_mono_list);
 		//var_dump($xml_mono_list['appendix_a']); exit;
 	
@@ -182,7 +188,7 @@ class QuickFixOrder extends Command {
         /* output messages */
        
         echo 'Total atoms: ' . count($atoms) . "\n";
-        echo 'Total imported atoms that has been set order: ' . $total_imported . "\n";
+        echo 'Total atoms that match xml: ' . $total_imported . "\n";
         
 
     }

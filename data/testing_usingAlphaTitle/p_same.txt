@@ -1,0 +1,63 @@
+atom 2418 57b7435e2c90a165218544 pamidronate (Rx) order remains the same: 6
+atom 2495 57b7435e7343e248860412 propafenone (Rx) order remains the same: 74
+atom 2435 57b7435e1a9be984129790 Penicillins order remains the same: 21
+atom 2436 57b7435e28286112581217 palbociclib order remains the same: 3
+atom 2437 57b7435e29dff787122365 paliperidone (Rx) order remains the same: 4
+atom 2438 57b7435e2b7e3638792024 palonosetron (Rx) order remains the same: 5
+atom 2439 57b7435e2e57f385281097 pancrelipase (Rx) order remains the same: 7
+atom 2440 57b7435e2f44a085273857 pancuronium (Rx) order remains the same: 8
+atom 2441 57b7435e30327460353092 panitumumab (Rx) order remains the same: 9
+atom 2442 57b7435e31285681044270 pantoprazole (Rx) order remains the same: 10
+atom 2443 57b7435e32cc8289732917 paricalcitol (Rx) order remains the same: 11
+atom 2444 57b7435e36ee5311610857 pegfilgrastim (Rx) order remains the same: 14
+atom 2445 57b7435e37d2e070126775 peginterferon alfa-2a (Rx) order remains the same: 15
+atom 2446 57b7435e384a2720985444 peginterferon alfa-2b (Rx) order remains the same: 16
+atom 2447 57b7435e39deb673788292 pegloticase (Rx) order remains the same: 17
+atom 2448 57b7435e3c90d197193874 pembrolizumab order remains the same: 19
+atom 2449 57b7435e3ea8b939221837 penciclovir topical order remains the same: 20
+atom 2450 57b7435e3f240096593925 pentamidine (Rx) order remains the same: 26
+atom 2451 57b7435e41a2e363124000 pentazocine (Rx) order remains the same: 27
+atom 2452 57b7435e44c6e947993723 peramivir order remains the same: 28
+atom 2453 57b7435e461c5171396974 perindopril (Rx) order remains the same: 29
+atom 2454 57b7435e47d04851187616 pertuzumab order remains the same: 30
+atom 2496 57b7435e745f0513611754 proparacaine ophthalmic order remains the same: 75
+atom 2497 57b7435e74b62111103179 propofol (Rx) order remains the same: 76
+atom 2498 57b7435e75d80801464883 propranolol (Rx) order remains the same: 77
+atom 2499 57b7435e78b94492908993 propylthiouracil (Rx) order remains the same: 78
+atom 2500 57b7435e7a3d6022541808 protamine (Rx) order remains the same: 79
+atom 2455 57b7435e4906c966224300 phentolamine (Rx) order remains the same: 31
+atom 2456 57b7435e49e88581802846 phenylephrine nasal agent order remains the same: 32
+atom 2457 57b7435e4a7de364357967 phenylephrine ophthalmic order remains the same: 33
+atom 2458 57b7435e4afee450341202 phenytoin (Rx) order remains the same: 34
+atom 2460 57b7435e4e2f9149549739 physostigmine ophthalmic order remains the same: 36
+atom 2461 57b7435e4e7ff801928011 phytonadione (Rx) order remains the same: 37
+atom 2462 57b7435e4f720775830238 pilocarpine ophthalmic order remains the same: 38
+atom 2463 57b7435e4fc73373974112 pimecrolimus topical order remains the same: 39
+atom 2464 57b7435e501b8052675489 pioglitazone (Rx) order remains the same: 40
+atom 2465 57b7435e51322711364661 piperacillin/tazobactam (Rx) order remains the same: 41
+atom 2466 57b7435e5343c865969085 pirbuterol (Rx) order remains the same: 42
+atom 2467 57b7435e601e6760053091 prasugrel (Rx) order remains the same: 59
+atom 2468 57b7435e60e5b473515484 pravastatin (Rx) order remains the same: 60
+atom 2469 57b7435e62063060118877 prazosin (Rx) order remains the same: 61
+atom 2470 57b7435e54195106913011 pirfenidone order remains the same: 43
+atom 2471 57b7435e547bb242261507 pitavastatin (Rx) order remains the same: 44
+atom 2472 57b7435e5576b411028347 plasma protein fraction (Rx) order remains the same: 45
+atom 2503 57b7435e7d0ad002019618 pyridostigmine (Rx) order remains the same: 82
+atom 2505 57b7435e7fe01861674784 pyrimethamine (Rx) order remains the same: 84
+atom 2473 57b7435e55ea2398320116 plerixafor (Rx) order remains the same: 46
+atom 2474 57b7435e56503641459480 pomalidomide order remains the same: 47
+atom 2475 57b7435e57247011857809 posaconazole (Rx) order remains the same: 48
+atom 2476 57b7435e588ce402386381 potassium acetate order remains the same: 49
+atom 2482 57b7435e5c13c571582494 potassium iodide (Rx) order remains the same: 55
+atom 2483 57b7435e5d8eb831516916 pramipexole (Rx) order remains the same: 56
+atom 2484 57b7435e5ea8a867476917 pramlintide (Rx) order remains the same: 57
+atom 2485 57b7435e5fa5c776250422 pramoxine topical order remains the same: 58
+atom 2486 57b7435e68495995195087 pregabalin (Rx) order remains the same: 65
+atom 2487 57b7435e6998f320662954 primaquine (Rx) order remains the same: 66
+atom 2488 57b7435e6a78a109577855 primidone (Rx) order remains the same: 67
+atom 2489 57b7435e6af08200457061 probenecid (Rx) order remains the same: 68
+atom 2490 57b7435e6bd0a271728349 procainamide (Rx) order remains the same: 69
+atom 2491 57b7435e6d1ee677869936 procarbazine (Rx) order remains the same: 70
+atom 2492 57b7435e6e802649098678 prochlorperazine (Rx) order remains the same: 71
+atom 2493 57b7435e70152981857028 progesterone (Rx) order remains the same: 72
+atom 2494 57b7435e71835439668753 promethazine (Rx) order remains the same: 73

@@ -1,0 +1,17 @@
+atom 1562 57b74358d1cbc650594346 DAUNOrubicin (Rx) not found in XML: 
+atom 1563 57b74358d2302840440819 DAUNOrubicin citrate liposomal (Rx) not found in XML: 
+atom 1545 57b74355b5d72092807137 daclatasvir not found in XML: 
+atom 1546 57b74355b67b2486051712 darunavir/cobicistat (Rx) not found in XML: 
+atom 1547 57b74355b8348071306420 deoxycholic acid not found in XML: 
+atom 1548 57b74355b882d261404312 dulaglutide (Rx) not found in XML: 
+atom 1557 57b74358caa42042962733 DAPTOmycin (Rx) not found in XML: 
+atom 1583 57b7435904010582795906 diphenhydrAMINE (otc, Rx) not found in XML: 
+atom 1587 57b74358e7c84130359055 diazepam (Rx) not found in XML: 
+atom 1598 57b74358f3cb0168380778 diltiazem (Rx) not found in XML: 
+atom 1599 57b7435901a70418594868 dimenhyDRINATE (otc, Rx) not found in XML: 
+atom 1604 57b743590726d458172448 DOBUTamine (Rx) not found in XML: 
+atom 1605 57b743590825c265352724 DOCEtaxel (Rx) not found in XML: 
+atom 1613 57b743590defa214398086 DOPamine (Rx) not found in XML: 
+atom 1618 57b7435912cf8707557689 DOXOrubicin not found in XML: 
+atom 1619 57b7435914380597145609 DOXOrubicin liposomal not found in XML: 
+atom 1627 57b743591a9e3829732788 DULoxetine (Rx) not found in XML: 

@@ -1,0 +1,9 @@
+atom 1992 57b74360d7fe2000739216 zafirlukast (Rx) order remains the same: 1
+atom 1994 57b74360d9e1d345909011 zanamivir (Rx) order remains the same: 3
+atom 1995 57b74360da9ad280019487 zidovudine (Rx) order remains the same: 4
+atom 2001 57b74360e3a7e704220341 zonisamide (Rx) order remains the same: 11
+atom 2874 57b74360dda2d739544015 ziprasidone (Rx) order remains the same: 6
+atom 2875 57b74360e0131795895181 zoledronic acid (Rx) order remains the same: 8
+atom 2877 57b74360d9004382473242 zaleplon (Rx) order remains the same: 2
+atom 2878 57b74360df004284123713 ziv-aflibercept order remains the same: 7
+atom 2879 57b74360e26f7401775324 zolpidem (Rx) order remains the same: 10

@@ -1,0 +1,6 @@
+atom 14 57b74355bed5d039627134 lenvatinib not found in XML: 
+atom 2281 57b7435b9cc20886470351 lansoprazole (Rx, otc) not found in XML: 6
+atom 2297 57b7435bb5cf9677533213 levothyroxine (T4) (Rx) not found in XML: 25
+atom 2305 57b7435bbb8f7725732138 liothyronine (T3) (Rx) not found in XML: 33
+atom 2312 57b7435bc0f0e016777297 loperamide (otc, Rx) not found in XML: 40
+atom 2314 57b7435bc2df8854764361 loratadine (otc, Rx) not found in XML: 42

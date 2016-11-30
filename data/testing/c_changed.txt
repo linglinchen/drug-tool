@@ -1,0 +1,88 @@
+new order for atom 230 57b7435836db6906079588 clobetasol has been updated!  => 90
+new order for atom 161 57b74357d5192424280453 Calcium Salts has been updated!  => 5
+new order for atom 165 57b74357ef49e616630591 Contraceptives, Hormonal has been updated!  => 102
+new order for atom 166 57b74358023c1064845325 calcitonin (salmon) (Rx) has been updated!  => 1
+new order for atom 167 57b74358032f5525063227 calcitriol vitamin D<emphasis style="inf">3</emphasis> (Rx) has been updated!  => 2
+new order for atom 168 57b7435804cdb474930363 calcium carbonate (<emphasis style="smallcaps">po-otc</emphasis>) has been updated!  => 3
+new order for atom 169 57b74358051b0291072904 calcium acetate (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 4
+new order for atom 170 57b743580664c571442773 canagliflozin has been updated!  => 10
+new order for atom 171 57b7435807194609548461 candesartan (Rx) has been updated!  => 11
+new order for atom 172 57b7435808005307810504 capecitabine (Rx) has been updated!  => 12
+new order for atom 173 57b743580998a539121622 captopril (Rx) has been updated!  => 13
+new order for atom 174 57b743580b317955037344 carbachol ophthalmic has been updated!  => 14
+new order for atom 175 57b743580b710557894013 car<emphasis style="tallman">BAM</emphasis>azepine (Rx) has been updated!  => 15
+new order for atom 177 57b743580f0f9832385925 carboprost (Rx) has been updated!  => 17
+new order for atom 178 57b743580fc5a911228594 carfilzomib has been updated!  => 18
+new order for atom 179 57b7435810753730835687 carglumic acid has been updated!  => 19
+new order for atom 180 57b7435811010805825007 carisoprodol (Rx) has been updated!  => 20
+new order for atom 181 57b7435811f20016718395 carmustine (Rx) has been updated!  => 21
+new order for atom 182 57b7435813305062680807 carteolol (ophthalmic) has been updated!  => 22
+new order for atom 183 57b7435813b66615041664 carvedilol (Rx) has been updated!  => 23
+new order for atom 184 57b7435814cd2536132141 caspofungin (Rx) has been updated!  => 24
+new order for atom 186 57b74358160c6991209107 cefadroxil has been updated!  => 26
+new order for atom 187 57b74358164af273013398 ce<emphasis style="tallman">FAZ</emphasis>olin has been updated!  => 27
+new order for atom 188 57b74358168b5752325298 cefdinir has been updated!  => 28
+new order for atom 189 57b7435816e95837059429 cefditoren pivoxil has been updated!  => 29
+new order for atom 190 57b743581727e245212982 cefepime has been updated!  => 30
+new order for atom 191 57b7435817665391976573 cefixime has been updated!  => 31
+new order for atom 192 57b74358179fb079374762 cefotaxime has been updated!  => 32
+new order for atom 193 57b7435817dee828389033 cefoTEtan has been updated!  => 33
+new order for atom 194 57b7435818223435345460 cef<emphasis style="tallman">OX</emphasis>itin has been updated!  => 34
+new order for atom 195 57b743581864f138571067 cefpodoxime has been updated!  => 35
+new order for atom 196 57b7435818a37989820968 cefprozil has been updated!  => 36
+new order for atom 197 57b7435818dd4711462526 cef<emphasis style="tallman">TAZ</emphasis>idime has been updated!  => 37
+new order for atom 198 57b7435819138225790680 ceftibuten has been updated!  => 38
+new order for atom 199 57b74358194a6238384386 ceftizoxime has been updated!  => 39
+new order for atom 200 57b7435819866935410504 cef<emphasis style="tallman">TRIAX</emphasis>one has been updated!  => 40
+new order for atom 201 57b7435819cc6096896069 cefuroxime has been updated!  => 41
+new order for atom 202 57b743581a0f8137625854 ceftaroline (Rx) has been updated!  => 42
+new order for atom 203 57b743581ac9e191898123 celecoxib (Rx) has been updated!  => 43
+new order for atom 204 57b743581c0ef890859018 cephalexin has been updated!  => 44
+new order for atom 205 57b743581c5a3342043463 cephradine has been updated!  => 65
+new order for atom 206 57b743581ca1a196527070 certolizumab pegol (Rx) has been updated!  => 66
+new order for atom 207 57b743581d7a4305451170 cetirizine (Rx, <emphasis style="smallcaps">otc</emphasis>) has been updated!  => 67
+new order for atom 208 57b743581e817797427923 cetrorelix (Rx) has been updated!  => 68
+new order for atom 209 57b743581f455189764081 cetuximab (Rx) has been updated!  => 69
+new order for atom 210 57b743582052b594122369 chlordiaze<emphasis style="tallman">POXIDE</emphasis> (Rx) has been updated!  => 70
+new order for atom 211 57b7435821a18580763259 chloroquine (Rx) has been updated!  => 71
+new order for atom 212 57b74358228b2201780636 chlorpheniramine (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 72
+new order for atom 213 57b74358236e8228656046 chlorpro<emphasis style="tallman">MAZINE</emphasis> (Rx) has been updated!  => 73
+new order for atom 214 57b7435825b1a805046571 cholestyramine (Rx) has been updated!  => 74
+new order for atom 215 57b7435826821967731197 cidofovir (Rx) has been updated!  => 75
+new order for atom 216 57b7435827804661765381 cilostazol (Rx) has been updated!  => 76
+new order for atom 217 57b743582857b768738332 cimetidine (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 77
+new order for atom 218 57b7435829cf3113876033 cinacalcet (Rx) has been updated!  => 78
+new order for atom 219 57b743582a9c2111386657 ciprofloxacin (Rx) has been updated!  => 79
+new order for atom 220 57b743582cd10147742401 ciprofloxacin (ophthalmic) has been updated!  => 80
+new order for atom 221 57b743582d7e2905554292 cisatracurium has been updated!  => 81
+new order for atom 222 57b743582e451372321386 <country code="CAN"><emphasis style="tallman">CIS</emphasis>platin (Rx)</country> has been updated!  => 82
+new order for atom 223 57b743583041e937404917 citalopram (Rx) has been updated!  => 83
+new order for atom 224 57b743583183f106206966 clarithromycin (Rx) has been updated!  => 84
+new order for atom 225 57b7435832f21529327341 clevidipine (Rx) has been updated!  => 85
+new order for atom 226 57b74358337f1329047322 clindamycin HCI (Rx) has been updated!  => 86
+new order for atom 227 57b7435833ca6842112479 clindamycin palmitate (Rx) has been updated!  => 87
+new order for atom 228 57b7435834174493469709 clindamycin phosphate (Rx) has been updated!  => 88
+new order for atom 229 57b7435835c4a236889356 clindamycin (topical, vaginal) has been updated!  => 89
+new order for atom 231 57b74358377eb389053995 clomi<emphasis style="tallman">PHENE</emphasis> (Rx) has been updated!  => 91
+new order for atom 232 57b7435838450054983620 clomi<emphasis style="tallman">PRAMINE</emphasis> (Rx) has been updated!  => 92
+new order for atom 233 57b7435839ce0883430586 clonaze<emphasis style="tallman">PAM</emphasis> (Rx) has been updated!  => 93
+new order for atom 234 57b743583b29a712543076 clo<emphasis style="tallman">NID</emphasis>ine (Rx) has been updated!  => 94
+new order for atom 235 57b743583d5b3421539891 clopidogrel (Rx) has been updated!  => 95
+new order for atom 236 57b743583efa9189037402 clotrimazole (topical, vaginal, oral) has been updated!  => 96
+new order for atom 237 57b7435840037079324103 clo<emphasis style="tallman">ZAP</emphasis>ine (Rx) has been updated!  => 97
+new order for atom 238 57b7435844cf6538690738 codeine (Rx) has been updated!  => 98
+new order for atom 239 57b743584a8b7022788167 colchicine (Rx) has been updated!  => 99
+new order for atom 240 57b743584b8a3211749515 colesevelam (Rx) has been updated!  => 100
+new order for atom 241 57b743584c32d265763008 conivaptan (Rx) has been updated!  => 101
+new order for atom 242 57b743584cfbf497109964 crizotinib has been updated!  => 137
+new order for atom 243 57b743584e3c2968466156 crofelemer has been updated!  => 138
+new order for atom 244 57b743584eb34998167944 crotamiton has been updated!  => 139
+new order for atom 246 57b743584f510291663731 hydroxocobalamin (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 141
+new order for atom 247 57b7435850821146640884 cyclobenzaprine (Rx) has been updated!  => 142
+new order for atom 248 57b7435851717923601440 cyclopentolate ophthalmic has been updated!  => 143
+new order for atom 249 57b7435851c09116115307 cyclophosphamide (Rx) has been updated!  => 144
+new order for atom 250 57b7435854b09822683716 cyclo<emphasis style="tallman">SPORINE</emphasis> (Rx) has been updated!  => 145
+new order for atom 251 57b7435856817719397051 cytarabine (Rx) has been updated!  => 146
+new order for atom 252 57b7435856c5f349024055 cytarabine liposomal (Rx) has been updated!  => 147
+new order for atom 1066 57b743580d392621859015 <emphasis style="tallman">CARBO</emphasis>platin (Rx) has been updated!  => 16
+new order for atom 1636 57b7435815cbc742467336 cefaclor has been updated!  => 25

@@ -1,0 +1,21 @@
+new order for atom 469 57b7435a6beea876725421 glucarpidase has been updated!  => 16
+new order for atom 454 57b7435a5b159525558631 gabapentin (Rx) has been updated!  => 1
+new order for atom 455 57b7435a5eaba748008888 galantamine (Rx) has been updated!  => 2
+new order for atom 456 57b7435a5f7f7505396509 ganciclovir (Rx) has been updated!  => 3
+new order for atom 457 57b7435a6185f167947301 ganciclovir ophthalmic has been updated!  => 4
+new order for atom 458 57b7435a61f04484522778 gatifloxacin has been updated!  => 5
+new order for atom 459 57b7435a62df3198249874 gemcitabine (Rx) has been updated!  => 6
+new order for atom 460 57b7435a6470d820049402 gemfibrozil (Rx) has been updated!  => 7
+new order for atom 461 57b7435a653cb961158031 gemifloxacin (Rx) has been updated!  => 8
+new order for atom 462 57b7435a663b8513370184 gentamicin (Rx) has been updated!  => 9
+new order for atom 463 57b7435a67be5420686053 gentamicin (ophthalmic) has been updated!  => 10
+new order for atom 464 57b7435a686fa965936222 gentamicin (topical) has been updated!  => 11
+new order for atom 465 57b7435a690bf114608765 glatiramer (Rx) has been updated!  => 12
+new order for atom 466 57b7435a69de6288247833 glimepiride (Rx) has been updated!  => 13
+new order for atom 467 57b7435a6a215741945555 glipi<emphasis style="tallman">ZIDE</emphasis> (Rx) has been updated!  => 14
+new order for atom 468 57b7435a6b451110509523 glucagon has been updated!  => 15
+new order for atom 470 57b7435a6c7b3630166858 gly<emphasis style="tallman">BURIDE</emphasis> (Rx) has been updated!  => 17
+new order for atom 471 57b7435a6d905236501103 golimumab (Rx) has been updated!  => 18
+new order for atom 472 57b7435a6e876815676321 goserelin (Rx) has been updated!  => 19
+new order for atom 473 57b7435a6f768764219301 granisetron (Rx) has been updated!  => 20
+new order for atom 474 57b7435a7067b870619569 guai<emphasis style="tallman">FEN</emphasis>esin (<emphasis style="smallcaps">otc</emphasis>, Rx) has been updated!  => 21

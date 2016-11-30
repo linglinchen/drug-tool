@@ -1,0 +1,83 @@
+atom 2718 57b7436012ead019470177 telavancin (Rx) order remains the same: 12
+atom 2719 57b74360156e9587451688 telbivudine (Rx) order remains the same: 13
+atom 2678 57b7436004f7b802050663 tacrolimus (topical) (Rx) order remains the same: 2
+atom 2679 57b743600780d467725557 tadalafil (Rx) order remains the same: 3
+atom 2701 57b7436008bd3170816319 tamoxifen (Rx) order remains the same: 4
+atom 2710 57b743600462b503671839 tacrolimus (Rx) (po, iv) order remains the same: 1
+atom 2711 57b743600a96d612436165 tamsulosin (Rx) order remains the same: 5
+atom 2712 57b743600b87f078972210 tapentadol (Rx) order remains the same: 6
+atom 2713 57b743600d71b895030057 tasimelteon order remains the same: 7
+atom 2714 57b743600dfa3994730973 tavaborole topical order remains the same: 8
+atom 2715 57b743600e7d2857555074 tbo-filgrastim order remains the same: 9
+atom 2716 57b743600f5ce133630363 teduglutide order remains the same: 10
+atom 2717 57b7436010767119128011 telaprevir order remains the same: 11
+atom 2720 57b7436016723836085891 telmisartan (Rx) order remains the same: 14
+atom 2721 57b7436017651919643082 temazepam (Rx) order remains the same: 15
+atom 2722 57b7436018d3c283019933 temozolomide (Rx) order remains the same: 16
+atom 2723 57b743601b108376499177 temsirolimus (Rx) order remains the same: 17
+atom 2724 57b743601b88d448424566 tenecteplase (TNK-tPA) (Rx) order remains the same: 18
+atom 2725 57b743601cc67828464336 tenofovir (Rx) order remains the same: 19
+atom 2726 57b743601dc61866432472 terazosin (Rx) order remains the same: 20
+atom 2727 57b743601ead3047090570 terbinafine oral (Rx) order remains the same: 21
+atom 2728 57b743601f8ab438949896 terbinafine topical order remains the same: 22
+atom 2729 57b743601ff0c426515554 terbutaline (Rx) order remains the same: 23
+atom 2730 57b74360210f6569141128 terconazole vaginal antifungal order remains the same: 24
+atom 2731 57b7436021693680352562 teriflunomide order remains the same: 25
+atom 2732 57b743602238a527882128 teriparatide (Rx) order remains the same: 26
+atom 2733 57b7436023191975129871 tesamorelin order remains the same: 27
+atom 2734 57b7436023d57516653205 testosterone cypionate (Rx) order remains the same: 28
+atom 2735 57b74360242f4935008068 testosterone enanthate (Rx) order remains the same: 29
+atom 2736 57b74360248b3756272753 testosterone gel (Rx) order remains the same: 30
+atom 2737 57b7436024d5b566838826 testosterone pellets (Rx) order remains the same: 31
+atom 2738 57b74360252e2782236963 testosterone transdermal (Rx) order remains the same: 32
+atom 2739 57b743602582a420140661 testosterone buccal (Rx) order remains the same: 33
+atom 2740 57b7436025e23130577475 testosterone topical solution, gel order remains the same: 34
+atom 2741 57b743602646c903728784 testosterone nasal gel order remains the same: 35
+atom 2742 57b7436027fcc258158597 tetracaine ophthalmic order remains the same: 36
+atom 2743 57b74360285b9831342993 tetracaine topical order remains the same: 37
+atom 2744 57b7436028b6a848166308 tetracycline (Rx) order remains the same: 38
+atom 2745 57b743602a29d841621931 tetrahydrozoline nasal agent order remains the same: 39
+atom 2746 57b743602a79e833870095 tetrahydrozoline ophthalmic order remains the same: 40
+atom 2747 57b743602ad72364760334 theophylline (Rx) order remains the same: 41
+atom 2748 57b743602d5e4840534834 thiamine (vit B1) (po-otc; iv, im-Rx) order remains the same: 42
+atom 2749 57b743602e6eb701730836 thioridazine (Rx) order remains the same: 43
+atom 2750 57b7436030215243783765 thyroid USP (desiccated) (Rx) order remains the same: 44
+atom 2751 57b74360325e8909042820 ticagrelor order remains the same: 46
+atom 2752 57b7436033721331597124 ticarcillin/clavulanate (Rx) order remains the same: 47
+atom 2753 57b743603506a003682372 ticlopidine (Rx) order remains the same: 48
+atom 2754 57b7436035d55525678989 tigecycline (Rx) order remains the same: 49
+atom 2755 57b743603735d271649335 timolol (Rx) order remains the same: 50
+atom 2756 57b7436038b74039907308 timolol (ophthalmic) order remains the same: 51
+atom 2757 57b7436039d45552118494 tinidazole (Rx) order remains the same: 52
+atom 2758 57b743603ae67121045908 tioconazole vaginal antifungal order remains the same: 53
+atom 2759 57b743603b3ce475996439 tiotropium (Rx) order remains the same: 54
+atom 2760 57b743603c3ec127291800 tipranavir (Rx) order remains the same: 55
+atom 2761 57b743603dbf5330854628 tirofiban (Rx) order remains the same: 56
+atom 2762 57b743603fd4a901116948 tobramycin (Rx) order remains the same: 58
+atom 2763 57b7436041dd6434308803 tobramycin ophthalmic order remains the same: 59
+atom 2764 57b7436042446121428081 tocilizumab (Rx) order remains the same: 60
+atom 2765 57b743604379b242257364 tofacitinib order remains the same: 61
+atom 2766 57b7436044aca812450489 tolcapone (Rx) order remains the same: 62
+atom 2767 57b7436045888496407663 tolnaftate topical order remains the same: 63
+atom 2768 57b7436045e8e583895934 tolterodine (Rx) order remains the same: 64
+atom 2769 57b7436046df7214275615 tolvaptan (Rx) order remains the same: 65
+atom 2770 57b7436047bc7792817740 topiramate (Rx) order remains the same: 66
+atom 2771 57b7436049f2c253759934 topotecan (Rx) order remains the same: 67
+atom 2772 57b743604b446128094866 toremifene (Rx) order remains the same: 68
+atom 2773 57b743604ba6c650095453 torsemide (Rx) order remains the same: 69
+atom 2774 57b743604eae9853064504 trametinib order remains the same: 71
+atom 2775 57b743605000d505639007 trandolapril (Rx) order remains the same: 72
+atom 2776 57b74360511a7308656545 trastuzumab (Rx) order remains the same: 73
+atom 2777 57b743605237d089194950 travoprost ophthalmic order remains the same: 74
+atom 2778 57b743605431e858405362 treprostinil (Rx) order remains the same: 76
+atom 2779 57b7436055726492917847 tretinoin (vit A acid, retinoic acid) (Rx) order remains the same: 77
+atom 2780 57b7436057ff0421075111 tretinoin topical order remains the same: 78
+atom 2781 57b743605891d414441478 triamcinolone (ophthalmic) order remains the same: 79
+atom 2782 57b7436059b46519342302 triamcinolone (Rx) order remains the same: 80
+atom 2783 57b743605f7bb712894450 triamcinolone nasal agent order remains the same: 81
+atom 2784 57b743605fc17491747374 triamcinolone (topical) order remains the same: 82
+atom 2785 57b74360604b7678795449 triamcinolone (topical-oral) (Rx, otc) order remains the same: 83
+atom 2786 57b7436060da1855760588 triazolam (Rx) order remains the same: 84
+atom 2787 57b74360634f8274631991 trifluridine ophthalmic order remains the same: 85
+atom 2788 57b7436063fad290227169 trimethobenzamide (Rx) order remains the same: 86
+atom 2789 57b7436064ea5490443278 trospium (Rx) order remains the same: 87

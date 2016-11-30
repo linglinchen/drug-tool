@@ -1,0 +1,48 @@
+new order for atom 1372 57b743571b0ab974606300 basiliximab (Rx) has been updated!  => 3
+new order for atom 1373 57b743571bc3b281010576 beclomethasone (Rx) has been updated!  => 4
+new order for atom 1374 57b743571c712931139878 beclomethasone (nasal) has been updated!  => 5
+new order for atom 1375 57b743571d1a9554600930 bedaquiline has been updated!  => 6
+new order for atom 1376 57b743573a9c0632377056 bu<emphasis style="tallman">PROP</emphasis>ion (Rx) has been updated!  => 44
+new order for atom 1377 57b743573cada243262044 bus<emphasis style="tallman">PIR</emphasis>one (Rx) has been updated!  => 45
+new order for atom 1378 57b743573db23094117894 busulfan (Rx) has been updated!  => 46
+new order for atom 1379 57b743573f466252837945 butorphanol (Rx) has been updated!  => 48
+new order for atom 1380 57b743571965f227204751 bacitracin topical has been updated!  => 1
+new order for atom 1381 57b743571db73448359246 belatacept has been updated!  => 7
+new order for atom 1382 57b743571e8d5546342272 belimumab has been updated!  => 8
+new order for atom 1383 57b743571f527826006832 belinostat has been updated!  => 9
+new order for atom 1384 57b7435720581842523783 benazepril (Rx) has been updated!  => 10
+new order for atom 1385 57b74357217ed522840063 bendamustine (Rx) has been updated!  => 11
+new order for atom 1386 57b7435722c7e710148090 benzocaine topical has been updated!  => 12
+new order for atom 1387 57b743573efc9522149246 butoconazole vaginal antifungal has been updated!  => 47
+new order for atom 1388 57b743572303f483169595 benzonatate (Rx) has been updated!  => 13
+new order for atom 1389 57b7435723439183398927 benztropine (Rx) has been updated!  => 14
+new order for atom 1390 57b7435724484740055735 bepotastine has been updated!  => 15
+new order for atom 1391 57b7435724c4b014648142 beractant (Rx) has been updated!  => 16
+new order for atom 1392 57b7435725018376367840 betamethasone (topical) has been updated!  => 17
+new order for atom 1393 57b74357253a8068320195 betamethasone dipropionate has been updated!  => 18
+new order for atom 1394 57b74357256f7607325895 betamethasone augmented dipropionate has been updated!  => 19
+new order for atom 1395 57b7435725a4d662899302 betamethasone valerate has been updated!  => 20
+new order for atom 1396 57b74357261b2586273116 betamethasone (augmented) topical has been updated!  => 21
+new order for atom 1397 57b743572656c586936213 betaxolol (ophthalmic) has been updated!  => 22
+new order for atom 1398 57b7435726d16182291220 bethanechol (Rx) has been updated!  => 23
+new order for atom 1399 57b743572779e247993008 bevacizumab (Rx) has been updated!  => 24
+new order for atom 1400 57b7435728d3d293404043 bimatoprost (ophthalmic/topical) has been updated!  => 25
+new order for atom 1401 57b743572961d763974483 bisacodyl (Rx, <emphasis style="smallcaps">otc</emphasis>) has been updated!  => 26
+new order for atom 1402 57b743572a228540531365 bismuth subsalicylate (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 27
+new order for atom 1403 57b743572ae98422103784 bisoprolol (Rx) has been updated!  => 28
+new order for atom 1404 57b743572c164537631236 bivalirudin (Rx) has been updated!  => 29
+new order for atom 1405 57b743572d275385381039 bleomycin (Rx) has been updated!  => 30
+new order for atom 1406 57b743572ebe3369402555 boceprevir has been updated!  => 31
+new order for atom 1407 57b743573077b543945630 bortezomib (Rx) has been updated!  => 32
+new order for atom 1408 57b7435731a0c049899558 bosentan (Rx) has been updated!  => 33
+new order for atom 1409 57b7435732709560078064 bosutinib has been updated!  => 34
+new order for atom 1410 57b74357332fa937902754 brentuximab has been updated!  => 35
+new order for atom 1411 57b743573413d785900470 brimonidine (ophthalmic) has been updated!  => 36
+new order for atom 1412 57b7435734ad3100395321 brinzolamide ophthalmic has been updated!  => 37
+new order for atom 1413 57b7435734f26522612444 bromfenac (ophthalmic) has been updated!  => 38
+new order for atom 1414 57b7435735811447240285 bromocriptine (Rx) has been updated!  => 39
+new order for atom 1415 57b7435736924786524399 budesonide (Rx) has been updated!  => 40
+new order for atom 1416 57b74357378df095434324 budesonide nasal agent has been updated!  => 41
+new order for atom 1417 57b7435737d39065144585 bumetanide (Rx) has been updated!  => 42
+new order for atom 1418 57b743573956f450554400 buprenorphine (Rx) has been updated!  => 43
+new order for atom 1419 57b7435719be9145166873 baclofen (Rx) has been updated!  => 2

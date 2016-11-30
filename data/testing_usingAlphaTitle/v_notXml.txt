@@ -1,0 +1,3 @@
+atom 2588 57b74360b87f4751135639 vitamin A (Rx, po-otc, Rx-IM) not found in XML: 22
+atom 2589 57b74360b96d5426437649 vitamin C (ascorbic acid) (otc, Rx) not found in XML: 23
+atom 2590 57b74360bac33679886483 vitamin E (otc) not found in XML: 24

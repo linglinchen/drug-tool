@@ -1,0 +1,32 @@
+atom 2529 57b7435f03b90376062833 riociguat order remains the same: 27
+atom 2530 57b7435f046e0199652189 risedronate (Rx) order remains the same: 28
+atom 2531 57b7435f08432532977635 ritonavir (Rx) order remains the same: 30
+atom 2532 57b7435f0b6a7260392762 rivaroxaban order remains the same: 32
+atom 2533 57b7435f0cdbd795141405 rivastigmine (Rx) order remains the same: 33
+atom 2507 57b7435edfc50526798247 radioactive iodine (sodium iodide) 131I (Rx) order remains the same: 2
+atom 2508 57b7435ee02e5730092176 raloxifene (Rx) order remains the same: 3
+atom 2509 57b7435ee11ba571168259 raltegravir (Rx) order remains the same: 4
+atom 2510 57b7435ee227c412429679 ramelteon (Rx) order remains the same: 5
+atom 2511 57b7435ee341e002917145 ramipril (Rx) order remains the same: 6
+atom 2512 57b7435ee4cde777916669 ranibizumab (Rx) order remains the same: 7
+atom 2513 57b7435ee7578331067004 ranolazine (Rx) order remains the same: 9
+atom 2514 57b7435ee84fc374321593 rasagiline (Rx) order remains the same: 10
+atom 2515 57b7435ee9ab8248843131 rasburicase (Rx) order remains the same: 11
+atom 2516 57b7435eea6f7364929520 regorafenib order remains the same: 12
+atom 2517 57b7435eeb6dd159968204 remifentanil (Rx) order remains the same: 13
+atom 2518 57b7435eec9db242432905 repaglinide (Rx) order remains the same: 14
+atom 2519 57b7435eed82c712111851 retapamulin (topical) order remains the same: 15
+atom 2520 57b7435eee316085408978 Rho(D) immune globulin standard dose IM?(Rx) order remains the same: 16
+atom 2521 57b7435eee91e487293493 Rho(D) immune globulin microdose IM (Rx) order remains the same: 17
+atom 2522 57b7435eeee8a528078241 Rho(D) immune globulin IV (Rx) order remains the same: 18
+atom 2523 57b7435ef0248007028538 riboflavin (vit B2) (otc) order remains the same: 19
+atom 2524 57b7435ef0c09118115081 rifabutin (Rx) order remains the same: 20
+atom 2525 57b7435ef3692514546402 rifapentine (Rx) order remains the same: 22
+atom 2526 57b7435f01a23094960780 rilpivirine order remains the same: 24
+atom 2527 57b7435f02b07278265104 riluzole (Rx) order remains the same: 25
+atom 2528 57b7435f03331177797506 rimexolone ophthalmic order remains the same: 26
+atom 2534 57b7435f0e345713036564 rizatriptan (Rx) order remains the same: 34
+atom 2535 57b7435f0f15d394776763 roflumilast order remains the same: 35
+atom 2536 57b7435f1276d274366545 rosiglitazone (Rx) order remains the same: 38
+atom 2537 57b7435f13aef321650496 rosuvastatin (Rx) order remains the same: 39
+atom 2538 57b7435f14ce3530255713 rufinamide (Rx) order remains the same: 40

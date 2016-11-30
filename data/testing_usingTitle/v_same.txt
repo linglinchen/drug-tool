@@ -1,0 +1,22 @@
+atom 2566 57b74360bc9a8579890397 voriconazole (Rx) order remains the same: 26
+atom 2567 57b74360bedd1285977794 vortioxetine order remains the same: 27
+atom 2572 57b743609a6be143988413 valproate (Rx) order remains the same: 3
+atom 2573 57b743609accc194599062 valproic acid (Rx) order remains the same: 4
+atom 2574 57b743609b576238660259 divalproex sodium (Rx) order remains the same: 5
+atom 2575 57b743609cf4a677400913 valsartan (Rx) order remains the same: 6
+atom 2576 57b743609e366946448338 vancomycin (Rx) order remains the same: 7
+atom 2577 57b74360a1dcf456955107 vardenafil (Rx) order remains the same: 8
+atom 2578 57b74360a3a4b679045075 varenicline (Rx) order remains the same: 9
+atom 2579 57b74360a6b95675099579 vasopressin (Rx) order remains the same: 10
+atom 2580 57b74360a88f7250842469 vedolizumab order remains the same: 11
+atom 2581 57b74360a991b129662153 vemurafenib order remains the same: 12
+atom 2582 57b74360ab043443925067 venlafaxine (Rx) order remains the same: 13
+atom 2583 57b74360ade67550753191 verapamil (Rx) order remains the same: 14
+atom 2584 57b74360b017a515826824 vigabatrin (Rx) order remains the same: 15
+atom 2585 57b74360b1215007177843 vilazodone (Rx) order remains the same: 16
+atom 2586 57b74360b651d099771144 vinorelbine (Rx) order remains the same: 20
+atom 2587 57b74360b7b9f973011322 vismodegib order remains the same: 21
+atom 2588 57b74360b87f4751135639 vitamin A (Rx, po-otc, Rx-IM) order remains the same: 22
+atom 2589 57b74360b96d5426437649 vitamin C (ascorbic acid) (otc, Rx) order remains the same: 23
+atom 2590 57b74360bac33679886483 vitamin E (otc) order remains the same: 24
+atom 2591 57b74360bbbdb964538553 vorapaxar order remains the same: 25

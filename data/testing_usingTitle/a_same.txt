@@ -1,0 +1,85 @@
+atom 2815 57b7435687136044954053 alosetron order remains the same: 28
+atom 2790 57b743568c45c589992881 amantadine (Rx) order remains the same: 34
+atom 2791 57b74356707a4161818280 acetylcysteine (Rx) order remains the same: 9
+atom 2792 57b7435691fe0539831569 amino acid infusions/electrolytes/dextrose order remains the same: 42
+atom 2793 57b7435677237258243659 adalimumab (Rx) order remains the same: 12
+atom 2794 57b7435678423447523574 adefovir (Rx) order remains the same: 13
+atom 2795 57b743567971c218539464 adenosine (Rx) order remains the same: 14
+atom 2796 57b743567aae1793966192 ado-trastuzumab order remains the same: 15
+atom 2797 57b743567c0d4324217875 afatinib order remains the same: 16
+atom 2798 57b743567cfad440424199 aflibercept order remains the same: 17
+atom 2799 57b7435665acb075679771 abacavir (Rx) order remains the same: 1
+atom 2800 57b7435666ce8914454070 abatacept (Rx) order remains the same: 2
+atom 2801 57b7435667d8b550140359 abiraterone order remains the same: 3
+atom 2802 57b7435668a4e731482998 acamprosate order remains the same: 4
+atom 2803 57b74356695f7028002881 acarbose (Rx) order remains the same: 5
+atom 2804 57b743566a252490271426 acetaminophen (OTC) (Paracetamol) order remains the same: 6
+atom 2805 57b743567da72544369393 albumin, human 5% (Rx) order remains the same: 18
+atom 2806 57b743567e133152542913 albumin, human 25% order remains the same: 19
+atom 2807 57b743567f7e6187089038 albuterol (Rx) order remains the same: 20
+atom 2808 57b7435681b50742407339 alemtuzumab order remains the same: 21
+atom 2809 57b7435682041243745952 alendronate (Rx) order remains the same: 22
+atom 2810 57b74356830a4142778281 alfuzosin (Rx) order remains the same: 23
+atom 2811 57b7435683be8935737405 aliskiren (Rx) order remains the same: 24
+atom 2812 57b7435684975190455508 allopurinol (Rx) order remains the same: 25
+atom 2813 57b7435685b0b222580509 almotriptan (Rx) order remains the same: 26
+atom 2814 57b7435686765206131636 alogliptin order remains the same: 27
+atom 2816 57b7435688ff3012647117 alprostadil (Rx) order remains the same: 30
+atom 2817 57b7435689640066390200 alteplase (Rx) order remains the same: 31
+atom 2818 57b743568adbb800690044 aluminum hydroxide (OTC) order remains the same: 32
+atom 2819 57b743568bacd532488119 alvimopan order remains the same: 33
+atom 2820 57b743568d882491282809 ambrisentan (Rx) order remains the same: 35
+atom 2821 57b743568e736195279951 amikacin (Rx) order remains the same: 36
+atom 2822 57b7435690efe135318737 amino acids order remains the same: 38
+atom 2823 57b7435691321540500867 amino acid infusions (crystalline) order remains the same: 39
+atom 2824 57b7435691792704570210 amino acid infusions/dextrose order remains the same: 40
+atom 2825 57b7435691bc4311515350 aminosyn with electrolytes order remains the same: 41
+atom 2826 57b7435692428672775643 amino acid infusions (hepatic failure) order remains the same: 43
+atom 2827 57b743569280b814263688 amino acid infusions (high metabolic stress) order remains the same: 44
+atom 2828 57b7435692bf7683588020 amino acid infusions (renal failure) order remains the same: 45
+atom 2829 57b7435693cc4156070881 amiodarone (Rx) order remains the same: 46
+atom 2830 57b74356956f4946054137 amitriptyline (Rx) order remains the same: 47
+atom 2831 57b74356980e7775372306 amoxicillin (Rx) order remains the same: 49
+atom 2832 57b7435699cd9533600948 amoxicillin/clavulanate (Rx) order remains the same: 50
+atom 2833 57b743569b04e511976392 amphotericin B lipid complex (ABLC) order remains the same: 51
+atom 2834 57b743569c6b3552505778 amphotericin B liposomal (LAmB) order remains the same: 52
+atom 2835 57b743569e059956515933 ampicillin (Rx) order remains the same: 53
+atom 2836 57b743569fc3e169312034 ampicillin, sulbactam (Rx) order remains the same: 54
+atom 2837 57b74356a16d4717930512 anakinra (Rx) order remains the same: 55
+atom 2838 57b74356a23e7245335023 anastrozole (Rx) order remains the same: 56
+atom 2839 57b74356a2f8b812149190 anidulafungin (Rx) order remains the same: 57
+atom 2858 57b74356b7b46665989330 atovaquone/proguanil order remains the same: 78
+atom 2871 57b7435670178528222748 acetylcholine ophthalmic order remains the same: 8
+atom 2872 57b74356725cc862587329 aclidinium order remains the same: 10
+atom 2873 57b74356734c3852915432 acyclovir (Rx) order remains the same: 11
+atom 2840 57b74356a4670747122818 antihemophilic factor Fc fusion protein order remains the same: 58
+atom 2841 57b74356a4bd8217996308 antithymocyte order remains the same: 59
+atom 2842 57b74356a5066538373526 apixaban order remains the same: 60
+atom 2843 57b74356a62fb641889273 apraclonidine ophthalmic order remains the same: 62
+atom 2844 57b74356a672e775251862 apremilast order remains the same: 63
+atom 2845 57b74356a7230206610864 aprepitant (Rx) order remains the same: 64
+atom 2846 57b74356a7653016483110 fosaprepitant order remains the same: 65
+atom 2847 57b74356a8838175757061 arformoterol (Rx) order remains the same: 66
+atom 2848 57b74356a93a9125111194 argatroban (Rx) order remains the same: 67
+atom 2849 57b74356ac65f248868577 armodafinil (Rx) order remains the same: 69
+atom 2850 57b74356acbfd989157821 asenapine (Rx) order remains the same: 70
+atom 2851 57b74356adb0f481301715 asparaginase Erwinia chrysanthemi order remains the same: 71
+atom 2852 57b74356ae136044648848 aspirin (otc) order remains the same: 72
+atom 2853 57b74356b0f24728161186 atazanavir (Rx) order remains the same: 73
+atom 2854 57b74356b27a9140113058 atenolol (Rx) order remains the same: 74
+atom 2855 57b74356b3f7f394941004 atomoxetine (Rx) order remains the same: 75
+atom 2856 57b74356b4d86137437760 atorvastatin (Rx) order remains the same: 76
+atom 2857 57b74356b650e374617378 atovaquone (Rx) order remains the same: 77
+atom 2859 57b74356b96be383359231 atracurium (Rx) order remains the same: 79
+atom 2860 57b74356ba1b6329874999 atropine (Rx) order remains the same: 80
+atom 2861 57b74356bc651413152990 atropine ophthalmic order remains the same: 81
+atom 2862 57b74356bce12939341947 avanafil order remains the same: 82
+atom 2863 57b74356beb33627156661 axitinib order remains the same: 83
+atom 2864 57b74356c30fc231720883 azelaic acid order remains the same: 86
+atom 2865 57b74356c3869358035481 azelastine (ophthalmic) order remains the same: 87
+atom 2866 57b74356c4300019033020 azelastine nasal agent order remains the same: 88
+atom 2867 57b74356c4742435054576 azilsartan order remains the same: 89
+atom 2868 57b74356c5278197332109 azithromycin (Rx) order remains the same: 90
+atom 2869 57b74356c80c5907712170 aztreonam (Rx) order remains the same: 92
+atom 2870 57b74356c7cbc312806943 azithromycin ophthalmic order remains the same: 91
+atom 2876 57b74356a5cb0219804306 apomorphine order remains the same: 61

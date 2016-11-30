@@ -1,0 +1,39 @@
+new order for atom 812 57b7435ede2c8232911624 <emphasis style="tallman">RABE</emphasis>prazole (Rx) has been updated!  => 1
+new order for atom 813 57b7435edfc50526798247 radioactive iodine (sodium iodide) <emphasis style="sup">131</emphasis>I (Rx) has been updated!  => 2
+new order for atom 814 57b7435ee02e5730092176 raloxifene (Rx) has been updated!  => 3
+new order for atom 815 57b7435ee11ba571168259 raltegravir (Rx) has been updated!  => 4
+new order for atom 816 57b7435ee227c412429679 ramelteon (Rx) has been updated!  => 5
+new order for atom 817 57b7435ee341e002917145 ramipril (Rx) has been updated!  => 6
+new order for atom 818 57b7435ee4cde777916669 ranibizumab (Rx) has been updated!  => 7
+new order for atom 819 57b7435ee58cb378726773 ra<emphasis style="tallman">niti</emphasis>dine (Rx, <emphasis style="smallcaps">otc</emphasis>) has been updated!  => 8
+new order for atom 820 57b7435ee7578331067004 ranolazine (Rx) has been updated!  => 9
+new order for atom 821 57b7435ee84fc374321593 rasagiline (Rx) has been updated!  => 10
+new order for atom 822 57b7435ee9ab8248843131 rasburicase (Rx) has been updated!  => 11
+new order for atom 823 57b7435eea6f7364929520 regorafenib has been updated!  => 12
+new order for atom 824 57b7435eeb6dd159968204 remifentanil (Rx) has been updated!  => 13
+new order for atom 825 57b7435eec9db242432905 repaglinide (Rx) has been updated!  => 14
+new order for atom 826 57b7435eed82c712111851 retapamulin (topical) has been updated!  => 15
+new order for atom 828 57b7435eee91e487293493 Rh<emphasis style="inf">o</emphasis>(D) immune globulin microdose IM (Rx) has been updated!  => 17
+new order for atom 829 57b7435eeee8a528078241 Rh<emphasis style="inf">o</emphasis>(D) immune globulin IV (Rx) has been updated!  => 18
+new order for atom 830 57b7435ef0248007028538 riboflavin (vit B<emphasis style="inf">2</emphasis>) (<emphasis style="smallcaps">otc</emphasis>) has been updated!  => 19
+new order for atom 831 57b7435ef0c09118115081 rifabutin (Rx) has been updated!  => 20
+new order for atom 832 57b7435ef1b17997085065 rif<emphasis style="tallman">amp</emphasis>in (Rx) has been updated!  => 21
+new order for atom 833 57b7435ef3692514546402 rifapentine (Rx) has been updated!  => 22
+new order for atom 834 57b7435f002de782625955 rif<emphasis style="tallman">axim</emphasis>in (Rx) has been updated!  => 23
+new order for atom 835 57b7435f01a23094960780 rilpivirine has been updated!  => 24
+new order for atom 836 57b7435f02b07278265104 riluzole (Rx) has been updated!  => 25
+new order for atom 837 57b7435f03331177797506 rimexolone ophthalmic has been updated!  => 26
+new order for atom 838 57b7435f03b90376062833 riociguat has been updated!  => 27
+new order for atom 839 57b7435f046e0199652189 risedronate (Rx) has been updated!  => 28
+new order for atom 840 57b7435f058dd193628859 risperi<emphasis style="tallman">DONE</emphasis> (Rx) has been updated!  => 29
+new order for atom 841 57b7435f08432532977635 ritonavir (Rx) has been updated!  => 30
+new order for atom 842 57b7435f09d43054861723 ri<emphasis style="tallman">TUX</emphasis>imab (Rx) has been updated!  => 31
+new order for atom 843 57b7435f0b6a7260392762 rivaroxaban has been updated!  => 32
+new order for atom 844 57b7435f0cdbd795141405 rivastigmine (Rx) has been updated!  => 33
+new order for atom 845 57b7435f0e345713036564 rizatriptan (Rx) has been updated!  => 34
+new order for atom 846 57b7435f0f15d394776763 roflumilast has been updated!  => 35
+new order for atom 847 57b7435f10076758433202 romi<emphasis style="tallman">PLOS</emphasis>tim (Rx) has been updated!  => 36
+new order for atom 848 57b7435f10e4a789103415 r<emphasis style="tallman">OPINIR</emphasis>ole (Rx) has been updated!  => 37
+new order for atom 849 57b7435f1276d274366545 rosiglitazone (Rx) has been updated!  => 38
+new order for atom 850 57b7435f13aef321650496 rosuvastatin (Rx) has been updated!  => 39
+new order for atom 851 57b7435f14ce3530255713 rufinamide (Rx) has been updated!  => 40

@@ -1,0 +1,6 @@
+new order for atom 550 57b7435b98679274345767 lami<emphasis style="tallman">VUD</emphasis>ine 3TC (Rx) has been updated!  => 4
+new order for atom 551 57b7435b9a54f078237037 lamo<emphasis style="tallman">TRI</emphasis>gine (Rx) has been updated!  => 5
+new order for atom 562 57b7435ba96d6556709495 lev<emphasis style="tallman">ETIRA</emphasis>cetam (Rx) has been updated!  => 16
+new order for atom 568 57b7435bb0956227763356 levo<emphasis style="tallman">flox</emphasis>acin (Rx) has been updated!  => 22
+new order for atom 569 57b7435bb4b08179653764 levo<emphasis style="tallman">flox</emphasis>acin ophthalmic has been updated!  => 23
+new order for atom 589 57b7435bc37b2626833198 <emphasis style="tallman">LOR</emphasis>azepam (Rx) has been updated!  => 43

@@ -1,0 +1,63 @@
+atom 2639 57b74358ccff0612210075 darifenacin order remains the same: 11
+atom 2640 57b74358cd8fd855291452 darunavir (Rx) order remains the same: 12
+atom 2641 57b74358d017f449103616 dasatinib (Rx) order remains the same: 13
+atom 2642 57b74358d2ab2309141811 DaunoXome order remains the same: 16
+atom 2638 57b74358cbf61412648649 darbepoetin (Rx) order remains the same: 10
+atom 2643 57b74358ea329431850290 diclofenac epolamine (Rx) order remains the same: 38
+atom 2644 57b74358ea6e9040820676 diclofenac potassium (Rx) order remains the same: 39
+atom 2645 57b74358eaaaf287069100 diclofenac sodium (Rx) order remains the same: 40
+atom 2646 57b74358ec8d9172852536 diclofenac ophthalmic order remains the same: 41
+atom 2647 57b74359162b7882910733 doxycycline calcium order remains the same: 73
+atom 2648 57b74358c36b0053269442 dabigatran order remains the same: 1
+atom 2649 57b74358c48ec817391483 dabrafenib order remains the same: 2
+atom 2650 57b74358c51c0207465032 dacarbazine (Rx) order remains the same: 3
+atom 2651 57b74358c62a7300200943 dalbavancin order remains the same: 4
+atom 2652 57b74358c6e69610900128 dalfampridine (Rx) order remains the same: 5
+atom 2653 57b74358c79ea708278037 dalteparin (Rx) order remains the same: 6
+atom 2654 57b74358c8b11151192298 dantrolene (Rx) order remains the same: 7
+atom 2655 57b74358c9e7a561067477 dapagliflozin order remains the same: 8
+atom 2656 57b74358d6590789477372 deferasirox (Rx) order remains the same: 17
+atom 2657 57b74358d6e2c108094169 degarelix order remains the same: 18
+atom 2658 57b74358d7c29170475902 delavirdine (Rx) order remains the same: 19
+atom 2659 57b74358d8ac1909544380 denosumab (Rx) order remains the same: 20
+atom 2660 57b74358d9c40897336126 desipramine (Rx) order remains the same: 21
+atom 2661 57b74358dbbb4697221921 desirudin order remains the same: 22
+atom 2662 57b74358dd050943450856 desloratadine (Rx) order remains the same: 23
+atom 2663 57b74358dda21473806300 desmopressin (Rx) order remains the same: 24
+atom 2664 57b74358def44790025136 desonide topical order remains the same: 25
+atom 2665 57b74358df315378710076 desoximetasone order remains the same: 26
+atom 2666 57b74358dfd36390613528 desvenlafaxine order remains the same: 27
+atom 2667 57b74358e0a8b307106242 dexamethasone (Rx) order remains the same: 28
+atom 2668 57b74358e0ea9572402766 dexamethasone sodium phosphate (Rx) order remains the same: 29
+atom 2669 57b74358e3481883766905 dexamethasone (ophthalmic) order remains the same: 30
+atom 2670 57b74358e3d2e541912805 dexlansoprazole (Rx) order remains the same: 31
+atom 2671 57b74358e4b75992927161 dexmethylphenidate (Rx) order remains the same: 32
+atom 2672 57b74358e5ccb240923372 dextroamphetamine (Rx) order remains the same: 33
+atom 2674 57b74359058f8567717647 diphenoxylate/atropine (Rx) order remains the same: 53
+atom 2675 57b7435905c9b092841038 difenoxin/atropine (Rx) order remains the same: 54
+atom 2677 57b74358e9f40426986133 dibucaine topical order remains the same: 37
+atom 2680 57b74358ecca0591515945 dicyclomine (Rx) order remains the same: 42
+atom 2681 57b74358ed181221141411 didanosine (Rx) order remains the same: 43
+atom 2682 57b74358ee7d4762921188 difluprednate (ophthalmic) order remains the same: 44
+atom 2683 57b74358ef021622893986 digoxin (Rx) order remains the same: 45
+atom 2684 57b74358f363e667066713 digoxin immune FAB (ovine) (Rx) order remains the same: 46
+atom 2685 57b7435901e66933748943 Motion Sickness order remains the same: 49
+atom 2686 57b743590293d819444722 dimethyl fumarate (Rx) order remains the same: 50
+atom 2687 57b74359031eb458831057 dinoprostone (Rx) order remains the same: 51
+atom 2688 57b7435906872033795576 dipyridamole (Rx) order remains the same: 55
+atom 2689 57b7435909ff8890555901 docosanol topical order remains the same: 58
+atom 2692 57b743590b28f078293486 dofetilide (Rx) order remains the same: 61
+atom 2693 57b743590c0ea664452857 dolasetron (Rx) order remains the same: 62
+atom 2694 57b743590caa8496848299 dolutegravir order remains the same: 63
+atom 2695 57b743590d3a9505609457 donepezil (Rx) order remains the same: 64
+atom 2696 57b743590f04a998026733 doripenem (Rx) order remains the same: 66
+atom 2697 57b7435910381218277126 dorzolamide (ophthalmic) order remains the same: 67
+atom 2698 57b7435910bf3137672331 doxazosin (Rx) order remains the same: 68
+atom 2699 57b743591174c795617462 doxepin (Rx) order remains the same: 69
+atom 2700 57b7435915eab317287918 doxycycline (Rx) order remains the same: 72
+atom 2702 57b7435916678320876388 doxycycline hyclate order remains the same: 74
+atom 2703 57b7435916a6e734818358 doxycycline monohydrate order remains the same: 75
+atom 2704 57b7435918cde853825788 doxylamine/pyridoxine order remains the same: 76
+atom 2705 57b743591939c816169926 dronedarone (Rx) order remains the same: 77
+atom 2706 57b743591a166311328234 droxidopa order remains the same: 78
+atom 2707 57b743591bcfc970998125 dutasteride (Rx) order remains the same: 80

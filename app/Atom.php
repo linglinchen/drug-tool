@@ -84,6 +84,13 @@ class Atom extends AppModel {
         $this->alpha_title = mb_convert_encoding(strip_tags($this->title), 'ASCII');
     }
 
+    public static function makeAlphaTitle($xml_name){
+        $title = trim($xml_name);
+        $alpha_title = mb_convert_encoding(strip_tags($title), 'ASCII');
+        //echo $xml_name.' => '.strip_tags($title).' ==>> '.$alpha_title."\n";
+        return $alpha_title;
+    }
+
     /**
      * Assign IDs to XML elements where appropriate.
      *
@@ -279,7 +286,11 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
+                    
                 });
+        //to get the SQL of search
+        //echo $candidates->toSql();
+        //exit;
         self::_addFilters($candidates, $filters);
         $candidates = $candidates
                 ->lists('alpha_title', 'id')
