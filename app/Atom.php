@@ -81,14 +81,21 @@ class Atom extends AppModel {
         }
 
         $this->title = trim($this->title);
-        $this->alpha_title = mb_convert_encoding(strip_tags($this->title), 'ASCII');
+        $this->alpha_title = self::makeAlphaTitle($this->title);
     }
 
-    public static function makeAlphaTitle($xml_name){
-        $title = trim($xml_name);
-        $alpha_title = mb_convert_encoding(strip_tags($title), 'ASCII');
-        //echo $xml_name.' => '.strip_tags($title).' ==>> '.$alpha_title."\n";
-        return $alpha_title;
+    /**
+     * convert the non-latin characters to latin, trim and strip xml tags to make it more searchable
+     *
+     * @param string $title the mono_name or group_name in xml
+     *
+     * @return string alpha title
+     */
+    public static function makeAlphaTitle($title){
+        $trimmedTitle = trim($title);
+        $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'ASCII');
+        
+        return $alphaTitle;
     }
 
     /**
@@ -354,16 +361,6 @@ class Atom extends AppModel {
                     ->orderBy('id', 'desc')
                     ->first();
         }
-    }
-
-    //Get the first version of an atom
-     public static function findFirst($entityId) {
-       
-        return self::withTrashed()
-                ->where('entity_id', '=', $entityId)
-                ->orderBy('id')
-                ->first();
-        
     }
 
     /**
