@@ -49,20 +49,20 @@ class QuickFixOrder extends Command {
 
         foreach($atoms as $atom) {
             $newSort = self::_getNewSort($atom, $importOrders);
-            if ($newSort != $atom->sort){
+            if ($newSort == NULL){ //the atom is not in xml
+                 if ($atom->sort !== NULL){
+                    $newAtom = $atom->replicate();
+                    $newAtom->sort = NULL;
+                    $newAtom->modified_by = NULL;
+                    $newAtom->save();
+                }
+            }
+            elseif ($newSort != $atom->sort){
                 $newAtom = $atom->replicate();
                 $newAtom->sort = $newSort;
                 $newAtom->modified_by = NULL;
                 $newAtom->save();
                 $totalChanged++;
-            }
-            elseif ($newSort === 0){  //the atom is not in xml
-                if ($atom->sort !== NULL){
-                    $newAtom = $atom->replicate();
-                    $newAtom->sort = $NULL;
-                    $newAtom->modified_by = NULL;
-                    $newAtom->save();
-                }
             }
         }
 
@@ -100,7 +100,7 @@ class QuickFixOrder extends Command {
             }
         }
 
-        return 0;   //the atom is not in xml
+        return NULL;   //the atom is not in xml
     }
 
     /**
