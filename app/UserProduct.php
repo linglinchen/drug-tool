@@ -6,6 +6,7 @@ use App\AppModel;
 
 class UserProduct extends AppModel {
     protected $table = 'user_products';
+    protected $dates = ['created_at', 'updated_at'];
 
 	/**
 	 * Find the user's group_id in the specified product if it exists.
