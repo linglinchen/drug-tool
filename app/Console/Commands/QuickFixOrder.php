@@ -93,7 +93,6 @@ class QuickFixOrder extends Command {
                     $nameFormatted =  Atom::makeAlphaTitle($name);
                     if ($nameFormatted == $atom->alpha_title && $match[1] == $atom->molecule_code){
                         $newSort = $order;
-                        //break;
                         return $newSort;
                     }
                 }
