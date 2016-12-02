@@ -31,11 +31,84 @@ class QuickFixOrder extends Command {
      * @return mixed
      */
     public function handle() {
-        self::fixOrder();
+        self::_fixOrder();
     }
 
-    public static function fixOrder() {
-        //get order from xml
+    /**
+     * Fix the sort order of atoms based on their original order in the XML.
+     *
+     * @return void;
+     */
+    protected static function _fixOrder() {
+        $importOrders = self::_getOrderFromXml();
+
+        $atoms = Atom::whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })->get();
+        $totalChanged = 0;
+
+        foreach($atoms as $atom) {
+            $newSort = self::_getNewSort($atom, $importOrders);
+            if ($newSort != $atom->sort){
+                $newAtom = $atom->replicate();
+                $newAtom->sort = $newSort;
+                $newAtom->modified_by = NULL;
+                $newAtom->save();
+                $totalChanged++;
+            }
+            elseif ($newSort === 0){  //the atom is not in xml
+                if ($atom->sort !== NULL){
+                    $newAtom = $atom->replicate();
+                    $newAtom->sort = $NULL;
+                    $newAtom->modified_by = NULL;
+                    $newAtom->save();
+                }
+            }
+        }
+
+        /* output messages */
+        echo 'Total atoms: ' . count($atoms) . "\n";
+        echo 'Total atoms that changed order: ' . $totalChanged . "\n";
+    }
+
+    /**
+     * Find the sort order of an atom based on its original position in the XML.
+     *
+     * @param object $atom The atom we are looking for
+     * @param array $importOrders An associative array containing the sort orders of each chapter
+     *
+     * @return ?integer;
+     */
+    protected static function _getNewSort($atom, $importOrders) {
+        $newSort = $atom->sort;
+
+        //find the corresponding atom in xml 
+        foreach ($importOrders as $xmlFile => $atomOrder){
+            preg_match('/letter_(.*)_20\d\d\.xml/i', $xmlFile, $chapterMatch);
+            preg_match('/(appendix_.*)_20\d\d\.xml/i', $xmlFile, $appendixMatch);
+            
+            $match = $chapterMatch ?: $appendixMatch;
+            if ($match){
+                foreach ($atomOrder as $name => $order){
+                    $nameFormatted =  Atom::makeAlphaTitle($name);
+                    if ($nameFormatted == $atom->alpha_title && $match[1] == $atom->molecule_code){
+                        $newSort = $order;
+                        //break;
+                        return $newSort;
+                    }
+                }
+            }
+        }
+
+        return 0;   //the atom is not in xml
+    }
+
+    /**
+     * Get the original order of every atom that was in the imported XML.
+     *
+     * @return array An associative array containing the sort orders of each chapter
+     */
+    protected static function _getOrderFromXml() {
         $importOrders = [];
         $dir = base_path() . '/data/import/atoms/';
         $dirFiles = scandir($dir);
@@ -46,17 +119,11 @@ class QuickFixOrder extends Command {
             $order = 0;
             while(!feof($fh)){
                 $line = fgets($fh);
-                preg_match('/<group_title>(.*)<\/group_title>/iU', $line,$groupMatch);
-                preg_match('/<mono_name>(.*)<\/mono_name>/iU', $line,$monoMatch);
-                $match = [];
-
-                if ($groupMatch){
-                    $match = $groupMatch;
-                }elseif ($monoMatch){
-                    $match = $monoMatch;
-                }
+                preg_match('/<group_title>(.*)<\/group_title>/iU', $line, $groupMatch);
+                preg_match('/<mono_name>(.*)<\/mono_name>/iU', $line, $monoMatch);
+                $match = $groupMatch ?: $monoMatch;
                 if ($match){
-                    $order ++;
+                    $order++;
                     $atomName = trim($match[1]);
                     $importOrders[$dirFile][$atomName] = $order;
                 }
@@ -64,58 +131,6 @@ class QuickFixOrder extends Command {
             fclose($fh);
         }
 
-        $atoms = Atom::whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                })->get();
-        $totalImported = 0;
-
-        foreach($atoms as $atom) {
-            $newAtom = $atom->replicate();
-
-            //find the corresponding atom in xml 
-            $flag = false; //no matching xml
-            foreach ($importOrders as $xmlFile => $atomOrder){
-                
-                preg_match('/letter_(.*)_2017\.xml/i', $xmlFile, $chapterMatch );
-                preg_match('/(appendix_.*)_2017\.xml/i', $xmlFile,$appendixMatch);
-
-                $match = [];
-                if ($chapterMatch){
-                    $match = $chapterMatch;
-                }elseif ($appendixMatch){
-                    $match = $chapterMatch;
-                }
-                
-                if ($match){
-                    foreach ($atomOrder as $name => $order){
-                        $nameFormatted =  Atom::makeAlphaTitle($name);
-                        if ($nameFormatted == $atom->alpha_title && $match[1] == $atom->molecule_code){
-                            $newAtom->sort = $order;
-                            $totalImported++;
-                            $flag = true; //found match in xml
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            if ($flag){   //there is match in xml
-                if ($newAtom->sort != $atom->sort){
-                    $newAtom->modified_by = NULL;
-                    $newAtom->save();
-                }
-            }else{ //no match in xml
-
-                if (!is_null($atom->sort)){
-                        $newAtom->sort = NULL;
-                        $newAtom->modified_by = NULL;
-                       $newAtom->save();
-                }
-            }
-        }
-
-        /* output messages */
-        echo 'Total atoms: ' . count($atoms) . "\n";
-        echo 'Total atoms that match xml: ' . $totalImported . "\n";
+        return $importOrders;
     }
 }
