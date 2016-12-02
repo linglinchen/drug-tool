@@ -31,6 +31,7 @@ class Comment extends AppModel {
 
         $comments = $comments->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
                 ->where('product_id', '=', $productId)
+                ->groupBy('comments.id')
                 ->orderBy('comments.id')
                 ->get()
                 ->toArray();
