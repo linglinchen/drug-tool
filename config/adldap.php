@@ -118,7 +118,8 @@ return [
                 |
                 */
 
-                'domain_controllers' => ['napdaydcxp021.regn.net', 'lbgc-ldapsus.regn.net'],
+                //'domain_controllers' => ['napdaydcxp021.regn.net', 'lbgc-ldapsus.regn.net'],
+				'domain_controllers' => ['science.regn.net', 'lbgc-ldapsus.regn.net'],
 
                 /*
                 |--------------------------------------------------------------------------
@@ -187,8 +188,8 @@ return [
                 |
                 */
 
-                'admin_username' => env('ADLDAP_ADMIN_USERNAME', 'svc-ucdfeedback'),
-                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', 'U@df33db@ck'),
+                'admin_username' => env('ADLDAP_ADMIN_USERNAME', NULL),
+                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', NULL),
 
                 /*
                 |--------------------------------------------------------------------------
