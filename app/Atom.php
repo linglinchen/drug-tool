@@ -295,9 +295,7 @@ class Atom extends AppModel {
                             ->orWhere($queryalphaTitleConditions);
                     
                 });
-        //to get the SQL of search
-        //echo $candidates->toSql();
-        //exit;
+
         self::_addFilters($candidates, $filters);
         $candidates = $candidates
                 ->lists('alpha_title', 'id')
