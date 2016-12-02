@@ -1,7 +1,0 @@
-new order for atom 1963 57b743566bc97911015557 aceta<emphasis style="tallman">ZOLAMIDE</emphasis> (Rx) has been updated!  => 7
-new order for atom 2003 57b7435687b3d201672055 <emphasis style="tallman">ALPRAZ</emphasis>olam (Rx) has been updated!  => 29
-new order for atom 2004 57b7435690093409208429 a<emphasis style="tallman">MIL</emphasis>oride (Rx) has been updated!  => 37
-new order for atom 2006 57b74356971d4097301893 am<emphasis style="tallman">LODIP</emphasis>ine (Rx) has been updated!  => 48
-new order for atom 2008 57b74356aa8ea685789097 <emphasis style="tallman">ARIP</emphasis>iprazole (Rx) has been updated!  => 68
-new order for atom 2009 57b74356c002d582109914 aza<emphasis style="tallman">CITID</emphasis>ine (Rx) has been updated!  => 84
-new order for atom 2010 57b74356c10c5356564709 aza<emphasis style="tallman">THIO</emphasis>prine (Rx) has been updated!  => 85

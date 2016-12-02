@@ -1,7 +1,0 @@
-atom 1991 58331aac5ccec512757716 TestRX not found in XML: 
-atom 2005 57b74355b2d8e177719355 atazanavir/cobicistat (Rx) not found in XML: 
-atom 2011 57be03eae9a33484203884 anothertest not found in XML: 
-atom 2012 57b74355b253b604112091 alirocumab (Rx) not found in XML: 
-atom 2013 57b74355b03c6775917473 albiglutide (Rx) not found in XML: 
-atom 2014 57eaacefa856b563983973 Math Test not found in XML: 
-atom 2852 57b74356ae136044648848 aspirin (otc) not found in XML: 72

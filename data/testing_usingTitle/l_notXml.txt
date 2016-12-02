@@ -1,7 +1,0 @@
-atom 14 57b74355bed5d039627134 lenvatinib not found in XML: 
-atom 550 57b7435b98679274345767 lamiVUDine 3TC (Rx) not found in XML: 
-atom 551 57b7435b9a54f078237037 lamoTRIgine (Rx) not found in XML: 
-atom 562 57b7435ba96d6556709495 levETIRAcetam (Rx) not found in XML: 
-atom 568 57b7435bb0956227763356 levofloxacin (Rx) not found in XML: 
-atom 569 57b7435bb4b08179653764 levofloxacin ophthalmic not found in XML: 
-atom 589 57b7435bc37b2626833198 LORazepam (Rx) not found in XML: 

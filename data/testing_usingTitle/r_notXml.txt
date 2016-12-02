@@ -1,8 +1,0 @@
-atom 812 57b7435ede2c8232911624 RABEprazole (Rx) not found in XML: 
-atom 819 57b7435ee58cb378726773 ranitidine (Rx, otc) not found in XML: 
-atom 832 57b7435ef1b17997085065 rifampin (Rx) not found in XML: 
-atom 834 57b7435f002de782625955 rifaximin (Rx) not found in XML: 
-atom 840 57b7435f058dd193628859 risperiDONE (Rx) not found in XML: 
-atom 842 57b7435f09d43054861723 riTUXimab (Rx) not found in XML: 
-atom 847 57b7435f10076758433202 romiPLOStim (Rx) not found in XML: 
-atom 848 57b7435f10e4a789103415 rOPINIRole (Rx) not found in XML: 

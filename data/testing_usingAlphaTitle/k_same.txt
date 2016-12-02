@@ -1,5 +1,0 @@
-atom 2231 57b7435b2c4f9644598027 ketorolac (systemic, nasal) (Rx) order remains the same: 5
-atom 2273 57b7435b29758092540774 ketoconazole (Rx) order remains the same: 1
-atom 2274 57b7435b29dd1324302478 ketoconazole (topical) order remains the same: 2
-atom 2276 57b7435b2bb52851542737 ketorolac (ophthalmic) order remains the same: 4
-atom 2277 57b7435b2dcfd063481749 ketotifen (ophthalmic) order remains the same: 6

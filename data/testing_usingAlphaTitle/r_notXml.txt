@@ -1,6 +1,0 @@
-atom 819 57b7435ee58cb378726773 ranitidine (Rx, otc) not found in XML: 
-atom 2507 57b7435edfc50526798247 radioactive iodine (sodium iodide) 131I (Rx) not found in XML: 2
-atom 2520 57b7435eee316085408978 Rho(D) immune globulin standard dose IM?(Rx) not found in XML: 16
-atom 2521 57b7435eee91e487293493 Rho(D) immune globulin microdose IM (Rx) not found in XML: 17
-atom 2522 57b7435eeee8a528078241 Rho(D) immune globulin IV (Rx) not found in XML: 18
-atom 2523 57b7435ef0248007028538 riboflavin (vit B2) (otc) not found in XML: 19

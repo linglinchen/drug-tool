@@ -1,3 +1,0 @@
-atom 18 57b74355c0fda020300952 secukinumab (Rx) not found in XML: 
-atom 19 57b74355c1b33459908057 siltuximab not found in XML: 
-atom 20 57b74355c1f79114775842 sonidegib not found in XML: 

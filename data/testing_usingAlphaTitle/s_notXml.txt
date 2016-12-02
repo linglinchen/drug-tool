@@ -1,5 +1,0 @@
-atom 18 57b74355c0fda020300952 secukinumab (Rx) not found in XML: 
-atom 19 57b74355c1b33459908057 siltuximab not found in XML: 
-atom 20 57b74355c1f79114775842 sonidegib not found in XML: 
-atom 2551 57b7435f622ac680628152 simethicone (otc, Rx) not found in XML: 15
-atom 2554 57b7435f67399322833774 sodium bicarbonate (Rx, otc) not found in XML: 19

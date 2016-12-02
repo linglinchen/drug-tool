@@ -1,4 +1,0 @@
-new order for atom 808 57b7435e90ad8169984510 <emphasis style="tallman">QUE</emphasis>tiapine (Rx) has been updated!  => 1
-new order for atom 809 57b7435e94691356328709 quinapril (Rx) has been updated!  => 2
-new order for atom 810 57b7435e95e55557229027 qui<emphasis style="tallman">NID</emphasis>ine gluconate (Rx) has been updated!  => 3
-new order for atom 811 57b7435e9651c481710098 qui<emphasis style="tallman">NID</emphasis>ine sulfate (Rx) has been updated!  => 4

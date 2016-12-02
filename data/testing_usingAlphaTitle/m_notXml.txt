@@ -1,5 +1,0 @@
-atom 15 57b74355bf347957130341 metreleptin not found in XML: 
-atom 16 57b74355bf8be751697229 miltefosine not found in XML: 
-atom 2334 57b7435c512bb440424743 meclizine (otc, Rx) not found in XML: 15
-atom 2329 57b7435c4831a801699373 magnesium sulfate (otc, Rx) not found in XML: 10
-atom 2357 57b7435c93490160184804 minoxidil (Rx, otc) not found in XML: 46

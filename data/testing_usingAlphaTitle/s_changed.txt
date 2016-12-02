@@ -1,6 +1,0 @@
-new order for atom 855 57b7435f582bc197213268 <emphasis style="tallman">sax</emphasis>agliptin (Rx) has been updated!  => 4
-new order for atom 864 57b7435f60afc906475457 silver sulf<emphasis style="tallman">ADIAZINE</emphasis> topical has been updated!  => 13
-new order for atom 869 57b7435f6621c467006971 <emphasis style="tallman">sit</emphasis>aGLIPtin (Rx) has been updated!  => 18
-new order for atom 881 57b7435f7f67d579782764 sulfa<emphasis style="tallman">SALA</emphasis>zine (Rx) has been updated!  => 30
-new order for atom 882 57b7435f80dc6682569005 <emphasis style="tallman">SUMA</emphasis>triptan (Rx) has been updated!  => 31
-new order for atom 883 57b7435f824d3751498509 <emphasis style="tallman">SUNI</emphasis>tinib (Rx) has been updated!  => 32

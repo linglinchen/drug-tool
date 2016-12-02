@@ -1,7 +1,0 @@
-atom 2376 57b7435d055fe964397703 naproxen (Rx, otc) not found in XML: 8
-atom 2386 57b7435d1b5e9501248370 niacin (otc, Rx) not found in XML: 18
-atom 2387 57b7435d1bb78018707426 niacinamide (otc, Rx) not found in XML: 19
-atom 2390 57b7435d1e63d236780391 nicotine inhaler (otc, Rx) not found in XML: 23
-atom 2391 57b7435d1ec2e660565234 nicotine lozenge (otc) not found in XML: 24
-atom 2393 57b7435d1f97c883313836 nicotine transdermal (otc, Rx) not found in XML: 26
-atom 2406 57b7435d2d0fe944065332 nizatidine (otc, Rx) not found in XML: 40

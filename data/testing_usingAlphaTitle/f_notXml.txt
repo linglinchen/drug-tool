@@ -1,4 +1,0 @@
-atom 2158 57b74359ebf65309003557 famotidine (otc, Rx) not found in XML: 4
-atom 2169 57b7435a00716918817370 carbonyl iron (otc) not found in XML: 21
-atom 2170 57b7435a00bf5217920259 iron polysaccharide (otc) not found in XML: 22
-atom 2191 57b7435a24733341331847 folic acid (vit B9) (otc) not found in XML: 49

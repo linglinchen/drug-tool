@@ -1,5 +1,0 @@
-new order for atom 975 57b7436097d8f192292260 val<emphasis style="tallman">ACY</emphasis>clovir (Rx) has been updated!  => 1
-new order for atom 976 57b74360992d7990267092 val<emphasis style="tallman">GAN</emphasis>ciclovir (Rx) has been updated!  => 2
-new order for atom 991 57b74360b22d0481321537 vin<emphasis style="tallman">BLAS</emphasis>tine (VLB) (Rx) has been updated!  => 17
-new order for atom 992 57b74360b4027564401025 vin<emphasis style="tallman">CRIS</emphasis>tine (VCR) (Rx) has been updated!  => 18
-new order for atom 993 57b74360b4624253347851 Vin<emphasis style="tallman">CRIS</emphasis>tine Liposomal (Rx) has been updated!  => 19
