@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixML::class,
         Commands\QuickFixXmlns::class,
         Commands\QuickFixRX::class,
+        Commands\QuickFixOrder::class,
     ];
 
     /**

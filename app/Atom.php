@@ -81,7 +81,21 @@ class Atom extends AppModel {
         }
 
         $this->title = trim($this->title);
-        $this->alpha_title = mb_convert_encoding(strip_tags($this->title), 'ASCII');
+        $this->alpha_title = self::makeAlphaTitle($this->title);
+    }
+
+    /**
+     * convert the non-latin characters to latin, trim and strip xml tags to make it more searchable
+     *
+     * @param string $title the mono_name or group_name in xml
+     *
+     * @return string alpha title
+     */
+    public static function makeAlphaTitle($title){
+        $trimmedTitle = trim($title);
+        $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'ASCII');
+        
+        return $alphaTitle;
     }
 
     /**
@@ -219,6 +233,7 @@ class Atom extends AppModel {
         return $query;
     }
 
+    
     /**
      * Get a list of discontinued monographs.
      *
@@ -278,7 +293,9 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
+                    
                 });
+
         self::_addFilters($candidates, $filters);
         $candidates = $candidates
                 ->lists('alpha_title', 'id')
