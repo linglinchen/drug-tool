@@ -37,7 +37,7 @@ class QuickFixOrder extends Command {
             throw new \Exception('Invalid product ID.');
         }
         
-        self::_fixOrder();
+        self::_fixOrder($productId);
     }
 
     /**
