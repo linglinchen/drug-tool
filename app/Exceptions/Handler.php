@@ -8,6 +8,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+
+use App\ApiError;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +48,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        return ApiError::buildResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
     }
 }

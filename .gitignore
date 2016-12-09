@@ -9,4 +9,7 @@ Homestead.json
 /data/cache/*
 /data/import/*
 
+.vscode
+.idea
+
 !empty

@@ -17,8 +17,7 @@ class Assignment extends AppModel {
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
 	 * Adds the appropriate atoms.
 	 *
-	 * @api
-	 *
+	 * @param integer $productId Limit query to this product
 	 * @param ?array $filters The filters as key => value pairs
 	 * @param ?array $order (optional) The order column and direction
 	 * @param ?int $limit (optional) Max number of results per page
@@ -27,9 +26,9 @@ class Assignment extends AppModel {
 	 *
 	 * @return array The list of assignments
 	 */
-	public function getList($filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
-		$query = self::select($columns);
+		$query = self::allForProduct($productId)->select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
@@ -48,9 +47,9 @@ class Assignment extends AppModel {
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
-			$atoms = Atom::findNewest($entityIds)
+			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
-			Comment::addSummaries($atoms);
+			Comment::addSummaries($atoms, $productId);
 			$atoms = $atoms->toArray();
 
 			//remove xml
@@ -78,12 +77,13 @@ class Assignment extends AppModel {
 	 * Get the specified atom's currently active assignment.
 	 *
 	 * @param string $atomEntityId The atom's entityId
+	 * @param integer $productId Limit query to this product
 	 *
 	 * @return ?object The assignment (if found)
 	 */
-	public static function getCurrentAssignment($atomEntityId) {
-		$assignment = self::select()
-				->orderBy('id', 'DESC')
+	public static function getCurrentAssignment($atomEntityId, $productId) {
+		$assignment = self::allForProduct($productId)
+				->orderBy('assignments.id', 'DESC')
 				->where('atom_entity_id', '=', $atomEntityId)
 				->limit(1)
 				->first();
@@ -101,8 +101,6 @@ class Assignment extends AppModel {
 		$validFilters = ['task_id', 'atoms.molecule_code', 'user_id', 'atom_entity_id', 'task_ended'];
 
 		if($filters) {
-			self::_joinAtoms($query);
-
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
@@ -149,29 +147,18 @@ class Assignment extends AppModel {
 	}
 
 	/**
-	 * Join in the current versions of the atoms.
-	 *
-	 * @param object $query The query object to modify
-	 */
-	protected static function _joinAtoms($query) {
-		$query->leftJoin('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->whereIn('atoms.id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                });
-	}
-
-	/**
 	 * Update the atom's assignments.
 	 *
 	 * @param string $atomEntityId The atom's entityId
 	 * @param mixed[] $promotion The promotion we're going to perform
+	 * @param integer $productId Limit query to this product
 	 */
-	public static function updateAssignments($atomEntityId, $promotion) {
+	public static function updateAssignments($atomEntityId, $promotion, $productId) {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
 
 		$user = \Auth::user();
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			self::_endCurrentAssignment($atomEntityId);
+			self::_endCurrentAssignment($atomEntityId, $productId);
 
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
@@ -189,9 +176,9 @@ class Assignment extends AppModel {
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
-			$assignment = self::getCurrentAssignment($atomEntityId);
+			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
-				self::_endCurrentAssignment($atomEntityId);
+				self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
 				$assignment->user_id = $promotion['user_id'];
@@ -204,9 +191,10 @@ class Assignment extends AppModel {
 	 * End the current task if it's still open.
 	 *
 	 * @param string $atomEntityId The atom's entityId
+	 * @param integer $productId Limit query to this product
 	 */
-	protected static function _endCurrentAssignment($atomEntityId) {
-		$currentAssignment = self::getCurrentAssignment($atomEntityId);
+	protected static function _endCurrentAssignment($atomEntityId, $productId) {
+		$currentAssignment = self::getCurrentAssignment($atomEntityId, $productId);
 		if($currentAssignment && !$currentAssignment->task_end) {
 			$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
 			$currentAssignment->save();
@@ -218,13 +206,15 @@ class Assignment extends AppModel {
 	 *
 	 * @param integer $userId The user's ID
 	 * @param string $atomEntityId The atomEntityId the user is currently on
+	 * @param integer $productId Limit query to this product
 	 *
 	 * @return ?object
 	 */
-	public static function next($userId, $atomEntityId) {
-		$assignments = Assignment::where('user_id' , '=', $userId)
-				->orderBy('id', 'ASC')
-				->get();
+	public static function next($userId, $atomEntityId, $productId) {
+		$query = Assignment::allForProduct($productId)
+				->where('user_id' , '=', $userId)
+				->orderBy('assignments.id', 'ASC');
+		$assignments = $query->get();
 
 		//find the current assignment
 		$found = 0;
@@ -243,5 +233,17 @@ class Assignment extends AppModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
+		return self::join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
+				->where('atoms.product_id', '=', (int)$productId);
 	}
 }

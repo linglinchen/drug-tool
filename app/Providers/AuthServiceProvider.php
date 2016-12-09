@@ -26,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies($gate);
 
-        //
+        \Auth::provider('apiuser', function ($app, array $config) {
+            $model = $app['config']['auth.providers.apiuser.model'];
+
+            return new ApiUserProvider($app['hash'], $model);
+        });
     }
 }

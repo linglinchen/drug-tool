@@ -12,7 +12,7 @@ use App\Group;
 /**
  * Expected field headers for groups.csv:
  *
- * title
+ * title,product_id
  */
 class ImportGroups extends Command
 {

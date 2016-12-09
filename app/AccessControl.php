@@ -29,6 +29,24 @@ class AccessControl extends AppModel {
 	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
 	/**
+	 * @var ?integer $productId Check access against this product
+	 */
+	public $productId = null;
+
+	public $permissions = [];
+
+	/**
+	 * Construct the User instance.
+	 *
+	 * @param ?integer $productId (optional) The ACL's productId
+	 */
+	public function __construct($productId = null) {
+		if($productId) {
+			$this->productId = $productId;
+		}
+	}
+
+	/**
 	 * Load the ACL into this model for the given user or the current user if none was provided.
 	 *
 	 * @param mixed[]|null $user (optional) Load permissions for this user
@@ -37,17 +55,24 @@ class AccessControl extends AppModel {
 	 */
 	public function loadPermissions($user = null) {
 		//default to the current user if one isn't provided
-		if($user === null) {
+		if(!$user) {
 			$user = \Auth::user();
-		}
 
-		$permissions = self::where('user_id', '=', $user['id'])
-				->orWhere('group_id', '=', $user['group_id'])
-				->get();
+			if(!$user) {
+				throw new \Exception('Missing user.');
+			}
+		}
+		$user = User::find($user['id']);
 
 		$accessControlStructure = new AccessControlStructure();
-		$structure = $accessControlStructure->getStructure();
-		$this->permissions = self::_applyPermissions($structure, $permissions);
+		$structure = $accessControlStructure->getStructure()->toArray();
+		
+		$this->permissions = [];
+		$permissions = $user->getPermissions()->toArray();
+		$productIds = $user->userProducts->pluck('product_id')->all();
+		foreach($productIds as $productId) {
+			$this->permissions[$productId] = self::_applyPermissions($structure, $permissions, $productId);
+		}
 
 		return $this->permissions;
 	}
@@ -60,11 +85,16 @@ class AccessControl extends AppModel {
 	 * @return boolean Can the user do the thing?
 	 */
 	public function can($key) {
+		if(!$this->productId) {
+			throw new \Exception('No product ID was set.');
+		}
+
 		if(!$this->permissions) {
 			$this->loadPermissions();
 		}
 
-		foreach($this->permissions as $permission) {
+		$permissions = $this->_getProductPermissions();
+		foreach($permissions as $permission) {
 			//if permissions key is what we are looking for, resolve user permissions for that node.
 			if(strtolower($permission['access_key']) == strtolower($key)) {
 				return $this->_resolvePermission($permission);
@@ -77,24 +107,38 @@ class AccessControl extends AppModel {
 	/**
 	 * Overlay the user's permissions onto the ACL structure to produce their ACL.
 	 *
-	 * @param string $structure array[] The ACL structure
-	 * @param string $permissions array[] The user's permissions
+	 * @param array[] $structure The ACL structure
+	 * @param array[] $permissions The user's permissions
+	 * @param integer $productId Build ACL for this product
 	 *
 	 * @return array[] The ACL
 	 */
-	protected static function _applyPermissions($structure, $permissions) {
+	protected static function _applyPermissions($structure, $permissions, $productId) {
 		foreach($permissions as $permission) {
-			$structure[$permission['access_control_structure_id']]['permitted'] = (bool)$permission['permitted'];
+			if($permission['product_id'] == $productId) {
+				$structure[$permission['access_control_structure_id']]['permitted'] = (bool)$permission['permitted'];
+			}
 		}
 
 		return $structure;
 	}
 
 	/**
+	 * Get the permissions for the currently selected product.
+	 *
+	 * @return array
+	 */
+	protected function _getProductPermissions() {
+		$productId = $this->productId;
+		
+		return $this->permissions[$productId];
+	}
+
+	/**
 	 * Recurse down the ACL tree to test if the user can do the thing.
 	 *
-	 * @param string $permission mixed[] The permission we are currently checking
-	 * @param string $permissions array[]|null (optional) The user's unvisited permissions
+	 * @param mixed[] $permission The permission we are currently checking
+	 * @param array[]|null $permissions (optional) The user's unvisited permissions
 	 *
 	 * @return boolean Can the user do the thing?
 	 */
@@ -104,7 +148,7 @@ class AccessControl extends AppModel {
 				$this->loadPermissions();
 			}
 
-			$permissions = $this->permissions;
+			$permissions = $this->_getProductPermissions();
 		}
 
 		if($permission['permitted']) {

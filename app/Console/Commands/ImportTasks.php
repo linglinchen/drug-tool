@@ -12,7 +12,7 @@ use App\Task;
 /**
  * Expected field headers for tasks.csv:
  *
- * title
+ * title,product_id
  */
 class ImportTasks extends Command
 {

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\AccessControl;
+
 class User extends Authenticatable {
     /**
      * The attributes that are mass assignable.
@@ -20,8 +22,28 @@ class User extends Authenticatable {
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'ACL'
     ];
+
+    public $ACL;
+
+    /**
+     * Set up the Product relationship.
+     *
+     * @returns HasManyThrough
+     */
+    public function products() {
+        return $this->hasManyThrough('App\Product', 'App\UserProduct');
+    }
+
+    /**
+     * Set up the UserProduct relationship.
+     *
+     * @returns HasManyThrough
+     */
+    public function userProducts() {
+        return $this->hasMany('App\UserProduct');
+    }
 
     /**
      * Returns a list of all users with sensitive fields excluded.
@@ -31,12 +53,92 @@ class User extends Authenticatable {
     public static function publicList() {
         $output = [];
 
-        $users = self::all();
+        $users = self::select()->get();
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
+            $user->userProducts;
             $output[$user['id']] = $user;
         }
 
         return $output;
     }
+
+    /**
+     * Load this user's ACL.
+     *
+	 * @param ?integer $productId (optional) The ACL's productId
+     */
+    public function loadACL($productId = null) {
+        $ACL = new AccessControl($productId);
+        $ACL->loadPermissions($this->toArray());
+        
+        $this->ACL = $ACL;
+    }
+
+    /**
+     * Get this user's explicit permissions for every product they can access.
+     *
+     * @returns array
+     */
+    public function getPermissions() {
+		$userProducts = $this->userProducts;
+        $productIds = $userProducts->pluck('product_id')->all();
+
+        //ORMs make everything so easy!
+        $query = AccessControl::select();
+        foreach($userProducts as $key => $userProduct) {
+            $subQueryFunction = function ($subQuery) use ($userProduct) {
+                $subQuery->where('product_id', '=', $userProduct->product_id)
+                        ->where(function ($subQuery) use ($userProduct) {
+                            $subQuery->where('user_id', '=', $userProduct->user_id)
+                                    ->orWhere('group_id', '=', $userProduct->group_id);
+                        });
+            };
+
+            if($key) {
+                $query->orWhere($subQueryFunction);
+            }
+            else {
+                $query->where($subQueryFunction);
+            }
+        }
+        
+        return $query->get();
+    }
+
+    /**
+     * Check if this user has access to the given product.
+     *
+     * @param integer $productId The product ID to check
+     *
+     * @return boolean
+     */
+    public function canAccessProduct($productId) {
+        $productIds = $this->userProducts->pluck('product_id')->all();
+
+        return in_array($productId, $productIds);
+    }
+
+	/**
+	 * Select all that belong to the current product.
+	 *
+	 * @return {object} The query object
+	 */
+	public static function allForCurrentProduct() {
+		$productId = \Auth::user()->ACL->productId;
+
+		return self::allForProduct($productId);
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
+		return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+				->where('user_products.product_id', '=', (int)$productId);
+	}
 }

@@ -28,13 +28,16 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @return ApiPayload|Response
      */
-    public function listAction() {
+    public function listAction($productId) {
         $list = [];
-        $atoms = Atom::whereIn('id', Atom::buildLatestIDQuery())
-            ->orderBy('alpha_title', 'asc')
-            ->get();
+        $atoms = Atom::allForCurrentProduct()
+                ->whereIn('id', Atom::buildLatestIDQuery())
+                ->orderBy('alpha_title', 'asc')
+                ->get();
         foreach($atoms as $atom) {
             $list[] = [
                 'entity_id' => $atom->entityId,
@@ -50,20 +53,23 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function postAction(Request $request) {
+    public function postAction($productId, Request $request) {
         $input = $request->all();
 
-        $locked = current(Molecule::locked($input['molecule_code']));
-        if(isset($input['molecule_code']) && $locked) {
+        $moleculeCode = isset($input['molecule_code']) ? $input['molecule_code'] : null;
+        $locked = current(Molecule::locked($moleculeCode, $productId));
+        if(isset($moleculeCode) && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
         $atom = new Atom();
         $atom->entity_id = Atom::makeUID();
+        $atom->product_id = $productId;
         foreach($this->_allowedProperties as $allowed) {
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];
@@ -72,7 +78,7 @@ class AtomController extends Controller
         $atom->save();
         $atom->is_current = true;
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments($productId));
     }
 
     /**
@@ -80,22 +86,24 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to retrieve
      * @param ?string $id (optional) The ID of the specific version to retrieve
      *
      * @return ApiPayload|Response
      */
-    public function getAction($entityId, $id = null) {
+    public function getAction($productId, $entityId, $id = null) {
         if($id) {
-            $atom = Atom::where('id', '=', $id)
+            $atom = Atom::allForCurrentProduct()
+                    ->where('id', '=', $id)
                     ->where('entity_id', '=', $entityId)
                     ->get()
                     ->first();
 
-            $currentAtom = Atom::findNewestIfNotDeleted($entityId);
+            $currentAtom = Atom::findNewestIfNotDeleted($entityId, $productId);
         }
         else {
-            $atom = Atom::findNewestIfNotDeleted($entityId);
+            $atom = Atom::findNewestIfNotDeleted($entityId, $productId);
         }
 
         if(!$atom) {
@@ -104,7 +112,7 @@ class AtomController extends Controller
 
         $atom->is_current = !$id || $atom->id == $currentAtom->id;
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments($productId));
     }
 
     /**
@@ -112,20 +120,21 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to retrieve
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function putAction($entityId, Request $request) {
+    public function putAction($productId, $entityId, Request $request) {
         $input = $request->all();
 
-        $locked = current(Molecule::locked($input['molecule_code']));
+        $locked = current(Molecule::locked($input['molecule_code'], $productId));
         if(isset($input['molecule_code']) && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
         }
 
-        $atom = Atom::findNewest($entityId);
+        $atom = Atom::findNewest($entityId, $productId);
         if(!$atom) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found.');
         }
@@ -139,7 +148,7 @@ class AtomController extends Controller
         $atom->save();
         $atom->is_current = true;
 
-        return new ApiPayload($atom->addAssignments());
+        return new ApiPayload($atom->addAssignments($productId));
     }
 
     /**
@@ -147,15 +156,16 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function massUpdateAction(Request $request) {
+    public function massUpdateAction($productId, Request $request) {
         $entityIds = $request->input('entityIds');
         $updates = $request->input('updates');
 
-        $atoms = Atom::findNewest($entityIds)->get();
+        $atoms = Atom::findNewest($entityIds, $productId)->get();
 
         try {
             $moleculeCodes = [];
@@ -163,12 +173,12 @@ class AtomController extends Controller
                 $moleculeCodes[] = $atom->molecule_code;
             }
 
-            $locked = current(Molecule::locked($moleculeCodes));
+            $locked = current(Molecule::locked($moleculeCodes, $productId));
             if($locked) {
                 throw new \Exception('Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
             }
 
-            \DB::transaction(function () use($atoms, $updates) {
+            \DB::transaction(function () use ($atoms, $updates, $productId) {
                 foreach($atoms as $atomKey => $atom) {
                     $atom = $atom->replicate();
                     foreach($this->_allowedMassUpdateProperties as $allowed) {
@@ -178,7 +188,7 @@ class AtomController extends Controller
                     }
                     $atom->save();
 
-                    $atoms[$atomKey] = $atom->addAssignments();
+                    $atoms[$atomKey] = $atom->addAssignments($productId);
                 }
             });
         }
@@ -195,9 +205,11 @@ class AtomController extends Controller
      * @todo Implement this.
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @param string $entityId The entityId of the atom to delete
      */
-    public function deleteAction($entityId) {
+    public function deleteAction($productId, $entityId) {
         //
     }
 
@@ -206,12 +218,14 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $entityId The entityId of the atom to examine
      *
      * @return ApiPayload|Response
      */
-    public function historyAction($entityId) {
-        $versions = Atom::where('entity_id', '=', $entityId)
+    public function historyAction($productId, $entityId) {
+        $versions = Atom::allForCurrentProduct()
+                ->where('entity_id', '=', $entityId)
                 ->orderBy('id', 'ASC')
                 ->get();
 
@@ -227,17 +241,18 @@ class AtomController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function searchAction(Request $request) {
+    public function searchAction($productId, Request $request) {
         $q = strtolower($request->input('q', ''));
         $filters = $request->input('filters', []);
         $limit = max((int)$request->input('limit', 10), 1);
         $page = max((int)$request->input('page', 1), 1);
 
-        $results = $q ? Atom::search($q, $filters, $limit, $page) : [];
+        $results = $q ? Atom::search($q, $productId, $filters, $limit, $page) : [];
 
         return new ApiPayload($results);
     }

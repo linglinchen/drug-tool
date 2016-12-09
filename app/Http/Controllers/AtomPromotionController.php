@@ -23,17 +23,18 @@ class AtomPromotionController extends Controller {
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function postAction(Request $request) {
+    public function postAction($productId, Request $request) {
         $atomEntityIds = $request->input('atomEntityIds');
         $atomEntityIds = is_string($atomEntityIds) ? [$atomEntityIds] : $atomEntityIds;
         $promotion = $request->input('promotion');
 
         try {
-            $assignments = Atom::promote($atomEntityIds, $promotion);
+            $assignments = Atom::promote($atomEntityIds, $promotion, $productId);
         }
         catch(\Exception $e) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());

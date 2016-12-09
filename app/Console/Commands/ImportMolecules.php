@@ -12,7 +12,7 @@ use App\Molecule;
 /**
  * Expected field headers for molecules.csv:
  *
- * code,title
+ * code,title,sort,product_id
  */
 class ImportMolecules extends Command
 {
