@@ -9,6 +9,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Atom;
+use App\Product;
 
 class QuickFixOrder extends Command {
     /**
