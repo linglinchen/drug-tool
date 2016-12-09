@@ -543,7 +543,7 @@ class Atom extends AppModel {
     protected function _isTitleInUse() {
         $count = self::allForProduct($this->product_id)
                 ->where('entity_id', '<>', $this->entity_id)
-                ->where('alpha_title', 'like', $this->alpha_title)
+                ->where('alpha_title', '=', $this->alpha_title)
                 ->count();
 
         return $count > 0;
