@@ -28,7 +28,7 @@ class AccessControlStructure extends AppModel {
     /**
      * Load and initialize the ACL structure.
      *
-     * @return array[] The ACL structure
+     * @return Collection The ACL structure
      */
 	public function getStructure() {
 		$output = array();
@@ -36,10 +36,10 @@ class AccessControlStructure extends AppModel {
 				->orderBy('parent_id')
 				->get();
 		foreach($structure as $element) {
-			$element['permitted'] = false;
-			$output[$element['id']] = $element;
+			$element->permitted = false;
+			$output[$element->id] = $element;
 		}
 
-		return $output;
+		return collect($output);
 	}
 }

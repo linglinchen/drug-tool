@@ -13,7 +13,7 @@ use App\AccessControl;
  * Since the ACL model defaults to denial, every line that is imported is treated as implicitly permitted.
  * Expected field headers for acl.csv:
  *
- * user_id,group_id,access_control_structure_id
+ * user_id,group_id,access_control_structure_id,product_id
  */
 class ImportACL extends Command
 {

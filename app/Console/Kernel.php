@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportACL::class,
         Commands\ImportTasks::class,
         Commands\ImportStatuses::class,
+        Commands\ImportUserProducts::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,

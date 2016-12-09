@@ -127,4 +127,35 @@ class AppModel extends Model {
 
 		return response()->stream($callback, 200, $headers);
 	}
+
+	/**
+	 * Get the current productId. This usually comes from the URL parameter.
+	 *
+	 * @return ?integer
+	 */
+	public static function getCurrentProductId() {
+		return \Auth::user()->ACL->productId;
+	}
+
+	/**
+	 * Select all that belong to the current product.
+	 *
+	 * @return {object} The query object
+	 */
+	public static function allForCurrentProduct() {
+		$productId = self::getCurrentProductId();
+
+		return self::allForProduct($productId);
+	}
+
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
+		return self::where('product_id', '=', $productId);
+	}
 }

@@ -16,7 +16,7 @@ class QuickFixOrder extends Command {
      *
      * @var string
      */
-    protected $signature = 'quickfix:order';
+    protected $signature = 'quickfix:order {productId}';
 
     /**
      * The console command description.
@@ -31,18 +31,26 @@ class QuickFixOrder extends Command {
      * @return mixed
      */
     public function handle() {
+        $productId = (int)$this->argument('productId');
+        if(!$productId || !Product::find($productId)) {
+            throw new \Exception('Invalid product ID.');
+        }
+        
         self::_fixOrder();
     }
 
     /**
      * Fix the sort order of atoms based on their original order in the XML.
      *
+     * @param integer $productId The product we are targeting
+     *
      * @return void;
      */
-    protected static function _fixOrder() {
+    protected static function _fixOrder($productId) {
         $importOrders = self::_getOrderFromXml();
 
-        $atoms = Atom::whereIn('id', function ($q) {
+        $atoms = Atom::allForProduct($productId)
+                ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })->get();
         $totalChanged = 0;

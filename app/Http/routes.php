@@ -37,48 +37,50 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('logout', ['uses' => 'UserController@logoutAction']);
         });
 
-        Route::group(['middleware' => 'auth.basic'], function () {		//secured endpoints
-            Route::get('atom', ['uses' => 'AtomController@listAction']);
-            Route::post('atom', ['uses' => 'AtomController@postAction']);
-            Route::get('atom/search', ['uses' => 'AtomController@searchAction']);
-            Route::put('atom/massUpdate', ['uses' => 'AtomController@massUpdateAction']);
-            Route::get('atom/{entityId}', ['uses' => 'AtomController@getAction']);
-            Route::get('atom/{entityId}/history', ['uses' => 'AtomController@historyAction']);
-            Route::get('atom/{entityId}/version/{id}', ['uses' => 'AtomController@getAction']);
-            Route::put('atom/{entityId}', ['uses' => 'AtomController@putAction']);
-            Route::delete('atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
+        Route::group(['middleware' => 'auth.api'], function () {		//secured endpoints
+            Route::get('{productId}/atom', ['uses' => 'AtomController@listAction']);
+            Route::post('{productId}/atom', ['uses' => 'AtomController@postAction']);
+            Route::get('{productId}/atom/search', ['uses' => 'AtomController@searchAction']);
+            Route::put('{productId}/atom/massUpdate', ['uses' => 'AtomController@massUpdateAction']);
+            Route::get('{productId}/atom/{entityId}', ['uses' => 'AtomController@getAction']);
+            Route::get('{productId}/atom/{entityId}/history', ['uses' => 'AtomController@historyAction']);
+            Route::get('{productId}/atom/{entityId}/version/{id}', ['uses' => 'AtomController@getAction']);
+            Route::put('{productId}/atom/{entityId}', ['uses' => 'AtomController@putAction']);
+            Route::delete('{productId}/atom/{entityId}', ['uses' => 'AtomController@deleteAction']);
 
-            Route::post('atom/promote', ['uses' => 'AtomPromotionController@postAction']);
+            Route::post('{productId}/atom/promote', ['uses' => 'AtomPromotionController@postAction']);
 
-            Route::get('atom/{entityId}/comment', ['uses' => 'AtomCommentController@getAction']);
-            Route::post('atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
-            Route::delete('atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
+            Route::get('{productId}/atom/{entityId}/comment', ['uses' => 'AtomCommentController@getAction']);
+            Route::post('{productId}/atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
+            Route::delete('{productId}/atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
 
-            Route::get('molecule', ['uses' => 'MoleculeController@listAction']);
-            Route::get('molecule/{code}', ['uses' => 'MoleculeController@getAction']);
-            Route::get('molecule/{code}/export', ['uses' => 'MoleculeExportController@getAction']);
-            Route::put('molecule/{code}/sort', ['uses' => 'MoleculeSortController@putAction']);
-            Route::get('molecule/{code}/lock', ['uses' => 'MoleculeLockController@lockAction']);
-            Route::get('molecule/{code}/unlock', ['uses' => 'MoleculeLockController@unlockAction']);
+            Route::get('{productId}/molecule', ['uses' => 'MoleculeController@listAction']);
+            Route::get('{productId}/molecule/{code}', ['uses' => 'MoleculeController@getAction']);
+            Route::get('{productId}/molecule/{code}/export', ['uses' => 'MoleculeExportController@getAction']);
+            Route::put('{productId}/molecule/{code}/sort', ['uses' => 'MoleculeSortController@putAction']);
+            Route::get('{productId}/molecule/{code}/lock', ['uses' => 'MoleculeLockController@lockAction']);
+            Route::get('{productId}/molecule/{code}/unlock', ['uses' => 'MoleculeLockController@unlockAction']);
 
-            Route::get('lookup', ['uses' => 'LookupController@listAction']);
+            Route::get('{productId}/lookup', ['uses' => 'LookupController@listAction']);
 
-            Route::get('assignment', ['uses' => 'AssignmentController@listAction']);
-            Route::post('assignment', ['uses' => 'AssignmentController@postAction']);
-            Route::get('assignment/{atomEntityId}/next', ['uses' => 'AssignmentController@nextAction']);
+            Route::get('product', ['uses' => 'ProductController@listAction']);
+
+            Route::get('{productId}/assignment', ['uses' => 'AssignmentController@listAction']);
+            Route::post('{productId}/assignment', ['uses' => 'AssignmentController@postAction']);
+            Route::get('{productId}/assignment/{atomEntityId}/next', ['uses' => 'AssignmentController@nextAction']);
 
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
 
             Route::get('report', ['uses' => 'ReportController@listAction']);
-            Route::get('report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
-            Route::get('report/statuses', ['uses' => 'ReportController@statusesAction']);
-            Route::get('report/edits', ['uses' => 'ReportController@editsAction']);
-            Route::get('report/openAssignments', ['uses' => 'ReportController@openAssignmentsAction']);
-            Route::get('report/brokenLinks', ['uses' => 'ReportController@brokenLinksAction']);
-            Route::get('report/comments', ['uses' => 'ReportController@commentsAction']);
-            Route::get('report/moleculeStats', ['uses' => 'ReportController@moleculeStatsAction']);
+            Route::get('{productId}/report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
+            Route::get('{productId}/report/statuses', ['uses' => 'ReportController@statusesAction']);
+            Route::get('{productId}/report/edits', ['uses' => 'ReportController@editsAction']);
+            Route::get('{productId}/report/openAssignments', ['uses' => 'ReportController@openAssignmentsAction']);
+            Route::get('{productId}/report/brokenLinks', ['uses' => 'ReportController@brokenLinksAction']);
+            Route::get('{productId}/report/comments', ['uses' => 'ReportController@commentsAction']);
+            Route::get('{productId}/report/moleculeStats', ['uses' => 'ReportController@moleculeStatsAction']);
         });
     });
 });

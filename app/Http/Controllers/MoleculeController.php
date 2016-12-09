@@ -21,10 +21,14 @@ class MoleculeController extends Controller
      *
      * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @return ApiPayload|Response
      */
-    public function listAction() {
-        $molecules = Molecule::select()->orderBy('sort', 'ASC')->get();
+    public function listAction($productId) {
+        $molecules = Molecule::where('product_id', '=', $productId)
+                ->orderBy('sort', 'ASC')
+                ->get();
 
         return new ApiPayload($molecules);
     }
@@ -34,24 +38,27 @@ class MoleculeController extends Controller
      *
      * @api
      *
+     * @param string $productId The current product's id
      * @param string $code The code of the molecule to retrieve
      *
      * @return ApiPayload|Response
      */
-    public function getAction($code) {
+    public function getAction($productId, $code) {
         $code = $code == '__none__' ? null : $code;
 
         if($code === null) {
             $molecule = ['code' => null];
         }
         else {
-            $molecule = Molecule::where('code', '=', $code)->first();
+            $molecule = Molecule::where('product_id', '=', $productId)
+                    ->where('code', '=', $code)
+                    ->first();
         }
 
         if(!$molecule) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
         }
 
-        return new ApiPayload(Molecule::addAtoms($molecule));
+        return new ApiPayload(Molecule::addAtoms($molecule, $productId));
     }
 }

@@ -16,18 +16,23 @@ class Comment extends AppModel {
      * Get comments for the given atom entityId(s).
      *
      * @param string|string[] $entityId The atom's entityId(s)
+     * @param integer $productId The current product's id
      *
      * @return object[] The comments
      */
-    protected static function getByAtomEntityId($entityId) {
+    protected static function getByAtomEntityId($entityId, $productId) {
+        $comments = self::select('comments.*');
         if(is_array($entityId)) {
-            $comments = self::whereIn('atom_entity_id', $entityId);
+            $comments->whereIn('atom_entity_id', $entityId);
         }
         else {
-            $comments = self::where('atom_entity_id', '=', $entityId);
+            $comments->where('atom_entity_id', '=', $entityId);
         }
 
-        $comments = $comments->orderBy('id')
+        $comments = $comments->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
+                ->where('product_id', '=', $productId)
+                ->groupBy('comments.id')
+                ->orderBy('comments.id')
                 ->get()
                 ->toArray();
 
@@ -38,14 +43,15 @@ class Comment extends AppModel {
      * Add a summary of comments to an atom collection.
      *
      * @param object $atoms The atom collection
+     * @param integer $productId The current product's id
      *
      * @return object This object
      */
-    public static function addSummaries($atoms) {
+    public static function addSummaries($atoms, $productId) {
         $groupedComments = [];
         $commentSummaries = [];
         $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
-        $comments = self::getByAtomEntityId($entityIds);
+        $comments = self::getByAtomEntityId($entityIds, $productId);
 
         foreach($comments as $comment) {
             if(!isset($groupedComments[$comment['atom_entity_id']])) {

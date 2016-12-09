@@ -10,6 +10,8 @@
 - **migrations** - A built-in Laravel table. Records which data migrations have been run. *Do not modify its data unless you know exactly what you're doing.*
 - [molecules](tables/molecules.md) - Molecules are roughly equivalent to chapters.
 - **password_resets** - A built-in Laravel table. Currently unused.
+- [products](tables/products.md) - Each book gets one row.
 - [statuses](tables/statuses.md) - A lookup table for status codes.
 - [tasks](tables/tasks.md) - A lookup table for task codes.
 - [users](tables/users.md) - Stores all user data except permissions. Every user should belong to a group.
+- [user_products](tables/user_products.md) - Determines which products a user has access to, and which group they belong to in that product.

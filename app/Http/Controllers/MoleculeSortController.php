@@ -24,13 +24,15 @@ class MoleculeSortController extends Controller {
      *
      * @api
      *
+     * @param integer $productId The current product's id
      * @param string $code The molecule code
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function putAction($code, Request $request) {
-        $molecule = Molecule::where('code', '=', $code)
+    public function putAction($productId, $code, Request $request) {
+        $molecule = Molecule::allForCurrentProduct()
+                ->where('code', '=', $code)
                 ->get()
                 ->first();
         if(!$molecule) {
@@ -46,7 +48,8 @@ class MoleculeSortController extends Controller {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing atomEntityIds.');
         }
 
-        $atoms = Atom::where('molecule_code', '=', $code)
+        $atoms = Atom::allForCurrentProduct()
+                ->where('molecule_code', '=', $code)
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
@@ -66,6 +69,6 @@ class MoleculeSortController extends Controller {
             }
         });
 
-        return new ApiPayload(Molecule::addAtoms($molecule));
+        return new ApiPayload(Molecule::addAtoms($molecule, $productId));
     }
 }

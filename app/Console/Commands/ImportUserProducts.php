@@ -6,29 +6,29 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use DB;
 
-use App\Status;
+use App\UserProduct;
 
 
 /**
- * Expected field headers for statuses.csv:
+ * Expected field headers for groups.csv:
  *
- * id,title,active,publish,product_id
+ * title,product_id
  */
-class ImportStatuses extends Command
+class ImportUserProducts extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:statuses';
+    protected $signature = 'import:userproducts';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import statuses from data/import/statuses.csv';
+    protected $description = 'Import groups from data/import/user_products.csv';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ImportStatuses extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/import/statuses.csv';
+        $filename = base_path() . '/data/import/user_products.csv';
         if(!file_exists($filename)) {
             return;
         }
@@ -51,19 +51,24 @@ class ImportStatuses extends Command
         $headers = array_shift($lines);     //first row is expected to contain the headers
 
         foreach($lines as $line) {
-            $status = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
-            $this->importStatuses($status);
+            $group = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
+            $this->importGroup($group);
         }
 
         echo "Done\n";
     }
 
     /**
-     * Import a status line.
+     * Import a user_product line.
      *
-     * @param array $status The status line as an associative array
+     * @param array $userProduct The user_product line as an associative array
      */
-    public function importStatuses($status) {
-        DB::table('statuses')->insert($status);
+    public function importGroup($userProduct) {
+        $timestamp = (new UserProduct())->freshTimestampString();
+
+        $userProduct['created_at'] = $timestamp;
+        $userProduct['updated_at'] = $timestamp;
+
+        DB::table('user_products')->insert($userProduct);
     }
 }
