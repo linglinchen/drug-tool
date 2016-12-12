@@ -85,9 +85,10 @@ class Assignment extends AppModel {
 		$assignment = self::allForProduct($productId)
 				->orderBy('assignments.id', 'DESC')
 				->where('atom_entity_id', '=', $atomEntityId)
+				->groupBy('assignments.id')
 				->limit(1)
 				->first();
-
+		
 		return ($assignment && $assignment->task_end) ? null : $assignment;
 	}
 
@@ -243,7 +244,9 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		return self::join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->where('atoms.product_id', '=', (int)$productId);
+		return self::select('assignments.*')
+				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
+				->where('atoms.product_id', '=', (int)$productId)
+				->groupBy('atoms.entity_id');
 	}
 }
