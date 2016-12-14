@@ -55,7 +55,7 @@ class QuickFixIV extends Command {
 
             foreach ($sections as $section){
                 $attributes = $section->attributes();
-               // print_r($attributes); exit;
+
                 if ($attributes->type == 'none'){
                     $attributes->type = 'intravenous';
                 }
