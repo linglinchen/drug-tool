@@ -6,8 +6,12 @@ use App\AbstractDoctype;
 
 class DictionaryDoctype extends AbstractDoctype {
     protected $_config = [
-        'validRootElements' => ['main-entry'],
+        'validAtomRootElements' => ['main-entry'],
         'validTitleElements' => ['headw'],
-        'idPrefixes' => []
+        'idPrefixes' => [],
+        'chapterElement' => [
+            'elementXpath' => '//alpha',
+            'keyAttributeName' => 'letter',
+        ]
     ];
 }

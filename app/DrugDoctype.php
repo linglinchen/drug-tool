@@ -6,7 +6,7 @@ use App\AbstractDoctype;
 
 class DrugDoctype extends AbstractDoctype {
     protected $_config = [
-        'validRootElements' => ['group', 'monograph'],
+        'validAtomRootElements' => ['group', 'monograph'],
         'validTitleElements' => ['group_title', 'mono_name'],
         'idPrefixes' => [
             'group' => 'g',
@@ -18,6 +18,10 @@ class DrugDoctype extends AbstractDoctype {
             'tgroup' => 'tg',
             'row' => 'r',
             'pill' => 'pl'
+        ],
+        'chapterElement' => [
+            'elementXpath' => '//alpha',
+            'keyAttributeName' => 'letter',
         ]
     ];
 }

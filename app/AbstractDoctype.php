@@ -4,9 +4,13 @@ namespace App;
 
 abstract class AbstractDoctype {
     protected $_config = [
-        'validRootElements' => [],       //in order of descending priority
+        'validAtomRootElements' => [],       //in order of descending priority
         'validTitleElements' => [],       //in order of descending priority
         'idPrefixes' => [],     //structure is tagName => prefix
+        'chapterElement' => [      //tells how to find chapters in the xml
+            'elementXpath' => '',        //xpath query that is used to find chapters
+            'keyAttributeName' => '',      //the name of the attribute that holds the chapter's key
+        ]
     ];
 
     /**
@@ -144,7 +148,7 @@ abstract class AbstractDoctype {
      *
      * @return ?string The detected entityId
      */
-    public static function detectAtomIDFromXML($xml) {
+    public function detectAtomIDFromXML($xml) {
         $idPrefixes = $this->getConfig()['idPrefixes'];
         $prefixPartial = '(' . implode('|', $idPrefixes) . ')';
         preg_match('/^(\s*<[^>]*) id="' . $prefixPartial . '([^"]*)"/Si', $xml, $match);
@@ -161,5 +165,48 @@ abstract class AbstractDoctype {
      */
     public static function removeAtomIDFromXML($xml) {
         return preg_replace('/^(\s*<[^>]*) id="[^"]*"/Si', '$1', $xml);
+    }
+
+    /**
+     * Extracts the XML of individual atoms from a dump, and groups them by chapter.
+     *
+     * @param string $xmlDump
+     *
+     * @return array
+     */
+    public function extractAtomXML($xmlDump) {
+        $chapters = [];
+        $chapterElementConfig = $this->getConfig()['chapterElement'];
+        $validAtomRootElements = $this->getConfig()['validAtomRootElements'];
+
+        $doc = new \DOMDocument();
+        $doc->loadXML($xmlDump);
+        $xpath = new \DOMXpath($doc);
+        $chapterElements = $xpath->query($chapterElementConfig['elementXpath']);
+
+        foreach($chapterElements as $chapterElement) {
+            $chapterKey = $chapterElement->getAttribute($chapterElementConfig['keyAttributeName']);
+            if(!$chapterKey) {
+                throw new \Exception('Missing chapter key.');
+            }
+
+            $atoms = [];
+            foreach($chapterElement->childNodes as $atomNode) {
+                if(!isset($atomNode->tagName)) {
+                    continue;
+                }
+                
+                if(!in_array(strtolower($atomNode->tagName), $validAtomRootElements)) {
+                    throw new \Exception('Invalid atom root element: ' . $atomNode->tagName);
+                }
+
+                $xml = $doc->saveXML($atomNode);
+                $atoms[] = $xml;
+            }
+
+            $chapters[$chapterKey] = $atoms;
+        }
+
+        return $chapters;
     }
 }
