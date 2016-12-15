@@ -12,6 +12,7 @@ use App\Assignment;
 use App\Comment;
 use App\Molecule;
 use App\User;
+use App\Product;
 
 class Atom extends AppModel {
     use SoftDeletes;
@@ -75,22 +76,8 @@ class Atom extends AppModel {
      * @return void
      */
     public function updateTitle() {
-        $titleElements = ['group_title', 'mono_name'];      //must be in order of priority
-
-        foreach($titleElements as $titleElement) {
-            preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/i', $this->xml, $match);
-
-            if($match) {
-                $this->title = $match[1];
-                break;
-            }
-        }
-
-        if(!$match) {
-            return;
-        }
-
-        $this->title = trim($this->title);
+        $doctype = Product::find($this->product_id)->getDoctype();
+        $this->title = $doctype->detectTitle($this->xml);
         $this->alpha_title = self::makeAlphaTitle($this->title);
     }
 
