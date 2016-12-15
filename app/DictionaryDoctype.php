@@ -8,5 +8,6 @@ class DictionaryDoctype extends AbstractDoctype {
     protected $_config = [
         'validRootElements' => ['main-entry'],
         'validTitleElements' => ['headw'],
+        'idPrefixes' => []
     ];
 }

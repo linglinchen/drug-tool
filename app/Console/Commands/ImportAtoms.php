@@ -193,6 +193,7 @@ class ImportAtoms extends Command
      */
     protected function _importXMLChunk($xml, $moleculeCode = null) {
         $atom = new Atom();
+        $doctype = Product::find($this->productId)->getDoctype();
 
         //atom types must be in order of priority, or your data will be mangled
         $atomTypes = [
@@ -215,15 +216,11 @@ class ImportAtoms extends Command
 
             $atomCount += sizeof($atoms);
             foreach($atoms as $atomString) {
-                preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
-                $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
-                $alphaTitle = strip_tags($title);
+                $title = $doctype->detectTitle($atomString);
+                $alphaTitle = Atom::makeAlphaTitle($this->title);
                 $timestamp = $atom->freshTimestampString();
-                
-                $entityId = Atom::detectAtomIDFromXML($atomString);
-                $entityId = $entityId ?: Atom::makeUID();
-                
-                $atomString = Atom::assignXMLIds(trim($atomString));
+                $entityId = $doctype->detectAtomIDFromXML($atomString) ?: Atom::makeUID();
+                $atomString = $doctype->assignXMLIds($atomString, $entityId);
 
                 $atomData = [
                     'entity_id' => $entityId,
