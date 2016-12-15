@@ -28,7 +28,7 @@ abstract class AbstractDoctype {
         $validTitleElements = $this->getConfig()['validTitleElements'];
 
         foreach($validTitleElements as $titleElement) {
-            preg_match('#<' . $titleElement . '(\b\s+[^>]*)?>(.*?)</' . $titleElement . '>#Si', $xml, $match);
+            preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Si', $xml, $match);
 
             if($match) {
                 return trim($match[2]);
