@@ -1,8 +1,8 @@
 <?php
 
-/* Change section type to be intravenous from none for IV records
- *
-*/
+/**
+ * Change section type to be intravenous from none for IV records
+ */
 
 namespace App\Console\Commands;
 
@@ -36,9 +36,10 @@ class QuickFixIV extends Command {
 
     public static function fixIV() {
 
-        $sql = ("select id, alpha_title, xml from atoms 
+        $sql = "select id, alpha_title, xml from atoms 
             where id IN (" . Atom::buildLatestIDQuery()->toSql() . ")
-            AND cast (xpath('//section[@type=\"doses\"]//sec_title[contains(., \"Administer\")]/parent::section//sec_title[contains(., \"IV\") and not(preceding-sibling::label)]', xml::xml) as text[])  != '{}'");
+            AND cast (xpath('//section[@type=\"doses\"]//sec_title[contains(., \"Administer\")]/parent::section//sec_title[contains(., \"IV\") and not(preceding-sibling::label)]', xml::xml) as text[])  != '{}'";
+        
         $atoms = DB::select($sql);
         $atomsArray = json_decode(json_encode($atoms), true);
         $changed = 0;
@@ -71,7 +72,7 @@ class QuickFixIV extends Command {
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $changed++;
-               // $newAtom->save();
+                $newAtom->save();
             }
         }
 
