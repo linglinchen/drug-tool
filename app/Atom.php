@@ -131,7 +131,7 @@ class Atom extends AppModel {
         //initialize $idSuffix
         $idSuffix = 0;
         preg_match_all($tagRegex, $xml, $tags);
-        $tags = $tags[0];
+        $tags = $tags[0]; 
         foreach($tags as $key => $tag) {
             //skip the tags we don't care about
             $name = strtolower(preg_replace($nameRegex, '$1', $tag));
@@ -141,10 +141,10 @@ class Atom extends AppModel {
             }
 
             preg_match($idSuffixRegex, $tag, $id);
-            if($id) {
+            if($id) { 
                 $id = (int)$id[1];
                 $idSuffix = $idSuffix > $id ? $idSuffix : $id;
-            }
+            } 
         }
 
         //complete id replacements
@@ -185,11 +185,10 @@ class Atom extends AppModel {
      * @param string $xml The XML to operate on
      *
      * @return ?string The detected entityId
-     */
+     */ 
     public static function detectAtomIDFromXML($xml) {
-        $prefixPartial = '(' . implode('|', self::$idPrefixes) . ')';
+        $prefixPartial = '(' . implode('|', self::$idPrefixes) . ')'; 
         preg_match('/^(\s*<[^>]*) id="' . $prefixPartial . '([^"]*)"/Si', $xml, $match);
-
         return (isset($match[3]) && $match[3] != '_REPLACE_ME__') ? $match[3] : null;
     }
 

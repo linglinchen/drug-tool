@@ -52,24 +52,25 @@ class ImportAtoms extends Command
      *
      * @return mixed
      */
-    public function handle() {
+    public function handle() { 
         $productId = (int)$this->argument('productId');
         if(!$productId || !Product::find($productId)) {
             throw new \Exception('Invalid product ID.');
-        }
+        } 
         $this->productId = $productId;
 
         $statusId = (int)$this->argument('statusId');
         $statusCount = Status::allForProduct($productId)
                 ->where('id', '=', $statusId)
                 ->count();
+      
         if(!$statusId || !$statusCount) {
             throw new \Exception('Invalid status ID.');
         }
         $this->statusId = $statusId;
 
         $this->moleculeLookups = Molecule::getLookups($productId);
-
+      
         $dataPath = base_path() . '/data/import/atoms/';
         $files = scandir($dataPath);
         $files = array_slice($files, 2);
@@ -80,21 +81,23 @@ class ImportAtoms extends Command
 
             echo 'Loading ', $file, "\n";
 
-            $xml = file_get_contents($dataPath . $file);
+            $xml = file_get_contents($dataPath . $file); 
             $xml = $this->_addTallman($xml);
 
             $alphas = $this->_extractAlphas($xml);
+    
             if($alphas) {
-                foreach($alphas as $alpha) {
-                    preg_match('/<alpha\b[^>]letter="([^"]*)"/Sis', $alpha, $moleculeCode);
-                    $moleculeCode = $moleculeCode ? trim($moleculeCode[1]) : null;
-                    $atomCount = self::_importXMLChunk($alpha, $moleculeCode);
+                foreach($alphas as $alpha) { 
+                    preg_match('/<alpha\b[^>]letter="([^"]*)"/Sis', $alpha, $moleculeCode); 
+                    $moleculeCode = $moleculeCode ? trim($moleculeCode[1]) : null;  
+                    $atomCount = self::_importXMLChunk($productId, $alpha, $moleculeCode);
 
                     echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
                 }
             }
             else {        //we don't know which letter(s) these atoms belong to
-                $atomCount = self::_importXMLChunk($xml);
+           
+                $atomCount = self::_importXMLChunk($productId, $xml);
 
                 echo "\t<no molecule detected> ", $atomCount, "\n";
             }
@@ -119,7 +122,6 @@ class ImportAtoms extends Command
         foreach($alphas as $key => &$alpha) {
             $alpha = explode('<alpha', $alpha);
             $alpha = $alpha[1];
-
             $alphas[$key] = '<alpha' . $alpha . '</alpha>';
         }
 
@@ -177,7 +179,6 @@ class ImportAtoms extends Command
 
                 //finish building the search regex
                 $find = '#\b' . $find . '\b#Si';
-
                 $this->tallman[$find] = $replacement;
             }
         }
@@ -186,25 +187,35 @@ class ImportAtoms extends Command
     /**
      * Import an XML string. Usually a whole letter node.
      *
+     * @param int $productId The productId of $xml
      * @param string $xml The XML string to import
      * @param string|null $moleculeCode (optional) The code of the molecule that this atom belongs to
      *
      * @return int The number of atoms imported
      */
-    protected function _importXMLChunk($xml, $moleculeCode = null) {
+    protected function _importXMLChunk($productId, $xml, $moleculeCode = null) {
         $atom = new Atom();
 
         //atom types must be in order of priority, or your data will be mangled
-        $atomTypes = [
-            [
-                'elementName' => 'group',
-                'titleElement' => 'group_title'
-            ],
-            [
-                'elementName' => 'monograph',
-                'titleElement' => 'mono_name'
-            ]
-        ];
+        if ($productId === 1){  //NDR
+             $atomTypes = [
+                /*[
+                    'elementName' => 'group',
+                    'titleElement' => 'group_title'
+                ],*/
+                [
+                    'elementName' => 'monograph',
+                    'titleElement' => 'mono_name'
+                ]
+             ];
+        }elseif ($productId === 3){  //vet-dictionary
+            $atomTypes = [
+                [
+                    'elementName' => 'main-entry',
+                    'titleElement' => 'headw'
+                ]
+            ];
+        }
 
         $atomCount = 0;
         foreach($atomTypes as $atomType) {
@@ -214,15 +225,16 @@ class ImportAtoms extends Command
             extract(self::_extractAtoms($xml, $elementName));
 
             $atomCount += sizeof($atoms);
+      
             foreach($atoms as $atomString) {
                 preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
-                $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
+                $title = isset($match[1]) ? trim($match[1]) : 'Missing title'; 
                 $alphaTitle = strip_tags($title);
                 $timestamp = $atom->freshTimestampString();
                 
                 $entityId = Atom::detectAtomIDFromXML($atomString);
                 $entityId = $entityId ?: Atom::makeUID();
-                
+               
                 $atomString = Atom::assignXMLIds(trim($atomString));
 
                 $atomData = [
@@ -237,7 +249,7 @@ class ImportAtoms extends Command
                     'product_id' => $this->productId
                 ];
 
-                DB::table('atoms')->insert($atomData);
+                //DB::table('atoms')->insert($atomData);
             }
         }
 
@@ -260,7 +272,6 @@ class ImportAtoms extends Command
         foreach($matches[0] as $tag) {
             $isOpenTag = strpos($tag[0], '/') === false;
             $level += $isOpenTag ? 1 : -1;
-
             //record bookends as needed
             if($isOpenTag && $level == 1) {
                 $bookend = [$tag[1]];
@@ -272,17 +283,16 @@ class ImportAtoms extends Command
         }
 
         //now that we have the bookends, we can extract the atoms
-        $atoms = [];
         foreach($bookends as $bookend) {
             $atoms[] = substr($xml, $bookend[0], $bookend[1] - $bookend[0]);
         }
-
+        
         //remove the atoms that we just extracted
         $bookends = array_reverse($bookends);
         foreach($bookends as $bookend) {
             $xml = substr_replace($xml, '', $bookend[0], $bookend[1] - $bookend[0]);
         }
-
+        
         return [
             'xml' => $xml,
             'atoms' => $atoms
