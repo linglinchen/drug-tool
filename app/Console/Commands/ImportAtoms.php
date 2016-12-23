@@ -225,9 +225,10 @@ class ImportAtoms extends Command
             extract(self::_extractAtoms($xml, $elementName));
 
             $atomCount += sizeof($atoms);
-      
+            $sort = 0;
             foreach($atoms as $atomString) {
-                preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
+                //preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
+                preg_match('/<' . $titleElement . '[^>]*>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
                 $title = isset($match[1]) ? trim($match[1]) : 'Missing title'; 
                 $alphaTitle = strip_tags($title);
                 $timestamp = $atom->freshTimestampString();
@@ -236,7 +237,7 @@ class ImportAtoms extends Command
                 $entityId = $entityId ?: Atom::makeUID();
                
                 $atomString = Atom::assignXMLIds(trim($atomString));
-
+                $sort++;
                 $atomData = [
                     'entity_id' => $entityId,
                     'title' => $title,
@@ -246,10 +247,11 @@ class ImportAtoms extends Command
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                     'status_id' => $this->statusId,
-                    'product_id' => $this->productId
+                    'product_id' => $this->productId,
+                    'sort' => $sort,
                 ];
 
-                //DB::table('atoms')->insert($atomData);
+                DB::table('atoms')->insert($atomData);
             }
         }
 
