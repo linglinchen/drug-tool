@@ -42,7 +42,7 @@ class AtomCommentController extends Controller {
         return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
 
-    public function deleteAction($productId, $atomEntityId, $commentId, $productId) {
+    public function deleteAction($productId, $atomEntityId, $commentId) {
         if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
