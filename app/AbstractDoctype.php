@@ -133,7 +133,7 @@ abstract class AbstractDoctype {
     public function addEntityIdToXML($xml, $entityId) {
         $idPrefixes = $this->getConfig()['idPrefixes'];
         $xml = self::removeAtomIDFromXML($xml);
-        preg_match('/^\s*<(\w+)/', $xml, $match);
+        preg_match('/^\s*<([\w\-]+)/', $xml, $match);
         $firstTag = strtolower($match[1]);
         $id = $idPrefixes[$firstTag] . $entityId;
         $xml = preg_replace('/^\s*<([^>]+)/i', '<$1 id="' . $id . '"', $xml);

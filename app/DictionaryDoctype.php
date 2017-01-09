@@ -8,7 +8,9 @@ class DictionaryDoctype extends AbstractDoctype {
     protected $_config = [
         'validAtomRootElements' => ['main-entry'],
         'validTitleElements' => ['headw'],
-        'idPrefixes' => [],
+        'idPrefixes' => [
+            'main-entry' => 'me'
+        ],
         'chapterElement' => [
             'elementXpath' => '//alpha',
             'keyAttributeName' => 'letter',
