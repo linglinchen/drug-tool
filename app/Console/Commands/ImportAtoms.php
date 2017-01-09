@@ -113,12 +113,14 @@ class ImportAtoms extends Command
     public function _importAtoms($atoms, $moleculeCode = null) {
         $atom = new Atom();
         $doctype = Product::find($this->productId)->getDoctype();
+        $sort = 0;
         foreach($atoms as $atomString) {
             $title = $doctype->detectTitle($atomString);
             $alphaTitle = Atom::makeAlphaTitle($title);
             $timestamp = $atom->freshTimestampString();
             $entityId = $doctype->detectAtomIDFromXML($atomString) ?: Atom::makeUID();
             $atomString = $doctype->assignXMLIds($atomString, $entityId);
+            $sort++;
 
             $atomData = [
                 'entity_id' => $entityId,
@@ -129,7 +131,8 @@ class ImportAtoms extends Command
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
                 'status_id' => $this->statusId,
-                'product_id' => $this->productId
+                'product_id' => $this->productId,
+                'sort' => $sort
             ];
 
             DB::table('atoms')->insert($atomData);
