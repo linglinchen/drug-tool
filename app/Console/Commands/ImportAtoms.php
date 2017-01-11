@@ -58,6 +58,7 @@ class ImportAtoms extends Command
             throw new \Exception('Invalid product ID.');
         }
         $this->productId = $productId;
+        $doctype = Product::find($productId)->getDoctype();
 
         $statusId = (int)$this->argument('statusId');
         $statusCount = Status::allForProduct($productId)
@@ -83,19 +84,15 @@ class ImportAtoms extends Command
             $xml = file_get_contents($dataPath . $file);
             $xml = $this->_addTallman($xml);
 
-            $alphas = $this->_extractAlphas($xml);
-            if($alphas) {
-                foreach($alphas as $alpha) {
-                    preg_match('/<alpha\b[^>]letter="([^"]*)"/Sis', $alpha, $moleculeCode);
-                    $moleculeCode = $moleculeCode ? trim($moleculeCode[1]) : null;
-                    $atomCount = self::_importXMLChunk($alpha, $moleculeCode);
-
+            $chapters = $doctype->extractAtomXML($xml);
+            if($chapters) {
+                foreach($chapters as $moleculeCode => $atoms) {
+                    $atomCount = $this->_importAtoms($atoms, $moleculeCode);
                     echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
                 }
             }
-            else {        //we don't know which letter(s) these atoms belong to
-                $atomCount = self::_importXMLChunk($xml);
-
+            else {
+                $atomCount = $this->_importAtoms($atoms);
                 echo "\t<no molecule detected> ", $atomCount, "\n";
             }
 
@@ -106,24 +103,42 @@ class ImportAtoms extends Command
     }
 
     /**
-     * Break XML into alpha sections, and remove everything else.
+     * Import an array of atom XML strings. Usually a whole letter node.
      *
-     * @param string $xml The XML string to extract from
+     * @param string[] $atoms The XML strings to import
+     * @param string|null $moleculeCode (optional) The code of the molecule that these atom belong to
      *
-     * @return string[] The extracted alpha sections
+     * @return int The number of atoms imported
      */
-    protected function _extractAlphas($xml) {
-        $alphas = explode('</alpha>', $xml);
-        array_pop($alphas);
+    public function _importAtoms($atoms, $moleculeCode = null) {
+        $atom = new Atom();
+        $doctype = Product::find($this->productId)->getDoctype();
+        $sort = 0;
+        foreach($atoms as $atomString) {
+            $title = $doctype->detectTitle($atomString);
+            $alphaTitle = Atom::makeAlphaTitle($title);
+            $timestamp = $atom->freshTimestampString();
+            $entityId = $doctype->detectAtomIDFromXML($atomString) ?: Atom::makeUID();
+            $atomString = $doctype->assignXMLIds($atomString, $entityId);
+            $sort++;
 
-        foreach($alphas as $key => &$alpha) {
-            $alpha = explode('<alpha', $alpha);
-            $alpha = $alpha[1];
+            $atomData = [
+                'entity_id' => $entityId,
+                'title' => $title,
+                'alpha_title' => $alphaTitle,
+                'molecule_code' => $moleculeCode,
+                'xml' => $atomString,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'status_id' => $this->statusId,
+                'product_id' => $this->productId,
+                'sort' => $sort
+            ];
 
-            $alphas[$key] = '<alpha' . $alpha . '</alpha>';
+            DB::table('atoms')->insert($atomData);
         }
 
-        return $alphas;
+        return sizeof($atoms);
     }
 
     /**
@@ -181,111 +196,5 @@ class ImportAtoms extends Command
                 $this->tallman[$find] = $replacement;
             }
         }
-    }
-
-    /**
-     * Import an XML string. Usually a whole letter node.
-     *
-     * @param string $xml The XML string to import
-     * @param string|null $moleculeCode (optional) The code of the molecule that this atom belongs to
-     *
-     * @return int The number of atoms imported
-     */
-    protected function _importXMLChunk($xml, $moleculeCode = null) {
-        $atom = new Atom();
-
-        //atom types must be in order of priority, or your data will be mangled
-        $atomTypes = [
-            [
-                'elementName' => 'group',
-                'titleElement' => 'group_title'
-            ],
-            [
-                'elementName' => 'monograph',
-                'titleElement' => 'mono_name'
-            ]
-        ];
-
-        $atomCount = 0;
-        foreach($atomTypes as $atomType) {
-            $elementName = $atomType['elementName'];
-            $titleElement = $atomType['titleElement'];
-
-            extract(self::_extractAtoms($xml, $elementName));
-
-            $atomCount += sizeof($atoms);
-            foreach($atoms as $atomString) {
-                preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/SUis', $atomString, $match);
-                $title = isset($match[1]) ? trim($match[1]) : 'Missing title';
-                $alphaTitle = strip_tags($title);
-                $timestamp = $atom->freshTimestampString();
-                
-                $entityId = Atom::detectAtomIDFromXML($atomString);
-                $entityId = $entityId ?: Atom::makeUID();
-                
-                $atomString = Atom::assignXMLIds(trim($atomString));
-
-                $atomData = [
-                    'entity_id' => $entityId,
-                    'title' => $title,
-                    'alpha_title' => $alphaTitle,
-                    'molecule_code' => $moleculeCode,
-                    'xml' => $atomString,
-                    'created_at' => $timestamp,
-                    'updated_at' => $timestamp,
-                    'status_id' => $this->statusId,
-                    'product_id' => $this->productId
-                ];
-
-                DB::table('atoms')->insert($atomData);
-            }
-        }
-
-        return $atomCount;
-    }
-
-    /*
-     * This method gently extracts only the top-level atoms' XML without altering it in any way.
-     *
-     * @param string $xml The XML string to import
-     * @param string $tagName The type of tag we would like to extract
-     *
-     * @return array The extracted atoms and the xml string with those atoms removed
-     */
-    protected static function _extractAtoms($xml, $tagName) {
-        //find the top-level atoms' bookends
-        $level = 0;
-        $bookends = [];
-        preg_match_all('/(<' . $tagName . '[ >]|<\/' . $tagName . '>)/Si', $xml, $matches, PREG_OFFSET_CAPTURE);
-        foreach($matches[0] as $tag) {
-            $isOpenTag = strpos($tag[0], '/') === false;
-            $level += $isOpenTag ? 1 : -1;
-
-            //record bookends as needed
-            if($isOpenTag && $level == 1) {
-                $bookend = [$tag[1]];
-            }
-            elseif(!$isOpenTag && $level == 0) {
-                $bookend[] = $tag[1] + strlen($tag[0]);
-                $bookends[] = $bookend;
-            }
-        }
-
-        //now that we have the bookends, we can extract the atoms
-        $atoms = [];
-        foreach($bookends as $bookend) {
-            $atoms[] = substr($xml, $bookend[0], $bookend[1] - $bookend[0]);
-        }
-
-        //remove the atoms that we just extracted
-        $bookends = array_reverse($bookends);
-        foreach($bookends as $bookend) {
-            $xml = substr_replace($xml, '', $bookend[0], $bookend[1] - $bookend[0]);
-        }
-
-        return [
-            'xml' => $xml,
-            'atoms' => $atoms
-        ];
     }
 }

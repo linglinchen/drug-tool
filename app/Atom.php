@@ -12,6 +12,7 @@ use App\Assignment;
 use App\Comment;
 use App\Molecule;
 use App\User;
+use App\Product;
 
 class Atom extends AppModel {
     use SoftDeletes;
@@ -55,7 +56,8 @@ class Atom extends AppModel {
      */
     public function save(array $options = []) {
         $this->updateTitle();
-        $this->xml = self::assignXMLIds($this->xml);
+        $doctype = Product::find($this->product_id)->getDoctype();
+        $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
         
         if(!$this->alpha_title) {
@@ -75,22 +77,8 @@ class Atom extends AppModel {
      * @return void
      */
     public function updateTitle() {
-        $titleElements = ['group_title', 'mono_name'];      //must be in order of priority
-
-        foreach($titleElements as $titleElement) {
-            preg_match('/<' . $titleElement . '>(.*)<\/' . $titleElement . '>/i', $this->xml, $match);
-
-            if($match) {
-                $this->title = $match[1];
-                break;
-            }
-        }
-
-        if(!$match) {
-            return;
-        }
-
-        $this->title = trim($this->title);
+        $doctype = Product::find($this->product_id)->getDoctype();
+        $this->title = $doctype->detectTitle($this->xml);
         $this->alpha_title = self::makeAlphaTitle($this->title);
     }
 
@@ -106,102 +94,6 @@ class Atom extends AppModel {
         $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'ASCII');
         
         return $alphaTitle;
-    }
-
-    /**
-     * Assign IDs to XML elements where appropriate.
-     *
-     * @param string $xml The XML to operate on
-     *
-     * @return string The modified XML
-     */
-    public static function assignXMLIds($xml) {
-        $tagRegex = '/<[^\/<>]+>/S';
-        $nameRegex = '/<([^\s<>]+).*?>/S';
-        $idSuffixRegex = '/\bid="[^"]*?(\d+)"/Si';
-        $idReplaceableSuffixRegex = '/_REPLACE_ME__/S';
-        $idRegex = '/\bid="[^"]*"/Si';
-
-        //remove empty ids
-        $xml = str_replace(' id=""', '', $xml);
-
-        //remove the first id -- it will be added during export
-        $xml = self::removeAtomIDFromXML($xml);
-
-        //initialize $idSuffix
-        $idSuffix = 0;
-        preg_match_all($tagRegex, $xml, $tags);
-        $tags = $tags[0];
-        foreach($tags as $key => $tag) {
-            //skip the tags we don't care about
-            $name = strtolower(preg_replace($nameRegex, '$1', $tag));
-            if(!isset(self::$idPrefixes[$name])) {
-                unset($tags[$key]);
-                continue;
-            }
-
-            preg_match($idSuffixRegex, $tag, $id);
-            if($id) {
-                $id = (int)$id[1];
-                $idSuffix = $idSuffix > $id ? $idSuffix : $id;
-            }
-        }
-
-        //complete id replacements
-        $old = '';
-        $new = $xml;
-        while($old != $new) {
-            $old = $new;
-            $new = preg_replace($idReplaceableSuffixRegex, ++$idSuffix, $old, 1);
-        }
-        if($old) {
-            --$idSuffix;
-        }
-        $xml = $new;
-
-        //assign the missing ids
-        foreach($tags as $tag) {
-            if(preg_match($idRegex, $tag)) {
-                continue;       //it already has an id
-            }
-
-            $name = strtolower(preg_replace($nameRegex, '$1', $tag));
-            $prefix = self::$idPrefixes[$name];
-            $id = $prefix . ++$idSuffix;
-            $newTag = substr($tag, 0, strlen($tag) - 1) . ' id="' . $id . '">';
-            $tag = preg_quote($tag, '/');
-            $xml = preg_replace('/' . $tag . '/', $newTag, $xml, 1);
-        }
-
-        //yes, we need to do this again in order to keep automatic IDs from creeping in
-        $xml = self::removeAtomIDFromXML($xml);
-
-        return $xml;
-    }
-
-    /**
-     * Attempt to find the atom's entityId in its XML
-     *
-     * @param string $xml The XML to operate on
-     *
-     * @return ?string The detected entityId
-     */
-    public static function detectAtomIDFromXML($xml) {
-        $prefixPartial = '(' . implode('|', self::$idPrefixes) . ')';
-        preg_match('/^(\s*<[^>]*) id="' . $prefixPartial . '([^"]*)"/Si', $xml, $match);
-
-        return (isset($match[3]) && $match[3] != '_REPLACE_ME__') ? $match[3] : null;
-    }
-
-    /**
-     * Attempt to remove the atom's entityId from its XML
-     *
-     * @param string $xml The XML to operate on
-     *
-     * @return ?string The detected entityId
-     */
-    public static function removeAtomIDFromXML($xml) {
-        return preg_replace('/^(\s*<[^>]*) id="[^"]*"/Si', '$1', $xml);
     }
 
     /**
@@ -505,12 +397,8 @@ class Atom extends AppModel {
      * @return string
      */
     public function export() {
-        $xml = trim(self::assignXMLIds($this->xml));
-
-        preg_match('/^\s*<(\w+)/', $xml, $match);
-        $firstTag = strtolower($match[1]);
-        $id = self::$idPrefixes[$firstTag] . $this->entity_id;
-        $xml = preg_replace('/^\s*<([^>]+)/i', '<$1 id="' . $id . '"', $xml);
+        $doctype = Product::find($this->product_id)->getDoctype();
+        $xml = $doctype->assignXMLIds($this->xml, $this->entity_id);
 
         return $xml;
     }
