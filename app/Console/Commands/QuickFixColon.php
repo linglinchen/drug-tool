@@ -40,7 +40,7 @@ class QuickFixColon extends Command {
     }
 
     public static function _fixMisplacedColon($productId) {
-        $sql = "SELECT MAX(id)
+        $sql = "SELECT MAX(id) as id
             FROM atoms
             WHERE (
 		        deleted_at IS NULL
