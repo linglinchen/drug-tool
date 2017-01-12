@@ -40,9 +40,18 @@ class QuickFixColon extends Command {
     }
 
     public static function _fixMisplacedColon($productId) {
-       $sql = "select id, alpha_title, xml from atoms 
-            where id IN (" . Atom::buildLatestIDQuery()->toSql() . ")
-            AND cast (xpath('//para[starts-with(.,\":\")]', xml::xml) as text[]) != '{}'"; 
+        $sql = "SELECT MAX(id)
+            FROM atoms
+            WHERE (
+		        deleted_at IS NULL
+		        AND product_id = $productId
+		    )
+            GROUP BY entity_id
+            INTERSECT
+            SELECT id
+            FROM atoms
+            WHERE (cast(xpath('//para[starts-with(.,\":\")]', XML::XML) AS TEXT []) != '{}')
+        ";
         
         $atoms = DB::select($sql);
         $atomsArray = json_decode(json_encode($atoms), true);  //convert object to array
@@ -51,9 +60,9 @@ class QuickFixColon extends Command {
         $changedSec = 0;
         $changedPara = 0;
         foreach($atomsArray as $atom) {
-            $xml = $atom['xml'];
             $atomModel = Atom::find($atom['id']);
-
+            $xml = $atomModel->xml;
+            echo $atomModel->alpha_title."\n";
             //add this header to xml so later processing won't do unwanted encoding, e. g. change '-' to &#x2014
             $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
             $xmlObject = simplexml_load_string($xml); 
@@ -92,7 +101,7 @@ class QuickFixColon extends Command {
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $changedAtoms++;
-                $newAtom->save();
+                //$newAtom->save();
             }
         }
 
