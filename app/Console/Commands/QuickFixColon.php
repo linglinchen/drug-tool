@@ -101,7 +101,7 @@ class QuickFixColon extends Command {
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $changedAtoms++;
-                //$newAtom->save();
+                $newAtom->save();
             }
         }
 
