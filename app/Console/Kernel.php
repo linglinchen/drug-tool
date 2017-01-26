@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportUsers::class,
         Commands\ImportGroups::class,
         Commands\ImportMolecules::class,
+        Commands\ImportDomains::class,
         Commands\ImportAtoms::class,
         Commands\ImportACLStructure::class,
         Commands\ImportACL::class,
