@@ -43,7 +43,7 @@ class DomainController extends Controller
      *
      * @return ApiPayload|Response
      */
-    public function getAction($productId, $code) {
+    public function getAction($productId, $code) { var_dump($productId); exit;
         $code = $code == '__none__' ? null : $code;
 
         if($code === null) {

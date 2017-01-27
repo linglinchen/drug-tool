@@ -45,7 +45,7 @@ class Domain extends AppModel {
      */
     public static function addAtoms($domain, $productId) {
         $atoms = Atom::allForProduct($productId)
-                ->where('molecule_code', '=', $molecule['code'])
+                ->where('domain_code', '=', $domain['code'])
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
@@ -60,9 +60,9 @@ class Domain extends AppModel {
             $atoms[$key] = $atom;
         }
 
-        $molecule['atoms'] = $atoms;
+        $domain['atoms'] = $atoms;
 
-        return $molecule;
+        return $domain;
     }
 
     /**

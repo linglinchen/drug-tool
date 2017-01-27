@@ -33,6 +33,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixIV::class,
         Commands\QuickFixLowercase::class,
         Commands\QuickFixColon::class,
+        Commands\QuickFixAddDomain::class,
     ];
 
     /**
