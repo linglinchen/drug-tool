@@ -145,6 +145,15 @@ class AtomController extends Controller
                 $atom->$allowed = $input[$allowed];
             }
         }
+
+        //if in xml the domain is different than the domain_code in atoms table, update it 
+         preg_match('/<category[^>]*>(.*)<\/category>/Si', $atom->xml, $matches);
+         if ($matches){
+            $xml_domain = $matches[1];
+            if ($xml_domain !== $atom->domain_code){
+                $atom->domain_code = $xml_domain;
+            }
+         }
         $atom->save();
         $atom->is_current = true;
 

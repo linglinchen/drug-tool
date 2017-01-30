@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportUsers::class,
         Commands\ImportGroups::class,
         Commands\ImportMolecules::class,
+        Commands\ImportDomains::class,
         Commands\ImportAtoms::class,
         Commands\ImportACLStructure::class,
         Commands\ImportACL::class,
@@ -32,6 +33,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixIV::class,
         Commands\QuickFixLowercase::class,
         Commands\QuickFixColon::class,
+        Commands\QuickFixAddDomain::class,
     ];
 
     /**
