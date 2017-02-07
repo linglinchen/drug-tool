@@ -60,7 +60,6 @@ class AtomController extends Controller
      */
     public function postAction($productId, Request $request) {
         $input = $request->all();
-
         $moleculeCode = isset($input['molecule_code']) ? $input['molecule_code'] : null;
         $locked = current(Molecule::locked($moleculeCode, $productId));
         if(isset($moleculeCode) && $locked) {
