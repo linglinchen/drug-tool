@@ -68,6 +68,8 @@ class Atom extends AppModel {
             throw new \Exception('That title is already used by another atom within this product.');
         }
 
+        $doctype->beforeSave($this);
+
         parent::save($options);
     }
 
