@@ -21,7 +21,7 @@ class DictionaryDoctype extends AbstractDoctype {
 
     public function beforeSave($atom) {
          $originalAtom = Atom::findNewestIfNotDeleted($atom->entity_id, $atom->product_id);
-         if ($originalAtom){ // for existing atom, if it's new atom, just return true
+         if ($originalAtom){ // for existing atom
             $originalDomainCode = $originalAtom->domain_code;
             if($originalDomainCode != $atom->domain_code) {
                 $replacement = '$1' . $atom->domain_code . '$3';
@@ -33,7 +33,7 @@ class DictionaryDoctype extends AbstractDoctype {
                     $atom->domain_code = trim($matches[1]);
                 }
             }
-        }
+        } //if it's new atom, just return true
         return true;
     }
 }
