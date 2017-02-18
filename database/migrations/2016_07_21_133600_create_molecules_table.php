@@ -17,11 +17,20 @@ class CreateMoleculesTable extends Migration
             $table->string('code');
             $table->string('title');
             $table->timestamps();
+            $table->tinyInteger('locked')->default(0);
+            $table->integer('sort')->nullable();
 
             $table->index('code');
 
             $table->softDeletes();
         });
+
+         $i = 0;
+        $molecules = Molecule::select()->orderBy('id', 'ASC')->get();
+        foreach($molecules as $molecule) {
+            $molecule->sort = ++$i;
+            $molecule->save();
+        }
     }
 
     /**
