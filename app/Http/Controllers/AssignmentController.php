@@ -55,4 +55,18 @@ class AssignmentController extends Controller {
 
         return Assignment::next($user->id, $atomEntityId, $productId);
     }
+
+    /**
+     * GET the atom's most recent assignment.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's ID
+     * @param string $atomEntityId The current assignment's atomEntityId
+     *
+     * @return ApiPayload|Response
+     */
+    public function currentAction($productId, $atomEntityId) {
+        return Assignment::getCurrentAssignment($atomEntityId, $productId);
+    }
 }

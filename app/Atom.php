@@ -68,6 +68,8 @@ class Atom extends AppModel {
             throw new \Exception('That title is already used by another atom within this product.');
         }
 
+        $doctype->beforeSave($this);
+
         parent::save($options);
     }
 
@@ -303,6 +305,28 @@ class Atom extends AppModel {
     public function addAssignments($productId) {
         $this->assignments = self::getAssignments($this->entity_id, $productId)['assignments'];
 
+        return $this;
+    }
+
+    /**
+     * Add domain to the atom.
+     *
+     * @param integer $productId Limit to this product
+     *
+     * @return object This object
+     */
+    public function addDomains($productId) {
+        preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $this->xml, $matches);
+        $uniques = array_unique($matches[1]);
+        sort($uniques);
+        $subDomains = [];
+        foreach ($uniques as $unique){
+            if ($unique !== $this->domain_code){
+                array_push($subDomains, $unique);
+            }
+        }
+       $this->domains = $subDomains;
+       
         return $this;
     }
 

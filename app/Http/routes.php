@@ -71,6 +71,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/assignment', ['uses' => 'AssignmentController@listAction']);
             Route::post('{productId}/assignment', ['uses' => 'AssignmentController@postAction']);
             Route::get('{productId}/assignment/{atomEntityId}/next', ['uses' => 'AssignmentController@nextAction']);
+            Route::get('{productId}/assignment/{atomEntityId}/current', ['uses' => 'AssignmentController@currentAction']);
 
             Route::get('user', ['uses' => 'UserController@listAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
