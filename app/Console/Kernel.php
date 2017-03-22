@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixColon::class,
         Commands\QuickFixAddDomain::class,
         Commands\ExtractRarelyUsed::class,
+        Commands\UpdateDomains::class,
     ];
 
     /**
