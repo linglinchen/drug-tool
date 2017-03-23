@@ -48,8 +48,6 @@ class UpdateDomains extends Command
         }
         $this->columnName = $columnName;
 
-
-
         $filename = base_path() . '/data/import/domain_update.csv';
         if(!file_exists($filename)) {
             return;
@@ -67,9 +65,9 @@ class UpdateDomains extends Command
         foreach($lines as $line) {
             $domain = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
             //get the user id based on email address
-            if ($domain['Contributor Email']){
-                $userModel = DB::table('users')->where('email', $domain['Contributor Email'])->first();
-               
+            if ($domain['Contributor Email'] && strlen($domain['Contributor Email'])>0 ){
+                $contributorEmail = trim($domain['Contributor Email']);
+                $userModel = DB::table('users')->where('email', $contributorEmail)->first();
                 $this->updateDomain($domain, $userModel->id, $columnName, $productId);
             }
         }
@@ -91,11 +89,9 @@ class UpdateDomains extends Command
         ->where('code', $domain['Domain'])
         ->where('product_id', $productId)
         ->first();
-        
         $columnNameValue = $domainModel->$columnName;
         if ($columnNameValue != $userId){
-            $domainModel->$columnName = $userId;
-            $domainModel->save();
+            DB::table('domains')->where('code', $domain['Domain'])->where('product_id',$productId)->update([$columnName => $userId]);
         }
     }
 }
