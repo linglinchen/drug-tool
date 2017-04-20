@@ -83,6 +83,7 @@ class UpdateDomains extends Command
                         $this->updateDomain($domain, 0, 'contributor_id', $productId);
                     }else{ //real contributor
                         $this->updateDomain($domain, $userModel->id, $columnName, $productId);
+                        $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                     }
                 }
             }else{
@@ -108,9 +109,7 @@ class UpdateDomains extends Command
         ->where('code', $domain)
         ->where('product_id', $productId)
         ->first();
-        $columnNameValue = $domainModel->$columnName;
-        if ($columnNameValue != $userId){
-            DB::table('domains')->where('code', $domain)->where('product_id',$productId)->update([$columnName => $userId]);
-        }
+        
+        DB::table('domains')->where('code', $domain)->where('product_id',$productId)->update([$columnName => $userId]);
     }
 }
