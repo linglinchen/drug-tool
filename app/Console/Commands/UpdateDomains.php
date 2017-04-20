@@ -63,19 +63,24 @@ class UpdateDomains extends Command
         $headers = array_shift($lines);     //first row is expected to contain the headers
 
         foreach($lines as $line) {
-            $domain = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
+            $input = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
             //get the user id based on email address
-            if ($domain['Contributor Email'] && strlen($domain['Contributor Email'])>0 ){
-                $contributorEmail = ltrim($domain['Contributor Email']);
+            if ($input['Contributor Email'] && strlen($input['Contributor Email'])>0 ){
+                $contributorEmail = ltrim($input['Contributor Email']);
                 $contributorEmail = rtrim($contributorEmail);
+                $domain = input['Domain'];
+                $userModel = DB::table('users')->where('email', $contributorEmail)->first();
 
                 if (preg_match('/\s+/', $contributorEmail)){ //multiple emails
-
-                }else{
-                    $userModel = DB::table('users')->where('email', $contributorEmail)->first();
-                    if (in_array($contributorEmail, ['v.studdert@unimelb.edu.au', 'ccg@pullman.com', 'hkw@unimelb.edu.au'])){
-                        // if they are editor
-
+                //find the editor group id in user table
+                    $editorUserModel = DB:table('users')->where('firstname', 'Editor')->('lastname', 'Group')->first();
+                    $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
+                    $this->updateDomain($domain, 0, 'contributor_id', $productId);
+                }else{ //only one email
+                    if (in_array($contributorEmail, ['v.studdert@unimelb.edu.au', 'ccg@pullman.com', 'hkw@unimelb.edu.au']) || $contributorEmail == 'none'){
+                        // if they are editor, populate editor_id, contributor_id will be 0
+                        $this->updateDomain($domain, $userModel->id, 'editor_id', $productId);
+                        $this->updateDomain($domain, 0, 'contributor_id', $productId);
                     }else{ //real contributor
                         $this->updateDomain($domain, $userModel->id, $columnName, $productId);
                     }
@@ -97,12 +102,12 @@ class UpdateDomains extends Command
     public function updateDomain($domain, $userId, $columnName, $productId) {
         
         $domainModel = DB::table('domains')
-        ->where('code', $domain['Domain'])
+        ->where('code', $domain)
         ->where('product_id', $productId)
         ->first();
         $columnNameValue = $domainModel->$columnName;
         if ($columnNameValue != $userId){
-            DB::table('domains')->where('code', $domain['Domain'])->where('product_id',$productId)->update([$columnName => $userId]);
+            DB::table('domains')->where('code', $domain)->where('product_id',$productId)->update([$columnName => $userId]);
         }
     }
 }
