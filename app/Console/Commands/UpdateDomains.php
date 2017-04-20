@@ -66,9 +66,20 @@ class UpdateDomains extends Command
             $domain = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
             //get the user id based on email address
             if ($domain['Contributor Email'] && strlen($domain['Contributor Email'])>0 ){
-                $contributorEmail = trim($domain['Contributor Email']);
-                $userModel = DB::table('users')->where('email', $contributorEmail)->first();
-                $this->updateDomain($domain, $userModel->id, $columnName, $productId);
+                $contributorEmail = ltrim($domain['Contributor Email']);
+                $contributorEmail = rtrim($contributorEmail);
+
+                if (preg_match('/\s+/', $contributorEmail)){ //multiple emails
+
+                }else{
+                    $userModel = DB::table('users')->where('email', $contributorEmail)->first();
+                    if (in_array($contributorEmail, ['v.studdert@unimelb.edu.au', 'ccg@pullman.com', 'hkw@unimelb.edu.au'])){
+                        // if they are editor
+
+                    }else{ //real contributor
+                        $this->updateDomain($domain, $userModel->id, $columnName, $productId);
+                    }
+                }
             }
         }
 
