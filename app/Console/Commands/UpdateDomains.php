@@ -73,7 +73,7 @@ class UpdateDomains extends Command
 
                 if (preg_match('/\s+/', $contributorEmail)){ //multiple emails
                 //find the editor group id in user table
-                    $editorUserModel = DB:table('users')->where('firstname', 'Editor')->('lastname', 'Group')->first();
+                    $editorUserModel = DB::table('users')->where('firstname', 'Editor')->where('lastname', 'Group')->first();
                     $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                     $this->updateDomain($domain, 0, 'contributor_id', $productId);
                 }else{ //only one email
