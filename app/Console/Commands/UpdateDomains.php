@@ -68,7 +68,7 @@ class UpdateDomains extends Command
             if ($input['Contributor Email'] && strlen($input['Contributor Email'])>0 ){
                 $contributorEmail = ltrim($input['Contributor Email']);
                 $contributorEmail = rtrim($contributorEmail);
-                $domain = input['Domain'];
+                $domain = $input['Domain'];
                 $userModel = DB::table('users')->where('email', $contributorEmail)->first();
 
                 if (preg_match('/\s+/', $contributorEmail)){ //multiple emails
