@@ -64,16 +64,16 @@ class UpdateDomains extends Command
 
         foreach($lines as $line) {
             $input = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
+            $editorUserModel = DB::table('users')->where('firstname', 'Editor')->where('lastname', 'Group')->first();
+            $domain = $input['Domain'];
             //get the user id based on email address
             if ($input['Contributor Email'] && strlen($input['Contributor Email'])>0 ){
                 $contributorEmail = ltrim($input['Contributor Email']);
                 $contributorEmail = rtrim($contributorEmail);
-                $domain = $input['Domain'];
                 $userModel = DB::table('users')->where('email', $contributorEmail)->first();
 
                 if (preg_match('/\s+/', $contributorEmail)){ //multiple emails
                 //find the editor group id in user table
-                    $editorUserModel = DB::table('users')->where('firstname', 'Editor')->where('lastname', 'Group')->first();
                     $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                     $this->updateDomain($domain, 0, 'contributor_id', $productId);
                 }else{ //only one email
@@ -85,6 +85,9 @@ class UpdateDomains extends Command
                         $this->updateDomain($domain, $userModel->id, $columnName, $productId);
                     }
                 }
+            }else{
+                $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
+                $this->updateDomain($domain, 0, 'contributor_id', $productId);
             }
         }
 
