@@ -77,7 +77,7 @@ class UpdateDomains extends Command
                     $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                     $this->updateDomain($domain, 0, 'contributor_id', $productId);
                 }else{ //only one email
-                    if (in_array($contributorEmail, ['v.studdert@unimelb.edu.au', 'ccg@pullman.com', 'hkw@unimelb.edu.au']) || $contributorEmail == 'none'){
+                    if (in_array($contributorEmail, ['v.studdert@unimelb.edu.au', 'ccg@pullman.com', 'hkw@unimelb.edu.au']) || $input['Contributors'] == 'none'){
                         // if they are editor, populate editor_id, contributor_id will be 0
                         $this->updateDomain($domain, $userModel->id, 'editor_id', $productId);
                         $this->updateDomain($domain, 0, 'contributor_id', $productId);
