@@ -317,13 +317,14 @@ class Atom extends AppModel {
      */
     public function addDomains($productId) {
         preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $this->xml, $matches);
+        array_shift($matches[1]); //exclude main word's domain info since it has been stored in atom table
         $uniques = array_unique($matches[1]);
         sort($uniques);
         $subDomains = [];
         foreach ($uniques as $unique){
-            if ($unique !== $this->domain_code){
+            //if ($unique !== $this->domain_code){
                 array_push($subDomains, $unique);
-            }
+            //}
         }
        $this->domains = $subDomains;
        
