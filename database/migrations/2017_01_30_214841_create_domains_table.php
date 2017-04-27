@@ -20,7 +20,8 @@ class CreateDomainsTable extends Migration
             $table->tinyInteger('locked')->default(0);
             $table->integer('sort')->nullable();
             $table->integer('product_id')->default(3);
-            $table->integer('contributor_id')->default(2);
+            $table->integer('contributor_id');
+            $table->integer('editor_id');
             $table->index('code');
 
             $table->softDeletes();
