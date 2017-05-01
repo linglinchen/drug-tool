@@ -20,7 +20,7 @@ use App\ApiPayload;
  */
 class AtomController extends Controller
 {
-    protected $_allowedProperties = ['molecule_code', 'xml', 'status_id'];
+    protected $_allowedProperties = ['molecule_code', 'xml', 'status_id', 'domain_code'];
     protected $_allowedMassUpdateProperties = ['molecule_code', 'status_id', 'sort'];
 
     /**
@@ -60,7 +60,6 @@ class AtomController extends Controller
      */
     public function postAction($productId, Request $request) {
         $input = $request->all();
-
         $moleculeCode = isset($input['molecule_code']) ? $input['molecule_code'] : null;
         $locked = current(Molecule::locked($moleculeCode, $productId));
         if(isset($moleculeCode) && $locked) {
@@ -145,6 +144,7 @@ class AtomController extends Controller
                 $atom->$allowed = $input[$allowed];
             }
         }
+
         $atom->save();
         $atom->is_current = true;
 

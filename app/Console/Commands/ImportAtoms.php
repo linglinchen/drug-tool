@@ -115,6 +115,11 @@ class ImportAtoms extends Command
         $doctype = Product::find($this->productId)->getDoctype();
         $sort = 0;
         foreach($atoms as $atomString) {
+            $category = '';
+            preg_match('/<category[^>]*>(.*)<\/category>/Si', $atomString, $matches);
+            if ($matches){
+                $category = $matches[1];
+            }
             $title = $doctype->detectTitle($atomString);
             $alphaTitle = Atom::makeAlphaTitle($title);
             $timestamp = $atom->freshTimestampString();
@@ -132,7 +137,8 @@ class ImportAtoms extends Command
                 'updated_at' => $timestamp,
                 'status_id' => $this->statusId,
                 'product_id' => $this->productId,
-                'sort' => $sort
+                'sort' => $sort,
+                'domain_code' => $category,
             ];
 
             DB::table('atoms')->insert($atomData);

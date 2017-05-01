@@ -209,4 +209,15 @@ abstract class AbstractDoctype {
 
         return $chapters;
     }
+
+    /**
+     * This method runs before an atom is written to the database.
+     *
+     * @param object $atom The atom that is being updated
+     *
+     * @return boolean
+     */
+    public function beforeSave($atom) {
+        return true;
+    }
 }

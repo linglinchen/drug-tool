@@ -11,15 +11,15 @@ use App\Atom;
 use App\Comment;
 use App\Status;
 
-class Molecule extends AppModel {
+class Domain extends AppModel {
     use SoftDeletes;
 
-    protected $table = 'molecules';
+    protected $table = 'domains';
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at'];
 
     /*
-     * Returns all molecule titles as an associative array.
+     * Returns all domain titles as an associative array.
      * code => title
      *
      * @param integer $productId Limit to this product
@@ -28,24 +28,24 @@ class Molecule extends AppModel {
      */
     public static function getLookups($productId) {
     	$output = [];
-    	$molecules = self::allForProduct($productId);
-    	foreach($molecules as $molecule) {
-    		$output[$molecule['code']] = $molecule['title'];
+    	$domains = self::allForProduct($productId);
+    	foreach($domains as $domain) {
+    		$output[$domain['code']] = $domain['title'];
     	}
 
     	return $output;
     }
 
     /**
-     * Add atoms to the molecule.
+     * Add atoms to the domain.
      *
      * @param integer $productId Limit to this product
      *
-     * @param mixed[] $molecule The molecule
+     * @param mixed[] $domain The domain
      */
-    public static function addAtoms($molecule, $productId) {
+    public static function addAtoms($domain, $productId) {
         $atoms = Atom::allForProduct($productId)
-                ->where('molecule_code', '=', $molecule['code'])
+                ->where('domain_code', '=', $domain['code'])
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
@@ -55,15 +55,14 @@ class Molecule extends AppModel {
 
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
-            $atom->addDomains($productId);
             $atom = $atom->toArray();
             unset($atom['xml']);
             $atoms[$key] = $atom;
         }
 
-        $molecule['atoms'] = $atoms;
+        $domain['atoms'] = $atoms;
 
-        return $molecule;
+        return $domain;
     }
 
     /**
@@ -71,7 +70,7 @@ class Molecule extends AppModel {
      *
      * @returns string
      */
-    public function export($statusId = null) {
+    public function export($statusId = null) {  //not ready
         $orderedIds = $this->_getSortOrder($this->product_id, $statusId);
 
         $unorderedAtoms = $this->_getMyPublishedAtoms();
@@ -101,7 +100,7 @@ class Molecule extends AppModel {
      *
      * @return object[]
      */
-    protected function _getMyPublishedAtoms() {
+    protected function _getMyPublishedAtoms() {  //not ready
         $atoms = [];
 
         $publishedStatuses = Status::getReadyForPublicationStatuses($this->product_id);
@@ -140,7 +139,7 @@ class Molecule extends AppModel {
      *
      * @return object[] An associative array containing locked molecules
      */
-    public static function locked($codes, $productId) {
+    public static function locked($codes, $productId) {  //not ready
         if($codes === null) {
             return [];
         }
@@ -166,7 +165,7 @@ class Molecule extends AppModel {
      *
      * @return string[]
      */
-    protected function _getSortOrder($productId, $statusId = null) {
+    protected function _getSortOrder($productId, $statusId = null) {  //not ready
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {

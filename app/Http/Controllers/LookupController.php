@@ -11,6 +11,7 @@ use App\Boilerplate;
 use App\Task;
 use App\Status;
 use App\Product;
+use App\Domain;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -32,8 +33,9 @@ class LookupController extends Controller
         return new ApiPayload([
             'groups' => Group::allForCurrentProduct()->get(),
             'boilerplates' => Boilerplate::allForCurrentProduct()->get(),
-            'tasks' => Task::allForCurrentProduct()->get(),
-            'statuses' => Status::allForCurrentProduct()->orderBy('id')->get()
+            'tasks' => Task::allForCurrentProduct()->orderBy('id')->get(),
+            'statuses' => Status::allForCurrentProduct()->orderBy('id')->get(),
+            'domains' => Domain::allForCurrentProduct()->orderBy('id')->get()
         ]);
     }
 }
