@@ -27,12 +27,12 @@ class CreateDomainsTable extends Migration
             $table->softDeletes();
         });
 
-         $i = 0;
+         /*$i = 0;
         $domains = Domain::select()->orderBy('id', 'ASC')->get();
         foreach($domains as $domain) {
             $domain->sort = ++$i;
             $domain->save();
-        }
+        }*/
     }
     /**
      * Reverse the migrations.
