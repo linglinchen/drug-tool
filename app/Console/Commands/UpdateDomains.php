@@ -21,14 +21,14 @@ class UpdateDomains extends Command
      *
      * @var string
      */
-    protected $signature = 'update:domains {productId} {columnName}, for example: php artisan update:domains 3 contributor_id';
+    protected $signature = 'update:domains {productId}, for example: php artisan update:domains 3';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update domains based on data/import/domain_update.csv';
+    protected $description = 'Update reviewer_id, editor_id, contributor_id in domains table based on data/import/domain_update.csv';
 
     /**
      * Execute the console command.
@@ -41,12 +41,6 @@ class UpdateDomains extends Command
             throw new \Exception('Invalid product ID.');
         }
         $this->productId = $productId;
-
-        $columnName = $this->argument('columnName');
-        if(!$columnName) {
-            throw new \Exception('Invalid column name.');
-        }
-        $this->columnName = $columnName;
 
         $filename = base_path() . '/data/import/domain_update.csv';
         if(!file_exists($filename)) {
@@ -82,13 +76,23 @@ class UpdateDomains extends Command
                         $this->updateDomain($domain, $userModel->id, 'editor_id', $productId);
                         $this->updateDomain($domain, 0, 'contributor_id', $productId);
                     }else{ //real contributor
-                        $this->updateDomain($domain, $userModel->id, $columnName, $productId);
+                        $this->updateDomain($domain, $userModel->id, 'contributor_id', $productId);
                         $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                     }
                 }
             }else{
                 $this->updateDomain($domain, $editorUserModel->id, 'editor_id', $productId);
                 $this->updateDomain($domain, 0, 'contributor_id', $productId);
+            }
+
+            //update reviewer_id
+            if ($input['Reviewer Email'] && strlen($input['Reviewer Email'])>0 ){
+                $reviewerEmail = ltrim($input['Reviewer Email']);
+                $reviewerEmail = rtrim($reviewerEmail);
+                $userModel = DB::table('users')->where('email', $reviewerEmail)->first();
+
+                $this->updateDomain($domain, $userModel->id, 'reviewer_id', $productId);
+                
             }
         }
 
