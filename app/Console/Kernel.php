@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixAddDomain::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
-    ];
+        ];
 
     /**
      * Define the application's command schedule.
