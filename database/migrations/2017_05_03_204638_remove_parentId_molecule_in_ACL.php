@@ -12,7 +12,11 @@ class RemoveParentIdMoleculeInACL extends Migration
      */
     public function up()
     {
-        DB:raw("UPDATE access_control_structure set parent_id=NULL where access_key='manage_molecules'");
+        DB::table('access_control_structure')
+        ->where('title', 'Manage molecules')
+        ->update([
+            "parent_id" => NULL
+        ]);
     }
 
     /**
