@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use App\Atom;
 use App\Domain;
 use App\Assignment;
+ini_set('memory_limit', '1280M');
 
 class AssignReviewerTasks extends Command {
     /**
@@ -30,7 +31,6 @@ class AssignReviewerTasks extends Command {
      */
     public function handle() {
         $atoms = [];
-        $assignments = [];
         $timestamp = (new Atom())->freshTimestampString();
 
         $entities = self::_organizeAtoms(self::_getAtomList());
@@ -40,20 +40,28 @@ class AssignReviewerTasks extends Command {
                         ->get();
             $atom = $atoms->last();
 
-            $domain = Domain::where('code', '=', $atom->domain_code)->get()->last();
-            $reviewer_id = $domain->reviewer_id; echo $atom->title.' '.$domain->code.' '.$domain->reviewer_id."\n";
-            if (!empty($reviewer_id)){  //if this domain has an reviewer assigned
-                $assignment = [
-                    'atom_entity_id' => $entityId,
-                    'user_id' => $domain->reviewer_id,
-                    'task_id' => 25,
-                    'task_end' => null
-                ];
-                $assignments[] = $assignment;
+            if ($atom->domain_code){   //if the atom has a domain
+                $domain = Domain::where('code', '=', $atom->domain_code)->get()->last();
+                $reviewer_id = $domain->reviewer_id;
+                if (!empty($reviewer_id)){  //if this domain has an reviewer assigned
+                    $assignment = [
+                        'atom_entity_id' => $entityId,
+                        'user_id' => $domain->reviewer_id,
+                        'task_id' => 25,
+                        'task_end' => null
+                    ];
+
+                    //check if the atom has been assigned
+                    $existing_assignments = Assignment::where('atom_entity_id', '=', $entityId)
+                                            ->where('task_id', '=', 25)->get()->last();
+                    if (is_null($existing_assignments)){
+                        Assignment::query()->insert($assignment);
+                    }
+                }
+            }else{
+                echo $atom->title."\n";
             }
         }
-
-       // Assignment::query()->insert($assignments);
     }
 
     protected static function _getAtomList() {
