@@ -27,11 +27,11 @@ class Assignment extends AppModel {
 	 * @return array The list of assignments
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
-		$columns = $this->getMyColumns(); 
-		array_unshift($columns, DB::raw('COUNT(comments.text) AS count')); 
+		$columns = $this->getMyColumns();
+		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
 		self::_addListFilters($query, $filters);
-		self::_addOrder($query, $order); //var_dump($query->toSql()); exit;
+		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
 		$countQuery->select(DB::raw('COUNT(*)'));

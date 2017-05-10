@@ -73,7 +73,6 @@ class Comment extends AppModel {
 
         foreach($atoms as $atom) {
             $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
-           
         }
     }
 }
