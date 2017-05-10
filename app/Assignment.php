@@ -28,6 +28,7 @@ class Assignment extends AppModel {
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
+		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
@@ -84,7 +85,7 @@ class Assignment extends AppModel {
 	public static function getCurrentAssignment($atomEntityId, $productId) {
 		$assignment = self::allForProduct($productId)
 				->orderBy('assignments.id', 'DESC')
-				->where('atom_entity_id', '=', $atomEntityId)
+				->where('assignments.atom_entity_id', '=', $atomEntityId)
 				->groupBy('assignments.id')
 				->limit(1)
 				->first();
@@ -99,7 +100,7 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'user_id', 'atom_entity_id', 'task_ended'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'assignments.user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 
 		if($filters) {
 			foreach($validFilters as $validFilter) {
@@ -113,6 +114,16 @@ class Assignment extends AppModel {
 						else {
 							$query->whereNull('task_end');
 						}
+					}
+					else if ($validFilter == 'has_discussion'){
+						if ($filterValue == 1){
+							$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
+						}else if ($filterValue == 0){
+							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
+						}
+					}
+					else if ($validFilter == 'atom_entity_id'){
+						$query->where('assignments.atom_entity_id', '=', $filterValue);
 					}
 					else {
 						$query->where($validFilter, '=', $filterValue);
@@ -246,6 +257,7 @@ class Assignment extends AppModel {
 	public static function allForProduct($productId) {
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
+				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
 				->groupBy('atoms.entity_id');
 	}
