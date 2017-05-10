@@ -253,7 +253,7 @@ class AtomController extends Controller
         $page = max((int)$request->input('page', 1), 1);
 
         $results = $q ? Atom::search($q, $productId, $filters, $limit, $page) : [];
-
+        
         return new ApiPayload($results);
     }
 }
