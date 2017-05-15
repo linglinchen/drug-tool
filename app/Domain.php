@@ -49,7 +49,7 @@ class Domain extends AppModel {
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
-                ->orderBy('sort', 'ASC')
+                ->orderBy('alpha_title', 'ASC')
                 ->get();
         Comment::addSummaries($atoms, $productId);
 
