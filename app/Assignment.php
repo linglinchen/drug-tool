@@ -224,7 +224,8 @@ class Assignment extends AppModel {
 	 */
 	public static function next($userId, $atomEntityId, $productId) {
 		$query = Assignment::allForProduct($productId)
-				->where('user_id' , '=', $userId)
+				->where('assignments.user_id' , '=', $userId)
+				->groupBy('assignments.id')
 				->orderBy('assignments.id', 'ASC');
 		$assignments = $query->get();
 
