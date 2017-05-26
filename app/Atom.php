@@ -93,7 +93,7 @@ class Atom extends AppModel {
      */
     public static function makeAlphaTitle($title){
         $trimmedTitle = trim($title);
-        $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'ASCII');
+        $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'UTF-8');
         
         return $alphaTitle;
     }
