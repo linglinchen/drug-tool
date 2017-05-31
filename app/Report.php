@@ -19,7 +19,8 @@ class Report extends AppModel {
 		'openAssignments' => 'Open Assignments',
 		'brokenLinks' => 'Broken Links',
 		'comments' => 'Comments',
-		'moleculeStats' => 'Chapter Stats'
+		'moleculeStats' => 'Chapter Stats',
+		'domainStats' => 'Domain Stats'
 	];
 
 	protected static $_stepSizeSeconds = [
