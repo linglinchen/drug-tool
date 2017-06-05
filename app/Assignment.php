@@ -100,7 +100,7 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -124,9 +124,9 @@ class Assignment extends AppModel {
 					else if ($validFilter == 'atom_entity_id'){
 						$query->where('assignments.atom_entity_id', '=', $filterValue);
 					}
-					else if ($validFilter == 'user_id'){
-						$query->where('assignments.user_id', '=', $filterValue);
-					}
+					//else if ($validFilter == 'user_id'){
+						//$query->where('assignments.user_id', '=', $filterValue);
+					//}
 					else {
 						$query->where($validFilter, '=', $filterValue);
 					}
