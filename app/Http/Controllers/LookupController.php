@@ -33,7 +33,7 @@ class LookupController extends Controller
         return new ApiPayload([
             'groups' => Group::allForCurrentProduct()->get(),
             'boilerplates' => Boilerplate::allForCurrentProduct()->get(),
-            'tasks' => Task::allForCurrentProduct()->orderBy('id')->get(),
+            'tasks' => Task::allForCurrentProduct()->orderBy('sort')->orderBy('id')->get(),
             'statuses' => Status::allForCurrentProduct()->orderBy('id')->get(),
             'domains' => Domain::allForCurrentProduct()->orderBy('id')->get()
         ]);
