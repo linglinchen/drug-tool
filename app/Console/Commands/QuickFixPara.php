@@ -46,17 +46,31 @@ class QuickFixPara extends Command {
 
         $assignments = Assignment::wherein('atom_entity_id', $entityIdArray)
             ->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-            ->where('task_id', '=', 25)->whereNotNull('task_end')->get()->toArray();
+            ->join('users', 'users.id', '=', 'assignments.user_id')
+            ->where('task_id', '=', 25)
+            //->whereNotNull('task_end')
+            ->where('task_end', "<", '2017-06-15')
+            ->get()->toArray();
 
         foreach ($assignments as $assignment){
-            echo $assignment['domain_code']."\t".$assignment['alpha_title']."\n";
+            echo $assignment['domain_code']."\t".$assignment['alpha_title']."\t".$assignment['task_end']."\t".$assignment['email']."\n";
             $new_assignment = [
                 'atom_entity_id' => $assignment['atom_entity_id'],
                 'user_id' => $assignment['user_id'],
                 'task_id' => 25,
-                'task_end' => null
+                'task_end' => null,
             ];
-            Assignment::query()->insert($new_assignment);
+
+            //check if the new_assignment is existing
+            $existing_assignments = Assignment::where('atom_entity_id', '=', $assignment['atom_entity_id'])
+                ->where('task_id', '=', 25)
+                ->where('user_id', '=', $assignment['user_id'])
+                ->where('task_end', '=', null)
+                ->get()->last();
+
+            if (is_null($existing_assignments)){
+                Assignment::query()->insert($new_assignment);
+            }
         }
     }
 }
