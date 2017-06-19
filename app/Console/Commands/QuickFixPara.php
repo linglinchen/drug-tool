@@ -49,7 +49,7 @@ class QuickFixPara extends Command {
             ->join('users', 'users.id', '=', 'assignments.user_id')
             ->where('task_id', '=', 25)
             //->whereNotNull('task_end')
-            ->where('task_end', "<", '2017-06-15')
+            ->where('task_end', "<", '2017-06-16')
             ->get()->toArray();
 
         foreach ($assignments as $assignment){
