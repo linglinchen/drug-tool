@@ -382,6 +382,23 @@ class Report extends AppModel {
 	}
 
 	/**
+	 * Provide an array of statistics about the domains.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return array
+	 */
+	public static function domainStats($productId) {
+		$domainStats = self::_countPerDomain($productId);
+
+		$stats = [
+			'domains' => $domainStats
+		];
+
+		return $stats;
+	}
+
+	/**
 	 * Extracts queries from a list of comments.
 	 *
 	 * @param object[] $comments
@@ -635,6 +652,94 @@ class Report extends AppModel {
         foreach($counts as $row) {
             $stats[$row->code]['chars'] = $row->chars;
         }
+
+        return $stats;
+    }
+
+	/**
+     * Calculate stats for each chapter.
+	 *
+	 * @param integer $productId Limit to this product
+     *
+     * @return integer[]
+     */
+    protected static function _countPerDomain($productId) {
+		$totalNumSum = 0;
+		$reviewedSum = 0;
+		$withCommentSum = 0;
+		$woCommentSum = 0;
+
+		//# of terms in each domain
+		$totalNumSql = 'SELECT domain_code, count(id) FROM atoms
+			WHERE id IN (SELECT MAX(id) FROM atoms WHERE product_id = '.$productId.' AND molecule_code IS NOT NULL GROUP BY entity_id)
+			GROUP BY domain_code
+			ORDER BY domain_code';
+
+        $totalNumQuery = DB::select($totalNumSql);
+        $totalNumArray = json_decode(json_encode($totalNumQuery), true);
+		$stats['sum'] = [
+			'totalNumSum' => 0,
+			'reviewedSum' => 0,
+			'withCommentSum' => 0,
+			'woCommentSum' => 0
+		];
+
+        foreach ($totalNumArray as $totalNum){
+			$stats[$totalNum['domain_code']] = [
+				'name' => $totalNum['domain_code'],
+				'totalNum' => $totalNum['count'],
+				'reviewed' => 0,
+				'perComplete' => 0,
+				'withComment' => 0,
+				'woComment' => 0
+			];
+			$totalNumSum += $totalNum['count'];
+		}
+
+		//# of terms that has been reviewed
+		$reviewedNumSql = 'SELECT a.domain_code, count(a.id) FROM atoms a
+			JOIN ASSIGNMENTS ass ON ass.atom_entity_id = a.entity_id
+			WHERE a.id IN (SELECT MAX(id) FROM atoms WHERE product_id = '.$productId.' AND molecule_code IS NOT NULL GROUP BY entity_id)
+				AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+				AND ass.task_end IS NOT NULL
+			GROUP BY a.domain_code
+			ORDER BY a.domain_code';
+
+		$reviewedNumQuery = DB::select($reviewedNumSql);
+		$reviewedNumArray = json_decode(json_encode($reviewedNumQuery), true);
+		foreach ($reviewedNumArray as $reviewedNum){
+			$stats[$reviewedNum['domain_code']]['reviewed'] = $reviewedNum['count'];
+			$stats[$reviewedNum['domain_code']]['perComplete'] = number_format($reviewedNum['count']/$stats[$reviewedNum['domain_code']]['totalNum']*100, 2);
+			$reviewedSum += $reviewedNum['count'];
+		}
+
+		//sent to editor with comments
+		$withCommentNumSql = 'SELECT a.domain_code, count(com.id) FROM atoms a
+			JOIN assignments ass ON ass.atom_entity_id = a.entity_id
+			JOIN comments com on ass.user_id = com.user_id AND ass.atom_entity_id = com.atom_entity_id
+			WHERE a.id IN (SELECT MAX(id) FROM atoms WHERE product_id = '.$productId.' AND molecule_code IS NOT NULL GROUP BY entity_id)
+				AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+				AND ass.task_end IS NOT NULL
+				AND com.id IN (SELECT MAX(id) FROM comments WHERE deleted_at IS NULL GROUP BY atom_entity_id, user_id)
+			GROUP BY a.domain_code
+			ORDER BY a.domain_code';
+
+		$withCommentNumQuery = DB::select($withCommentNumSql);
+		$withCommentNumArray = json_decode(json_encode($withCommentNumQuery), true);
+		foreach ($withCommentNumArray as $withCommentNum){
+			$stats[$withCommentNum['domain_code']]['withComment'] = $withCommentNum['count'];
+			$woComment = $stats[$withCommentNum['domain_code']]['reviewed'] - $withCommentNum['count'];
+			$stats[$withCommentNum['domain_code']]['woComment'] = $woComment;
+			$withCommentSum += $withCommentNum['count'];
+			$woCommentSum += $woComment;
+		}
+
+		$stats['sum'] = [
+			'totalNumSum' => $totalNumSum,
+			'reviewedSum' => $reviewedSum,
+			'withCommentSum' => $withCommentSum,
+			'woCommentSum' => $woCommentSum
+		];
 
         return $stats;
     }

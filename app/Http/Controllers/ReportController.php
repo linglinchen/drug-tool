@@ -80,4 +80,15 @@ class ReportController extends Controller {
 
         return new ApiPayload($stats);
     }
+
+    public function domainStatsAction($productId, Request $request) {
+        try {
+            $stats = Report::domainStats($productId);
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No domain statistics were found.');
+        }
+
+        return new ApiPayload($stats);
+    }
 }
