@@ -11,11 +11,11 @@ use App\Product;
 use App\Status;
 
 /**
- * Imports atoms from XML file(s) in the data/import/atoms directory. Automatically applies tallman tags to text.
+ * Imports atoms from XML file(s) in the data/import/atoms directory. Applies tallman tags to text when tallmanSet is specified to a predefined set.
  * When editing tallman.txt, be sure that you capitalize ONLY the characters that you want tagged as tallman.
  * To avoid headaches, run this after creating the molecules.
  *
- * Reimports probably work, but are untested.
+ * Reimports using existing entityIDs probably work, but are untested.
  */
 class ImportAtoms extends Command
 {
@@ -24,7 +24,7 @@ class ImportAtoms extends Command
      *
      * @var string
      */
-    protected $signature = 'import:atoms {productId} {statusId}';
+    protected $signature = 'import:atoms {productId} {statusId} {tallmanSet}';
 
     /**
      * The console command description.
@@ -68,6 +68,13 @@ class ImportAtoms extends Command
             throw new \Exception('Invalid status ID.');
         }
         $this->statusId = $statusId;
+
+        $tallmanSet = (string)$this->argument('tallmanSet');
+        if(!$tallmanSet) {
+            $tallmanSet = 'false';
+        }
+		//$tallmanSet value is validated in _loadTallman
+        $this->tallmanSet = $tallmanSet;
 
         $this->moleculeLookups = Molecule::getLookups($productId);
 
@@ -155,6 +162,12 @@ class ImportAtoms extends Command
      * @return string The modified XML string
      */
     protected function _addTallman($xml) {
+        //tallman isn't used on every import
+        if($this->tallmanSet === 'false') {
+        	return $xml;
+        }
+
+
         $this->_loadTallman();
 
         foreach($this->tallman as $find => $replacement) {
@@ -169,8 +182,21 @@ class ImportAtoms extends Command
      */
     protected function _loadTallman() {
         if(!$this->tallman) {
-            $dataPath = base_path() . '/data/tallman.txt';
+            //list of predefined tallman sets selected with tallmanSet
+            $tallmanSets = [
+            	'NDR' => 'tallman.txt',
+            ];
+
+			if(!array_key_exists($this->tallmanSet, $tallmanSets)) {
+				throw new \Exception('Invalid tallmanSet value: ' . $this->tallmanSet);
+			}
+
+            $dataPath = base_path() . '/data/' . $tallmanSets[$this->tallmanSet];
             $tallman = file_get_contents($dataPath);
+            if($tallman === false) {
+            	throw new \Exception('tallmanSet file was not found: ' . $dataPath);
+            }
+
             $tallman = preg_split('/\v+/S', trim($tallman));
             foreach($tallman as $name) {
                 $name = trim($name);
