@@ -20,7 +20,8 @@ class Report extends AppModel {
 		'brokenLinks' => 'Broken Links',
 		'comments' => 'Comments',
 		'moleculeStats' => 'Chapter Stats',
-		'domainStats' => 'Domain Stats'
+		'domainStats' => 'Domain Stats',
+		'reviewerStats' => 'Reviewer Process Stats'
 	];
 
 	protected static $_stepSizeSeconds = [
@@ -399,6 +400,24 @@ class Report extends AppModel {
 	}
 
 	/**
+	 * Provide an array of statistics about the reviewer process.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return array
+	 */
+	public static function reviewerStats($productId) {
+		$reviewerStats = self::_countPerReviewer($productId);
+
+		$stats = [
+			'reviewer' => $reviewerStats
+		];
+
+		return $stats;
+	}
+
+
+	/**
 	 * Extracts queries from a list of comments.
 	 *
 	 * @param object[] $comments
@@ -657,7 +676,7 @@ class Report extends AppModel {
     }
 
 	/**
-     * Calculate stats for each chapter.
+     * Calculate process for each domain.
 	 *
 	 * @param integer $productId Limit to this product
      *
@@ -730,6 +749,111 @@ class Report extends AppModel {
 			$stats[$withCommentNum['domain_code']]['withComment'] = $withCommentNum['count'];
 			$woComment = $stats[$withCommentNum['domain_code']]['reviewed'] - $withCommentNum['count'];
 			$stats[$withCommentNum['domain_code']]['woComment'] = $woComment;
+			$withCommentSum += $withCommentNum['count'];
+			$woCommentSum += $woComment;
+		}
+
+		$stats['sum'] = [
+			'totalNumSum' => $totalNumSum,
+			'reviewedSum' => $reviewedSum,
+			'withCommentSum' => $withCommentSum,
+			'woCommentSum' => $woCommentSum
+		];
+
+        return $stats;
+    }
+
+	/**
+     * Calculate process for each reviewer.
+	 *
+	 * @param integer $productId Limit to this product
+     *
+     * @return integer[]
+     */
+    protected static function _countPerReviewer($productId) {
+		$totalNumSum = 0;
+		$reviewedSum = 0;
+		$withCommentSum = 0;
+		$woCommentSum = 0;
+
+		//# of terms assigned to each reviewer
+		$totalNumSql = 'SELECT us.firstname, us.lastname, COUNT(atom_entity_id) FROM assignments ass
+			JOIN users us ON us.id = ass.user_id
+			WHERE us.id in (
+				SELECT u.id FROM user_products up
+				JOIN users u ON u.id = up.user_id
+				JOIN groups g ON g.id = up.group_id
+				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
+			)
+			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+			AND task_id=25
+			GROUP BY us.id';
+
+        $totalNumQuery = DB::select($totalNumSql);
+        $totalNumArray = json_decode(json_encode($totalNumQuery), true);
+		$stats['sum'] = [
+			'totalNumSum' => 0,
+			'reviewedSum' => 0,
+			'withCommentSum' => 0,
+			'woCommentSum' => 0
+		];
+
+        foreach ($totalNumArray as $totalNum){
+			$stats[$totalNum['lastname']] = [
+				'name' => $totalNum['firstname'].' '.$totalNum['lastname'],
+				'totalNum' => $totalNum['count'],
+				'reviewed' => 0,
+				'perComplete' => 0,
+				'withComment' => 0,
+				'woComment' => 0
+			];
+			$totalNumSum += $totalNum['count'];
+		}
+
+		//# of terms that has been reviewed
+		$reviewedNumSql = 'SELECT us.firstname, us.lastname, COUNT(ass.atom_entity_id) FROM assignments ass
+			JOIN users us ON us.id = ass.user_id
+			WHERE us.id in (
+				SELECT u.id FROM user_products up
+				JOIN users u ON u.id = up.user_id
+				JOIN groups g ON g.id = up.group_id
+				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
+			)
+			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+			AND task_id=25
+			AND task_end IS NOT NULL
+			GROUP BY us.id';
+
+		$reviewedNumQuery = DB::select($reviewedNumSql);
+		$reviewedNumArray = json_decode(json_encode($reviewedNumQuery), true);
+		foreach ($reviewedNumArray as $reviewedNum){
+			$stats[$reviewedNum['lastname']]['reviewed'] = $reviewedNum['count'];
+			$stats[$reviewedNum['lastname']]['perComplete'] = number_format($reviewedNum['count']/$stats[$reviewedNum['lastname']]['totalNum']*100, 2);
+			$reviewedSum += $reviewedNum['count'];
+		}
+
+		 //sent to editor with comments
+		 $withCommentNumSql = 'SELECT us.firstname, us.lastname, COUNT(ass.atom_entity_id) FROM assignments ass
+			JOIN users us ON us.id = ass.user_id
+			JOIN comments com on com.atom_entity_id = ass.atom_entity_id and com.user_id = ass.user_id
+			WHERE us.id in (
+				SELECT u.id FROM user_products up
+				JOIN users u ON u.id = up.user_id
+				JOIN groups g ON g.id = up.group_id
+				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
+    		)
+			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+			AND task_id=25
+			AND task_end IS NOT NULL
+			AND com.id IN (SELECT MAX(id) FROM comments WHERE deleted_at IS NULL GROUP BY atom_entity_id, user_id)
+			GROUP BY us.id';
+
+		$withCommentNumQuery = DB::select($withCommentNumSql);
+		$withCommentNumArray = json_decode(json_encode($withCommentNumQuery), true);
+		foreach ($withCommentNumArray as $withCommentNum){
+			$stats[$withCommentNum['lastname']]['withComment'] = $withCommentNum['count'];
+			$woComment = $stats[$withCommentNum['lastname']]['reviewed'] - $withCommentNum['count'];
+			$stats[$withCommentNum['lastname']]['woComment'] = $woComment;
 			$withCommentSum += $withCommentNum['count'];
 			$woCommentSum += $woComment;
 		}

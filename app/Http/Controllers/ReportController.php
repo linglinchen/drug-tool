@@ -91,4 +91,15 @@ class ReportController extends Controller {
 
         return new ApiPayload($stats);
     }
+
+     public function reviewerStatsAction($productId, Request $request) {
+        try {
+            $stats = Report::reviewerStats($productId);
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No reviewer statistics were found.');
+        }
+
+        return new ApiPayload($stats);
+    }
 }
