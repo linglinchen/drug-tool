@@ -719,7 +719,13 @@ class Report extends AppModel {
 		$reviewedNumSql = 'SELECT a.domain_code, count(a.id) FROM atoms a
 			JOIN ASSIGNMENTS ass ON ass.atom_entity_id = a.entity_id
 			WHERE a.id IN (SELECT MAX(id) FROM atoms WHERE product_id = '.$productId.' AND molecule_code IS NOT NULL GROUP BY entity_id)
-				AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+				AND ass.id IN (
+                SELECT MAX(assi.id) FROM assignments assi
+                join tasks ta on ta.id = assi.task_id
+                WHERE ta.title = \'Reviewer submits notes to Editor\'
+					AND ta.product_id = '.$productId.'
+                GROUP BY atom_entity_id
+            )
 				AND ass.task_end IS NOT NULL
 			GROUP BY a.domain_code
 			ORDER BY a.domain_code';
@@ -737,7 +743,13 @@ class Report extends AppModel {
 			JOIN assignments ass ON ass.atom_entity_id = a.entity_id
 			JOIN comments com on ass.user_id = com.user_id AND ass.atom_entity_id = com.atom_entity_id
 			WHERE a.id IN (SELECT MAX(id) FROM atoms WHERE product_id = '.$productId.' AND molecule_code IS NOT NULL GROUP BY entity_id)
-				AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
+				AND ass.id IN (
+                SELECT MAX(assi.id) FROM assignments assi
+                join tasks ta on ta.id = assi.task_id
+                WHERE ta.title = \'Reviewer submits notes to Editor\'
+					AND ta.product_id = '.$productId.'
+                GROUP BY atom_entity_id
+            )
 				AND ass.task_end IS NOT NULL
 				AND com.id IN (SELECT MAX(id) FROM comments WHERE deleted_at IS NULL GROUP BY atom_entity_id, user_id)
 			GROUP BY a.domain_code
@@ -779,14 +791,22 @@ class Report extends AppModel {
 		//# of terms assigned to each reviewer
 		$totalNumSql = 'SELECT us.firstname, us.lastname, COUNT(atom_entity_id) FROM assignments ass
 			JOIN users us ON us.id = ass.user_id
+            JOIN tasks t on t.id = ass.task_id
 			WHERE us.id in (
 				SELECT u.id FROM user_products up
 				JOIN users u ON u.id = up.user_id
 				JOIN groups g ON g.id = up.group_id
 				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
 			)
-			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
-			AND task_id=25
+			AND ass.id IN (
+                SELECT MAX(assi.id) FROM assignments assi
+                join tasks ta on ta.id = assi.task_id
+                WHERE ta.title = \'Reviewer submits notes to Editor\'
+					AND ta.product_id = '.$productId.'
+                GROUP BY atom_entity_id
+            )
+			AND t.title = \'Reviewer submits notes to Editor\'
+            AND t.product_id = '.$productId.'
 			GROUP BY us.id';
 
         $totalNumQuery = DB::select($totalNumSql);
@@ -813,14 +833,22 @@ class Report extends AppModel {
 		//# of terms that has been reviewed
 		$reviewedNumSql = 'SELECT us.firstname, us.lastname, COUNT(ass.atom_entity_id) FROM assignments ass
 			JOIN users us ON us.id = ass.user_id
+			JOIN tasks t on t.id = ass.task_id
 			WHERE us.id in (
 				SELECT u.id FROM user_products up
 				JOIN users u ON u.id = up.user_id
 				JOIN groups g ON g.id = up.group_id
 				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
 			)
-			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
-			AND task_id=25
+			AND ass.id IN (
+                SELECT MAX(assi.id) FROM assignments assi
+                join tasks ta on ta.id = assi.task_id
+                WHERE ta.title = \'Reviewer submits notes to Editor\'
+					AND ta.product_id = '.$productId.'
+                GROUP BY atom_entity_id
+            )
+			AND t.title = \'Reviewer submits notes to Editor\'
+            AND t.product_id = '.$productId.'
 			AND task_end IS NOT NULL
 			GROUP BY us.id';
 
@@ -836,14 +864,22 @@ class Report extends AppModel {
 		 $withCommentNumSql = 'SELECT us.firstname, us.lastname, COUNT(ass.atom_entity_id) FROM assignments ass
 			JOIN users us ON us.id = ass.user_id
 			JOIN comments com on com.atom_entity_id = ass.atom_entity_id and com.user_id = ass.user_id
+			JOIN tasks t on t.id = ass.task_id
 			WHERE us.id in (
 				SELECT u.id FROM user_products up
 				JOIN users u ON u.id = up.user_id
 				JOIN groups g ON g.id = up.group_id
 				WHERE g.title=\'Reviewer\' AND g.product_id = '.$productId.'
     		)
-			AND ass.id IN (SELECT MAX(id) FROM assignments WHERE task_id = 25 GROUP BY atom_entity_id)
-			AND task_id=25
+			AND ass.id IN (
+                SELECT MAX(assi.id) FROM assignments assi
+                join tasks ta on ta.id = assi.task_id
+                WHERE ta.title = \'Reviewer submits notes to Editor\'
+					AND ta.product_id = '.$productId.'
+                GROUP BY atom_entity_id
+            )
+			AND t.title = \'Reviewer submits notes to Editor\'
+			AND t.product_id = '.$productId.'
 			AND task_end IS NOT NULL
 			AND com.id IN (SELECT MAX(id) FROM comments WHERE deleted_at IS NULL GROUP BY atom_entity_id, user_id)
 			GROUP BY us.id';
