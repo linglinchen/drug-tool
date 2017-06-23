@@ -62,7 +62,7 @@ class ImportDomains extends Command
     /**
      * Import a domain.
      *
-     * @param array $domain The domain as an associative array; currently: id,code,title,locked,sort,product_id,contributor_id
+     * @param array $domain The domain as an associative array; currently: code,title,locked,sort,product_id,contributor_id,editor_id
      */
     public function importDomain($domain) {
         $timestamp = (new Domain())->freshTimestampString();
