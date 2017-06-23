@@ -53,8 +53,7 @@ class ImportDomains extends Command
         $sort = 0;
         foreach($lines as $line) {
             $domain = array_combine($headers, $line);     //this gives us an associative array that will be easy to work with
-            $sort++;
-            $this->importDomain($domain, $sort);
+            $this->importDomain($domain);
         }
 
         echo "Done\n";
@@ -63,16 +62,13 @@ class ImportDomains extends Command
     /**
      * Import a domain.
      *
-     * @param array $domain The domain as an associative array
+     * @param array $domain The domain as an associative array; currently: id,code,title,locked,sort,product_id,contributor_id
      */
-    public function importDomain($domain, $sort) {
+    public function importDomain($domain) {
         $timestamp = (new Domain())->freshTimestampString();
 
         $domain['created_at'] = $timestamp;
         $domain['updated_at'] = $timestamp;
-        $domain['locked'] = 0;
-        $domain['product_id'] = 3;
-        $domain['sort'] = $sort;
         DB::table('domains')->insert($domain);
     }
 }
