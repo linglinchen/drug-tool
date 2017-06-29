@@ -323,7 +323,9 @@ class Atom extends AppModel {
         $subDomains = [];
         foreach ($uniques as $unique){
             //if ($unique !== $this->domain_code){
+            if ($unique !== ' '){
                 array_push($subDomains, $unique);
+            }
             //}
         }
        $this->domains = $subDomains;
