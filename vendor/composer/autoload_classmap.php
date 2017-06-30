@@ -11,6 +11,7 @@ return array(
     'AddDomainCodeToAtomsTable' => $baseDir . '/database/migrations/2017_05_01_223429_add_domainCode_to_Atoms_table.php',
     'AddMoreProductIdColumns' => $baseDir . '/database/migrations/2016_11_22_132400_add_more_product_id_columns.php',
     'AddProductIdColumns' => $baseDir . '/database/migrations/2016_10_10_134900_add_product_id_columns.php',
+    'AddSortToTasksTable' => $baseDir . '/database/migrations/2017_06_13_145042_add_sort_to_tasks_table.php',
     'AddStatusFlags' => $baseDir . '/database/migrations/2016_11_29_130800_add_status_flags.php',
     'AddStatusToAtomsTable' => $baseDir . '/database/migrations/2016_08_08_121000_add_status_to_atoms_table.php',
     'AssignmentsCreatedAtDefault' => $baseDir . '/database/migrations/2016_09_23_084800_assignments_created_at_default.php',
