@@ -26,6 +26,10 @@
 ```
 sudo service httpd configtest
 ```
+Note: You can optionally run optimize that should work as well versus restarting Apache
+```
+php artisan optimize
+```
 - Ensure that everything in **storage** and **bootstrap/cache** is writeable by Apache.
 - Copy **.env.example** to **.env** -- **.env** should *always live outside of source control*.
 - Alter **.env** to match suit the environment.
