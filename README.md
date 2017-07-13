@@ -26,10 +26,7 @@
 ```
 sudo service httpd configtest
 ```
-Note: You can optionally run optimize that should work as well versus restarting Apache
-```
-php artisan optimize
-```
+
 - Ensure that everything in **storage** and **bootstrap/cache** is writeable by Apache.
 - Copy **.env.example** to **.env** -- **.env** should *always live outside of source control*.
 - Alter **.env** to match suit the environment.
@@ -64,7 +61,10 @@ cd /var/www/drug-tool
 ```
 sudo service httpd restart
 ```
-
+Note: In VM you can optionally run optimize that should work as well versus restarting Apache
+```
+php artisan optimize
+```
 # Notes
 
 - **All** modifications to the database structure should be handled with migrations. If you make the change with something like pgAdmin or Heidi, *you're doing it wrong!*
