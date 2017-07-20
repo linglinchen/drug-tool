@@ -62,7 +62,8 @@ class QuickFixXrefs extends Command {
         ";
 		
         $atoms = DB::select($sql);
-        $atomsArray = json_decode(json_encode($atoms), true);  //convert object to 
+        $atomsArray = json_decode(json_encode($atoms), true);
+//convert object to 
 //watcher array to track which records from atoms results set have been processed and control the update of the xml so that all replacements on a sourceid are done before the sourceid record is saved. Otherwise, xml could be written each time a row for substition is done.
 		$watcherArray=array();
 			foreach($atomsArray as $keyInt=>$val){
@@ -71,16 +72,73 @@ class QuickFixXrefs extends Command {
 				$watcherArray[$newKey][] = ['atomkey'=>$keyInt, 'originalxml'=>$val['xml'],'newXml'=>NULL];
 
 			}
-//$watcherArray = sort($watcherArray);
+
 //print_r ($watcherArray['51311']);
 
         $totalDetectedAtoms = sizeof($watcherArray);
+		$totalDetectedReplacements = sizeof($atomsArray);
         $changedAtoms = 0;
         $changedXref = 0;
  //add working atom array, loop through. Issue now is how to do all needed replacements for the atom, then save the atom, then move on to next (otherwise, could get atom saved multiple times for every single xref. Add a watcher? key value pairs?
-         foreach($atomsArray as $atom) {
+ 
+	$watchedAtomsCount = 0;
+ 
+foreach($watcherArray as $watchedAtom) {
+
+	 for ($i = 0; $i < sizeof($watchedAtom); ++$i){
+		 $buffer = $watchedAtom[0]['originalxml'];
+		 
+/* 			if($atomsArray[$watchedAtom[$i]['atomkey']]) { */
+			//grab the row from atoms array that matches the atomkey in $watcherArray index
+			$currentReplacement = $atomsArray[$watchedAtom[$i]['atomkey']];
+
+			//snippet to replace an entityid to replace it with from atomsArray
+					$target_entityid = $currentReplacement['target_entityid'];
+					$xmlrefsnippet = $currentReplacement['xmlrefsnippet'];
+print_r('<pre>'.$target_entityid .'</pre>');
+/* Need to do this write/replacement elsewhere */
+/* 
+					$atomModel = Atom::find($currentReplacement['sourceid']);
+
+					$xml = $buffer; 
+					$xml = $currentReplacement['xml'];
+					$find = '/"'.$currentReplacement['xmlrefsnippet'].'([#"])/';
+					$replace = '"a:'.$currentReplacement['target_entityid'].'$1';
+					preg_replace($find, $replace, $xml, -1, $count);
+					print_r($buffer); */
+			}
+						if (next($watchedAtom)) {
+							print_r('Not done '.$i.'count of '.sizeof($watchedAtom).'');
+							$watchedAtomsCount++;	
+						} 
+			
+/* 		}  */
+
+}
+			
+/* 		foreach($atomsArray as $atom) {
+					$atomModel = Atom::find($atom['sourceid']);
+
+					$xml = $atomModel->xml; 
+					$xml = $atom['xml'];
+					$find = '/"'.$atom['xmlrefsnippet'].'([#"])/';
+					$replace = '"a:'.$atom['target_entityid'].'$1';
+					preg_replace($find, $replace, $xml, -1, $count);
+					
+					$changedXref = $changedXref + $count;
+				   if($newXml !== $atomModel->xml) {
+						$newAtom = $atomModel->replicate();
+						$newAtom->xml = $newXml;
+						$newAtom->modified_by = null;
+						$changedAtoms++;
+						$newAtom->save();
+					}
+		} */
+	
+
+ /*        foreach($atomsArray as $atom) {
 			$atomModel = Atom::find($atom['sourceid']);
-//			print_r($atomModel);
+
             $xml = $atomModel->xml; 
             $xml = $atom['xml'];
 			$find = '/"'.$atom['xmlrefsnippet'].'([#"])/';
@@ -88,20 +146,19 @@ class QuickFixXrefs extends Command {
 			preg_replace($find, $replace, $xml, -1, $count);
 			
 			$changedXref = $changedXref + $count;
- 
-   
-
-/*             if($newXml !== $atomModel->xml) {
+           if($newXml !== $atomModel->xml) {
                 $newAtom = $atomModel->replicate();
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $changedAtoms++;
                 $newAtom->save();
-            } */
-        }
+            }
+        }*/
         /* output messages */
-        echo 'affected Atoms: '.$totalDetectedAtoms."\n";
-        echo 'changed Atoms: '.$changedAtoms."\n";
+//        echo 'affected Atoms: '.$totalDetectedAtoms."\n";
+	   echo 'number of Xref replacements across atoms: '.$totalDetectedReplacements."\n";
+       echo 'changed Atoms: '.$watchedAtomsCount."\n";		
+//       echo 'changed Atoms: '.$changedAtoms."\n";
         echo 'total changed xrefs: '.$changedXref."\n";
     }
 }
