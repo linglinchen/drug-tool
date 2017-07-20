@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 
 use App\Atom;
 use App\Product;
-ini_set('memory_limit', '1280M');
+use Illuminate\Support\Facades\DB;
 
 class QuickFixXrefs extends Command {
     /**
@@ -17,7 +17,7 @@ class QuickFixXrefs extends Command {
      *
      * @var string
      */
-    protected $signature = 'quickfix:xrefs {productId} {moleculeCode?}';
+    protected $signature = 'quickfix:xrefs {productId}';
 
     /**
      * The console command description.
@@ -31,84 +31,77 @@ class QuickFixXrefs extends Command {
      *
      * @return mixed
      */
-          $productId = (int)$this->argument('productId');
+    public function handle() {
+	    $productId = (int)$this->argument('productId');
         if(!$productId || !Product::find($productId)) {
             throw new \Exception('Invalid product ID.');
-        }      
+        }
+        $this->productId = $productId;
         self::_fixNonEnityIdRefs($productId);
+    }
+	 
 
 
-    public static function _fixNonEnityIdRefs() {
-       $sql = "SELECT MAX(id) as id
-            FROM atoms
-            WHERE (
-		        deleted_at IS NULL
-		        AND product_id = $productId
-		    )
-            GROUP BY entity_id
-            INTERSECT
-            SELECT id
-            FROM atoms
-            WHERE (cast(xpath('//para[starts-with(.,\":\")]', XML::XML) AS TEXT []) != '{}')
+
+    public static function _fixNonEnityIdRefs($productId) {
+       $sql = "select a.*, b.id as targetid, b.entity_id as target_entityid
+					from (
+					select max(a.id) as sourceid, a.entity_id, t.xmlrefsnippet, a.xml, a.product_id
+					  from (select id,
+					  regexp_replace(
+					  unnest(xpath('//xref/@refid', a.xml::xml))::varchar(255) 
+					  , '\#.*$', '')
+					  as xmlrefsnippet 
+					  from atoms a) t
+					  inner join atoms a
+						on a.id = t.id      
+					group by a.entity_id, t.xmlrefsnippet, a.xml, a.product_id) a
+						inner join atoms b 
+							on a.xmlrefsnippet = 'tra_'||lower(regexp_replace(b.alpha_title, '\W', '', 'g'))
+						where a.product_id=$productId and b.product_id=$productId;
         ";
-        
+		
         $atoms = DB::select($sql);
-        $atomsArray = json_decode(json_encode($atoms), true);  //convert object to array
-        $totalDetectedAtoms = sizeof($atomsArray);
+        $atomsArray = json_decode(json_encode($atoms), true);  //convert object to 
+//watcher array to track which records from atoms results set have been processed and control the update of the xml so that all replacements on a sourceid are done before the sourceid record is saved. Otherwise, xml could be written each time a row for substition is done.
+		$watcherArray=array();
+			foreach($atomsArray as $keyInt=>$val){
+				//key for watcher will be the atom's id (atom.sourceid)
+				$newKey=$val['sourceid'];
+				$watcherArray[$newKey][] = ['atomkey'=>$keyInt, 'originalxml'=>$val['xml'],'newXml'=>NULL];
+
+			}
+//$watcherArray = sort($watcherArray);
+//print_r ($watcherArray['51311']);
+
+        $totalDetectedAtoms = sizeof($watcherArray);
         $changedAtoms = 0;
-        $changedSec = 0;
-        $changedPara = 0;
-        foreach($atomsArray as $atom) {
-            $atomModel = Atom::find($atom['id']);
-            $xml = $atomModel->xml;
-            echo $atomModel->alpha_title."\n";
-            //add this header to xml so later processing won't do unwanted encoding, e. g. change '-' to &#x2014
-            $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
-            $xmlObject = simplexml_load_string($xml); 
+        $changedXref = 0;
+ //add working atom array, loop through. Issue now is how to do all needed replacements for the atom, then save the atom, then move on to next (otherwise, could get atom saved multiple times for every single xref. Add a watcher? key value pairs?
+         foreach($atomsArray as $atom) {
+			$atomModel = Atom::find($atom['sourceid']);
+//			print_r($atomModel);
+            $xml = $atomModel->xml; 
+            $xml = $atom['xml'];
+			$find = '/"'.$atom['xmlrefsnippet'].'([#"])/';
+			$replace = '"a:'.$atom['target_entityid'].'$1';
+			preg_replace($find, $replace, $xml, -1, $count);
+			
+			$changedXref = $changedXref + $count;
+ 
+   
 
-            //get the para that start with ":"
-            $paras = $xmlObject->xpath('//para[starts-with(.,":")]');
-
-            foreach ($paras as $para){
-             $dom = dom_import_simplexml($para);
-             $currentNodeValue = $dom->nodeValue;
-             if (preg_match('/^:/', $currentNodeValue)){
-                $newNodeValue = preg_replace("/^:/", '', $currentNodeValue);
-                $dom->nodeValue = $newNodeValue;
-                $changedPara++;
-             }
-             
-             //find the sec_title before the para 
-             $secTitle = $para->xpath('ancestor-or-self::section[1]/sec_title[1]'); 
-                $domSec = dom_import_simplexml($secTitle[0]);
-                $currentSec = trim($domSec->nodeValue);
-                if (!preg_match('/:$/', $currentSec)){
-                    $newSec = $currentSec.':'; 
-                    $domSec->nodeValue = $newSec;
-                    $changedSec++;
-                }
-            }
-             
-
-            $xmlString = $xmlObject->asXML();
-        
-            //remove the header line that's generated by asXML()
-            $newXml = preg_replace('/<\?xml version="1\.0" encoding="UTF-8"\?>\n/', '', $xmlString);
-
-            if($newXml !== $atomModel->xml) {
+/*             if($newXml !== $atomModel->xml) {
                 $newAtom = $atomModel->replicate();
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
                 $changedAtoms++;
                 $newAtom->save();
-            }
+            } */
         }
-
         /* output messages */
         echo 'affected Atoms: '.$totalDetectedAtoms."\n";
         echo 'changed Atoms: '.$changedAtoms."\n";
-        echo 'total changed Sec_title: '.$changedSec."\n";
-        echo 'total changed Para: '.$changedPara."\n";
-    }
+        echo 'total changed xrefs: '.$changedXref."\n";
     }
 }
