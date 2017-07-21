@@ -80,33 +80,29 @@ class QuickFixXrefs extends Command {
         $changedXref = 0;
 		$count = 0; //used to increment the changedXref count
 		$watchedAtomsCount = 0;
+
 	
 foreach($watcherArray as $watchedAtom) {
 
 	 for ($i = 0; $i < sizeof($watchedAtom); ++$i){
 			//grab the row from atoms array that matches the atomkey in $watcherArray index
 			$currentReplacement = $atomsArray[$watchedAtom[$i]['atomkey']];
-						print_r('<pre>'.$currentReplacement['sourceid'] .'</pre>   ,    ');
-						print_r('<pre>'.$currentReplacement['xmlrefsnippet'].'</pre> .');	
+/* 						print_r('<pre>'.$currentReplacement['sourceid'] .'</pre>   ,    ');
+						print_r('<pre>'.$currentReplacement['xmlrefsnippet'].'</pre> .');	 */
 			
 			//snippet to replace an entityid to replace it with from atomsArray
 					$target_entityid = $currentReplacement['target_entityid'];
 					$xmlrefsnippet = $currentReplacement['xmlrefsnippet'];
-					$xmltmp = $watchedAtom[$i]['startingXml']; //take the xml copy from the watchedAtoms array, not atoms array. watchedAtoms is the array that gets updated.
-/* 					if ($currentReplacement['sourceid'] == 51311){
-						print_r('<pre>'.$currentReplacement['sourceid'] .'</pre>');
-						print_r('<pre>'.$xmltmp.'</pre>');	
-					}
-					 */
+					
+					//take the xml copy from the watchedAtoms array, not atoms array. watchedAtoms is the array that gets updated.
+					$xmltmp = $watchedAtom[$i]['startingXml']; 
+
 					//replace stuff and save to current $watchedAtom['newXml']
 					$find = '/"'.$currentReplacement['xmlrefsnippet'].'([#"])/';
 					$replace = '"a:'.$currentReplacement['target_entityid'].'$1';
 					$newXml = preg_replace($find, $replace, $xmltmp, -1, $count);
 					$changedXref = $changedXref + $count;
-/* 					if ($currentReplacement['sourceid'] == 51311){
-						print_r('<pre>'.$currentReplacement['sourceid'] .'</pre>');
-						print_r('<pre>'.$newXml.'</pre>');	
-					}	 */	
+
 					$watchedAtom[$i]['WIPXml']	= $newXml;
 					$newXmlValue = $watchedAtom[$i]['WIPXml'];
 
@@ -114,19 +110,17 @@ foreach($watcherArray as $watchedAtom) {
 								if (next($watchedAtom)) {
 											//replace copy current $watchedAtom['newXml'] to next 	 $watchedAtom['originalxml']
 									$watchedAtom[$i+1]['startingXml'] = $newXmlValue;		
-/* 					if ($currentReplacement['sourceid'] == 51311){
-						print_r('<pre>'.$currentReplacement['sourceid'] .'</pre>');
-						print_r('<pre>'.$watchedAtom[$i+1]['startingXml'].'</pre>');	
-					}
-	  */
+
 									} else {
 										//commit to new atom with all replacements to database
 										$atomModel = Atom::find($currentReplacement['sourceid']);
 										$xml = $atomModel->xml; 
-						
+					// 					$xml = $atom['xml'];
 									   if($newXmlValue !== $atomModel->xml) {
 											$newAtom = $atomModel->replicate();
 											$newAtom->xml = $newXmlValue;
+											//print_r($currentReplacement['entity_id']);
+											//print_r($newAtom['xml']);
 											$newAtom->modified_by = null;
 											$changedAtoms++;
 											$newAtom->save();
@@ -134,49 +128,12 @@ foreach($watcherArray as $watchedAtom) {
 									
 									$watchedAtomsCount++;
 								}
-	
+
 	 }					
 
 }
 			
-/* 		foreach($atomsArray as $atom) {
-					$atomModel = Atom::find($atom['sourceid']);
 
-					$xml = $atomModel->xml; 
-					$xml = $atom['xml'];
-					$find = '/"'.$atom['xmlrefsnippet'].'([#"])/';
-					$replace = '"a:'.$atom['target_entityid'].'$1';
-					preg_replace($find, $replace, $xml, -1, $count);
-					
-
-				   if($newXml !== $atomModel->xml) {
-						$newAtom = $atomModel->replicate();
-						$newAtom->xml = $newXml;
-						$newAtom->modified_by = null;
-						$changedAtoms++;
-						$newAtom->save();
-					}
-		} */
-	
-
- /*        foreach($atomsArray as $atom) {
-			$atomModel = Atom::find($atom['sourceid']);
-
-            $xml = $atomModel->xml; 
-            $xml = $atom['xml'];
-			$find = '/"'.$atom['xmlrefsnippet'].'([#"])/';
-			$replace = '"a:'.$atom['target_entityid'].'$1';
-			preg_replace($find, $replace, $xml, -1, $count);
-			
-			$changedXref = $changedXref + $count;
-           if($newXml !== $atomModel->xml) {
-                $newAtom = $atomModel->replicate();
-                $newAtom->xml = $newXml;
-                $newAtom->modified_by = null;
-                $changedAtoms++;
-                $newAtom->save();
-            }
-        }*/
         /* output messages */
 //        echo 'affected Atoms: '.$totalDetectedAtoms."\n";
 	   echo 'number of Xref replacements across atoms: '.$totalDetectedReplacements."\n";
