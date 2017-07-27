@@ -15,6 +15,10 @@ class ReportController extends Controller {
         return new ApiPayload(Report::$reportTypes);
     }
 
+    public function menuAction($productId) {
+        return new ApiPayload(Report::reportMenu($productId));
+    }
+
     public function discontinuedAction($productId) {
         return new ApiPayload(Report::discontinued($productId));
     }

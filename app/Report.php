@@ -6,12 +6,15 @@ use DB;
 use Log;
 
 use App\AppModel;
+use App\Product;
 use App\Atom;
 use App\Comment;
 use App\Molecule;
 use App\Assignment;
 
+
 class Report extends AppModel {
+	// $reportTypes left here to support defunct listAction function. Remove after routing it on front and back.
 	public static $reportTypes = [
 		'discontinued' => 'Discontinued Monographs',
 		'statuses' => 'Status Breakdown',
@@ -23,6 +26,68 @@ class Report extends AppModel {
 		'domainStats' => 'Domain Stats',
 		'reviewerStats' => 'Reviewer Process Stats'
 	];
+
+
+	/**
+	 * Get a menu of reports per product.
+	 *
+     * @param integer $productId Limit to this product
+	 *
+	 * @return mixed[]
+	 */
+
+	public static function reportMenu($productId) {
+		//check if product is either dictionary and if so give separate menus.
+		//Otherwise, provide generic drug type menu
+		if ($productId == 3 || $productId == 5){
+				switch ($productId) {
+				    case 3:
+				        $reportTypes = [
+							'statuses' => 'Status Breakdown',
+							'edits' => 'Edits',
+							'openAssignments' => 'Open Assignments',
+							'brokenLinks' => 'Broken Links',
+							'comments' => 'Comments',
+							'moleculeStats' => 'Chapter Stats',
+							'domainStats' => 'Domain Stats',
+							'reviewerStats' => 'Reviewer Process Stats'
+						];
+
+						break;
+				    case 5:
+				        $reportTypes = [
+							'statuses' => 'Status Breakdown',
+							'openAssignments' => 'Open Assignments',
+							'brokenLinks' => 'Broken Links',
+							'comments' => 'Comments',
+							'moleculeStats' => 'Chapter Stats',
+							'domainStats' => 'Category Stats'
+						];
+
+						break;
+
+				}
+
+
+
+		} else {
+
+				$reportTypes = [
+					'discontinued' => 'Discontinued Monographs',
+					'statuses' => 'Status Breakdown',
+					'edits' => 'Edits',
+					'openAssignments' => 'Open Assignments',
+					'brokenLinks' => 'Broken Links',
+					'comments' => 'Comments',
+					'moleculeStats' => 'Chapter Stats',
+					'domainStats' => 'Domain Stats'
+			];
+		}
+
+
+		return $reportTypes;
+	}
+
 
 	protected static $_stepSizeSeconds = [
 		'day' => 24 * 60 * 60,
