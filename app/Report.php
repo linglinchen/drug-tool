@@ -311,14 +311,19 @@ class Report extends AppModel {
 			foreach($elements as $element) {
 				$attributes = $element->attributes();
 				$refid = isset($attributes['refid']) ? current($attributes['refid']) : null;
+				//strip out part after the hashtag
+			//	$refid = preg_replace('/\#.*$/', '', $refid);
 				$parsedRefid = preg_split('/[\/:]/', $refid);
 				$valid = sizeof($parsedRefid) > 1;
 				if($valid) {
+
 					$type = $parsedRefid[0];
 					$valid = false;
 					if($type == 'a') {		//atom
+				//		print_r(gettype($parsedRefid[1]));
 						$valid = isset($atoms[$parsedRefid[1]]);
 						if($valid) {
+				//			print_r($parsedRefid[1]);
 							$atom = $atoms[$parsedRefid[1]];
 							if(isset($parsedRefid[2])) {		//deep link
 								$valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
