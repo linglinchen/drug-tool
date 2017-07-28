@@ -1,7 +1,7 @@
 <?php
 
 /* ml to mL wherever it thinks this means milliliters. Based on quick fix
-	2016-09-16 JWS	original
+
 
 	Expected results from sample data:
 	42 ignored (eg, firmly, xmlns:mml)

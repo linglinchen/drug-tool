@@ -59,13 +59,15 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
-        
+
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
         }
 
         if($this->_isTitleInUse()) {
-            throw new \Exception('That title is already used by another atom within this product.');
+            $usedtitle = $this->alpha_title;
+            $usedid = $this->entity_id;
+            throw new \Exception('That title  '. $usedtitle .' with entityid ' .$usedid. ' is already used by another atom within this product.');
         }
 
         $doctype->beforeSave($this);
@@ -94,7 +96,7 @@ class Atom extends AppModel {
     public static function makeAlphaTitle($title){
         $trimmedTitle = trim($title);
         $alphaTitle = mb_convert_encoding(strip_tags($trimmedTitle), 'UTF-8');
-        
+
         return $alphaTitle;
     }
 
@@ -138,7 +140,7 @@ class Atom extends AppModel {
         return $query;
     }
 
-    
+
     /**
      * Get a list of discontinued monographs.
      *
@@ -206,7 +208,7 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-                    
+
                 });
 
         self::_addFilters($candidates, $filters);
@@ -329,7 +331,7 @@ class Atom extends AppModel {
             //}
         }
        $this->domains = $subDomains;
-       
+
         return $this;
     }
 
