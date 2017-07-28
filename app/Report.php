@@ -300,7 +300,13 @@ class Report extends AppModel {
 		}
 
 		foreach($atoms as $atom) {
-			$elements = $atom->xml->xpath('//see|include');
+			//look for xref elements in dictionaries, and see in drugs
+					if ($productId == 3 || $productId == 5){
+						$elements = $atom->xml->xpath('//xref|include');
+					} else {
+						$elements = $atom->xml->xpath('//see|include');
+					}
+
 			$total += sizeof($elements);
 			foreach($elements as $element) {
 				$attributes = $element->attributes();
