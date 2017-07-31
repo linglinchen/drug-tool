@@ -6,7 +6,7 @@ use DB;
 use Log;
 
 use App\AppModel;
-use App\Product;
+//use App\Product;
 use App\Atom;
 use App\Comment;
 use App\Molecule;
@@ -283,6 +283,8 @@ class Report extends AppModel {
 		return $output;
 	}
 
+
+
 	/**
 	 * Generate a list of broken links, and get the total.
 	 *
@@ -300,31 +302,22 @@ class Report extends AppModel {
 		}
 
 		foreach($atoms as $atom) {
-			//look for xref elements in dictionaries, and see in drugs
-					if ($productId == 3 || $productId == 5){
-						$elements = $atom->xml->xpath('//xref|include');
-					} else {
-						$elements = $atom->xml->xpath('//see|include');
-					}
-
+			$elements = $atom->xml->xpath('//xref|//see|include');
 			$total += sizeof($elements);
 			foreach($elements as $element) {
 				$attributes = $element->attributes();
 				$refid = isset($attributes['refid']) ? current($attributes['refid']) : null;
-				//strip out part after the hashtag
-			//	$refid = preg_replace('/\#.*$/', '', $refid);
+				$refid = preg_replace('/\#.*$/', '', $refid);
 				$parsedRefid = preg_split('/[\/:]/', $refid);
 				$valid = sizeof($parsedRefid) > 1;
 				if($valid) {
-
 					$type = $parsedRefid[0];
+						$strippedParsedid=preg_replace('/#.*$/', '', $parsedRefid[1]);
 					$valid = false;
 					if($type == 'a') {		//atom
-				//		print_r(gettype($parsedRefid[1]));
-						$valid = isset($atoms[$parsedRefid[1]]);
+						$valid = isset($atoms[$strippedParsedid]);
 						if($valid) {
-				//			print_r($parsedRefid[1]);
-							$atom = $atoms[$parsedRefid[1]];
+							$atom = $atoms[$strippedParsedid];
 							if(isset($parsedRefid[2])) {		//deep link
 								$valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
 							}
