@@ -46,7 +46,7 @@ class Report extends AppModel {
 							'statuses' => 'Status Breakdown',
 							'edits' => 'Edits',
 							'openAssignments' => 'Open Assignments',
-							'brokenLinks' => 'Broken Links',
+/*							'brokenLinks' => 'Broken Links',*/
 							'comments' => 'Comments',
 							'moleculeStats' => 'Chapter Stats',
 							'domainStats' => 'Domain Stats',
