@@ -299,6 +299,7 @@ class Report extends AppModel {
 		$molecules = self::_getKeyedMolecules($productId);
 		foreach($atoms as $atom) {
 			$atom->xml = simplexml_load_string($atom->xml);
+
 		}
 
 		foreach($atoms as $atom) {
