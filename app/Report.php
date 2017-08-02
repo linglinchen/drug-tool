@@ -293,17 +293,22 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function links($productId) {
+
 		$brokenLinks = [];
 		$total = 0;
 		$atoms = self::_getKeyedAtoms($productId);
 		$molecules = self::_getKeyedMolecules($productId);
 		foreach($atoms as $atom) {
 			$atom->xml = simplexml_load_string($atom->xml);
-
 		}
 
 		foreach($atoms as $atom) {
-			$elements = $atom->xml->xpath('//xref|//see|include');
+			//look for xref elements in dictionaries, and see in drugs
+					if ($productId == 3 || $productId == 5){
+						$elements = $atom->xml->xpath('//xref|include');
+					} else {
+						$elements = $atom->xml->xpath('//see|include');
+					}
 			$total += sizeof($elements);
 			foreach($elements as $element) {
 				$attributes = $element->attributes();
@@ -330,7 +335,7 @@ class Report extends AppModel {
 				}
 
 				if(!$valid) {
-					$linkRefid = 'a:' . $atom->entity_id;
+					$linkRefid = ' a:' . $atom->entity_id;
 					$closestAncestorId = self::_closestId($element->xpath('..')[0]);
 					if($closestAncestorId) {
 						$linkRefid .= '/' . $closestAncestorId;
