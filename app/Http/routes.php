@@ -20,7 +20,7 @@ Route::get('/', function () {
 | Application Routes
 |--------------------------------------------------------------------------
 |
-| This route group applies the "web" middleware group to every route
+| This route group applies the "web" middlewarere group to every route
 | it contains. The "web" middleware group is defined in your HTTP
 | kernel and includes session state, CSRF protection, and more.
 |
@@ -78,6 +78,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
 
             Route::get('report', ['uses' => 'ReportController@listAction']);
+            Route::get('{productId}/report', ['uses' => 'ReportController@menuAction']);
             Route::get('{productId}/report/discontinued', ['uses' => 'ReportController@discontinuedAction']);
             Route::get('{productId}/report/statuses', ['uses' => 'ReportController@statusesAction']);
             Route::get('{productId}/report/edits', ['uses' => 'ReportController@editsAction']);
