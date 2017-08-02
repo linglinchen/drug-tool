@@ -68,8 +68,6 @@ class Report extends AppModel {
 
 				}
 
-
-
 		} else {
 
 				$reportTypes = [
@@ -345,8 +343,8 @@ class Report extends AppModel {
 						'type' => $element->getName(),
 						'atomTitle' => $atom->title,
 						'contents' => preg_replace('/(^<[^>]*>|<[^>]*>$)/', '', $element->asXML()),
-						'linkRefid' => $linkRefid,
-						'destRefid' => $refid
+						'linkRefid' => trim($linkRefid),
+						'destRefid' => trim($refid)
 					];
 				}
 			}
