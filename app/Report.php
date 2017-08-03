@@ -373,7 +373,8 @@ class Report extends AppModel {
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
-//product_id field added in select so can double filter out by product.
+
+		//product_id field added in select so can double filter out by product.
 		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title')
                 ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
@@ -390,7 +391,7 @@ class Report extends AppModel {
 					'users.firstname AS firstname',
 					'users.lastname AS lastname'
 				)
-		 		 ->where('atom_subquery.product_id', '=', DB::raw((int)$productId))		//NEED TO SORT OUT AGAIN BY PRODUCT. subquery does not do this
+		 		->where('atom_subquery.product_id', '=', DB::raw((int)$productId))		//NEED TO SORT OUT AGAIN BY PRODUCT. subquery does not do this
 				->leftJoin('users', 'comments.user_id', '=', 'users.id')
 				->leftJoin($rawAtomSubQuery, function ($join) {
 					$join->on('comments.atom_entity_id', '=', 'atom_subquery.entity_id');
