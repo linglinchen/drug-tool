@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Console;
 
@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixColon::class,
         Commands\QuickFixAddDomain::class,
         Commands\QuickFixPara::class,
+        Commands\QuickFixXrefs::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
