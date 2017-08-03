@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Console\Commands;
 
@@ -27,7 +27,7 @@ class ImportAtoms extends Command
 	protected $signature = 'import:atoms
 						{productId : The ID of product for the imported atoms}
 						{statusId : The ID of the status to set on each imported atom}
-						{tallmanSet* : the name of an established tallman set [ false | NDR ]}';
+						{tallmanSet=false : the name of a preconfigured tallman set [ false | NDR ]}';
 
     /**
      * The console command description.
