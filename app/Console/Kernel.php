@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Console;
 
@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportTasks::class,
         Commands\ImportStatuses::class,
         Commands\ImportUserProducts::class,
+        Commands\ImportBoilerplates::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,
