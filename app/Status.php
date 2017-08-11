@@ -38,4 +38,10 @@ class Status extends AppModel {
                 ->pluck('id')
                 ->all();
     }
+
+    public static function getDevStatusId($productId){
+        return self::allForProduct($productId)
+            ->where('title', '=', 'Development')
+            ->first();
+    }
 }
