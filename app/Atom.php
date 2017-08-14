@@ -13,6 +13,7 @@ use App\Comment;
 use App\Molecule;
 use App\User;
 use App\Product;
+use App\Status;
 
 class Atom extends AppModel {
     use SoftDeletes;
@@ -59,7 +60,8 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
-
+        $devStatusId = Status::getDevStatusId($this->product_id)->id;
+        $this->status_id = $devStatusId; //change status to be 'development when saving'
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
         }

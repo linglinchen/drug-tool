@@ -6,12 +6,15 @@ use DB;
 use Log;
 
 use App\AppModel;
+//use App\Product;
 use App\Atom;
 use App\Comment;
 use App\Molecule;
 use App\Assignment;
 
+
 class Report extends AppModel {
+	// $reportTypes left here to support defunct listAction function. Remove after routing it on front and back.
 	public static $reportTypes = [
 		'discontinued' => 'Discontinued Monographs',
 		'statuses' => 'Status Breakdown',
@@ -23,6 +26,66 @@ class Report extends AppModel {
 		'domainStats' => 'Domain Stats',
 		'reviewerStats' => 'Reviewer Process Stats'
 	];
+
+
+	/**
+	 * Get a menu of reports per product.
+	 *
+     * @param integer $productId Limit to this product
+	 *
+	 * @return mixed[]
+	 */
+
+	public static function reportMenu($productId) {
+		//check if product is either dictionary and if so give separate menus.
+		//Otherwise, provide generic drug type menu
+		if ($productId == 3 || $productId == 5){
+				switch ($productId) {
+				    case 3:
+				        $reportTypes = [
+							'statuses' => 'Status Breakdown',
+							'edits' => 'Edits',
+							'openAssignments' => 'Open Assignments',
+							'brokenLinks' => 'Broken Links',
+							'comments' => 'Comments',
+							'moleculeStats' => 'Chapter Stats',
+							'domainStats' => 'Domain Stats',
+							'reviewerStats' => 'Reviewer Process Stats'
+						];
+
+						break;
+				    case 5:
+				        $reportTypes = [
+							'statuses' => 'Status Breakdown',
+							'openAssignments' => 'Open Assignments',
+							'brokenLinks' => 'Broken Links',
+							'comments' => 'Comments',
+							'moleculeStats' => 'Chapter Stats',
+							'domainStats' => 'Category Stats'
+						];
+
+						break;
+
+				}
+
+		} else {
+
+				$reportTypes = [
+					'discontinued' => 'Discontinued Monographs',
+					'statuses' => 'Status Breakdown',
+					'edits' => 'Edits',
+					'openAssignments' => 'Open Assignments',
+					'brokenLinks' => 'Broken Links',
+					'comments' => 'Comments',
+					'moleculeStats' => 'Chapter Stats',
+					'domainStats' => 'Domain Stats'
+			];
+		}
+
+
+		return $reportTypes;
+	}
+
 
 	protected static $_stepSizeSeconds = [
 		'day' => 24 * 60 * 60,
@@ -218,6 +281,8 @@ class Report extends AppModel {
 		return $output;
 	}
 
+
+
 	/**
 	 * Generate a list of broken links, and get the total.
 	 *
@@ -226,6 +291,7 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function links($productId) {
+
 		$brokenLinks = [];
 		$total = 0;
 		$atoms = self::_getKeyedAtoms($productId);
@@ -235,20 +301,27 @@ class Report extends AppModel {
 		}
 
 		foreach($atoms as $atom) {
-			$elements = $atom->xml->xpath('//see|include');
+			//look for xref elements in dictionaries, and see in drugs
+					if ($productId == 3 || $productId == 5){
+						$elements = $atom->xml->xpath('//xref|include');
+					} else {
+						$elements = $atom->xml->xpath('//see|include');
+					}
 			$total += sizeof($elements);
 			foreach($elements as $element) {
 				$attributes = $element->attributes();
 				$refid = isset($attributes['refid']) ? current($attributes['refid']) : null;
+				$refid = preg_replace('/\#.*$/', '', $refid);
 				$parsedRefid = preg_split('/[\/:]/', $refid);
 				$valid = sizeof($parsedRefid) > 1;
 				if($valid) {
 					$type = $parsedRefid[0];
+						$strippedParsedid=preg_replace('/#.*$/', '', $parsedRefid[1]);
 					$valid = false;
 					if($type == 'a') {		//atom
-						$valid = isset($atoms[$parsedRefid[1]]);
+						$valid = isset($atoms[$strippedParsedid]);
 						if($valid) {
-							$atom = $atoms[$parsedRefid[1]];
+							$atom = $atoms[$strippedParsedid];
 							if(isset($parsedRefid[2])) {		//deep link
 								$valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
 							}
@@ -260,7 +333,7 @@ class Report extends AppModel {
 				}
 
 				if(!$valid) {
-					$linkRefid = 'a:' . $atom->entity_id;
+					$linkRefid = ' a:' . $atom->entity_id;
 					$closestAncestorId = self::_closestId($element->xpath('..')[0]);
 					if($closestAncestorId) {
 						$linkRefid .= '/' . $closestAncestorId;
@@ -270,8 +343,8 @@ class Report extends AppModel {
 						'type' => $element->getName(),
 						'atomTitle' => $atom->title,
 						'contents' => preg_replace('/(^<[^>]*>|<[^>]*>$)/', '', $element->asXML()),
-						'linkRefid' => $linkRefid,
-						'destRefid' => $refid
+						'linkRefid' => trim($linkRefid),
+						'destRefid' => trim($refid)
 					];
 				}
 			}
@@ -296,11 +369,13 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function comments($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null) {
+
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
-		$atomSubQuery = Atom::select('entity_id', 'title', 'alpha_title')
+		//product_id field added in select so can double filter out by product.
+		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title')
                 ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
@@ -316,6 +391,7 @@ class Report extends AppModel {
 					'users.firstname AS firstname',
 					'users.lastname AS lastname'
 				)
+		 		->where('atom_subquery.product_id', '=', DB::raw((int)$productId))		//NEED TO SORT OUT AGAIN BY PRODUCT. subquery does not do this
 				->leftJoin('users', 'comments.user_id', '=', 'users.id')
 				->leftJoin($rawAtomSubQuery, function ($join) {
 					$join->on('comments.atom_entity_id', '=', 'atom_subquery.entity_id');

@@ -24,7 +24,10 @@ class ImportAtoms extends Command
      *
      * @var string
      */
-    protected $signature = 'import:atoms {productId} {statusId} {tallmanSet}';
+	protected $signature = 'import:atoms
+						{productId : The ID of product for the imported atoms}
+						{statusId : The ID of the status to set on each imported atom}
+						{tallmanSet=false : the name of a preconfigured tallman set [ false | NDR ]}';
 
     /**
      * The console command description.
