@@ -86,7 +86,7 @@ class Assignment extends AppModel {
 		$assignment = self::allForProduct($productId)
 				->orderBy('assignments.id', 'DESC')
 				->where('assignments.atom_entity_id', '=', $atomEntityId)
-				->groupBy('assignments.id')
+				->groupBy('assignments.id');
 				->limit(1)
 				->first();
 		
@@ -169,10 +169,12 @@ class Assignment extends AppModel {
 	 */
 	public static function updateAssignments($atomEntityId, $promotion, $productId) {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
-
+		//var_dump($promotion); exit;
 		$user = \Auth::user();
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			self::_endCurrentAssignment($atomEntityId, $productId);
+			if ($promotion['task_id'] != 29){
+				self::_endCurrentAssignment($atomEntityId, $productId);
+			}
 
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
