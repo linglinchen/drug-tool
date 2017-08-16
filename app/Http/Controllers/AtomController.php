@@ -110,7 +110,7 @@ class AtomController extends Controller
         }
 
         $atom->is_current = !$id || $atom->id == $currentAtom->id;
-
+        $atom = $atom->addDomains($productId);
         return new ApiPayload($atom->addAssignments($productId));
     }
 
