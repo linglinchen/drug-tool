@@ -86,10 +86,10 @@ class Assignment extends AppModel {
 		$assignment = self::allForProduct($productId)
 				->orderBy('assignments.id', 'DESC')
 				->where('assignments.atom_entity_id', '=', $atomEntityId)
-				->groupBy('assignments.id');
+				->groupBy('assignments.id')
 				->limit(1)
 				->first();
-		
+
 		return ($assignment && $assignment->task_end) ? null : $assignment;
 	}
 
@@ -169,26 +169,39 @@ class Assignment extends AppModel {
 	 */
 	public static function updateAssignments($atomEntityId, $promotion, $productId) {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
-		//var_dump($promotion); exit;
 		$user = \Auth::user();
+		$currentAssignment = self::allForProduct($productId)  //current assignment for the user
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.atom_entity_id', '=', $atomEntityId)
+				->where('assignments.user_id', '=', $user->id)
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
+
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			if ($promotion['task_id'] != 29){
-				self::_endCurrentAssignment($atomEntityId, $productId);
+			if($currentAssignment && $currentAssignment->task_id !== $promotion['task_id']){    // when vet task_id =29, there are multiple assignments per atom
+				if($currentAssignment && !$currentAssignment->task_end) {
+					$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+					$currentAssignment->save();
+				}
 			}
 
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
-				$assignment = new Assignment();
-				foreach($allowedProperties as $allowed) {
-					if(array_key_exists($allowed, $promotion)) {
-						$assignment->$allowed = $promotion[$allowed];
+				//check if there are other assignments with the same task_id, need to wait for all the other to be finished to continue
+				if (!self::_ParallelAssignment($currentAssignment, $productId)){
+					$assignment = new Assignment();
+					foreach($allowedProperties as $allowed) {
+						if(array_key_exists($allowed, $promotion)) {
+							$assignment->$allowed = $promotion[$allowed];
+						}
 					}
-				}
-				$assignment->created_by = $user->id;
-				$assignment->task_id = $promotion['task_id'];
-				$assignment->atom_entity_id = $atomEntityId;
+					$assignment->created_by = $user->id;
+					$assignment->task_id = $promotion['task_id'];
+					$assignment->atom_entity_id = $atomEntityId;
 
-				$assignment->save();
+					$assignment->save();
+				}
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
@@ -201,6 +214,26 @@ class Assignment extends AppModel {
 				$assignment->save();
 			}
 		}
+	}
+
+	/**
+	 * check if there's still other assignment with the same task_id (parallelAssignment) existing
+	 *
+	 * @param object $assignment The assignment we are going to check against
+	 * @param integer $productId Limit query to this product
+	 */
+	protected static function _ParallelAssignment($assignment, $productId){
+		$parallelAssignment = self::allForProduct($productId)
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.atom_entity_id', '=', $assignment->atom_entity_id)
+				->where('assignments.user_id', '!=', $assignment->user_id)
+				->where('assignments.task_id', '=', $assignment->task_id)
+				->whereNull('assignments.task_end')
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
+				
+		return $parallelAssignment ? $parallelAssignment : null;
 	}
 
 	/**
