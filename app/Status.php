@@ -39,6 +39,13 @@ class Status extends AppModel {
                 ->all();
     }
 
+
+    public static function getDeactivatedStatusId($productId) {
+         return self::allForProduct($productId)
+            ->where('title', '=', 'Deactivated')
+            ->first();
+    }
+
     public static function getDevStatusId($productId){
         return self::allForProduct($productId)
             ->where('title', '=', 'Development')
