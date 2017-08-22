@@ -189,7 +189,10 @@ class Assignment extends AppModel {
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
 				//check if there are other assignments with the same task_id, need to wait for all the other to be finished to continue
-				if (!self::_ParallelAssignment($currentAssignment, $productId)){
+				if ($currentAssignment->task_id == $promotion['task_id']){
+					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
+				}
+				else if (($currentAssignment && !self::_ParallelAssignment($currentAssignment, $productId)) || !$currentAssignment){
 					$assignment = new Assignment();
 					foreach($allowedProperties as $allowed) {
 						if(array_key_exists($allowed, $promotion)) {
@@ -205,16 +208,28 @@ class Assignment extends AppModel {
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
-			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
-			if($assignment) {
-				self::_endCurrentAssignment($atomEntityId, $productId);
-				$assignment = $assignment->replicate();
-				$assignment->created_by = $user->id;
-				$assignment->user_id = $promotion['user_id'];
-				$assignment->save();
+			self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
 			}
 		}
 	}
+
+	/**
+	 * change assignment owner
+	 *
+	 * @param string $atomEntityId the entity_id of the atom
+	 * @param interger $productId Limit query to this product
+	 * @param mixed[] $promotion The promotion we're going to perform
+	 */
+	 public static function _changeAssignmentOwner($atomEntityId, $productId, $promotion) {
+		 $assignment = self::getCurrentAssignment($atomEntityId, $productId);
+			if($assignment) {
+				self::_endCurrentAssignment($atomEntityId, $productId);
+				$assignment = $assignment->replicate();
+				//$assignment->created_by = $user->id;
+				$assignment->user_id = $promotion['user_id'];
+				$assignment->save();
+			}
+	 }
 
 	/**
 	 * check if there's still other assignment with the same task_id (parallelAssignment) existing
@@ -232,7 +247,7 @@ class Assignment extends AppModel {
 				->groupBy('assignments.id')
 				->limit(1)
 				->first();
-				
+
 		return $parallelAssignment ? $parallelAssignment : null;
 	}
 
