@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddEditionToAtomsTable extends Migration
+class AddEditionToCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,7 @@ class AddEditionToAtomsTable extends Migration
      */
     public function up()
     {
-        Schema::table('atoms', function (Blueprint $table) {
-            //
+        Schema::table('comments', function (Blueprint $table) {
             $table->float('edition', 8, 3)->after('product_id')->nullable()->comment('MAJOR_or_year.MINOR_or_revision');
         });
     }
@@ -25,7 +24,7 @@ class AddEditionToAtomsTable extends Migration
      */
     public function down()
     {
-        Schema::table('atoms', function (Blueprint $table) {
+        Schema::table('comments', function (Blueprint $table) {
             $table->dropColumn('edition');
         });
     }
