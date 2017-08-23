@@ -178,6 +178,11 @@ class Assignment extends AppModel {
 				->limit(1)
 				->first();
 
+		if (!$currentAssignment){ //no current asignment for this user
+
+
+		}
+
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
 			if($currentAssignment && $currentAssignment->task_id !== $promotion['task_id']){    // when vet task_id =29, there are multiple assignments per atom
 				if($currentAssignment && !$currentAssignment->task_end) {
@@ -188,11 +193,11 @@ class Assignment extends AppModel {
 
 			//create a new assignment if this isn't a terminal promotion
 			if($promotion['task_id']) {
-				//check if there are other assignments with the same task_id, need to wait for all the other to be finished to continue
 				if ($currentAssignment->task_id == $promotion['task_id']){
 					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
 				}
-				else if (($currentAssignment && !self::_ParallelAssignment($currentAssignment, $productId)) || !$currentAssignment){
+				//check if there are other assignments with the same task_id, need to wait for all the other to be finished to continue
+				else if (($currentAssignment && !self::_parallelAssignment($currentAssignment, $productId)) || !$currentAssignment){
 					$assignment = new Assignment();
 					foreach($allowedProperties as $allowed) {
 						if(array_key_exists($allowed, $promotion)) {
@@ -209,27 +214,8 @@ class Assignment extends AppModel {
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
 			self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
-			}
 		}
 	}
-
-	/**
-	 * change assignment owner
-	 *
-	 * @param string $atomEntityId the entity_id of the atom
-	 * @param interger $productId Limit query to this product
-	 * @param mixed[] $promotion The promotion we're going to perform
-	 */
-	 public static function _changeAssignmentOwner($atomEntityId, $productId, $promotion) {
-		 $assignment = self::getCurrentAssignment($atomEntityId, $productId);
-			if($assignment) {
-				self::_endCurrentAssignment($atomEntityId, $productId);
-				$assignment = $assignment->replicate();
-				//$assignment->created_by = $user->id;
-				$assignment->user_id = $promotion['user_id'];
-				$assignment->save();
-			}
-	 }
 
 	/**
 	 * check if there's still other assignment with the same task_id (parallelAssignment) existing
@@ -237,7 +223,7 @@ class Assignment extends AppModel {
 	 * @param object $assignment The assignment we are going to check against
 	 * @param integer $productId Limit query to this product
 	 */
-	protected static function _ParallelAssignment($assignment, $productId){
+	protected static function _parallelAssignment($assignment, $productId){
 		$parallelAssignment = self::allForProduct($productId)
 				->orderBy('assignments.id', 'DESC')
 				->where('assignments.atom_entity_id', '=', $assignment->atom_entity_id)
@@ -250,6 +236,25 @@ class Assignment extends AppModel {
 
 		return $parallelAssignment ? $parallelAssignment : null;
 	}
+
+	/**
+	 * change assignment owner
+	 *
+	 * @param string $atomEntityId the entity_id of the atom
+	 * @param interger $productId Limit query to this product
+	 * @param mixed[] $promotion The promotion we're going to perform
+	 */
+	 protected static function _changeAssignmentOwner($atomEntityId, $productId, $promotion) {
+		 $assignment = self::getCurrentAssignment($atomEntityId, $productId);
+		 $user = \Auth::user();
+		if($assignment) {
+			self::_endCurrentAssignment($atomEntityId, $productId);
+			$assignment = $assignment->replicate();
+			$assignment->created_by = $user->id;
+			$assignment->user_id = $promotion['user_id'];
+			$assignment->save();
+		}
+	 }
 
 	/**
 	 * End the current task if it's still open.
