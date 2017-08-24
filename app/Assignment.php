@@ -179,8 +179,7 @@ class Assignment extends AppModel {
 				->first();
 
 		if (!$currentAssignment){ //no current asignment for this user
-
-
+			$currentAssignment = self::getCurrentAssignment($atomEntityId, $productId);
 		}
 
 		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
