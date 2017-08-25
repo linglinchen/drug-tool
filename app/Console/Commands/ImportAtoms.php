@@ -9,6 +9,7 @@ use App\Atom;
 use App\Molecule;
 use App\Product;
 use App\Status;
+use App\User;
 
 /**
  * Imports atoms from XML file(s) in the data/import/atoms directory. Applies tallman tags to text when tallmanSet is specified to a predefined set.
@@ -26,7 +27,7 @@ class ImportAtoms extends Command
 	 */
 	protected $signature = 'import:atoms
 						{productId : The ID of product for the imported atoms}
-						{statusId : The ID of the status to set on each imported atom}
+						{statusId : The ID of the status to set on each imported atom [ ID from db | 0-prefixed ID pattern for lookup ]}
 						{tallmanSet=false : the name of a preconfigured tallman set [ false | NDR ]}
 						{edition=false : the edition number to write out on imported atoms}
 						{modifiedBy=false : the author ID to blame for modifications to imported atoms}';
@@ -63,33 +64,30 @@ class ImportAtoms extends Command
 			throw new \Exception('Invalid product ID.');
 		}
 		$this->productId = $productId;
-		$doctype = Product::find($productId)->getDoctype();
+		$doctype = Product::find($this->productId)->getDoctype();
 
 		$statusId = (int)$this->argument('statusId');
 		$statusPattern = (string)$this->argument('statusId');
 		//prefixing with '0' will fetch statuses based on the naming convention pattern established on product 1
 		if(substr($statusPattern, 0, 1) == '0') {
-
+			$statusCount = true;
 			switch ($statusPattern) {
 				case '0100':
-					$statusId = Status::getDevStatusId($productId)->id;
+					$statusId = Status::getDevStatusId($this->productId)->id;
 					break;
 				case '0200':
-					$statusId = Status::getReadyForPublicationStatusId($productId)->id;
+					$statusId = Status::getReadyForPublicationStatusId($this->productId)->id;
 					break;
 				case '0300':
-					$statusId = Status::getDeactivatedStatusId($productId)->id;
+					$statusId = Status::getDeactivatedStatusId($this->productId)->id;
 					break;
 				default:
 					$statusCount = false;
 			}
 
-			echo (string)$statusId."\n";
-			exit;
-
 		//explicitly request a status ID
 		} else {
-			$statusCount = Status::allForProduct($productId)
+			$statusCount = Status::allForProduct($this->productId)
 					->where('id', '=', $statusId)
 					->count();
 		}
@@ -99,33 +97,29 @@ class ImportAtoms extends Command
 		$this->statusId = $statusId;
 
 		$tallmanSet = (string)$this->argument('tallmanSet');
-		if(!$tallmanSet) {
-			$tallmanSet = 'false';
-		}
 		//$tallmanSet value is validated in _loadTallman
 		$this->tallmanSet = $tallmanSet;
 
-
-
-
 		$edition = (string)$this->argument('edition');
-		if(!$edition) {
-			$edition = 'false';
+		if($edition!=='false' && !preg_match('/^[0-9]+(\.?[0-9]+)?$/', $edition)) {
+			throw new \Exception('Invalid edition value.');
 		}
-		//$edition value is validated in _loadTallman
 		$this->edition = $edition;
 
 		$modifiedBy = (string)$this->argument('modifiedBy');
-		if(!$modifiedBy) {
-			$modifiedBy = 'false';
+		$modifiedByCount = 0;
+		if($modifiedBy!=='false' && preg_match('/[^0-9]/', $modifiedBy)) {
+			throw new \Exception('Invalid modified by value.');
+
+		} else if($modifiedBy!=='false') {
+			$modifiedByCount = User::allForProduct($this->productId)
+					->where('user_id', '=', $modifiedBy)
+					->count();
 		}
-		//$modifiedBy value is validated in _loadmodifiedBy
+		if($modifiedBy!=='false' && !$modifiedByCount) {
+			throw new \Exception('Requested modified by ID is not available for this product.');
+		}
 		$this->modifiedBy = $modifiedBy;
-
-
-
-
-
 
 		$this->moleculeLookups = Molecule::getLookups($productId);
 
@@ -183,6 +177,8 @@ class ImportAtoms extends Command
 			$timestamp = $atom->freshTimestampString();
 			$entityId = $doctype->detectAtomIDFromXML($atomString) ?: Atom::makeUID();
 			$atomString = $doctype->assignXMLIds($atomString, $entityId);
+			$edition = ($this->edition=='false' ? null : $this->edition);
+			$modifiedBy = ($this->modifiedBy=='false' ? null : $this->modifiedBy);
 			$sort++;
 
 			$atomData = [
@@ -191,10 +187,12 @@ class ImportAtoms extends Command
 				'alpha_title' => $alphaTitle,
 				'molecule_code' => $moleculeCode,
 				'xml' => $atomString,
+				'modified_by' => $modifiedBy,
 				'created_at' => $timestamp,
 				'updated_at' => $timestamp,
 				'status_id' => $this->statusId,
 				'product_id' => $this->productId,
+				'edition' => $edition,
 				'sort' => $sort,
 				'domain_code' => $category,
 			];
