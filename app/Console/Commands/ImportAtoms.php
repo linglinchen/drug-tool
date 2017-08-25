@@ -16,7 +16,7 @@ use App\User;
  * When editing tallman.txt, be sure that you capitalize ONLY the characters that you want tagged as tallman.
  * To avoid headaches, run this after creating the molecules.
  *
- * Reimports using existing entityIDs probably work, but are untested.
+ * Reimports using existing entityIDs.
  */
 class ImportAtoms extends Command
 {
