@@ -94,6 +94,25 @@ class Assignment extends AppModel {
 	}
 
 	/**
+	 * Get the specified atom's currently active assignment.
+	 *
+	 * @param string $atomEntityId The atom's entityId
+	 * @param integer $productId Limit query to this product
+	 *
+	 * @return ?object The assignment (if found)
+	 */
+	public static function getAssignment($assignmentId, $productId) {
+		$assignment = self::allForProduct($productId)
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.id', '=', $assignmentId)
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
+
+		return ($assignment && $assignment->task_end) ? null : $assignment;
+	}
+
+	/**
 	 * Add filters to the list query.
 	 *
 	 * @param object $query The query object to modify
@@ -174,6 +193,7 @@ class Assignment extends AppModel {
 				->orderBy('assignments.id', 'DESC')
 				->where('assignments.atom_entity_id', '=', $atomEntityId)
 				->where('assignments.user_id', '=', $user->id)
+				->whereNull('task_end')
 				->groupBy('assignments.id')
 				->limit(1)
 				->first();
@@ -244,14 +264,32 @@ class Assignment extends AppModel {
 	 * @param mixed[] $promotion The promotion we're going to perform
 	 */
 	 protected static function _changeAssignmentOwner($atomEntityId, $productId, $promotion) {
-		 $assignment = self::getCurrentAssignment($atomEntityId, $productId);
 		 $user = \Auth::user();
-		if($assignment) {
-			self::_endCurrentAssignment($atomEntityId, $productId);
-			$assignment = $assignment->replicate();
-			$assignment->created_by = $user->id;
-			$assignment->user_id = $promotion['user_id'];
-			$assignment->save();
+		 if ($promotion['assignment_ids']){
+			 foreach ($promotion['assignment_ids'] as $assignmentId){
+				$assignment = self::getAssignment($assignmentId, $productId);
+				if($assignment && !$assignment->task_end) {
+					$assignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+					$assignment->save();
+
+					$newAssignment = $assignment->replicate();
+					$newAssignment->created_by = $user->id;
+					$newAssignment->user_id = $promotion['user_id'];
+					$newAssignment->task_end = NULL;
+
+					//check if this assignment is existing
+					$existing_assignment = Assignment::where('atom_entity_id', '=', $atomEntityId)
+                                            ->where('task_id', '=', $assignment->task_id)
+											->where('user_id', '=', $promotion['user_id'])
+											->whereNull('task_end')
+											->get()
+											->last();
+                    if (is_null($existing_assignment)){
+                        $newAssignment->save();
+                    }
+				}
+			 }
+
 		}
 	 }
 
