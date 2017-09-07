@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 use DB;
 
 use App\Molecule;
-
+use App\Product;
+use App\Status;
 use App\ApiError;
 use App\ApiPayload;
 
@@ -30,8 +31,35 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($productId, $code, Request $request) {
+//$doctype = (string)Product::find(5)->getDoctype();
+
         $statusId = $request->input('statusId');
         $statusId = $statusId === '' ? null : $statusId;
+
+//receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
+        if ($productId !== 1){
+                switch ($statusId) {
+                    case 100:
+                    $statusId = Status::getDevStatusId($productId);
+                        break;
+                    case 200:
+                    $statusId = Status::getReadyForPublicationStatusId($productId);
+                        break;
+                    case 300:
+                    $statusId = Status::getDeactivatedStatusId($productId);
+                        break;
+
+                    default:
+                        break;
+                }
+
+        }
+
+
+        // This is a test that shows in network tab of browser what the statusId resolves to sends a Javascript alert to the client
+
+//$message = $doctype;
+//echo "<script type='text/javascript'>alert('$message');</script>";
 
         $molecule = Molecule::allForCurrentProduct()
                 ->where('code', '=', $code)
