@@ -53,7 +53,7 @@ class MoleculeExportController extends Controller {
                 }
 
         }
-
+//method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
         $doctype = 'drug';
 
         $doctypeObj = Product::find($productId)->getDoctype();
