@@ -97,7 +97,7 @@ class MoleculeExportController extends Controller {
                         break;
                     case 5:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<drug_guide isbn="9780323546355">' . "\n";
+                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
                             $xml .= $molecule->export($statusId);
                             $xml .= '</dictionary>';
                             $zip->addFromString($code . '.xml', $xml);
@@ -106,7 +106,7 @@ class MoleculeExportController extends Controller {
 
                     default:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<drug_guide isbn="9780323546355">' . "\n";
+                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
                             $xml .= $molecule->export($statusId);
                             $xml .= '</dictionary>';
                             $zip->addFromString($code . '.xml', $xml);
