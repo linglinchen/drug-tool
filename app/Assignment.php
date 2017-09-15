@@ -202,39 +202,6 @@ class Assignment extends AppModel {
 			$currentAssignment = self::getCurrentAssignment($atomEntityId, $productId);
 		}
 
-		/*if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			if($currentAssignment && $currentAssignment->task_id !== $promotion['task_id']){    // when vet task_id =29, there are multiple assignments per atom
-				if(!$currentAssignment->task_end) {
-					$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
-					$currentAssignment->save();
-				}
-			}
-
-			//create a new assignment if this isn't a terminal promotion
-			if($promotion['task_id']) {
-				if ($currentAssignment && $currentAssignment->task_id == $promotion['task_id']){
-					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
-				}
-				//check if there are other assignments with the same task_id, need to wait for all the other to be finished to continue
-				else if (($currentAssignment && !self::_parallelAssignment($currentAssignment, $productId)) || !$currentAssignment){
-					$assignment = new Assignment();
-					foreach($allowedProperties as $allowed) {
-						if(array_key_exists($allowed, $promotion)) {
-							$assignment->$allowed = $promotion[$allowed];
-						}
-					}
-					$assignment->created_by = $user->id;
-					$assignment->task_id = $promotion['task_id'];
-					$assignment->atom_entity_id = $atomEntityId;
-
-					$assignment->save();
-				}
-				else{
-					// $currentAssignment->task_end = NULL; //reverse the currentAssignment task_end
-					// $currentAssignment->save();
-				}
-			}
-		}*/
 		if(array_key_exists('task_id', $promotion)) {
 			if ($currentAssignment){
 				if ($currentAssignment->task_id == $promotion['task_id']){ //mass assignment
