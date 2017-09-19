@@ -251,6 +251,7 @@ class Assignment extends AppModel {
 		}
 		$assignment->created_by = $user->id;
 		$assignment->task_id = $promotion['task_id'];
+		$assignment->user_id = $promotion['user_id'];
 		$assignment->atom_entity_id = $atomEntityId;
 
 		$assignment->save();
