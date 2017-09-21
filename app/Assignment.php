@@ -32,7 +32,9 @@ class Assignment extends AppModel {
 		$query = self::allForProduct($productId)->select($columns);
 /*	$querySql = $query->toSql();
 	print_r($querySql);*/
-		self::_addListFilters($query, $filters);
+		$query2= self::_addListFilters($query, $filters);
+		$query2Sql = $query2->toSql();
+		print_r($query2Sql);
 		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
@@ -380,7 +382,7 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		echo 'in assignment allForProduct';
+		// echo 'in assignment allForProduct';
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
