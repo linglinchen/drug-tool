@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 use DB;
 
 use App\Molecule;
-
+use App\Product;
+use App\Status;
 use App\ApiError;
 use App\ApiPayload;
 
@@ -30,8 +31,44 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($productId, $code, Request $request) {
+//$doctype = (string)Product::find(5)->getDoctype();
+
         $statusId = $request->input('statusId');
         $statusId = $statusId === '' ? null : $statusId;
+
+//receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
+        if ($productId !== 1){
+                switch ($statusId) {
+                    case 100:
+                    $statusId = Status::getDevStatusId($productId);
+                        break;
+                    case 200:
+                    $statusId = Status::getReadyForPublicationStatusId($productId);
+                        break;
+                    case 300:
+                    $statusId = Status::getDeactivatedStatusId($productId);
+                        break;
+                    default:
+                        break;
+                }
+
+        }
+//method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
+        $doctype = 'drug';
+
+        $doctypeObj = Product::find($productId)->getDoctype();
+        $doctypeString= get_class($doctypeObj);
+        // This is a test that shows in network tab of browser what the statusId resolves to sends a Javascript alert to the client
+
+        if($doctypeString =='App\DictionaryDoctype'){
+         $doctype='dictionary';
+        }
+
+
+//echo "<script type='text/javascript'>alert('$message');</script>";
+
+//$message = $doctype;
+//echo "<script type='text/javascript'>alert('$message');</script>";
 
         $molecule = Molecule::allForCurrentProduct()
                 ->where('code', '=', $code)
@@ -47,13 +84,44 @@ class MoleculeExportController extends Controller {
         $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
         $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
+//If doctype is dictionary, different xml wrapper is written.
+          if ($doctype === 'dictionary'){
+                switch ((int)$productId) { //TODO: make the ISBN dynamic
+                    case 3:
+                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                            $xml .= '<dictionary isbn="9780702074639">' . "\n";
+                            $xml .= $molecule->export($statusId);
+                            $xml .= '</dictionary>';
+                            $zip->addFromString($code . '.xml', $xml);
+                            $zip->close();
+                        break;
+                    case 5:
+                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
+                            $xml .= $molecule->export($statusId);
+                            $xml .= '</dictionary>';
+                            $zip->addFromString($code . '.xml', $xml);
+                            $zip->close();
+                        break;
+
+                    default:
+                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
+                            $xml .= $molecule->export($statusId);
+                            $xml .= '</dictionary>';
+                            $zip->addFromString($code . '.xml', $xml);
+                            $zip->close();
+                        break;
+                }
+
+        } else {      //drug doctypes just get orginal code
         $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "Y:\WWW1\tools\Drugs\3_4_drug.dtd">' . "\n";
         $xml .= '<drug_guide isbn="9780323448260">' . "\n";     //TODO: make the ISBN dynamic
         $xml .= $molecule->export($statusId);
         $xml .= '</drug_guide>';
         $zip->addFromString($code . '.xml', $xml);
-
         $zip->close();
+        }
 
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="' . $filename . '"');

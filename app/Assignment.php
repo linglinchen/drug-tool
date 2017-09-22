@@ -89,7 +89,26 @@ class Assignment extends AppModel {
 				->groupBy('assignments.id')
 				->limit(1)
 				->first();
-		
+
+		return ($assignment && $assignment->task_end) ? null : $assignment;
+	}
+
+	/**
+	 * Get the assignment by assignmentId.
+	 *
+	 * @param string $assignmentId The assignment id
+	 * @param integer $productId Limit query to this product
+	 *
+	 * @return ?object The assignment (if found)
+	 */
+	public static function getAssignment($assignmentId, $productId) {
+		$assignment = self::allForProduct($productId)
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.id', '=', $assignmentId)
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
+
 		return ($assignment && $assignment->task_end) ? null : $assignment;
 	}
 
@@ -169,37 +188,147 @@ class Assignment extends AppModel {
 	 */
 	public static function updateAssignments($atomEntityId, $promotion, $productId) {
 		$allowedProperties = ['atom_entity_id', 'user_id', 'task_id', 'task_end'];
-
 		$user = \Auth::user();
-		if(array_key_exists('task_id', $promotion)) {		//not all promotions touch the assignments table
-			self::_endCurrentAssignment($atomEntityId, $productId);
+		$currentAssignment = self::allForProduct($productId)  //current assignment for the user
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.atom_entity_id', '=', $atomEntityId)
+				->where('assignments.user_id', '=', $user->id)
+				->whereNull('task_end')
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
 
-			//create a new assignment if this isn't a terminal promotion
-			if($promotion['task_id']) {
-				$assignment = new Assignment();
-				foreach($allowedProperties as $allowed) {
-					if(array_key_exists($allowed, $promotion)) {
-						$assignment->$allowed = $promotion[$allowed];
+		if (!$currentAssignment){ //no current asignment for this user
+			$currentAssignment = self::getCurrentAssignment($atomEntityId, $productId);
+		}
+
+		if(array_key_exists('task_id', $promotion)) {
+			if ($currentAssignment){
+				if ($currentAssignment->task_id == $promotion['task_id']){ //mass assignment
+					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
+				}
+				else{
+					if (self::_parallelAssignment($currentAssignment, $productId)){ //there's parallel assignment, only end the current Assignment
+						if(!$currentAssignment->task_end && !array_key_exists('assignment_ids', $promotion)) { //it's not from mass assignment
+							$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+							$currentAssignment->save();
+						}
+					}
+					else if ($promotion['task_id']){ //no parallel assignment, and it's not the terminal promotion
+						self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
+					}
+					else{ //task_id == null , for terminal promotion
+						if(!$currentAssignment->task_end) { //it's not from mass assignment
+							$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+							$currentAssignment->save();
+						}
 					}
 				}
-				$assignment->created_by = $user->id;
-				$assignment->task_id = $promotion['task_id'];
-				$assignment->atom_entity_id = $atomEntityId;
-
-				$assignment->save();
+			}else{
+				if($promotion['task_id']){
+					self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
+				}
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
+			self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
+		}
+	}
+
+	/**
+	 * create a new assignment
+	 *
+	 * @param object $currentAsssignment the current unfinished assignment
+	 * @param object $allowedProperties the properties of table that's needed
+	 * @param object string $atomEntityId The atom's entityId
+	 * @param mixed[] $promotion The promotion we're going to perform
+	 * @param integer $user the browser user
+	 *
+	 */
+	protected static function _makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user){
+		if($currentAssignment && !$currentAssignment->task_end) {
+			$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+			$currentAssignment->save();
+		}
+
+		$assignment = new Assignment();
+		foreach($allowedProperties as $allowed) {
+			if(array_key_exists($allowed, $promotion)) {
+				$assignment->$allowed = $promotion[$allowed];
+			}
+		}
+		$assignment->created_by = $user->id;
+		$assignment->task_id = $promotion['task_id'];
+		$assignment->user_id = $promotion['user_id'];
+		$assignment->atom_entity_id = $atomEntityId;
+
+		$assignment->save();
+	}
+
+	/**
+	 * check if there's still other assignment with the same task_id (parallelAssignment) existing
+	 *
+	 * @param object $assignment The assignment we are going to check against
+	 * @param integer $productId Limit query to this product
+	 */
+	protected static function _parallelAssignment($assignment, $productId){
+		$parallelAssignment = self::allForProduct($productId)
+				->orderBy('assignments.id', 'DESC')
+				->where('assignments.atom_entity_id', '=', $assignment->atom_entity_id)
+				->where('assignments.user_id', '!=', $assignment->user_id)
+				->where('assignments.task_id', '=', $assignment->task_id)
+				->whereNull('assignments.task_end')
+				->groupBy('assignments.id')
+				->limit(1)
+				->first();
+
+		return $parallelAssignment ? $parallelAssignment : null;
+	}
+
+	/**
+	 * change assignment owner
+	 *
+	 * @param string $atomEntityId the entity_id of the atom
+	 * @param interger $productId Limit query to this product
+	 * @param mixed[] $promotion The promotion we're going to perform
+	 */
+	 protected static function _changeAssignmentOwner($atomEntityId, $productId, $promotion) {
+		 $user = \Auth::user();
+		 if (array_key_exists('assignment_ids', $promotion)){ //the request is from mass assignment
+			 foreach ($promotion['assignment_ids'] as $assignmentId){
+				$assignment = self::getAssignment($assignmentId, $productId);
+				if($assignment && !$assignment->task_end) {
+					$newAssignment = $assignment->replicate();
+					$newAssignment->created_by = $user->id;
+					$newAssignment->user_id = $promotion['user_id'];
+					$newAssignment->task_end = NULL;
+
+					//check if this assignment is existing
+					$existing_assignment = Assignment::where('atom_entity_id', '=', $atomEntityId)
+                                            ->where('task_id', '=', $assignment->task_id)
+											->where('user_id', '=', $promotion['user_id'])
+											->whereNull('task_end')
+											->get()
+											->last();
+                    if (is_null($existing_assignment)){
+						$assignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+						$assignment->save();
+                        $newAssignment->save();
+                    }
+				}
+			 }
+		}
+		else{
 			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
-				self::_endCurrentAssignment($atomEntityId, $productId);
+				//self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
 				$assignment->user_id = $promotion['user_id'];
 				$assignment->save();
 			}
 		}
-	}
+	 }
 
 	/**
 	 * End the current task if it's still open.
