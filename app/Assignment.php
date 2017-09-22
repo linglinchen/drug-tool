@@ -30,11 +30,7 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
-/*	$querySql = $query->toSql();
-	print_r($querySql);*/
-		$query2= self::_addListFilters($query, $filters);
-		$query2Sql = $query2->toSql();
-		print_r($query2Sql);
+		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
@@ -218,12 +214,20 @@ class Assignment extends AppModel {
 							$currentAssignment->save();
 						}
 					}
-					else{ //no parallel assignment
+					else if ($promotion['task_id']){ //no parallel assignment, and it's not the terminal promotion
 						self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
+					}
+					else{ //task_id == null , for terminal promotion
+						if(!$currentAssignment->task_end) { //it's not from mass assignment
+							$currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
+							$currentAssignment->save();
+						}
 					}
 				}
 			}else{
-				self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
+				if($promotion['task_id']){
+					self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
+				}
 			}
 		}
 		else if(array_key_exists('user_id', $promotion) && $promotion['user_id']) {		//change assignment's owner
@@ -255,6 +259,7 @@ class Assignment extends AppModel {
 		}
 		$assignment->created_by = $user->id;
 		$assignment->task_id = $promotion['task_id'];
+		$assignment->user_id = $promotion['user_id'];
 		$assignment->atom_entity_id = $atomEntityId;
 
 		$assignment->save();
@@ -382,7 +387,6 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		// echo 'in assignment allForProduct';
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
