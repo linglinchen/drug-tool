@@ -60,13 +60,17 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
-        $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
-        $devStatusId = Status::getDevStatusId($this->product_id)->id;
-        if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
-        {
-            $this->status_id = $devStatusId; //change status to be 'development when saving'
-        } //if status is deactivated or development, no need to change
-
+        if (array_key_exists('massupdate', $this->attributes)){
+            array_pop($this->attributes); //remove 'massupdate' element
+        }
+        else {
+            $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
+            $devStatusId = Status::getDevStatusId($this->product_id)->id;
+            if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
+            {
+                $this->status_id = $devStatusId; //change status to be 'development when saving'
+            } //if status is deactivated or development, no need to change
+        }
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
         }
