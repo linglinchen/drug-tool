@@ -82,7 +82,7 @@ class QuickFixStatus extends Command {
                 $newAtom->status_id = $devStatusId;
                 $changedAtoms++;
                 echo $newAtom->alpha_title."\n";
-                //$newAtom->save();
+                $newAtom->save();
             }
         }
 
