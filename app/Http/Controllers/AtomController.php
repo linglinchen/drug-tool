@@ -184,10 +184,12 @@ class AtomController extends Controller
                     foreach($this->_allowedMassUpdateProperties as $allowed) {
                         if(array_key_exists($allowed, $updates)) {
                             $atom->$allowed = $updates[$allowed];
+                            if ($allowed == 'status_id'){
+                                $atom['massupdate'] = 'massupdate'; //indicating it's from massupdate
+                            }
                         }
                     }
                     $atom->save();
-
                     $atoms[$atomKey] = $atom->addAssignments($productId);
                 }
             });
