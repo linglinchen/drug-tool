@@ -80,7 +80,7 @@ class QuickFixStatus extends Command {
                 $newAtom = $atomModel->replicate();
                 $newAtom->modified_by = null;
                 $timestamp = $newAtom->freshTimestampString();
-                $newAtom->credated_at = $timestamp;
+                $newAtom->created_at = $timestamp;
                 $newAtom->updated_at = $timestamp;
                 $newAtom->status_id = $devStatusId;
                 $changedAtoms++;
