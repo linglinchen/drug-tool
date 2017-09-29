@@ -50,11 +50,14 @@ class QuickFixStatus extends Command {
          $devStatusId = Status::getDevStatusId($productId)->id;
          $editionSql = $edition == NULL ?  "IS NULL" : "= $edition";
 
+         // make sure it's not system change (modified_by is null), not by TNQ (modified_by = 95)
          $sql = "SELECT MAX(id) as id, entity_id
             FROM atoms
             WHERE 
 		        product_id = $productId
                 and edition $editionSql
+                and modified_by IS NOT NULL
+                and modified_by != 95
                 and entity_id in 
                 (
                     SELECT entity_id 
@@ -77,7 +80,7 @@ class QuickFixStatus extends Command {
                 $newAtom = $atomModel->replicate();
                 $newAtom->modified_by = null;
                 $timestamp = $newAtom->freshTimestampString();
-                $newAtom->credated_at = $timestamp;
+                $newAtom->created_at = $timestamp;
                 $newAtom->updated_at = $timestamp;
                 $newAtom->status_id = $devStatusId;
                 $changedAtoms++;
