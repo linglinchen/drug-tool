@@ -37,6 +37,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixAddDomain::class,
         Commands\QuickFixPara::class,
         Commands\QuickFixXrefs::class,
+        Commands\QuickFixStatus::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
