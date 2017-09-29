@@ -29,7 +29,32 @@ class Assignment extends AppModel {
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
+		array_unshift($columns, DB::raw('atoms.id AS atomsid'));
+		print_r( DB::raw('atoms.id AS atomsid'));
+	$maxIdarray = DB::select('SELECT id
+FROM atoms as atomsidMax
+WHERE (id) in (select max(id)
+                                from atoms
+                                group by id, entity_id)');
+
+
+	print_r($maxIdarray);
+/*
+		foreach($maxIdarray as $object)
+{
+    $arrays[] =  (array) $object;
+}*/
+// Dump array with object-arrays
+/*$maxIdarray = $arrays;
+print_r($maxIdarray);*/
+/*array_unshift($columns, $maxIdarray['id']);*/
+
+//array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
+
 		$query = self::allForProduct($productId)->select($columns);
+/*		$querySQL = $query->toSql();
+		print_r($querySQL);*/
+
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
@@ -44,7 +69,7 @@ class Assignment extends AppModel {
 
 		$assignments = $query->get()
 				->toArray();
-
+//print_r($assignments);
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
@@ -60,10 +85,14 @@ class Assignment extends AppModel {
 
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
-					if($atom['entity_id'] == $row['atom_entity_id']) {
+					if($atom['entity_id'] == $row['atom_entity_id']
+						&& $atom['id'] == $row['atomsid']) {
 						$row['atom'] = $atom;
 						break;
-					}
+					} else {
+						array_delete($row);
+						break;}
+
 				}
 			}
 		}
@@ -387,10 +416,36 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		return self::select('assignments.*')
+/*
+
+        $atommaxentityIds = Atom::allForProduct($productId)
+                ->select(DB::raw('DISTINCT entity_id'))
+                ->addSelect(max('id'))
+	            ->get()
+                ->pluck('entity_id')
+                ->all();
+print_r($atommaxentityIds);*/
+		/* $maxAtoms = self::select('max('k.id') from atoms where k.entity_id=atoms.entity_id');*/
+/*		 print_r($maxAtoms->toSql());*/
+/*		$maxIds =  ->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
+                ->where('product_id', '=', $productId)
+                ->groupBy('comments.id')
+                ->orderBy('comments.id')
+                ->get()
+                ->toArray();*/
+
+
+		return self::select('assignments.*','atoms.id as maxId')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
-				->groupBy('atoms.entity_id');
+				// ->where('assignments.atomsid', '=', 'atoms.id')
+/*				->whereRaw('max(k.id) from atoms k where  k.entity_id=atoms.entity_id')*/
+
+/*				->where('atoms.id', '=', maxAtom)*/
+				/*
+				->whereIn('atoms.id', ('select max(k.id) from atoms k where k.entity_id=atoms.entity_id'))*/
+				->groupBy('atoms.id', 'atoms.entity_id')
+				->orderBy('atoms.id');
 	}
 }
