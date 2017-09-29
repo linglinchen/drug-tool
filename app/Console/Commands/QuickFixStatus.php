@@ -50,11 +50,14 @@ class QuickFixStatus extends Command {
          $devStatusId = Status::getDevStatusId($productId)->id;
          $editionSql = $edition == NULL ?  "IS NULL" : "= $edition";
 
+         // make sure it's not system change (modified_by is null), not by TNQ (modified_by = 95)
          $sql = "SELECT MAX(id) as id, entity_id
             FROM atoms
             WHERE 
 		        product_id = $productId
                 and edition $editionSql
+                and modified_by IS NOT NULL
+                and modified_by != 95
                 and entity_id in 
                 (
                     SELECT entity_id 
