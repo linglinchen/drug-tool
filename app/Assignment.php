@@ -30,7 +30,11 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		array_unshift($columns, DB::raw('atoms.id AS atomsid'));
-		print_r( DB::raw('atoms.id AS atomsid'));
+array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
+
+
+/*
+
 	$maxIdarray = DB::select('SELECT id
 FROM atoms as atomsidMax
 WHERE (id) in (select max(id)
@@ -38,7 +42,7 @@ WHERE (id) in (select max(id)
                                 group by id, entity_id)');
 
 
-	print_r($maxIdarray);
+	print_r($maxIdarray);*/
 /*
 		foreach($maxIdarray as $object)
 {
@@ -89,10 +93,7 @@ print_r($maxIdarray);*/
 						&& $atom['id'] == $row['atomsid']) {
 						$row['atom'] = $atom;
 						break;
-					} else {
-						array_delete($row);
-						break;}
-
+					}
 				}
 			}
 		}
@@ -148,7 +149,7 @@ print_r($maxIdarray);*/
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.modified_by','atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
