@@ -30,40 +30,14 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		array_unshift($columns, DB::raw('atoms.id AS atomsid'));
-array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
-
-
-/*
-
-	$maxIdarray = DB::select('SELECT id
-FROM atoms as atomsidMax
-WHERE (id) in (select max(id)
-                                from atoms
-                                group by id, entity_id)');
-
-
-	print_r($maxIdarray);*/
-/*
-		foreach($maxIdarray as $object)
-{
-    $arrays[] =  (array) $object;
-}*/
-// Dump array with object-arrays
-/*$maxIdarray = $arrays;
-print_r($maxIdarray);*/
-/*array_unshift($columns, $maxIdarray['id']);*/
-
-//array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
+		array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
 
 		$query = self::allForProduct($productId)->select($columns);
-/*		$querySQL = $query->toSql();
-		print_r($querySQL);*/
-
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
+//JZ this count no longer being used on assignments and dashboard as it includes a count of all historic matches, not current/not maxatomsId see $count below in addatoms for new counter. Notice that the number is overwritten in the $addatoms loop below.
 		$countQuery = clone $query->getQuery();
-		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
 		//paginate the results
@@ -73,7 +47,7 @@ print_r($maxIdarray);*/
 
 		$assignments = $query->get()
 				->toArray();
-//print_r($assignments);
+
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
@@ -86,12 +60,15 @@ print_r($maxIdarray);*/
 			foreach($atoms as $atomKey => $atom) {
 				unset($atom['xml']);		//a waste of bandwidth in this case
 			}
-
+//JZ. October 2, 2017 count is calculated here so that only the atom's maxId instance is counted, not every atom.
+			$count = 0;
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
 					if($atom['entity_id'] == $row['atom_entity_id']
-						&& $atom['id'] == $row['atomsid']) {
+						&& $atom['id'] == $row['atomsid'] && $row['atomsmaxid'] == true) {
+
 						$row['atom'] = $atom;
+						$count++;
 						break;
 					}
 				}
@@ -100,7 +77,8 @@ print_r($maxIdarray);*/
 
 		return [
 			'assignments' => $assignments,
-			'count' => $count
+			'count' => $count/*,
+			'$Rawallassignmentscount' => $Rawallassignmentscount*/
 		];
 	}
 
@@ -149,7 +127,7 @@ print_r($maxIdarray);*/
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.modified_by','atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.modified_by','atoms.status_id', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -417,35 +395,10 @@ print_r($maxIdarray);*/
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-/*
-
-        $atommaxentityIds = Atom::allForProduct($productId)
-                ->select(DB::raw('DISTINCT entity_id'))
-                ->addSelect(max('id'))
-	            ->get()
-                ->pluck('entity_id')
-                ->all();
-print_r($atommaxentityIds);*/
-		/* $maxAtoms = self::select('max('k.id') from atoms where k.entity_id=atoms.entity_id');*/
-/*		 print_r($maxAtoms->toSql());*/
-/*		$maxIds =  ->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
-                ->where('product_id', '=', $productId)
-                ->groupBy('comments.id')
-                ->orderBy('comments.id')
-                ->get()
-                ->toArray();*/
-
-
 		return self::select('assignments.*','atoms.id as maxId')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
-				// ->where('assignments.atomsid', '=', 'atoms.id')
-/*				->whereRaw('max(k.id) from atoms k where  k.entity_id=atoms.entity_id')*/
-
-/*				->where('atoms.id', '=', maxAtom)*/
-				/*
-				->whereIn('atoms.id', ('select max(k.id) from atoms k where k.entity_id=atoms.entity_id'))*/
 				->groupBy('atoms.id', 'atoms.entity_id')
 				->orderBy('atoms.id');
 	}
