@@ -358,6 +358,11 @@ class ComposerStaticInit1671968730f8ad60b029a8d158f00826
         'AddBelongToToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_01_224350_add_belongTo_to_users_table.php',
         'AddDatesToUserProductsTable' => __DIR__ . '/../..' . '/database/migrations/2016_12_02_112800_add_dates_to_user_products_table.php',
         'AddDomainCodeToAtomsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_01_223429_add_domainCode_to_Atoms_table.php',
+        'AddEditionMetadataToProductsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_23_194954_add_edition_metadata_to_products_table.php',
+        'AddEditionToAtomsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_23_190406_add_edition_to_atoms_table.php',
+        'AddEditionToCommentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_23_194129_add_edition_to_comments_table.php',
+        'AddEditionToMoleculesTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_23_195410_add_edition_to_molecules_table.php',
+        'AddFlagToTasksTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_09_151818_add_flag_to_tasks_table.php',
         'AddMoreProductIdColumns' => __DIR__ . '/../..' . '/database/migrations/2016_11_22_132400_add_more_product_id_columns.php',
         'AddProductIdColumns' => __DIR__ . '/../..' . '/database/migrations/2016_10_10_134900_add_product_id_columns.php',
         'AddSortToTasksTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_13_145042_add_sort_to_tasks_table.php',
@@ -900,6 +905,7 @@ class ComposerStaticInit1671968730f8ad60b029a8d158f00826
         'TaskSeeder' => __DIR__ . '/../..' . '/database/seeds/TaskSeeder.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdateColumnTypeContributorIdDomainsTable' => __DIR__ . '/../..' . '/database/migrations/2017_10_09_160035_update_column_type_ContributorId_domains_table.php',
         'UserSeeder' => __DIR__ . '/../..' . '/database/seeds/UserSeeder.php',
     );
 
