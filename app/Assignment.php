@@ -29,15 +29,12 @@ class Assignment extends AppModel {
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
-		array_unshift($columns, DB::raw('atoms.id AS atomsid'));
-		array_unshift($columns, DB::raw('atoms.id=(select max(k.id) from atoms k where  k.entity_id=atoms.entity_id) AS atomsMaxid'));
-
 		$query = self::allForProduct($productId)->select($columns);
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
-//JZ this count no longer being used on assignments and dashboard as it includes a count of all historic matches, not current/not maxatomsId see $count below in addatoms for new counter. Notice that the number is overwritten in the $addatoms loop below.
 		$countQuery = clone $query->getQuery();
+		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
 		//paginate the results
@@ -60,15 +57,11 @@ class Assignment extends AppModel {
 			foreach($atoms as $atomKey => $atom) {
 				unset($atom['xml']);		//a waste of bandwidth in this case
 			}
-//JZ. October 2, 2017 count is calculated here so that only the atom's maxId instance is counted, not every atom.
-			$count = 0;
+
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
-					if($atom['entity_id'] == $row['atom_entity_id']
-						&& $atom['id'] == $row['atomsid'] && $row['atomsmaxid'] == true) {
-
+					if($atom['entity_id'] == $row['atom_entity_id']) {
 						$row['atom'] = $atom;
-						$count++;
 						break;
 					}
 				}
@@ -77,8 +70,7 @@ class Assignment extends AppModel {
 
 		return [
 			'assignments' => $assignments,
-			'count' => $count/*,
-			'$Rawallassignmentscount' => $Rawallassignmentscount*/
+			'count' => $count
 		];
 	}
 
@@ -127,7 +119,7 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.modified_by','atoms.status_id', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -404,11 +396,10 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		return self::select('assignments.*','atoms.id as maxId')
+		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
-				->groupBy('atoms.id', 'atoms.entity_id')
-				->orderBy('atoms.id');
+				->groupBy('atoms.entity_id');
 	}
 }
