@@ -68,8 +68,8 @@ php artisan optimize
 # Notes
 
 - **All** modifications to the database structure should be handled with migrations. If you make the change with something like pgAdmin or Heidi, *you're doing it wrong!*
-- Most custom code is in the **app** directory.
-- Refresh database by running: `php artisan migrate:refresh` *Never do this on production!!!*
+- Migration scripts are stored in the database/migrations directory.
+- If new migrations are added, refresh database by running this command from the metis root directory: `php artisan migrate` *Never do this on production!!!*
 - See a list of available Artisan commands: `php artisan`
 - You can truncate the various tables with these commands.
 ```
