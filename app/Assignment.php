@@ -204,6 +204,9 @@ class Assignment extends AppModel {
 
 		if(array_key_exists('task_id', $promotion)) {
 			if ($currentAssignment){
+				if(array_key_exists('maxId', $currentAssignment)){
+					unset($currentAssignment->maxId);
+				}
 				if ($currentAssignment->task_id == $promotion['task_id']){ //mass assignment
 					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
 				}
@@ -238,7 +241,7 @@ class Assignment extends AppModel {
 	/**
 	 * create a new assignment
 	 *
-	 * @param object $currentAsssignment the current unfinished assignment
+	 * @param object $currentAssignment the current unfinished assignment
 	 * @param object $allowedProperties the properties of table that's needed
 	 * @param object string $atomEntityId The atom's entityId
 	 * @param mixed[] $promotion The promotion we're going to perform
@@ -297,6 +300,9 @@ class Assignment extends AppModel {
 		 if (array_key_exists('assignment_ids', $promotion)){ //the request is from mass assignment
 			 foreach ($promotion['assignment_ids'] as $assignmentId){
 				$assignment = self::getAssignment($assignmentId, $productId);
+				if($assignment['maxId']){
+					unset($assignment['maxId']);
+				}
 				if($assignment && !$assignment->task_end) {
 					$newAssignment = $assignment->replicate();
 					$newAssignment->created_by = $user->id;
@@ -321,6 +327,9 @@ class Assignment extends AppModel {
 		else{
 			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
+				if($assignment['maxId']){
+					unset($assignment['maxId']);
+				}
 				//self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
