@@ -41,6 +41,7 @@ class Kernel extends ConsoleKernel
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
+        Commands\CreateAtomDomainsList::class,
         ];
 
     /**
