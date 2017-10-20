@@ -38,6 +38,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixPara::class,
         Commands\QuickFixXrefs::class,
         Commands\QuickFixStatus::class,
+        Commands\QuickFixVasontImages::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
@@ -45,7 +46,7 @@ class Kernel extends ConsoleKernel
         ];
 
     /**
-     * Define the application's command schedule.
+     * Define the application command schedule.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
