@@ -10,7 +10,7 @@ use App\Status;
 
 
 /**
- * changes ml to mL wherever it thinks this means milliliters. Based on quick fix
+ * Meant to work with Vet, product id 3. Finds image src="vasontId" references and replaces the whole source reference with the appropriate file stub name for files stored on S3. Based on quick fix
 */
 class QuickFixVasontImages extends Command {
     /**
@@ -27,7 +27,7 @@ class QuickFixVasontImages extends Command {
      *
      * @var string
      */
-    protected $description = 'This command so far is meant to work with Vet, product id 3. I does a find of image src="vasontId" references and replaces the whole source reference with the appropriate file stub name for files stored on S3';
+    protected $description = 'This command so far is meant to work with Vet, product id 3. It does a find of image src="vasontId" references and replaces the whole source reference with the appropriate file stub name for files stored on S3';
 
     /**
      * Execute the console command.
@@ -51,8 +51,8 @@ class QuickFixVasontImages extends Command {
                 })->where('product_id','=', $this->productId)->get();
         $total_replaced = 0;
         $total_replaced_atoms = 0;
-//include file with giant searh replace array to match up vasont ids and s3 files
-include_once "veterinary_dictionary_image_renamer.php";
+        //include file with giant search replace array to match up vasont ids and s3 files
+        include_once "veterinary_dictionary_image_renamer.php";
 
         foreach($atoms as $atom) {
             $newXml = preg_replace(array_keys($searchreplace), array_values($searchreplace), $atom->xml, -1, $count);

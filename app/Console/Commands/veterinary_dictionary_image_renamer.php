@@ -23,9 +23,11 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21924308.jpg"/' => 'src="f01-06-9780702032318"', //Abyssinian: Abyssinian guinea pig.
 	'/src="_REPLACE_LOCATION__21924311.jpg"/' => 'src="f01-07-9780702032318"', //Acanthamoeba: Acanthamoeba trophozoites from culture. Note the filamentous pseudopods and the large central karyosome within the nucleus.
 	'/src="_REPLACE_LOCATION__21896475.jpg"/' => 'src="f01-08-9780702032318"', //acanthosis: Acanthosis nigricans in the axillae of a 1-year-old Dachshund.
+	//new word
 	'/src="_REPLACE_LOCATION__21924328.jpg"/' => 'src="f01-09-9780702032318"', //acid-fast: Ziehl-Neelsen stain. Skin. Dog, mycobacterial dermatitis. Acid-fast organisms (arrowheads) are strongly stained bright red.
 	'/src="_REPLACE_LOCATION__21622447.jpg"/' => 'src="f01-10-9780702032318"', //acne: Feline acne.
 	'/src="_REPLACE_LOCATION__21896477.jpg"/' => 'src="f01-11-9780702032318"', //acral: Acral lick dermatitis.
+
 	'/src="_REPLACE_LOCATION__21896481.jpg"/' => 'src="f01-12a-9780702032318"', //actinobacillosis: Ewe with actinobacillosis showing the swelling of the lips, nose and frontal areas of the face resulting from multiple abscesses with fistulous tracts. Pus can be seen draining from one fistulous tract.  In contrast to cattle, where actinobacillsosis affects primarily the tongue, infection in sheep is in the lips and facial tissues. The difference is because sheep use predomionantly the lips rather than the tongue for prehension of food.
 	'/src="_REPLACE_LOCATION__21896482.jpg"/' => 'src="f01-12b-9780702032318"', //actinobacillosis: Lateral view of the face of the same ewe.
 	'/src="_REPLACE_LOCATION__21896485.jpg"/' => 'src="f01-13-9780702032318"', //action potential: Action potential - refractory periods.From Koeppen BM, Stanton BA, Berne &amp; Levy Physiology, 6th ed, Mosby, 2008
@@ -37,6 +39,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21624102.jpg"/' => 'src="f01-19-9780702032318"', //Aelurostrongylus: Larva of Aelurostrongylus abstrusus.
 	'/src="_REPLACE_LOCATION__21896488.jpg"/' => 'src="f01-20-9780702032318"', //agar: Colonies of bacteria growing on a blood agar plate. The material to be cultured has been streaked across the plate in a manner to result in an area of individual colonies.
 	'/src="_REPLACE_LOCATION__21924368.jpg"/' => 'src="f01-21-9780702032318"', //agglutination: Macroscopic slide agglutination of erythrocytes in a cat with primary IMHA.
+	//removed image a-22 avian respirator system
 	'/src="_REPLACE_LOCATION__21924408.jpg"/' => 'src="f01-22-9780702032318"', //Alaria: Egg of Alaria species.
 	'/src="_REPLACE_LOCATION__21625261.jpg"/' => 'src="f01-23-9780702032318"', //albino: Albino mare and foal.
 	'/src="_REPLACE_LOCATION__21896490.jpg"/' => 'src="f01-24-9780702032318"', //allergic: Sweet itch (Queensland itch) on the neck of a horse.
@@ -48,6 +51,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21897828.jpg"/' => 'src="f01-30-9780702032318"', //Amblyomma: Engorged female Amblyomma americanum. Courtesy of CDC/Dr Amanda Loftis, Dr William Nicholson, Dr Will Reeves, Dr Chris Paddock; Photo: James Gathany.
 	'/src="_REPLACE_LOCATION__21924088.jpg"/' => 'src="f01-31-9780702032318"', //Ambu bag: Use of an Ambu bag to deliver room air to an intubated patient.
 	'/src="_REPLACE_LOCATION__21922588.jpg"/' => 'src="f01-32-9780702032318"', //ameloblastoma: Canine acanthomatous ameloblastoma.
+	//new file missing
 	'/src="_REPLACE_LOCATION__21924448.jpg"/' => 'src="f01-33-9780702032318"', //amnion: The feline fetal membranes in transverse and longitudinal section, schematic. 1, Amnion; 2, amniotic cavity; 3, yolk sac; 4, chorioallantois; 5, allantoic cavity; 6, zonary placenta.
 	'/src="_REPLACE_LOCATION__21896512.jpg"/' => 'src="f01-34-9780702032318"', //anagen: Anagen defluxion in a calf with chronic calf scours.
 	'/src="_REPLACE_LOCATION__21896518.jpg"/' => 'src="f01-35-9780702032318"', //anal: Atresia ani in a piglet.
@@ -65,7 +69,9 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21629292.jpg"/' => 'src="f01-47-9780702032318"', //Anglo-Arab: Anglo-Arab horse.
 	'/src="_REPLACE_LOCATION__21629305.jpg"/' => 'src="f01-48-9780702032318"', //Angora: Angora goat.
 	'/src="_REPLACE_LOCATION__21922608.jpg"/' => 'src="f01-49-9780702032318"', //anisocoria: Cat with neurological signs including anisocoria due to granulomatous changes in the central nervous system caused by feline infectious peritonitis (FIP).
+	//new image missing file
 	'/src="_REPLACE_LOCATION__21924568.jpg"/' => 'src="f01-50-9780702032318"', //Anoplura: Linognathus setosus (Anoplura) of dogs and foxes.
+
 	'/src="_REPLACE_LOCATION__21897830.jpg"/' => 'src="f01-51-9780702032318"', //anthrax: Cutaneous anthrax. Courtesy of CDC/James H Steele.
 	'/src="_REPLACE_LOCATION__21896530.jpg"/' => 'src="f01-52-9780702032318"', //aortic: Thoracic aorta of a dog with widespread Spirocerca lupi-associated aneurysms and mineralisation of the aortic wall. Bar = 2.5 cm.
 	'/src="_REPLACE_LOCATION__21631643.jpg"/' => 'src="f01-53-9780702032318"', //aortic: Aortic thromboembolism in a cat.
@@ -87,8 +93,11 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21896562.jpg"/' => 'src="f01-69-9780702032318"', //auricular: Aural hematoma. Swollen "ballooning" of the pinna is apparent.
 	'/src="_REPLACE_LOCATION__21635333.jpg"/' => 'src="f01-70-9780702032318"', //Australian: Australian kelpie (barb).
 	'/src="_REPLACE_LOCATION__21635366.jpg"/' => 'src="f01-71-9780702032318"', //Australian: Australian terrier.
+
+//this image moved from a-22
 	'/src="_REPLACE_LOCATION__21924108.jpg"/' => 'src="f01-72-9780702032318"', //avian: Diagram of the avian respiratory system showing location of air sacs.
-	'/src="_REPLACE_LOCATION__21922628.jpg"/' => 'src="f02-01--9780702032318"', //Babesia: Trophozoites of Babesia canis within canine red blood cells.
+
+	'/src="_REPLACE_LOCATION__21922628.jpg"/' => 'src="f02-01-9780702032318"', //Babesia: Trophozoites of Babesia canis within canine red blood cells.
 	'/src="_REPLACE_LOCATION__21924588.jpg"/' => 'src="f02-02-9780702032318"', //Backhaus towel clamp: Backhaus Towel Clamp.
 	'/src="_REPLACE_LOCATION__21924590.jpg"/' => 'src="f02-03-9780702032318"', //Baermann technique: Baermann apparatus is used to recover larvae of roundworms from feces, soil, or animal tissues.
 	'/src="_REPLACE_LOCATION__21922648.jpg"/' => 'src="f02-04-9780702032318"', //Balantidium:  Motile trophozoite stage of Balantidium coli From Hendrix CM, Robinson E, Diagnostic Parasitology for Veterinary Technicians, 3rd Edition. C.V. Mosby, 2006.
@@ -114,6 +123,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21639796.jpg"/' => 'src="f02-24-9780702032318"', //biopsy: Needle aspiration of bone marrow.
 	'/src="_REPLACE_LOCATION__21896580.jpg"/' => 'src="f02-25-9780702032318"', //black spot: Black spot lesion on the teat of a cow.
 	'/src="_REPLACE_LOCATION__21896584.jpg"/' => 'src="f02-26-9780702032318"', //blepharitis: Staphylococcal blepharitis in a Weimaraner.
+	//image 27 removed. thown off numbering
 	'/src="_REPLACE_LOCATION__21641240.jpg"/' => 'src="f02-27-9780702032318"', //Blonde D'Aquitaine: Blonde D'Aquatine beef bull.
 	'/src="_REPLACE_LOCATION__21896595.jpg"/' => 'src="f02-28a-9780702032318"', //bluetongue: Erosive lesions of bluetongue with hyperemia and ulceration on the vulva of a ewe.
 	'/src="_REPLACE_LOCATION__21896597.jpg"/' => 'src="f02-28b-9780702032318"', //bluetongue: Erosive lesions on the tongue and lips in bluetongue.
@@ -140,9 +150,12 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21644575.jpg"/' => 'src="f02-49-9780702032318"', //Brown Swiss cattle: Brown Swiss dual-purpose bull.
 	'/src="_REPLACE_LOCATION__21644963.jpg"/' => 'src="f02-50-9780702032318"', //Budyonny horse: Budyonny horse.
 	'/src="_REPLACE_LOCATION__21922788.jpg"/' => 'src="f02-51-9780702032318"', //Bufo: The Bufo spp. toads produce a powerful, potentially toxic secretion from the parotid glands.
+
 	'/src="_REPLACE_LOCATION__21645300.jpg"/' => 'src="f02-52-9780702032318"', //bulldog calves: Bulldog calf.
+		//b-54 removed (burdizzo emasculatome)
 	'/src="_REPLACE_LOCATION__21896624.jpg"/' => 'src="f02-53-9780702032318"', //burr: Scrotal lesions of mycotic dermatitis initiated by seed burrs (arrow).
 	'/src="_REPLACE_LOCATION__21896628.jpg"/' => 'src="f02-54-9780702032318"', //bushfire injury: Grass fire burns in a cow.There have been severe burns to the skin with damage to the conjunctiva and cornea, as indicated by conjunctival swelling, and to the nasal mucous membranes.
+
 	'/src="_REPLACE_LOCATION__21646308.jpg"/' => 'src="f03-01-9780702032318"', //Cairn terrier: Cairn terrier.
 	'/src="_REPLACE_LOCATION__21896639.jpg"/' => 'src="f03-02-9780702032318"', //calcinosis: Radiograph of calcinosis circumscripta on the carpus of a dog.
 	'/src="_REPLACE_LOCATION__21646470.jpg"/' => 'src="f03-03-9780702032318"', //calcinosis: Calcinosis cutis in a dog with Cushing's syndrome.
@@ -378,9 +391,11 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21925008.jpg"/' => 'src="f06-19-9780702032318"', //Fergusson angiotribe: Ferguson Angiotribe Forceps:Curved.
 	'/src="_REPLACE_LOCATION__21925011.jpg"/' => 'src="f06-20-9780702032318"', //ferret: Domestic ferret.
 	'/src="_REPLACE_LOCATION__21685557.jpg"/' => 'src="f06-21-9780702032318"', //fertilization: Fertilization.
+	//Missing 22a new image?
 	'/src="_REPLACE_LOCATION__21896923.jpg"/' => 'src="f06-22a-9780702032318"', //fescue: Fescue foot in early stages with developing necrotic lower foot and showing line of demarcation of still vascularized tissue above with edema. The result of the vasoactive effects of ergot alkaloids that can be present in fescue grass and hay containing endophyte or in grains infected with ergot.
 	'/src="_REPLACE_LOCATION__21896924.jpg"/' => 'src="f06-22b-9780702032318"', //fescue: Chronic fescue foot showing gangrene of lower foot with line of granulating tissue separating this from the more healthy tissue above
 	'/src="_REPLACE_LOCATION__21685632.jpg"/' => 'src="f06-23-9780702032318"', //fetal: Calving jack (fetal extractor) for use in a cow.
+	//f-24 image removed Feline fetal membranes. numbers off
 	'/src="_REPLACE_LOCATION__21924028.jpg"/' => 'src="f06-24-9780702032318"', //fetotome: Fetotome.
 	'/src="_REPLACE_LOCATION__21925013.jpg"/' => 'src="f06-25-9780702032318"', //fibrosarcoma: Maxillary fibrosarcoma.
 	'/src="_REPLACE_LOCATION__21923148.jpg"/' => 'src="f06-26-9780702032318"', //filariasis: Dirofilaria immitis may be recovered from a variety of aberrant sites, such as the anterior chamber of the eye.
@@ -416,6 +431,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21690285.jpg"/' => 'src="f06-55-9780702032318"', //frostbite: Ear necrosis from frostbite.
 	'/src="_REPLACE_LOCATION__21896964.jpg"/' => 'src="f06-56-9780702032318"', //fundus: Typical canine fundus.
 	'/src="_REPLACE_LOCATION__21896966.jpg"/' => 'src="f06-57-9780702032318"', //fundus: Subalbinotic fundus of a dog.
+
 	'/src="_REPLACE_LOCATION__21925048.jpg"/' => 'src="f07-01-9780702032318"', //gag: Mouth gag or speculum.
 	'/src="_REPLACE_LOCATION__21896970.jpg"/' => 'src="f07-02-9780702032318"', //galactosemia: Cataract in a young kangaroo fed cow's milk.
 	'/src="_REPLACE_LOCATION__21691377.jpg"/' => 'src="f07-03-9780702032318"', //Galloway: Galloway beef bull.
