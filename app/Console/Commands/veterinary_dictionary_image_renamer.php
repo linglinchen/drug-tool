@@ -281,6 +281,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21669018.jpg"/' => 'src="f04-22-9780702032318"', //descemetocele: Descemetocele. FromMaggs, David. Slatter's Fundamentals of Veterinary Ophthalmology, 4th Edition. Saunders, 2008.
 	'/src="_REPLACE_LOCATION__21924748.jpg"/' => 'src="f04-23-9780702032318"', //Desmarres: Desmarres forceps.
 	'/src="_REPLACE_LOCATION__21669459.jpg"/' => 'src="f04-24-9780702032318"', //Dexter: Dexter beef bull.
+	//missing image for 'diabetes mellitus: Plantigrade posture in a cat with diabetes mellitus and exocrine'
 	'/src="_REPLACE_LOCATION__21924768.jpg"/' => 'src="f04-25-9780702032318"', //diabetes mellitus: Plantigrade posture in a cat with diabetes mellitus and exocrine pancreatic insufficiency.
 	'/src="_REPLACE_LOCATION__21922908.jpg"/' => 'src="f04-26-9780702032318"', //diapedesis: Diapedesis. 1, Neutrophil lying against vessel wall begins to squeeze through the space between endothelial cells by flowing into pseudopod. 2, Pseudopod continues to push its way between cells.  3, Pseudopod and the rest of the cell emerge on tissue side of blood vessel. 4, Neutrophil is off in tissue space. Colville TP, Bassert JM, Clinical Anatomy and Physiology for Veterinary Technicians, 2nd Edition, Mosby, 2007.
 	'/src="_REPLACE_LOCATION__21896794.jpg"/' => 'src="f04-27-9780702032318"', //diaphragmatic: Diaphragmatic hernia at post mortem showing intestines and omentum in the thoracic cavity displacing liver and stomach caudally.
@@ -320,6 +321,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21676541.jpg"/' => 'src="f05-20-9780702032318"', //electrocardiography: Electrocardiography: Normal lead II ECG complex of the dog.
 	'/src="_REPLACE_LOCATION__21676828.jpg"/' => 'src="f05-21-9780702032318"', //electrophoretogram: Cellulose acetate electrophoretogram.
 	'/src="_REPLACE_LOCATION__21677028.jpg"/' => 'src="f05-22-9780702032318"', //Elizabethan collar: Elizabethan collar.
+	//new image inserted. Missing image emasculatome
 	'/src="_REPLACE_LOCATION__21924888.jpg"/' => 'src="f05-23-9780702032318"', //emasculatome: Burdizzo Emasculatome.
 	'/src="_REPLACE_LOCATION__21896899.jpg"/' => 'src="f05-24-9780702032318"', //emphysema: Diffuse pulmonary emphysema in a cat.
 	'/src="_REPLACE_LOCATION__21896804.jpg"/' => 'src="f05-25-9780702032318"', //enamel: Enamel hypoplasia.
@@ -370,6 +372,8 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21683273.jpg"/' => 'src="f05-70-9780702032318"', //extensor: Extensor postural thrust response.
 	'/src="_REPLACE_LOCATION__21896895.jpg"/' => 'src="f05-71-9780702032318"', //exudative:  Pigs with greasy pig disease (exudative epidermitis) showing the grease-like appearance of the seborrheic dermatitis that gives rise to its colloquial name.
 	'/src="_REPLACE_LOCATION__21896897.jpg"/' => 'src="f05-72-9780702032318"', //eye: Sunken eye due to dehydration.
+
+
 	'/src="_REPLACE_LOCATION__21923088.jpg"/' => 'src="f06-01-9780702032318"', //fabella: Distal displacement of the medial fabella (arrow) of the left stifle of a 2-year-old male West Highland White Terrier.
 	'/src="_REPLACE_LOCATION__21896901.jpg"/' => 'src="f06-02-9780702032318"', //facial: Severe ulcerative facial dermatitis.
 	'/src="_REPLACE_LOCATION__21896903.jpg"/' => 'src="f06-03-9780702032318"', //facial: Facial eczema. Skin sloughing because of damage from photosensitivity.
@@ -534,6 +538,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21897068.jpg"/' => 'src="f09-02-9780702032318"', //immunity: General dynamics and characteristics of the primary and secondary antibody responses.
 	'/src="_REPLACE_LOCATION__21897070.jpg"/' => 'src="f09-03-9780702032318"', //immunoglobulin: Structure of an immunoglobulin molecule.
 	'/src="_REPLACE_LOCATION__21897072.jpg"/' => 'src="f09-04-9780702032318"', //infectious: Infectious bovine keratoconjunctivitis (pink eye) in a heifer.
+	//new image, missing image infraorbital
 	'/src="_REPLACE_LOCATION__21925108.jpg"/' => 'src="f09-05-9780702032318"', //infraorbital: Location for blocking the infraorbital foramen in the dog. The infraorbital foramina are the sites for injection to provide nerve block to the entire maxilla.
 	'/src="_REPLACE_LOCATION__21897074.jpg"/' => 'src="f09-06-9780702032318"', //injection-site reactions: Necrosis at the site of a previous injection with copper glycinate.
 	'/src="_REPLACE_LOCATION__21897076.jpg"/' => 'src="f09-07-9780702032318"', //interdigital: Interdigital fibroma (corn) between the toes of a bull's foot.
@@ -544,6 +549,7 @@ $searchreplace = array(
 	'/src="_REPLACE_LOCATION__21712750.jpg"/' => 'src="f09-12-9780702032318"', //Irish water spaniel: Irish water spaniel.
 	'/src="_REPLACE_LOCATION__21713379.jpg"/' => 'src="f09-13-9780702032318"', //Isospora: Sporulated Isospora felisoocysts.
 	'/src="_REPLACE_LOCATION__21922488.jpg"/' => 'src="f09-14-9780702032318"', //Ixodes: Six-legged Ixodeslarva.
+
 	'/src="_REPLACE_LOCATION__21713794.jpg"/' => 'src="f10-01-9780702032318"', //Jacob sheep:  Jacob sheep.
 	'/src="_REPLACE_LOCATION__21922449.jpg"/' => 'src="f10-02-9780702032318"', //Jamshidi biopsy needle: Jamshidi bone marrow biopsy needle.
 	'/src="_REPLACE_LOCATION__21897083.jpg"/' => 'src="f10-03-9780702032318"', //jaundice: Jaundice in a horse's oral mucosa.
