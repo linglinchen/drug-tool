@@ -63,9 +63,9 @@ class MoleculeSortController extends Controller {
                     continue;       //skip if unchanged
                 }
 
-                $atom = $atom->replicate();
+                //$atom = $atom->replicate();
                 $atom->sort = $newSort;
-                $atom->save();
+                $atom->simpleSave();
             }
         });
 

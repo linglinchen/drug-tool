@@ -86,6 +86,17 @@ class Atom extends AppModel {
         parent::save($options);
     }
 
+/**
+     * Save this atom in simply way
+     *
+     * @param array $options
+     *
+     * @return void
+     */
+    public function simpleSave(array $options = []) {
+        parent::save($options);
+    }
+
     /**
      * Extracts the title from the atom's XML, cleans it up, and places it into meta data columns.
      *
