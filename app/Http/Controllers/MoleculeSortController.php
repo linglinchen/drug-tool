@@ -63,9 +63,11 @@ class MoleculeSortController extends Controller {
                     continue;       //skip if unchanged
                 }
 
-                $atom = $atom->replicate();
+                //$atom = $atom->replicate();
+                //atom sort order change won't result in a new record
                 $atom->sort = $newSort;
-                $atom->save();
+                //just do a simple save (only sort column will be updated in atom table)
+                $atom->simpleSave();
             }
         });
 
