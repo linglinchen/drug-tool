@@ -87,7 +87,7 @@ class Atom extends AppModel {
     }
 
 /**
-     * Save this atom in simply way
+     * Save this atom in simply way, e.g. when only sort order of atom changes
      *
      * @param array $options
      *
