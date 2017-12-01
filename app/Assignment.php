@@ -51,6 +51,9 @@ class Assignment extends AppModel {
 			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
 			Comment::addSummaries($atoms, $productId);
+			foreach ($atoms as $atom){
+				$atom->addDomains($productId);
+			}
 			$atoms = $atoms->toArray();
 
 			//remove xml
