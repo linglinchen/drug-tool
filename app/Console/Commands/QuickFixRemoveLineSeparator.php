@@ -52,8 +52,7 @@ class QuickFixRemoveLineSeparator extends Command {
             preg_match('/ /', $xml, $matches);
             if ($matches){
                 $count++;
-                print_r($xml);
-                echo "\n";
+                echo $atom->id."\t".$atom->entityId."\t".$atom->alphaTitle."\n";
             }
         }
     }
