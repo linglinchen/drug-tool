@@ -39,10 +39,11 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixVasontImages::class,
         Commands\QuickFixXrefs::class,
         Commands\QuickFixStatus::class,
+        Commands\QuickFixRemoveLineSeparator::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
-        Commands\CreateAtomDomainsList::class,
+        Commands\CreateAtomDomainsList::class
         ];
 
     /**
