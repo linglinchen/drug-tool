@@ -40,20 +40,31 @@ class QuickFixRemoveLineSeparator extends Command {
         $this->productId = $productId;
 
         ini_set('memory_limit', '1280M');
-        
-        $atoms = Atom::allForProduct($productId)
-                ->whereIn('id', function ($q) {
+
+	$atoms = Atom::whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
-                })->get();
+                })->where('product_id','=', $this->productId)->get();
 
         $count = 0;
         foreach($atoms as $atom) {
-            $xml = $atom->xml;
-            preg_match('/ /', $xml, $matches);
+	    preg_match('/ /', $atom->xml, $matches);
             if ($matches){
                 $count++;
-                echo $atom->id."\t".$atom->entityId."\t".$atom->alphaTitle."\n";
-            }
-        }
+                $newAtom = $atom->replicate();
+                preg_match('/[\w]�[\w]/', $atom->xml, $matches2); //need to keep a space there
+                if ($matches2){
+                        echo $atom->id."\t".$atom->entity_id."\t".$atom->alpha_title."replace by space\n";
+			            $newAtom->xml = str_replace("\xe2\x80\xa8",'\\u2028', $atom->xml);
+                        $newAtom->xml = str_replace('\\u2028',' ', $newAtom->xml);
+                }else{
+                        echo $atom->id."\t".$atom->entity_id."\t".$atom->alpha_title."\tremoved\n";
+                        $newAtom->xml = str_replace("\xe2\x80\xa8",'\\u2028', $atom->xml);
+                        $newAtom->xml = str_replace('\\u2028','', $newAtom->xml);
+                }
+                $newAtom->save();
+		        //exit;
+	    }
+	}
+	echo 'Total changed atoms: '.$count."\n";
     }
 }

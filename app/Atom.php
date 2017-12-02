@@ -75,11 +75,11 @@ class Atom extends AppModel {
             throw new \Exception('Missing title.');
         }
 
-        if($this->_isTitleInUse()) {
+        /*if($this->_isTitleInUse()) {
             $usedtitle = $this->alpha_title;
             $usedid = $this->entity_id;
             throw new \Exception('That title  '. $usedtitle .' with entityid ' .$usedid. ' is already used by another atom within this product.');
-        }
+        }*/
 
         $doctype->beforeSave($this);
 
