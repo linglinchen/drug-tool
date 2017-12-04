@@ -158,7 +158,6 @@ class Atom extends AppModel {
                 })
                 ->whereNull('deleted_at')
                 ->orderBy('alpha_title', 'ASC');
-
         return $query;
     }
 
@@ -251,6 +250,29 @@ class Atom extends AppModel {
         ];
     }
 
+/*get a list of max atoms ids so it is just a list of current atoms
+     *
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function maxAtomIdsList() {
+        $table = (new self)->getTable();
+        $query = $q ? $q->select('id') : self::select('id');
+        $query->from($table);
+
+        $query->whereIn('id', function ($q) use ($table) {
+                    $q->select(DB::raw('MAX(id)'))
+                            ->from($table);
+                    $q->groupBy('entity_id');
+                })
+                ->whereNull('deleted_at')
+                ->orderBy('alpha_title', 'ASC');
+                print_r($query);
+        return $query;
+    }
+
     /**
      * Add filters to the query.
      *
@@ -258,8 +280,11 @@ class Atom extends AppModel {
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
+  //    print_r('in atoms filter function');
+        $maxAtoms = maxAtomIdsList();
         $validFilters = ['status_id', 'molecule_code'];
-
+ //       $sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
+ //       $ZatomsMaxIds = DB::select($sqlMaxAtoms);
         if($filters) {
             foreach($validFilters as $validFilter) {
                 if(isset($filters[$validFilter])) {

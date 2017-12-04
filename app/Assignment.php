@@ -30,10 +30,19 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
+//need to create an array of only the max/current atom Ids
+		$sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
+        $ZatomsMaxIds = DB::select($sqlMaxAtoms);
+//        $ZatomsMaxIds = json_decode(json_encode($ZatomsMaxIds), true);
+//        print_r($ZatomsMaxIds);
 		self::_addListFilters($query, $filters);
+
 		self::_addOrder($query, $order);
 
+		//at this point, query results contain all historical atoms, not just current
+//						print_r($query->toSql());
 		$countQuery = clone $query->getQuery();
+//		print_r($countQuery->toSql());
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
@@ -124,10 +133,14 @@ class Assignment extends AppModel {
 	protected static function _addListFilters($query, $filters) {
 		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
+//			print_r($query->toSql());
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
-
+		$sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
+        $ZatomsMaxIds = DB::select($sqlMaxAtoms);
+        $ZatomsMaxIds =  json_decode(json_encode($ZatomsMaxIds), true);
+ //      print_r($ZatomsMaxIds);
 					if($validFilter == 'task_ended') {
 						if($filterValue) {
 							$query->whereNotNull('task_end');
@@ -166,6 +179,7 @@ class Assignment extends AppModel {
 	 * @param string[] $order The order column and direction
 	 */
 	protected static function _addOrder($query, $order) {
+
 		if($order && isset($order['column'])) {
 			$order['direction'] = isset($order['direction']) && strtolower($order['direction']) == 'desc' ?
 					'desc' :
