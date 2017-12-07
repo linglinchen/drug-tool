@@ -269,7 +269,33 @@ class Atom extends AppModel {
                 })
                 ->whereNull('deleted_at')
                 ->orderBy('alpha_title', 'ASC');
-                print_r($query);
+
+        return $query;
+    }
+
+        /*get a list  by product of max atoms ids so it is just a list of current atomid for the product
+     *
+     * @param ?integer|integer[] $productId Only return atoms with the specified productId
+     * @param ?object $q (optional) Subquery object (to limit atom ids only to the maxid/most current)
+     *
+     * @return object The constructed query object
+     */
+    public static function maxProdAtomIdsList($productId, $q = null) {
+        $table = (new self)->getTable();
+        $query = $q ? $q->select('id') : self::select('id');
+        $query->from($table);
+
+        $query->whereIn('id', function ($q) use ($table, $productId) {
+                    $q->select(DB::raw('MAX(id)'))
+                            ->from($table);
+
+                    if($productId !== null) {
+                        $q->where('product_id', $productId);
+                    }
+
+                    $q->groupBy('entity_id');
+                })
+                ->orderBy('id', 'ASC');
         return $query;
     }
 

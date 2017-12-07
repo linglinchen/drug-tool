@@ -30,12 +30,10 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
-//need to create an array of only the max/current atom Ids
-		$sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
-        $ZatomsMaxIds = DB::select($sqlMaxAtoms);
-//        $ZatomsMaxIds = json_decode(json_encode($ZatomsMaxIds), true);
-//        print_r($ZatomsMaxIds);
-		self::_addListFilters($query, $filters);
+	/* $ZatomIds is an array of all current atom ids for the product. Needed for use in filters so that filters only look at current atom information*/
+		$ZatomIds = Atom::maxProdAtomIdsList($productId)->get()->pluck('id')->all();
+
+		self::_addListFilters($query, $filters, $ZatomIds);
 
 		self::_addOrder($query, $order);
 
@@ -129,18 +127,17 @@ class Assignment extends AppModel {
 	 *
 	 * @param object $query The query object to modify
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
+	 * $ZatomIds array[] of all current atom ids for the product. Needed for use in filters so that filters only look at current atom information
 	 */
-	protected static function _addListFilters($query, $filters) {
+	protected static function _addListFilters($query, $filters, $ZatomIds) {
+
 		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
 //			print_r($query->toSql());
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
-		$sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
-        $ZatomsMaxIds = DB::select($sqlMaxAtoms);
-        $ZatomsMaxIds =  json_decode(json_encode($ZatomsMaxIds), true);
- //      print_r($ZatomsMaxIds);
+
 					if($validFilter == 'task_ended') {
 						if($filterValue) {
 							$query->whereNotNull('task_end');
@@ -163,7 +160,9 @@ class Assignment extends AppModel {
 						$query->where('assignments.user_id', '=', $filterValue);
 					}
 					else {
-						$query->where($validFilter, '=', $filterValue);
+						//Limit the filter to only look at current Atom Ids ($ZatomIds) before looking for the value.
+						$query->whereIn('atoms.id', $ZatomIds)
+						->where($validFilter, '=', $filterValue);
 					}
 				}
 			}
