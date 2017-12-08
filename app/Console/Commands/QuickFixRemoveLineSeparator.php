@@ -53,7 +53,7 @@ class QuickFixRemoveLineSeparator extends Command {
                 $newAtom = $atom->replicate();
                 preg_match('/[\w]�[\w]/', $atom->xml, $matches2); //need to keep a space there
                 if ($matches2){
-                        echo $atom->id."\t".$atom->entity_id."\t".$atom->alpha_title."replace by space\n";
+                        echo $atom->id."\t".$atom->entity_id."\t".$atom->alpha_title."\treplace by space\n";
 			            $newAtom->xml = str_replace("\xe2\x80\xa8",'\\u2028', $atom->xml);
                         $newAtom->xml = str_replace('\\u2028',' ', $newAtom->xml);
                 }else{
