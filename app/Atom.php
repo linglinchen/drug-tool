@@ -307,7 +307,7 @@ class Atom extends AppModel {
      */
     protected static function _addFilters($query, $filters) {
   //    print_r('in atoms filter function');
-        $maxAtoms = maxAtomIdsList();
+        $maxAtoms = self::maxAtomIdsList();
         $validFilters = ['status_id', 'molecule_code'];
  //       $sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
  //       $ZatomsMaxIds = DB::select($sqlMaxAtoms);
