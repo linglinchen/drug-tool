@@ -257,7 +257,7 @@ class Atom extends AppModel {
      *
      * @return object The constructed query object
      */
-    public static function maxAtomIdsList() {
+    public static function maxAtomIdsList($q = null) {
         $table = (new self)->getTable();
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
