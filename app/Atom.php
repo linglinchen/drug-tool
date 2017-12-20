@@ -250,28 +250,6 @@ class Atom extends AppModel {
         ];
     }
 
-/*get a list of max atoms ids so it is just a list of current atoms
-     *
-     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
-     * @param ?object $q (optional) Subquery object
-     *
-     * @return object The constructed query object
-     */
-    public static function maxAtomIdsList($q = null) {
-        $table = (new self)->getTable();
-        $query = $q ? $q->select('id') : self::select('id');
-        $query->from($table);
-
-        $query->whereIn('id', function ($q) use ($table) {
-                    $q->select(DB::raw('MAX(id)'))
-                            ->from($table);
-                    $q->groupBy('entity_id');
-                })
-                ->whereNull('deleted_at')
-                ->orderBy('alpha_title', 'ASC');
-
-        return $query;
-    }
 
         /*get a list  by product of max atoms ids so it is just a list of current atomid for the product
      *
