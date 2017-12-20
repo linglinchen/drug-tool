@@ -142,7 +142,8 @@ class Atom extends AppModel {
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
         $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
-
+//print_r($statusId);
+//if you statically set the statusId here to a publish id, this all works for export
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
 
@@ -257,7 +258,7 @@ class Atom extends AppModel {
      *
      * @return object The constructed query object
      */
-    public static function maxAtomIdsList() {
+    public static function maxAtomIdsList($q = null) {
         $table = (new self)->getTable();
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
@@ -307,7 +308,7 @@ class Atom extends AppModel {
      */
     protected static function _addFilters($query, $filters) {
   //    print_r('in atoms filter function');
-        $maxAtoms = maxAtomIdsList();
+      //  $maxAtoms = self::maxAtomIdsList(null);
         $validFilters = ['status_id', 'molecule_code'];
  //       $sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
  //       $ZatomsMaxIds = DB::select($sqlMaxAtoms);
