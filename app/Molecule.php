@@ -72,8 +72,8 @@ class Molecule extends AppModel {
      * @returns string
      */
     public function export($statusId = null) {
-
-        $orderedIds = $this->_getSortOrder($this->product_id, $statusId);
+        $readytoPubStatusId = Status::getReadyForPublicationStatuses($this->product_id);
+        $orderedIds = $this->_getSortOrder();
 
         $unorderedAtoms = $this->_getMyPublishedAtoms();
 
@@ -167,13 +167,12 @@ class Molecule extends AppModel {
      *
      * @return string[]
      */
-    protected function _getSortOrder($productId, $statusId = null) {
-  //       $statusId = Status::getReadyForPublicationStatusId($productId);
-
+    protected function _getSortOrder() {
+        $productId = $this->product_id;
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
+                    Atom::buildLatestPubIDQuery($q);
                 })
                 ->orderBy('sort', 'ASC')
                 ->get();

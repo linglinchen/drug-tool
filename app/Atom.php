@@ -140,9 +140,10 @@ class Atom extends AppModel {
      * @return object The constructed query object
      */
     public static function buildLatestIDQuery($statusId = null, $q = null) {
+
         $table = (new self)->getTable();
         $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
-//print_r($statusId);
+
 //if you statically set the statusId here to a publish id, this all works for export
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
@@ -158,9 +159,35 @@ class Atom extends AppModel {
                     $q->groupBy('entity_id');
                 })
                 ->whereNull('deleted_at')
-                ->orderBy('alpha_title', 'ASC');
+                ->orderBy('sort', 'ASC');
+
         return $query;
     }
+
+    /**
+     * Build a query to find the latest PUBLISHED version of every atom that hasn't been deleted.
+     *
+    * @param integer $productId Limit to this product
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function buildLatestPubIDQuery($q=null) {
+
+echo '<pre>';
+print_r($GLOBALS);
+echo '</pre>';
+
+      $sql = 'SELECT id from atoms
+WHERE id in (select MAX(id) from atoms WHERE status_id=' . $statusId . ' AND molecule_code =' . $code . ' GROUP BY entity_id)
+AND deleted_at is null
+ORDER BY sort asc';
+
+        return DB::select($sql);
+    }
+
+
 
 
     /**
@@ -174,8 +201,7 @@ class Atom extends AppModel {
         $sql = 'SELECT id, entity_id, title, UNNEST(XPATH(\'//monograph[@status="discontinued"]/mono_name/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))) AS subtitle
                 FROM atoms
                 WHERE id IN(' . self::buildLatestIDQuery()->toSql() . ')
-                    AND product_id=' . $productId . '
-                    AND XPATH_EXISTS(\'//monograph[@status="discontinued"]\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', xml, \'</root>\')))';
+                    AND product_id=' . $productId . '';
 
         return DB::select($sql);
     }
