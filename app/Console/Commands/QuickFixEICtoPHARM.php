@@ -12,6 +12,7 @@ use App\Atom;
 use App\Assignment;
 use App\Product;
 use App\Status;
+use Carbon\Carbon;
 
 class QuickFixEICtoPHARM extends Command {
     /**
@@ -34,7 +35,7 @@ class QuickFixEICtoPHARM extends Command {
      * @return mixed
      */
     public function handle() {
-        $sql = "select * from assignments ass
+        $sql = "select ass.id, ass.atom_entity_id, ass.user_id, ass.task_id, ass.task_end, ass.created_at, ass.updated_at, ass.created_by from assignments ass
                 join (
                         select MAX(id) as id, entity_id, domain_code from atoms 
                         where product_id=5 and domain_code = 'PHARM'
@@ -46,28 +47,28 @@ class QuickFixEICtoPHARM extends Command {
         $assignmentsArray = json_decode(json_encode($assignments), true);  //convert object to array
         $totalDetectedAssignments = sizeof($assignmentsArray);
         $changedAssignments = 0;
+        $timestamp = Carbon::now()->toDateTimeString();
         foreach($assignmentsArray as $assignment) {
             $assignmentModel = Assignment::find($assignment['id']);
-            make_newAssignment($assignment, 533);
-            make_newAssignment(534);
-            $assignmentModel->task_end = DB::raw('CURRENT_TIMESTAMP');
-            $assignmentModel->save;
+            self::make_newAssignment($assignment, 533, $timestamp);
+            self::make_newAssignment($assignment, 534, $timestamp);
+            $assignmentModel->task_end = $timestamp;
+            $assignmentModel->save();
         }
+
+        /* output messages */
+        echo 'affected Assignments: '.$totalDetectedAssignments."\n";
     }
 
-    public static function make_newAssignment($oldAssignment, $userId) {
+    public static function make_newAssignment($oldAssignment, $userId, $timestamp) {
          $assignment = new Assignment();
-         $assignment->atom_entity_id = $oldAssignment->atom_entity_id;
+         $assignment->atom_entity_id = $oldAssignment['atom_entity_id'];
          $assignment->user_id = $userId;
-         $assignment->task_id = $oldAssignment->task_id;
+         $assignment->task_id = $oldAssignment['task_id'];
          $assignment->task_end = NULL;
-         $assignment->created_at = DB::raw('CURRENT_TIMESTAMP');
-         $assignment->updated_at = DB::raw('CURRENT_TIMESTAMP');
+         $assignment->created_at = $timestamp;
+         $assignment->updated_at = $timestamp;
          $assignment->created_by = NULL;
          $assignment->save();
-         
-        /* output messages */
-        echo 'affected Atoms: '.$totalDetectedAtoms."\n";
-        echo 'changed Atoms: '.$changedAtoms."\n";
     }
 }
