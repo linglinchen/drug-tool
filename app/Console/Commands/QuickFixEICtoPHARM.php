@@ -37,9 +37,13 @@ class QuickFixEICtoPHARM extends Command {
     public function handle() {
         $sql = "select ass.id, ass.atom_entity_id, ass.user_id, ass.task_id, ass.task_end, ass.created_at, ass.updated_at, ass.created_by from assignments ass
                 join (
-                        select MAX(id) as id, entity_id, domain_code from atoms
-                        where product_id=5 and domain_code = 'PHARM'
-                        group by entity_id, domain_code
+                        select * from atoms where id in
+                            (
+                                select MAX(id) as id from atoms
+                                where product_id=5
+                                group by entity_id
+                            )
+                        and xml like '%>PHARM</category>%'
                       ) atomtable
                 on atomtable.entity_id = ass.atom_entity_id
                 where user_id=241 and task_id=556 and task_end is NULL";
