@@ -30,10 +30,17 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
-		self::_addListFilters($query, $filters);
+	/* $ZatomIds is an array of all current atom ids for the product. Needed for use in filters so that filters only look at current atom information*/
+		$ZatomIds = Atom::maxProdAtomIdsList($productId)->get()->pluck('id')->all();
+
+		self::_addListFilters($query, $filters, $ZatomIds);
+
 		self::_addOrder($query, $order);
 
+		//at this point, query results contain all historical atoms, not just current
+//						print_r($query->toSql());
 		$countQuery = clone $query->getQuery();
+//		print_r($countQuery->toSql());
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
@@ -120,10 +127,13 @@ class Assignment extends AppModel {
 	 *
 	 * @param object $query The query object to modify
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
+	 * $ZatomIds array[] of all current atom ids for the product. Needed for use in filters so that filters only look at current atom information
 	 */
-	protected static function _addListFilters($query, $filters) {
+	protected static function _addListFilters($query, $filters, $ZatomIds) {
+
 		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
 		if($filters) {
+//			print_r($query->toSql());
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
@@ -150,7 +160,9 @@ class Assignment extends AppModel {
 						$query->where('assignments.user_id', '=', $filterValue);
 					}
 					else {
-						$query->where($validFilter, '=', $filterValue);
+						//Limit the filter to only look at current Atom Ids ($ZatomIds) before looking for the value.
+						$query->whereIn('atoms.id', $ZatomIds)
+						->where($validFilter, '=', $filterValue);
 					}
 				}
 			}
@@ -166,6 +178,7 @@ class Assignment extends AppModel {
 	 * @param string[] $order The order column and direction
 	 */
 	protected static function _addOrder($query, $order) {
+
 		if($order && isset($order['column'])) {
 			$order['direction'] = isset($order['direction']) && strtolower($order['direction']) == 'desc' ?
 					'desc' :
