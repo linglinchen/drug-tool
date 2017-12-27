@@ -58,8 +58,10 @@ class ReportController extends Controller {
         $queriesOnly = (bool)$request->input('queriesOnly');
         $generateCsv = (bool)$request->input('generateCsv') && $queriesOnly;
         $queryType = $request->input('queryType');
+        $moleculeCode = $request->input('moleculeCode');
+        $domainCode = $request->input('domainCode');
 
-        $comments = Report::comments($productId, $timezoneOffset, $startTime, $endTime, $queriesOnly, $queryType);
+        $comments = Report::comments($productId, $timezoneOffset, $startTime, $endTime, $queriesOnly, $queryType, $moleculeCode, $domainCode);
 
         if($generateCsv) {
             if($comments) {

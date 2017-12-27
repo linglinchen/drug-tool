@@ -365,17 +365,19 @@ class Report extends AppModel {
 	 * @param ?string $endTime (optional) End time of the graph
 	 * @param bool $queriesOnly (optional) Only show queries
 	 * @param ?string $queryType (optional) Filter down to this type of query
+	 * @param ?string $moleculeCode (optional) molecule of the atom
+	 * @param ?string $domainCode (optional) domainCode of the atom
 	 *
 	 * @return array
 	 */
-	public static function comments($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null) {
+	public static function comments($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null, $moleculeCode = 'Any', $domainCode = 'Any') {
 
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
 		//product_id field added in select so can double filter out by product.
-		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title')
+		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title', 'molecule_code', 'domain_code')
                 ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
 					Atom::buildLatestIDQuery(null, $q);
@@ -388,6 +390,8 @@ class Report extends AppModel {
 					'atom_subquery.entity_id AS entity_id',
 					'atom_subquery.title AS title',
 					'atom_subquery.alpha_title AS atom_title',
+					'atom_subquery.molecule_code AS atom_molecule',
+					'atom_subquery.domain_code AS atom_domain',
 					'users.firstname AS firstname',
 					'users.lastname AS lastname'
 				)
@@ -416,7 +420,25 @@ class Report extends AppModel {
 			$query->where('text', 'LIKE', $queryMatcher);
 		}
 
-		$query->orderBy('comments.id', 'DESC');
+		if ($moleculeCode == 'Any'){
+			if ($domainCode == 'Any'){ //moleculeCode is Any, DomainCode is Any
+				$query->orderBy('comments.id', 'DESC');
+			}else{ //moleculecode is Any, domaincode is not Any
+				$query->where('atom_subquery.domain_code', '=', $domainCode);
+				$query->orderBy('atom_subquery.alpha_title', 'DESC');
+			}
+		}
+		else{ // moleculeCode is not Any
+			if ($domainCode == 'Any'){ //domain is Any
+				$query->where('atom_subquery.molecule_code', '=', $moleculeCode);
+				$query->orderBy('atom_subquery.alpha_title', 'DESC');
+			}
+			else{ // moleculeCode is not Any, domainCode is not Any
+				$query->where('atom_subquery.molecule_code', '=', $moleculeCode);
+				$query->where('atom_subquery.domain_code', '=', $domainCode);
+				$query->orderBy('atom_subquery.alpha_title', 'DESC');
+			}
+		}
 
 		return $query->get();
 	}
