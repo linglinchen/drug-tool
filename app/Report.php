@@ -420,24 +420,16 @@ class Report extends AppModel {
 			$query->where('text', 'LIKE', $queryMatcher);
 		}
 
-		if ($moleculeCode == 'Any'){
-			if ($domainCode == 'Any'){ //moleculeCode is Any, DomainCode is Any
-				$query->orderBy('comments.id', 'DESC');
-			}else{ //moleculecode is Any, domaincode is not Any
+		if ($moleculeCode == 'Any' && $domainCode == 'Any'){ //moleculeCode is Any, DomainCode is Any
+			$query->orderBy('comments.id', 'DESC');
+		}else{
+			if ($domainCode != 'Any'){//domainCode is not Any
 				$query->where('atom_subquery.domain_code', '=', $domainCode);
-				$query->orderBy('atom_subquery.alpha_title', 'DESC');
 			}
-		}
-		else{ // moleculeCode is not Any
-			if ($domainCode == 'Any'){ //domain is Any
+			if ($moleculeCode != 'Any'){//moleculeCode is not Any
 				$query->where('atom_subquery.molecule_code', '=', $moleculeCode);
-				$query->orderBy('atom_subquery.alpha_title', 'DESC');
 			}
-			else{ // moleculeCode is not Any, domainCode is not Any
-				$query->where('atom_subquery.molecule_code', '=', $moleculeCode);
-				$query->where('atom_subquery.domain_code', '=', $domainCode);
-				$query->orderBy('atom_subquery.alpha_title', 'DESC');
-			}
+			$query->orderBy('atom_subquery.alpha_title', 'DESC');//moleculeCode or domainCode is not Any
 		}
 
 		return $query->get();
