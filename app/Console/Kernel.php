@@ -41,6 +41,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixStatus::class,
         Commands\QuickFixRemoveLineSeparator::class,
         Commands\QuickFixEICtoPHARM::class,
+        Commands\QuickFixVetXref::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
