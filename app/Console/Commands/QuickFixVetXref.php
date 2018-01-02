@@ -39,6 +39,13 @@ class QuickFixVetXref extends Command {
     }
 
     public static function _getEntityIdArray() {
+        $atoms = Atom::whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })->get();
+
+        foreach($atoms as $atom) {
+            echo "$atom->alpha_title\t$atom->entity_id\n";
+        }
         return true;
     }
 
@@ -90,7 +97,7 @@ class QuickFixVetXref extends Command {
         foreach ($xref_arr as $xref){
             foreach ($xref as $term => $ref){
                 foreach ($ref as $refered){
-                    echo "$term\t$refered\n";
+                    //echo "$term\t$refered\n";
                 }
             }
         }
