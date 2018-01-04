@@ -157,9 +157,28 @@ class Atom extends AppModel {
                     $q->groupBy('entity_id');
                 })
                 ->whereNull('deleted_at')
-                ->orderBy('alpha_title', 'ASC');
+                ->orderBy('sort', 'ASC');
+      //          print_r($query->toSql());
         return $query;
     }
+
+    /**
+     * Build a query to find the latest PUBLISHED version of every atom that hasn't been deleted.
+     *
+    * @param integer $productId Limit to this product
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function buildLatestPubIDQuery($statusId=null, $q=null) {
+/*
+      $sql = "select id from atoms where id in (select MAX(id) from atoms where status_id =$statusId
+group by entity_id) and deleted_at is null and molecule_code='Z' order by sort asc";
+
+        return DB::select($sql);*/
+    }
+
 
 
     /**
