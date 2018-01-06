@@ -45,14 +45,14 @@ class QuickFixVetXref extends Command {
         foreach($atoms as $atom) {
             foreach ($xrefLocation as $xref){
                 foreach ($xref as $term => $ref){
-                    if ($atom->alpha_title == $term && $atom->alpha_title == 'A-mode'){ //if atom has xref
+                    if ($atom->alpha_title == $term){ //if atom has xref
                         $newAtom = $atom->replicate();
                         $newXml = $atom->xml;
                         foreach ($ref as $refered){
                             if (array_key_exists($refered, $entityIdArray)){
                                 $entityId = $entityIdArray[$refered];
                                 echo "$term\t$refered\t$entityId\n";
-                                $referedPattern = '/(<xref refid="tra__REFID__">)?'.$refered.'(</xref>)?/';
+                                $referedPattern = '/(<xref refid="tra__REFID__">)?\b'.$refered.'\b(<\/xref>)?/';
                                 $replacement = '<xref refid="a:'.$entityId.'">'.$refered.'</xref>';
                                 $newXml = preg_replace($referedPattern, $replacement, $newXml);
                             }
@@ -60,32 +60,10 @@ class QuickFixVetXref extends Command {
                         $newAtom->xml = $newXml;
                         $newAtom->modified_by = null;
 						$newAtom->save();
-                        exit;
                     }
                 }
             }
         }
-
-        // $xml = '<entry sortorder="758" type="shared">
-		// 		<headw id="hw_REPLACE_ME__">hepatoprotectant</headw>
-		// 		<category cat_id="cat_REPLACE_ME__">PHTHG</category>
-		// 		<defgroup type="shared">
-		// 			<def id="d_REPLACE_ME__" n="1">compounds that may provide the liver with some protection from toxins or biochemical injury. Includes ursodeoxycholic acid, <emphasis style="italic">S</emphasis>-adenosyl-<emphasis style="smallcaps">l</emphasis>- methionine, and silymarin.    Many are nutraceuticals with uncertain efficacy.</def>
-		// 		</defgroup>
-		// 	</entry>';
-        // $term = 'hepatoprotectant';
-        // $ref=['silymarin', 'S-adenosyl-l- methionine'];
-        // $newXml = $xml;
-        // foreach ($ref as $refered){
-        //     if (array_key_exists($refered, $entityIdArray)){
-        //         $entityId = $entityIdArray[$refered];
-        //         echo "$term\t$refered\t$entityId\n";
-        //         $referedPattern = '/(<xref refid="tra__REFID__">)?'.$refered.'(<\/xref>)?/';
-        //         $replacement = '<xref refid="a:'.$entityId.'">'.$refered.'</xref>';
-        //         $newXml = preg_replace($referedPattern, $replacement, $newXml);
-        //         echo "$newXml\n";
-        //     }
-        // }
     }
 
     public static function _getEntityIdArray() {
@@ -148,7 +126,7 @@ class QuickFixVetXref extends Command {
             //}
         }
         $xref_arr = array_unique($xref_arr, SORT_REGULAR);
-        echo "term\trefered\n";
+        /*echo "term\trefered\n";
         foreach ($xref_arr as $xref){
             foreach ($xref as $term => $ref){
                 //if ($term == 'hepatoprotectant'){
@@ -157,7 +135,7 @@ class QuickFixVetXref extends Command {
                     }
                 //}
             }
-        }
+        }*/
         return $xref_arr;
     }
 }
