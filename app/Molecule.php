@@ -79,15 +79,16 @@ class Molecule extends AppModel {
         $unorderedAtoms = $this->_getMyPublishedAtoms();
 
         //postgres doesn't support ORDER BY FIELD, so...
-        $atoms = array_flip($orderedIds);
+                $atoms = array_flip($orderedIds);
 
-        foreach($unorderedAtoms as $atom) {
+
+ /*       foreach($unorderedAtoms as $atom) {
             $atoms[$atom->id] = $atom;
         }
         $atoms = array_filter($atoms, function ($element) {
             return !is_numeric($element);       //remove atoms that have never been published
         });
-
+*/
         $xml = "\t" . '<alpha letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
@@ -181,10 +182,27 @@ class Molecule extends AppModel {
 
 $moleculecode=$this->code;
       $sql = "select id from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc";
+$sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
+select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+
+inner join  (
+select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b
+                            on a.entity_id=b.entity_id
+                        where a.product_id=$productId and b.product_id=$productId;";
+
+/*This code gets a table of pub and current
+select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
+select * from atoms where id in (select MAX(id) from atoms where status_id=4200 group by entity_id) and molecule_code='Z' and deleted_at is null order by sort asc ) a
+
+inner join  (
+select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='Z' and deleted_at is null order by sort asc ) b
+                            on a.entity_id=b.entity_id
+                        where a.product_id=5 and b.product_id=5;*/
 
       $atoms = DB::select($sql);
 
-$atomIds = array_map(function($a) { return $a->id; }, $atoms);
+//$atomIds = array_map(function($a) { return $a->id; }, $atoms);
+$atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
 
 //print_r($atomIds);
         return $atomIds;
