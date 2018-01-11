@@ -157,29 +157,9 @@ class Atom extends AppModel {
                     $q->groupBy('entity_id');
                 })
                 ->whereNull('deleted_at')
-                ->orderBy('sort', 'ASC');
-      //          print_r($query->toSql());
+                ->orderBy('alpha_title', 'ASC');
         return $query;
     }
-
-    /**
-     * Build a query to find the latest PUBLISHED version of every atom that hasn't been deleted.
-     *
-    * @param integer $productId Limit to this product
-     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
-     * @param ?object $q (optional) Subquery object
-     *
-     * @return object The constructed query object
-     */
-    public static function buildLatestPubIDQuery($statusId=null, $q=null) {
-/*
-      $sql = "select id from atoms where id in (select MAX(id) from atoms where status_id =$statusId
-group by entity_id) and deleted_at is null and molecule_code='Z' order by sort asc";
-
-        return DB::select($sql);*/
-    }
-
-
 
     /**
      * Get a list of discontinued monographs.
@@ -269,33 +249,6 @@ group by entity_id) and deleted_at is null and molecule_code='Z' order by sort a
         ];
     }
 
-
-        /*get a list  by product of max atoms ids so it is just a list of current atomid for the product
-     *
-     * @param ?integer|integer[] $productId Only return atoms with the specified productId
-     * @param ?object $q (optional) Subquery object (to limit atom ids only to the maxid/most current)
-     *
-     * @return object The constructed query object
-     */
-    public static function maxProdAtomIdsList($productId, $q = null) {
-        $table = (new self)->getTable();
-        $query = $q ? $q->select('id') : self::select('id');
-        $query->from($table);
-
-        $query->whereIn('id', function ($q) use ($table, $productId) {
-                    $q->select(DB::raw('MAX(id)'))
-                            ->from($table);
-
-                    if($productId !== null) {
-                        $q->where('product_id', $productId);
-                    }
-
-                    $q->groupBy('entity_id');
-                })
-                ->orderBy('id', 'ASC');
-        return $query;
-    }
-
     /**
      * Add filters to the query.
      *
@@ -303,11 +256,7 @@ group by entity_id) and deleted_at is null and molecule_code='Z' order by sort a
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
-  //    print_r('in atoms filter function');
- //       $maxAtoms = self::maxAtomIdsList();
         $validFilters = ['status_id', 'molecule_code'];
- //       $sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
- //       $ZatomsMaxIds = DB::select($sqlMaxAtoms);
         if($filters) {
             foreach($validFilters as $validFilter) {
                 if(isset($filters[$validFilter])) {

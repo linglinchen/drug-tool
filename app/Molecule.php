@@ -75,15 +75,10 @@ class Molecule extends AppModel {
 
         //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain 'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export. Changed January 2018 - JZ.
         $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
-//print_r($orderedIds);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
-//print_r($unorderedAtoms);
-        //postgres doesn't support ORDER BY FIELD, so...
-    $atoms = $orderedAtoms;
 
-//print_r($atoms);
-
+        $atoms = $orderedAtoms;
 
         $xml = "\t" . '<alpha letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
@@ -180,7 +175,7 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Get the molecule's ordered atom IDs.
+     * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the current desired sort order.
      *
      * @param integer $productId Limit to this product
      * @param ?integer $statusId (optional) Only export atoms with this status
@@ -188,40 +183,19 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getExportSortOrder($productId, $statusId = null) {
-    //    print_r($statusId);
-/*        $atoms = Atom::allForProduct($productId)
-                ->where('molecule_code', '=', $this->code)
-                ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                })
-                ->orderBy('sort', 'ASC')
-                ->get();*/
 
-$moleculecode=$this->code;
+        $moleculecode=$this->code;
 
-$sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
+        select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        inner join  (
+        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
+                                where a.product_id=$productId and b.product_id=$productId;";
 
-inner join  (
-select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b
-                            on a.entity_id=b.entity_id
-                        where a.product_id=$productId and b.product_id=$productId;";
+        $atoms = DB::select($sql);
 
-/*This code gets a table of pub and current
-select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-select * from atoms where id in (select MAX(id) from atoms where status_id=4200 group by entity_id) and molecule_code='Z' and deleted_at is null order by sort asc ) a
+        $atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
 
-inner join  (
-select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='Z' and deleted_at is null order by sort asc ) b
-                            on a.entity_id=b.entity_id
-                        where a.product_id=5 and b.product_id=5;*/
-
-      $atoms = DB::select($sql);
-
-//$atomIds = array_map(function($a) { return $a->id; }, $atoms);
-$atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
-
-//print_r($atomIds);
         return $atomIds;
     }
 
@@ -234,7 +208,7 @@ $atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
      * @return string[]
      */
     protected function _getSortOrder($productId, $statusId = null) {
-    //    print_r($statusId);
+
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {
