@@ -6,6 +6,8 @@ use App\AppModel;
 
 use App\DrugDoctype;
 use App\DictionaryDoctype;
+use App\BookDoctype;
+use App\QuestionDoctype;
 
 class Product extends AppModel {
     protected $table = 'products';
@@ -14,6 +16,8 @@ class Product extends AppModel {
     protected $doctypes = [
         'drug' => DrugDoctype::class,
         'dictionary' => DictionaryDoctype::class,
+        'book' => BookDocype::class,
+        'question' => QuestionDoctype::class,
     ];
 
     /**
