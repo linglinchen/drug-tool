@@ -127,7 +127,8 @@ class AtomController extends Controller
      */
     public function putAction($productId, $entityId, Request $request) {
         $input = $request->all();
-
+        $ready = [];
+        $ready['ready'] = $input['ready'];
         $locked = current(Molecule::locked($input['molecule_code'], $productId));
         if(isset($input['molecule_code']) && $locked) {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
@@ -145,7 +146,7 @@ class AtomController extends Controller
             }
         }
 
-        $atom->save();
+        $atom->save($ready);
         $atom->is_current = true;
 
         return new ApiPayload($atom->addAssignments($productId));

@@ -16,7 +16,7 @@ class Product extends AppModel {
     protected $doctypes = [
         'drug' => DrugDoctype::class,
         'dictionary' => DictionaryDoctype::class,
-        'book' => BookDocype::class,
+        'book' => BookDoctype::class,
         'question' => QuestionDoctype::class,
     ];
 
