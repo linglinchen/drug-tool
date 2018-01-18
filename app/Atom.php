@@ -82,10 +82,6 @@ class Atom extends AppModel {
         }
 
         $doctype->beforeSave($this);
-        //if ($options && $options['ready'] == 'yes'){
-                $this->status_id = $pubStatusId;
-               // unset($options['ready']);
-        //}
         parent::save($options);
     }
 
