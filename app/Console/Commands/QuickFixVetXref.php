@@ -34,15 +34,17 @@ class QuickFixVetXref extends Command {
      */
     public function handle() {
         ini_set('memory_limit', '1280M');
-       $xrefLocation = self::_getXrefBasedOnOldXml();
-       $entityIdArray = self::_getEntityIdArray();
+       //$xrefLocation = self::_getXrefBasedOnOldXml();
+       //$entityIdArray = self::_getEntityIdArray();
 
        //insert <xref> into the xml
         $atoms = Atom::whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })->where('product_id','=', 3)->get();
 
-        foreach($atoms as $atom) {
+                var_dump($atoms); exit;
+
+       // foreach($atoms as $atom) {
             foreach ($xrefLocation as $xref){
                 foreach ($xref as $term => $ref){
                     if ($atom->alpha_title == $term){ //if atom has xref
@@ -63,7 +65,7 @@ class QuickFixVetXref extends Command {
                     }
                 }
             }
-        }
+       // }
     }
 
     public static function _getEntityIdArray() {
