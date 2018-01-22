@@ -8,10 +8,10 @@ use App\Atom;
 
 class DictionaryDoctype extends AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => ['entry'],
+        'validAtomRootElements' => ['main-entry'],
         'validTitleElements' => ['headw'],
         'idPrefixes' => [
-            'entry' => 'me'
+            'main-entry' => 'me'
         ],
         'chapterElement' => [
             'elementXpath' => '//alpha',
