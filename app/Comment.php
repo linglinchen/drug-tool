@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use DB;
+
 class Comment extends AppModel {
     use SoftDeletes;
 
@@ -75,4 +77,28 @@ class Comment extends AppModel {
             $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
         }
     }
+
+/*get a list of max atoms ids so it is just a list of current atoms
+     *
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function getSuggestionIds($entityId) {
+/*       print_r(is_string($entityId));
+       print_r($entityId);*/
+
+/*        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figuretag from comments where atom_entity_id=\'599c96938d1fe084243282\'';
+*/
+        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figuretag from comments where atom_entity_id=\''. $entityId .'\'';
+// echo $sql;
+
+    $idArray= DB::select($sql);
+    $idArray = json_decode(json_encode($idArray), true);
+
+        return $idArray;
+ //       return DB::select($sql);
+    }
+
 }

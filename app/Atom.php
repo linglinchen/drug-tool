@@ -354,6 +354,22 @@ class Atom extends AppModel {
         return $this;
     }
 
+
+    /**
+     * Add filters to the query.
+     *
+     * @param object $query The query object to modify
+     * @param mixed[] $filters The filters to add represented as key => value pairs
+     */
+    public function addCommentSuggestions($entityId) {
+
+        $suggestedFigures = [];
+        $suggestedFigureIds = Comment::getSuggestionIds($entityId);
+
+        $this->suggestedFigures=$suggestedFigureIds;
+        return $this;
+    }
+
     /**
      * Get active assignments for the given atom entityId.
      *
@@ -382,7 +398,6 @@ class Atom extends AppModel {
      */
     public function addComments() {
         $this->comments = Comment::getByAtomEntityId($this->entity_id);
-
         return $this;
     }
 
