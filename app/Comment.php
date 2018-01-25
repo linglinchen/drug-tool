@@ -91,11 +91,11 @@ class Comment extends AppModel {
 
 /*        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figuretag from comments where atom_entity_id=\'599c96938d1fe084243282\'';
 */
-        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figuretag from comments where atom_entity_id=\''. $entityId .'\'';
+        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments where atom_entity_id=\''. $entityId .'\'';
 // echo $sql;
 
-    $idArray= DB::select($sql);
-    $idArray = json_decode(json_encode($idArray), true);
+        $idArray= DB::select($sql);
+        $idArray = json_decode(json_encode($idArray), true);
 
         return $idArray;
  //       return DB::select($sql);
