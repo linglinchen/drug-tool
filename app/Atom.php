@@ -60,12 +60,12 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
+        $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
+        $devStatusId = Status::getDevStatusId($this->product_id)->id;
         if (array_key_exists('massupdate', $this->attributes)){
             array_pop($this->attributes); //remove 'massupdate' element
         }
         else {
-            $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
-            $devStatusId = Status::getDevStatusId($this->product_id)->id;
             if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
             {
                 $this->status_id = $devStatusId; //change status to be 'development when saving'
@@ -82,7 +82,6 @@ class Atom extends AppModel {
         }
 
         $doctype->beforeSave($this);
-
         parent::save($options);
     }
 
@@ -160,7 +159,6 @@ class Atom extends AppModel {
                 ->orderBy('alpha_title', 'ASC');
         return $query;
     }
-
 
     /**
      * Get a list of discontinued monographs.
@@ -250,33 +248,6 @@ class Atom extends AppModel {
         ];
     }
 
-
-        /*get a list  by product of max atoms ids so it is just a list of current atomid for the product
-     *
-     * @param ?integer|integer[] $productId Only return atoms with the specified productId
-     * @param ?object $q (optional) Subquery object (to limit atom ids only to the maxid/most current)
-     *
-     * @return object The constructed query object
-     */
-    public static function maxProdAtomIdsList($productId, $q = null) {
-        $table = (new self)->getTable();
-        $query = $q ? $q->select('id') : self::select('id');
-        $query->from($table);
-
-        $query->whereIn('id', function ($q) use ($table, $productId) {
-                    $q->select(DB::raw('MAX(id)'))
-                            ->from($table);
-
-                    if($productId !== null) {
-                        $q->where('product_id', $productId);
-                    }
-
-                    $q->groupBy('entity_id');
-                })
-                ->orderBy('id', 'ASC');
-        return $query;
-    }
-
     /**
      * Add filters to the query.
      *
@@ -284,11 +255,7 @@ class Atom extends AppModel {
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addFilters($query, $filters) {
-  //    print_r('in atoms filter function');
- //       $maxAtoms = self::maxAtomIdsList();
         $validFilters = ['status_id', 'molecule_code'];
- //       $sqlMaxAtoms='select atoms.id from atoms where id in (select MAX(id) from atoms group by entity_id)';
- //       $ZatomsMaxIds = DB::select($sqlMaxAtoms);
         if($filters) {
             foreach($validFilters as $validFilter) {
                 if(isset($filters[$validFilter])) {

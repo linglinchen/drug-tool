@@ -6,13 +6,11 @@ use App\AbstractDoctype;
 
 use App\Atom;
 
-class DictionaryDoctype extends AbstractDoctype {
+class QuestionDoctype extends AbstractDoctype {
     protected $_config = [
-        //'validAtomRootElements' => ['main-entry'],
         'validAtomRootElements' => ['entry'],
         'validTitleElements' => ['headw'],
         'idPrefixes' => [
-            //'main-entry' => 'me'
             'entry' => 'me'
         ],
         'chapterElement' => [

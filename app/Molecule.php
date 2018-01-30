@@ -67,23 +67,18 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Export the molecule to XML. Takes the LATEST VERSION of each atom that matches the statusId (if passed).
+     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId (if passed).
      *
      * @returns string
      */
     public function export($statusId = null) {
-        $orderedIds = $this->_getSortOrder($this->product_id, $statusId);
 
-        $unorderedAtoms = $this->_getMyPublishedAtoms();
+        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain 'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export. Changed January 2018 - JZ.
+        $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
 
-        //postgres doesn't support ORDER BY FIELD, so...
-        $atoms = array_flip($orderedIds);
-        foreach($unorderedAtoms as $atom) {
-            $atoms[$atom->id] = $atom;
-        }
-        $atoms = array_filter($atoms, function ($element) {
-            return !is_numeric($element);       //remove atoms that have never been published
-        });
+        $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
+
+        $atoms = $orderedAtoms;
 
         $xml = "\t" . '<alpha letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
@@ -94,6 +89,27 @@ class Molecule extends AppModel {
         $xml .= "\t" . '</alpha>' . "\n";
 
         return $xml;
+    }
+
+
+    /**
+     * Gets a list of properly sorted atoms that are ready for publication.
+     * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort order (sort based on current atom in any status but ids are most current and ready to publish atoms)
+     * @return object[]
+     */
+    protected function _getMysortedPublishedAtoms($orderedIds) {
+        $atoms = [];
+
+        foreach($orderedIds as $orderedId) {
+            $versions = Atom::allForCurrentProduct()
+                    ->where('id', '=', $orderedId)
+                    ->get();
+            foreach($versions as $version) {
+                    $atoms[] = $version;
+            }
+        }
+
+        return $atoms;
     }
 
     /**
@@ -116,7 +132,7 @@ class Molecule extends AppModel {
         foreach($entityIds as $entityId) {
             $versions = Atom::allForCurrentProduct()
                     ->where('entity_id', '=', $entityId)
-                    ->orderBy('id', 'DESC')
+                    ->orderBy('alpha_title', 'DESC')
                     ->get();
             foreach($versions as $version) {
                 if(in_array($version->status_id, $publishedStatuses)) {
@@ -159,6 +175,31 @@ class Molecule extends AppModel {
     }
 
     /**
+     * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the current desired sort order.
+     *
+     * @param integer $productId Limit to this product
+     * @param ?integer $statusId (optional) Only export atoms with this status
+     *
+     * @return string[]
+     */
+    protected function _getExportSortOrder($productId, $statusId = null) {
+
+        $moleculecode=$this->code;
+
+        $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
+        select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        inner join  (
+        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
+                                where a.product_id=$productId and b.product_id=$productId;";
+
+        $atoms = DB::select($sql);
+
+        $atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
+
+        return $atomIds;
+    }
+
+    /**
      * Get the molecule's ordered atom IDs.
      *
      * @param integer $productId Limit to this product
@@ -167,6 +208,7 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getSortOrder($productId, $statusId = null) {
+
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {
