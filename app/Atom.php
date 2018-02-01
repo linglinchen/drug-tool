@@ -316,6 +316,22 @@ class Atom extends AppModel {
     }
 
     /**
+     * Get the oldest version of the atom(s) regardless of whether or not it has been deleted.
+     *
+     * @param string|string[] $entityId The entityId(s) of the atom
+     * @param integer $productId Limit to this product
+     *
+     * @return object|object[]|null The atom(s)
+     */
+    public static function findOldest($entityId, $productId) {
+            return self::allForProduct($productId)
+                    ->withTrashed()
+                    ->where('entity_id', '=', $entityId)
+                    ->orderBy('id')
+                    ->first();
+    }
+
+    /**
      * Add active assignments to the atom.
      *
      * @param integer $productId Limit to this product

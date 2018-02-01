@@ -1,8 +1,8 @@
 <?php
 
-/* search for the vet terms that xref is needed based on previous transformation (it's missing from recent transformation)
- * insert <xref> to them
-*/
+/* run this script to update the first atom version that should have xref
+ * give a report of atoms that with only one version, and with multiple versions
+ */
 
 namespace App\Console\Commands;
 
@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use App\Atom;
 use App\Product;
 use App\Status;
+use App\Molecule;
+use App\User;
 
 class QuickFixVetXref extends Command {
     /**
@@ -18,126 +20,282 @@ class QuickFixVetXref extends Command {
      *
      * @var string
      */
-    protected $signature = 'quickfix:vetXref';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command searches for vet terms that has missing <xref> tags based on a older transformation xml and insert the <xref> tags into database atoms xml e.g. quickfix:vetXref';
+    //protected $description = 'This command searches for vet terms that has missing <xref> tags based on a older transformation xml and insert the <xref> tags into database atoms xml e.g. quickfix:vetXref';
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle() {
-        ini_set('memory_limit', '1280M');
-       //$xrefLocation = self::_getXrefBasedOnOldXml();
-       //$entityIdArray = self::_getEntityIdArray();
+    protected $signature = 'quickfix:vetXref
+						{productId : The ID of product for the imported atoms}
+						{statusId : The ID of the status to set on each imported atom [ ID from db | 0-prefixed ID pattern for lookup ]}
+						{tallmanSet=false : the name of a preconfigured tallman set [ false | NDR ]}
+						{edition=false : the edition number to write out on imported atoms}
+						{modifiedBy=false : the author ID to blame for modifications to imported atoms}';
 
-       //insert <xref> into the xml
-        $atoms = Atom::whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                })->where('product_id','=', 3)->get();
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Import atoms from XML file(s) in the data/import/atoms directory, and place them into the specified product. Do not run without first importing or adding molecules.';
 
-                var_dump($atoms); exit;
+	/**
+	 * The contents of the molecules table
+	 *
+	 * @var array
+	 */
+	protected $moleculeLookups;
 
-       // foreach($atoms as $atom) {
-            foreach ($xrefLocation as $xref){
-                foreach ($xref as $term => $ref){
-                    if ($atom->alpha_title == $term){ //if atom has xref
-                        $newAtom = $atom->replicate();
-                        $newXml = $atom->xml;
-                        foreach ($ref as $refered){
-                            if (array_key_exists($refered, $entityIdArray)){
-                                $entityId = $entityIdArray[$refered];
-                                echo "$term\t$refered\t$entityId\n";
-                                $referedPattern = '/(<xref refid="tra__REFID__">)?\b'.$refered.'\b(<\/xref>)?/';
-                                $replacement = '<xref refid="a:'.$entityId.'">'.$refered.'</xref>';
-                                $newXml = preg_replace($referedPattern, $replacement, $newXml);
-                            }
-                        }
-                        $newAtom->xml = $newXml;
-                        $newAtom->modified_by = null;
-						$newAtom->save();
-                    }
-                }
+	/**
+	 * A translation table for tallman drug names
+	 *
+	 * @var string[]
+	 */
+	protected $tallman = [];
+
+	/**
+	 * Execute the console command.
+	 *
+	 * @return mixed
+	 */
+	public function handle() {
+        $myfile = fopen("atomVersion.csv", "w") or die("Unable to open file!");
+		$productId = (int)$this->argument('productId');
+		if(!$productId || !Product::find($productId)) {
+			throw new \Exception('Invalid product ID.');
+		}
+		$this->productId = $productId;
+		$doctype = Product::find($this->productId)->getDoctype();
+
+		$statusId = (int)$this->argument('statusId');
+		$statusPattern = (string)$this->argument('statusId');
+		//prefixing with '0' will fetch statuses based on the naming convention pattern established on product 1
+		if(substr($statusPattern, 0, 1) == '0') {
+			$statusCount = true;
+			switch ($statusPattern) {
+				case '0100':
+					$statusId = Status::getDevStatusId($this->productId)->id;
+					break;
+				case '0200':
+					$statusId = Status::getReadyForPublicationStatusId($this->productId)->id;
+					break;
+				case '0300':
+					$statusId = Status::getDeactivatedStatusId($this->productId)->id;
+					break;
+				default:
+					$statusCount = false;
+			}
+
+		//explicitly request a status ID
+		} else {
+			$statusCount = Status::allForProduct($this->productId)
+					->where('id', '=', $statusId)
+					->count();
+		}
+		if(!$statusId || !$statusCount) {
+			throw new \Exception('Invalid status ID.');
+		}
+		$this->statusId = $statusId;
+
+		$tallmanSet = (string)$this->argument('tallmanSet');
+		//$tallmanSet value is validated in _loadTallman
+		$this->tallmanSet = $tallmanSet;
+
+		$edition = (string)$this->argument('edition');
+		if($edition!=='false' && !preg_match('/^[0-9]+(\.?[0-9]+)?$/', $edition)) {
+			throw new \Exception('Invalid edition value.');
+		}
+		$this->edition = $edition;
+
+		$modifiedBy = (string)$this->argument('modifiedBy');
+		$modifiedByCount = 0;
+		if($modifiedBy!=='false' && preg_match('/[^0-9]/', $modifiedBy)) {
+			throw new \Exception('Invalid modified by value.');
+
+		} else if($modifiedBy!=='false') {
+			$modifiedByCount = User::allForProduct($this->productId)
+					->where('user_id', '=', $modifiedBy)
+					->count();
+		}
+		if($modifiedBy!=='false' && !$modifiedByCount) {
+			throw new \Exception('Requested modified by ID is not available for this product.');
+		}
+		$this->modifiedBy = $modifiedBy;
+
+		$this->moleculeLookups = Molecule::getLookups($productId);
+
+		$dataPath = base_path() . '/data/import/atoms/';
+		$files = scandir($dataPath);
+		$files = array_slice($files, 2);
+		foreach($files as $file) {
+			if(!preg_match('/\.xml$/i', $file)) {
+				continue;       //skip non-xml file
+			}
+
+			echo 'Loading ', $file, "\n";
+
+			$xml = file_get_contents($dataPath . $file);
+			$xml = $this->_addTallman($xml);
+
+			$chapters = $doctype->extractAtomXML($xml);
+			if($chapters) {
+				foreach($chapters as $moleculeCode => $atoms) {
+					$atomCount = $this->_importAtoms($atoms, $moleculeCode, $myfile);
+					echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
+				}
+			}
+			else {
+				$atomCount = $this->_importAtoms($atoms);
+				echo "\t<no molecule detected> ", $atomCount, "\n";
+			}
+
+			echo "\n";
+		}
+
+		echo "Done\n";
+        fclose($myfile);
+	}
+
+	/**
+	 * Import an array of atom XML strings. Usually a whole letter node.
+	 *
+	 * @param string[] $atoms The XML strings to import
+	 * @param string|null $moleculeCode (optional) The code of the molecule that these atom belong to
+	 *
+	 * @return int The number of atoms imported
+	 */
+	public function _importAtoms($atoms, $moleculeCode = null, $myfile) {
+		$atom = new Atom();
+		$doctype = Product::find($this->productId)->getDoctype();
+		$sort = 0;
+		foreach($atoms as $atomString) {
+			$category = '';
+			preg_match('/<category[^>]*>(.*)<\/category>/Si', $atomString, $matches);
+			if ($matches){
+				$category = $matches[1];
+			}
+			$title = $doctype->detectTitle($atomString);
+			$alphaTitle = Atom::makeAlphaTitle($title);
+			$timestamp = $atom->freshTimestampString();
+			$entityId = $doctype->detectAtomIDFromXML($atomString) ?: Atom::makeUID();
+			$atomString = $doctype->assignXMLIds($atomString, $entityId);
+			$edition = ($this->edition=='false' ? null : $this->edition);
+			$modifiedBy = ($this->modifiedBy=='false' ? null : $this->modifiedBy);
+			$sort++;
+
+			$atomData = [
+				'entity_id' => $entityId,
+				'title' => $title,
+				'alpha_title' => $alphaTitle,
+				'molecule_code' => $moleculeCode,
+				'xml' => $atomString,
+				'modified_by' => $modifiedBy,
+				'created_at' => $timestamp,
+				'updated_at' => $timestamp,
+				'status_id' => $this->statusId,
+				'product_id' => $this->productId,
+				'edition' => $edition,
+				'sort' => $sort,
+				'domain_code' => $category,
+			];
+
+            if ($entityId != '59286fbc987e7731400725' && $entityId != '59286fce97139018665595' && $entityId != '59286fea297c8255819769'){
+                //find out how many versions this term has
+                $sql = "SELECT COUNT(*)
+                    FROM atoms 
+                    WHERE entity_id = '$entityId' and product_id = $this->productId";
+
+                $versionCount = DB::select($sql)[0]->count;
+
+                fwrite($myfile, "$versionCount\t$entityId\t$alphaTitle\n");
+                //update the oldest version
+                $dbAtom = Atom::findOldest($entityId, $this->productId);
+                $dbAtom->xml = $atomString;
+                $dbAtom->modified_by = $modifiedBy;
+
+                $dbAtom->save();
             }
-       // }
-    }
+		}
 
-    public static function _getEntityIdArray() {
-        $entityIdArray = [];
-        $atoms = Atom::whereIn('id', function ($q) {
-                        Atom::buildLatestIDQuery(null, $q);
-                    })->where('product_id','=', 3)->get();
+		return sizeof($atoms);
+	}
 
-        foreach($atoms as $atom) {
-            $entityIdArray[$atom->alpha_title] = $atom->entity_id;
-            //echo "$atom->alpha_title\t$atom->entity_id\n";
-        }
-        return $entityIdArray;
-    }
+	/**
+	 * Add tallman tags to XML.
+	 *
+	 * @param string $xml The XML string to modify
+	 *
+	 * @return string The modified XML string
+	 */
+	protected function _addTallman($xml) {
+		//tallman isn't used on every import
+		if($this->tallmanSet === 'false') {
+			return $xml;
+		}
 
-    public static function _getXrefBasedOnOldXml() {
-        $dir = "/var/www/vet_batch_2017_05_19";
-        $files = scandir($dir);
-        $files = array_slice($files, 2);
-        $xref_arr = [];
-        foreach ($files as $file){
-            //if ($file == 'letter_a_4e.xml'){
-            $xml = file_get_contents($dir.'/'.$file);
-            $doc = new \DOMDocument();
-            $doc->loadXML($xml);
-            $xpath = new \DOMXpath($doc);
-            $chapterElements = $xpath->query('/dictionary/body/alpha/entry');
-            foreach($chapterElements as $chapterElement) {
-                $headw = '';
-                $ref_array = [];
-                $ref_unique = [];
-                foreach($chapterElement->childNodes as $atomNode) {
-                    if(isset($atomNode->tagName) && ($atomNode->tagName == 'headw')) {
-                        $headw = trim(str_replace("\n", '', $atomNode->nodeValue));
-                    }else{
-                        $xml = $doc->saveXML($atomNode);
-                        if (strlen(trim($xml)) > 0 && strlen($headw) > 0){
-                            $termDoc = new \DOMDocument();
-                            $termDoc->loadXML($xml);
-                            $termXpath = new \DOMXpath($termDoc);
-                            $xrefElements = $termXpath->query('//xref');
-                            foreach ($xrefElements as $xrefElement){
-                                $xrefText = trim(str_replace("\n", '',$xrefElement->textContent));
-                                if (strlen($xrefText)>0){
-                                    array_push($ref_array, $xrefText);
-                                }else{
-                                    //echo "self closing xref: $headw\n";
-                                }
-                            }
-                        }
-                    }
-                }
-                $ref_uniq = array_unique($ref_array);
-                if ($ref_uniq){
-                    array_push($xref_arr, array($headw => $ref_uniq));
-                }
-                    /* preg_match_all('/<xref refid="tra__REFID__"( id_legacy="[\d]+")?>(.*)<\/xref>/Si', $xml, $matches);
-                     preg_match_all('/<xref refid="tra__REFID__">([\d\D]*)<\/xref>/Si', $xml, $matches);*/
-            }
-            //}
-        }
-        $xref_arr = array_unique($xref_arr, SORT_REGULAR);
-        /*echo "term\trefered\n";
-        foreach ($xref_arr as $xref){
-            foreach ($xref as $term => $ref){
-                //if ($term == 'hepatoprotectant'){
-                    foreach ($ref as $refered){
-                        //echo "$term\t$refered\n";
-                    }
-                //}
-            }
-        }*/
-        return $xref_arr;
-    }
+
+		$this->_loadTallman();
+
+		foreach($this->tallman as $find => $replacement) {
+			$xml = preg_replace($find, $replacement, $xml);
+		}
+
+		return $xml;
+	}
+
+	/**
+	 * Loads the tallman data if needed, and computes searches / replacements.
+	 */
+	protected function _loadTallman() {
+		if(!$this->tallman) {
+			//list of predefined tallman sets selected with tallmanSet
+			$tallmanSets = [
+				'NDR' => 'tallman.txt',
+			];
+
+			if(!array_key_exists($this->tallmanSet, $tallmanSets)) {
+				throw new \Exception('Invalid tallmanSet value: ' . $this->tallmanSet);
+			}
+
+			$dataPath = base_path() . '/data/' . $tallmanSets[$this->tallmanSet];
+			$tallman = file_get_contents($dataPath);
+			if($tallman === false) {
+				throw new \Exception('tallmanSet file was not found: ' . $dataPath);
+			}
+
+			$tallman = preg_split('/\v+/S', trim($tallman));
+			foreach($tallman as $name) {
+				$name = trim($name);
+
+				if(!$name) {
+					continue;       //skip blank lines
+				}
+
+				//build inner portion of the search regex
+				$find = preg_replace('/[A-Z]+/S', '($0)', $name);
+				$find = preg_replace('/[a-z]+/S', '($0)', $find);
+
+				//build the replacement
+				$i = 0;
+				$parts = explode(')(', $find);
+				$replacement = '';
+				foreach($parts as $part) {
+					if(strtolower($part) == $part) {
+						$replacement .= '$' . ++$i;     //lowercase
+					}
+					else {
+						$replacement .= '<emphasis style="tallman">$' . ++$i . '</emphasis>';     //uppercase
+					}
+				}
+
+				//finish building the search regex
+				$find = '#\b' . $find . '\b#Si';
+
+				$this->tallman[$find] = $replacement;
+			}
+		}
+	}
 }
