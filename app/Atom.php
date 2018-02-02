@@ -61,9 +61,9 @@ class Atom extends AppModel {
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
 
-        if ($this->modified_by == NULL){
-            $this->modified_by = 200;
-        }
+        // if ($this->modified_by == NULL){
+        //     $this->modified_by = 200;
+        // }
 
         $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
         $devStatusId = Status::getDevStatusId($this->product_id)->id;
