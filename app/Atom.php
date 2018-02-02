@@ -59,7 +59,8 @@ class Atom extends AppModel {
         $this->updateTitle();
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
-        $this->modified_by = \Auth::user()['id'];
+        //$this->modified_by = \Auth::user()['id'];
+        $this->modified_by = 200;
         $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
         $devStatusId = Status::getDevStatusId($this->product_id)->id;
         if (array_key_exists('massupdate', $this->attributes)){

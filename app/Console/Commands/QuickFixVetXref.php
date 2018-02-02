@@ -62,7 +62,8 @@ class QuickFixVetXref extends Command {
 	 * @return mixed
 	 */
 	public function handle() {
-        $myfile = fopen("atomVersion.csv", "w") or die("Unable to open file!");
+        $singleFile = fopen("../vetAtomSingleVersion.csv", "w") or die("Unable to open file!");
+        $multipleFile = fopen("../vetAtomMultipleVersion.csv", "w") or die("Unable to open file!");
 		$productId = (int)$this->argument('productId');
 		if(!$productId || !Product::find($productId)) {
 			throw new \Exception('Invalid product ID.');
@@ -143,7 +144,7 @@ class QuickFixVetXref extends Command {
 			$chapters = $doctype->extractAtomXML($xml);
 			if($chapters) {
 				foreach($chapters as $moleculeCode => $atoms) {
-					$atomCount = $this->_importAtoms($atoms, $moleculeCode, $myfile);
+					$atomCount = $this->_importAtoms($atoms, $moleculeCode, $singleFile, $multipleFile);
 					echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
 				}
 			}
@@ -156,7 +157,8 @@ class QuickFixVetXref extends Command {
 		}
 
 		echo "Done\n";
-        fclose($myfile);
+        fclose($multipleFile);
+        fclose($singleFile);
 	}
 
 	/**
@@ -167,7 +169,7 @@ class QuickFixVetXref extends Command {
 	 *
 	 * @return int The number of atoms imported
 	 */
-	public function _importAtoms($atoms, $moleculeCode = null, $myfile) {
+	public function _importAtoms($atoms, $moleculeCode = null, $singleFile, $multipleFile) {
 		$atom = new Atom();
 		$doctype = Product::find($this->productId)->getDoctype();
 		$sort = 0;
@@ -209,12 +211,15 @@ class QuickFixVetXref extends Command {
                     WHERE entity_id = '$entityId' and product_id = $this->productId";
 
                 $versionCount = DB::select($sql)[0]->count;
+                if ($versionCount == 1){
+                    fwrite($singleFile, "$versionCount\t$entityId\t$alphaTitle\n");
+                }else{
+                    fwrite($multipleFile, "$versionCount\t$entityId\t$alphaTitle\n");
+                }
 
-                fwrite($myfile, "$versionCount\t$entityId\t$alphaTitle\n");
                 //update the oldest version
                 $dbAtom = Atom::findOldest($entityId, $this->productId);
                 $dbAtom->xml = $atomString;
-                $dbAtom->modified_by = $modifiedBy;
 
                 $dbAtom->save();
             }
