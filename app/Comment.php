@@ -89,7 +89,7 @@ class Comment extends AppModel {
 
 /*       select the Comment id and the figure src info for records that have figure queries with uploaded images.
 */
-        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments where atom_entity_id=\''. $entityId .'\'';
+        $sql = 'select id, unnest(xpath(\'//query[@type="figure"]/suggestion/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as reviewstatus, unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments where atom_entity_id=\''. $entityId .'\'';
 
         $idArray= DB::select($sql);
         $idArray = json_decode(json_encode($idArray), true);
