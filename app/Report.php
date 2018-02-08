@@ -57,6 +57,7 @@ class Report extends AppModel {
 				    case 5:
 				        $reportTypes = [
 							'statuses' => 'Status Breakdown',
+							'edits' => 'Edits',
 							'openAssignments' => 'Open Assignments',
 							'brokenLinks' => 'Broken Links',
 							'comments' => 'Comments',
@@ -221,6 +222,7 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function openAssignments($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+		ini_set('memory_limit', '1280M');
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
@@ -665,6 +667,7 @@ class Report extends AppModel {
 	 * @param integer $end The end of the assignment
 	 */
 	protected static function _applyAssignmentToSeries(&$series, $timezoneOffset, $stepSizeSeconds, $start, $end) {
+		ini_set('memory_limit', '1280M');
 		reset($series);
 		$seriesStart = key($series);
 		$start = $seriesStart > $start ? $seriesStart : self::_snapTime($start, $timezoneOffset, $stepSizeSeconds, false);
