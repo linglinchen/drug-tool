@@ -41,6 +41,18 @@ class AtomCommentController extends Controller {
 
         return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
+        /**
+     * Update the text column of an atom's comments.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param string $entityId The entityId of the atom to retrieve
+     * @param integer $commentId The current comment's id
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
 
     public function updateAction($productId, $atomEntityId, $commentId, Request $request) {
 
