@@ -34,4 +34,22 @@ class Product extends AppModel {
 
         return new $this->doctypes[$doctypeKey];
     }
+
+    /**
+     * Gets this product's termtype.
+     *
+     * @return object
+     */
+    public function getTermtype() {
+        return $this->termtype;
+    }
+
+    /**
+     * Gets this product's categorytype.
+     *
+     * @return object
+     */
+    public function getCategorytype() {
+        return $this->categorytype;
+    }
 }
