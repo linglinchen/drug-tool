@@ -511,6 +511,7 @@ return array(
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'ParentIdNullableOnCommentsTable' => $baseDir . '/database/migrations/2016_08_22_150900_parentId_nullable_on_comments_table.php',
+    'ProductsTableAddColumnTermTypeCategoryType' => $baseDir . '/database/migrations/2018_02_12_193953_productsTable_add_column_termType_categoryType.php',
     'ReAddCreatedByOnAssignmentsTable' => $baseDir . '/database/migrations/2016_08_19_130300_re_add_createdBy_on_assignments_table.php',
     'RemoveColumnsFromAssignmentsTable' => $baseDir . '/database/migrations/2016_08_16_144500_remove_columns_from_assignments_table.php',
     'RemoveParentIdMoleculeInACL' => $baseDir . '/database/migrations/2017_05_03_204638_remove_parentId_molecule_in_ACL.php',
