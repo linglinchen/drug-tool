@@ -8,10 +8,10 @@ use App\Atom;
 
 class QuestionDoctype extends AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => ['entry'],
-        'validTitleElements' => ['headw'],
+        'validAtomRootElements' => ['question'],
+        'validTitleElements' => ['qnum'],
         'idPrefixes' => [
-            'entry' => 'me'
+            'question' => 'q'
         ],
         'chapterElement' => [
             'elementXpath' => '//alpha',
