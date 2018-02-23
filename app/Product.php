@@ -6,6 +6,8 @@ use App\AppModel;
 
 use App\DrugDoctype;
 use App\DictionaryDoctype;
+use App\BookDoctype;
+use App\QuestionDoctype;
 
 class Product extends AppModel {
     protected $table = 'products';
@@ -14,6 +16,8 @@ class Product extends AppModel {
     protected $doctypes = [
         'drug' => DrugDoctype::class,
         'dictionary' => DictionaryDoctype::class,
+        'book' => BookDoctype::class,
+        'question' => QuestionDoctype::class,
     ];
 
     /**
@@ -29,5 +33,23 @@ class Product extends AppModel {
         }
 
         return new $this->doctypes[$doctypeKey];
+    }
+
+    /**
+     * Gets this product's termtype.
+     *
+     * @return object
+     */
+    public function getTermtype() {
+        return $this->termtype;
+    }
+
+    /**
+     * Gets this product's categorytype.
+     *
+     * @return object
+     */
+    public function getCategorytype() {
+        return $this->categorytype;
     }
 }

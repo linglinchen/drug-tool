@@ -860,6 +860,7 @@ class ComposerStaticInit1671968730f8ad60b029a8d158f00826
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'ParentIdNullableOnCommentsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_22_150900_parentId_nullable_on_comments_table.php',
+        'ProductsTableAddColumnTermTypeCategoryType' => __DIR__ . '/../..' . '/database/migrations/2018_02_12_193953_productsTable_add_column_termType_categoryType.php',
         'ReAddCreatedByOnAssignmentsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_19_130300_re_add_createdBy_on_assignments_table.php',
         'RemoveColumnsFromAssignmentsTable' => __DIR__ . '/../..' . '/database/migrations/2016_08_16_144500_remove_columns_from_assignments_table.php',
         'RemoveParentIdMoleculeInACL' => __DIR__ . '/../..' . '/database/migrations/2017_05_03_204638_remove_parentId_molecule_in_ACL.php',

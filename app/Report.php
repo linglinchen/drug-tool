@@ -6,7 +6,7 @@ use DB;
 use Log;
 
 use App\AppModel;
-//use App\Product;
+use App\Product;
 use App\Atom;
 use App\Comment;
 use App\Molecule;
@@ -39,49 +39,22 @@ class Report extends AppModel {
 	public static function reportMenu($productId) {
 		//check if product is either dictionary and if so give separate menus.
 		//Otherwise, provide generic drug type menu
-		if ($productId == 3 || $productId == 5){
-				switch ($productId) {
-				    case 3:
-				        $reportTypes = [
-							'statuses' => 'Status Breakdown',
-							'edits' => 'Edits',
-							'openAssignments' => 'Open Assignments',
-							'brokenLinks' => 'Broken Links',
-							'comments' => 'Comments',
-							'moleculeStats' => 'Chapter Stats',
-							'domainStats' => 'Domain Stats',
-							'reviewerStats' => 'Reviewer Process Stats'
-						];
+		$categoryType = Product::find($productId)->getCategorytype();
 
-						break;
-				    case 5:
-				        $reportTypes = [
-							'statuses' => 'Status Breakdown',
-							'openAssignments' => 'Open Assignments',
-							'brokenLinks' => 'Broken Links',
-							'comments' => 'Comments',
-							'moleculeStats' => 'Chapter Stats',
-							'domainStats' => 'Category Stats'
-						];
+		$reportTypes = [
+			'discontinued' => 'Discontinued '.Product::find($productId)->getTermtype(),
+			'statuses' => 'Status Breakdown',
+			'edits' => 'Edits',
+			'openAssignments' => 'Open Assignments',
+			'brokenLinks' => 'Broken Links',
+			'comments' => 'Comments',
+			'moleculeStats' => 'Chapter Stats',
+			'domainStats' => $categoryType ? $categoryType.' Stats' : ''
+		];
 
-						break;
-
-				}
-
-		} else {
-
-				$reportTypes = [
-					'discontinued' => 'Discontinued Monographs',
-					'statuses' => 'Status Breakdown',
-					'edits' => 'Edits',
-					'openAssignments' => 'Open Assignments',
-					'brokenLinks' => 'Broken Links',
-					'comments' => 'Comments',
-					'moleculeStats' => 'Chapter Stats',
-					'domainStats' => 'Domain Stats'
-			];
+		if ($productId == 3){
+			$reportTypes['reviewerStats'] = 'Reviewer Process Stats';
 		}
-
 
 		return $reportTypes;
 	}
@@ -221,6 +194,7 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function openAssignments($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
+		ini_set('memory_limit', '1280M');
 		$stepSize = strtolower($stepSize);
 		$stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';		//sanitize, and default to 1 day
 		$stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
@@ -665,6 +639,7 @@ class Report extends AppModel {
 	 * @param integer $end The end of the assignment
 	 */
 	protected static function _applyAssignmentToSeries(&$series, $timezoneOffset, $stepSizeSeconds, $start, $end) {
+		ini_set('memory_limit', '1280M');
 		reset($series);
 		$seriesStart = key($series);
 		$start = $seriesStart > $start ? $seriesStart : self::_snapTime($start, $timezoneOffset, $stepSizeSeconds, false);

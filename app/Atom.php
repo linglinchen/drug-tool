@@ -60,12 +60,17 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
+
+        // if ($this->modified_by == NULL){
+        //     $this->modified_by = 200;
+        // }
+
+        $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
+        $devStatusId = Status::getDevStatusId($this->product_id)->id;
         if (array_key_exists('massupdate', $this->attributes)){
             array_pop($this->attributes); //remove 'massupdate' element
         }
         else {
-            $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
-            $devStatusId = Status::getDevStatusId($this->product_id)->id;
             if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
             {
                 $this->status_id = $devStatusId; //change status to be 'development when saving'
@@ -82,7 +87,6 @@ class Atom extends AppModel {
         }
 
         $doctype->beforeSave($this);
-
         parent::save($options);
     }
 
@@ -314,6 +318,22 @@ class Atom extends AppModel {
                 ->first();
 
         return ($atom && $atom->trashed()) ? null : $atom;
+    }
+
+    /**
+     * Get the oldest version of the atom(s) regardless of whether or not it has been deleted.
+     *
+     * @param string|string[] $entityId The entityId(s) of the atom
+     * @param integer $productId Limit to this product
+     *
+     * @return object|object[]|null The atom(s)
+     */
+    public static function findOldest($entityId, $productId) {
+            return self::allForProduct($productId)
+                    ->withTrashed()
+                    ->where('entity_id', '=', $entityId)
+                    ->orderBy('id')
+                    ->first();
     }
 
     /**
