@@ -12,9 +12,9 @@ use Zend\EventManager\StaticEventManager;
 use Codeception\Lib\Connector\ZF2 as ZF2Connector;
 
 /**
- * This module allows you to run tests inside Zend Framework 2.
+ * This module allows you to run tests inside Zend Framework 2 and Zend Framework 3.
  *
- * File `init_autoloader` in project's root is required.
+ * File `init_autoloader` in project's root is required by Zend Framework 2.
  * Uses `tests/application.config.php` config file by default.
  *
  * Note: services part and Doctrine integration is not compatible with ZF3 yet
@@ -41,7 +41,7 @@ use Codeception\Lib\Connector\ZF2 as ZF2Connector;
  * Usage example:
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - ZF2:
@@ -80,13 +80,16 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     protected $time = 0;
 
     /**
-     * @var array Used to collect domains while recusively traversing route tree
+     * @var array Used to collect domains while recursively traversing route tree
      */
     private $domainCollector = [];
 
     public function _initialize()
     {
-        require Configuration::projectDir() . 'init_autoloader.php';
+        $initAutoloaderFile = Configuration::projectDir() . 'init_autoloader.php';
+        if (file_exists($initAutoloaderFile)) {
+            require $initAutoloaderFile;
+        }
 
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
         if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
@@ -118,10 +121,6 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
             StaticEventManager::resetInstance();
         }
 
-        //Close the session, if any are open
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            session_write_close();
-        }
         $this->queries = 0;
         $this->time = 0;
 
@@ -135,6 +134,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _getEntityManager()
     {
+        if (!$this->client) {
+            $this->client = new ZF2Connector();
+            $this->client->setApplicationConfig($this->applicationConfig);
+        }
+
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
 

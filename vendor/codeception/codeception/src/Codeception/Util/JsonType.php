@@ -96,21 +96,19 @@ class JsonType
      */
     public function matches(array $jsonType)
     {
-        if (array_key_exists(0, $this->jsonArray)) {
-            // sequential array
-            if (array_key_exists(0, $this->jsonArray)) {
-                $msg = '';
-                foreach ($this->jsonArray as $array) {
-                    $res = $this->typeComparison($array, $jsonType);
-                    if ($res !== true) {
-                        $msg .= "\n" . $res;
-                    }
+        if (array_key_exists(0, $this->jsonArray) && is_array($this->jsonArray[0])) {
+            // a list of items
+            $msg = '';
+            foreach ($this->jsonArray as $array) {
+                $res = $this->typeComparison($array, $jsonType);
+                if ($res !== true) {
+                    $msg .= "\n" . $res;
                 }
-                if ($msg) {
-                    return $msg;
-                }
-                return true;
             }
+            if ($msg) {
+                return $msg;
+            }
+            return true;
         }
         return $this->typeComparison($this->jsonArray, $jsonType);
     }

@@ -3,7 +3,7 @@
 use Codeception\Util\Locator;
 use Facebook\WebDriver\WebDriverBy;
 
-class LocatorTest extends PHPUnit_Framework_TestCase
+class LocatorTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testCombine()
@@ -55,6 +55,16 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Locator::isID('#user-name .field'));
         $this->assertFalse(Locator::isID('.field'));
         $this->assertFalse(Locator::isID('hello'));
+    }
+
+    public function testIsClass()
+    {
+        $this->assertTrue(Locator::isClass('.username'));
+        $this->assertTrue(Locator::isClass('.name'));
+        $this->assertTrue(Locator::isClass('.user-name'));
+        $this->assertFalse(Locator::isClass('.user-name .field'));
+        $this->assertFalse(Locator::isClass('#field'));
+        $this->assertFalse(Locator::isClass('hello'));
     }
 
     public function testContains()

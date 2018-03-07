@@ -14,7 +14,7 @@ interface Web
      * $I->amOnPage('/register');
      * ```
      *
-     * @param $page
+     * @param string $page
      */
     public function amOnPage($page);
 
@@ -26,9 +26,10 @@ interface Web
      *
      * ``` php
      * <?php
-     * $I->see('Logout');                 // I can suppose user is logged in
-     * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
-     * $I->see('Sign Up', '//body/h1');   // with XPath
+     * $I->see('Logout');                        // I can suppose user is logged in
+     * $I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
+     * $I->see('Sign Up', '//body/h1');          // with XPath
+     * $I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
      * ```
      *
      * Note that the search is done after stripping all HTML tags from the body,
@@ -45,8 +46,8 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param      $text
-     * @param null $selector
+     * @param string $text
+     * @param string $selector optional
      */
     public function see($text, $selector = null);
 
@@ -56,9 +57,10 @@ interface Web
      *
      * ```php
      * <?php
-     * $I->dontSee('Login');                    // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
-     * $I->dontSee('Sign Up','//body/h1');      // with XPath
+     * $I->dontSee('Login');                         // I can suppose user is already logged in
+     * $I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
+     * $I->dontSee('Sign Up','//body/h1');           // with XPath
+     * $I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
      * ```
      *
      * Note that the search is done after stripping all HTML tags from the body,
@@ -75,8 +77,8 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param      $text
-     * @param null $selector
+     * @param string $text
+     * @param string $selector optional
      */
     public function dontSee($text, $selector = null);
     
@@ -107,7 +109,7 @@ interface Web
     public function dontSeeInSource($raw);
 
     /**
-     * Submits the given form on the page, optionally with the given form
+     * Submits the given form on the page, with the given form
      * values.  Pass the form field's values as an array in the second
      * parameter.
      *
@@ -323,8 +325,8 @@ interface Web
      * ?>
      * ```
      *
-     * @param      $text
-     * @param null $url
+     * @param string $text
+     * @param string $url optional
      */
     public function seeLink($text, $url = null);
 
@@ -339,8 +341,8 @@ interface Web
      * ?>
      * ```
      *
-     * @param $text
-     * @param null $url
+     * @param string $text
+     * @param string $url optional
      */
     public function dontSeeLink($text, $url = null);
 
@@ -356,7 +358,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeInCurrentUrl($uri);
 
@@ -371,7 +373,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeCurrentUrlEquals($uri);
 
@@ -385,7 +387,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeCurrentUrlMatches($uri);
 
@@ -398,7 +400,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeInCurrentUrl($uri);
 
@@ -413,7 +415,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeCurrentUrlEquals($uri);
 
@@ -427,12 +429,12 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeCurrentUrlMatches($uri);
 
     /**
-     * Executes the given regular expression against the current URI and returns the first match.
+     * Executes the given regular expression against the current URI and returns the first capturing group.
      * If no parameters are provided, the full URI is returned.
      *
      * ``` php
@@ -442,7 +444,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param null $uri
+     * @param string $uri optional
      *
      * @return mixed
      */
@@ -478,8 +480,8 @@ interface Web
     public function dontSeeCheckboxIsChecked($checkbox);
 
     /**
-     * Checks that the given input field or textarea contains the given value.
-     * For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
+     * Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
+     * Fields are matched by label text, the "name" attribute, CSS, or XPath.
      *
      * ``` php
      * <?php
@@ -649,7 +651,7 @@ interface Web
      * $I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
      * ?>
-     + ```
+     * ```
      *
      * @param $select
      * @param $option
@@ -696,9 +698,9 @@ interface Web
      * @param $value
      */
     public function fillField($field, $value);
-
+    
     /**
-     * Attaches a file relative to the Codeception data directory to the given file upload field.
+     * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
      *
      * ``` php
      * <?php
@@ -841,13 +843,11 @@ interface Web
      * ``` php
      * <?php
      * $I->seeNumberOfElements('tr', 10);
-     * $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
+     * $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
      * ?>
      * ```
      * @param $selector
-     * @param mixed $expected :
-     * - string: strict number
-     * - array: range of numbers [0,10]
+     * @param mixed $expected int or int[]
      */
     public function seeNumberOfElements($selector, $expected);
 
@@ -973,4 +973,11 @@ interface Web
      * @return mixed
      */
     public function grabCookie($cookie, array $params = []);
+
+    /**
+     * Grabs current page source code.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource();
 }
