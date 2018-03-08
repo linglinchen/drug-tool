@@ -7,6 +7,7 @@ use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response as ZendResponse;
 use Zend\Expressive\Application;
 use Zend\Diactoros\UploadedFile;
 
@@ -126,9 +127,9 @@ class ZendExpressive extends Client
         $headers = [];
         $server = $request->getServer();
 
-        $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
+        $contentHeaders = array('Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true);
         foreach ($server as $header => $val) {
-            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
+            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
 
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;

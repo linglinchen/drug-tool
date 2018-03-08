@@ -120,7 +120,7 @@ class EventFiringWebDriver implements WebDriver, JavaScriptExecutor
     {
         $this->dispatch('beforeFindBy', $by, null, $this);
         try {
-            $elements = [];
+            $elements = array();
             foreach ($this->driver->findElements($by) as $element) {
                 $elements[] = $this->newElement($element);
             }
@@ -156,7 +156,7 @@ class EventFiringWebDriver implements WebDriver, JavaScriptExecutor
      * @throws WebDriverException
      * @return mixed
      */
-    public function executeScript($script, array $arguments = [])
+    public function executeScript($script, array $arguments = array())
     {
         if (!$this->driver instanceof JavaScriptExecutor) {
             throw new UnsupportedOperationException(
@@ -181,7 +181,7 @@ class EventFiringWebDriver implements WebDriver, JavaScriptExecutor
      * @throws WebDriverException
      * @return mixed
      */
-    public function executeAsyncScript($script, array $arguments = [])
+    public function executeAsyncScript($script, array $arguments = array())
     {
         if (!$this->driver instanceof JavaScriptExecutor) {
             throw new UnsupportedOperationException(

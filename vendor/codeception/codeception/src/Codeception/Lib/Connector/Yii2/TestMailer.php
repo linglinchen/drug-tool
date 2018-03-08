@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Connector\Yii2;
 
 use yii\mail\BaseMailer;
+use yii\mail\BaseMessage;
 
 class TestMailer extends BaseMailer
 {

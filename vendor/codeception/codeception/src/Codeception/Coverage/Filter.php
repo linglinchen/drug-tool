@@ -2,14 +2,13 @@
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
-use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Symfony\Component\Finder\Finder;
 
 class Filter
 {
     /**
-     * @var \SebastianBergmann\CodeCoverage\CodeCoverage
+     * @var \PHP_CodeCoverage
      */
     protected $phpCodeCoverage = null;
 
@@ -19,31 +18,31 @@ class Filter
     protected static $c3;
 
     /**
-     * @var \SebastianBergmann\CodeCoverage\Filter
+     * @var \PHP_CodeCoverage_Filter
      */
     protected $filter = null;
 
-    public function __construct(\SebastianBergmann\CodeCoverage\CodeCoverage $phpCoverage)
+    public function __construct(\PHP_CodeCoverage $phpCoverage)
     {
         $this->phpCodeCoverage = $phpCoverage
             ? $phpCoverage
-            : new \SebastianBergmann\CodeCoverage\CodeCoverage;
+            : new \PHP_CodeCoverage;
 
         $this->filter = $this->phpCodeCoverage->filter();
     }
 
     /**
-     * @param \SebastianBergmann\CodeCoverage\CodeCoverage $phpCoverage
+     * @param \PHP_CodeCoverage $phpCoverage
      * @return Filter
      */
-    public static function setup(\SebastianBergmann\CodeCoverage\CodeCoverage $phpCoverage)
+    public static function setup(\PHP_CodeCoverage $phpCoverage)
     {
         self::$c3 = new self($phpCoverage);
         return self::$c3;
     }
 
     /**
-     * @return null|\SebastianBergmann\CodeCoverage\CodeCoverage
+     * @return null|\PHP_CodeCoverage
      */
     public function getPhpCodeCoverage()
     {
@@ -72,12 +71,9 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['include'])) {
-            if (!is_array($coverage['whitelist']['include'])) {
-                throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
-            }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                    ? [$fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -87,12 +83,9 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['exclude'])) {
-            if (!is_array($coverage['whitelist']['exclude'])) {
-                throw new ConfigurationException('Error parsing yaml. Config `whitelist: exclude:` should be an array');
-            }
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                    ? [$fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -123,7 +116,7 @@ class Filter
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                        ? [$fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -134,7 +127,7 @@ class Filter
             if (isset($coverage['blacklist']['exclude'])) {
                 foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                        ? [$fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -166,7 +159,7 @@ class Filter
     }
 
     /**
-     * @return \SebastianBergmann\CodeCoverage\Filter
+     * @return \PHP_CodeCoverage_Filter
      */
     public function getFilter()
     {

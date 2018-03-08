@@ -13,9 +13,14 @@ class Test
     protected $template = <<<EOF
 <?php
 {{namespace}}
+
 class {{name}}Test extends \Codeception\Test\Unit
 {
-{{tester}}
+    /**
+     * @var \{{actorClass}}
+     */
+    protected \${{actor}};
+
     protected function _before()
     {
     }
@@ -25,21 +30,12 @@ class {{name}}Test extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testSomeFeature()
+    public function testMe()
     {
 
     }
 }
 EOF;
-
-    protected $testerTemplate = <<<EOF
-    /**
-     * @var \{{actorClass}}
-     */
-    protected \${{actor}};
-    
-EOF;
-
 
     protected $settings;
     protected $name;
@@ -52,25 +48,18 @@ EOF;
 
     public function produce()
     {
-        $actor = $this->settings['actor'];
+        $actor = $this->settings['class_name'];
         if ($this->settings['namespace']) {
             $actor = $this->settings['namespace'] . '\\' . $actor;
         }
 
         $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
 
-        $tester = '';
-        if ($this->settings['actor']) {
-            $tester = (new Template($this->testerTemplate))
-            ->place('actorClass', $actor)
-            ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
-            ->produce();
-        }
-
         return (new Template($this->template))
             ->place('namespace', $ns)
             ->place('name', $this->getShortClassName($this->name))
-            ->place('tester', $tester)
+            ->place('actorClass', $actor)
+            ->place('actor', lcfirst(Configuration::config()['actor']))
             ->produce();
     }
 }

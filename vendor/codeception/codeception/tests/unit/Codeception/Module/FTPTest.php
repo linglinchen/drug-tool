@@ -12,7 +12,7 @@ use Codeception\Util\Stub;
  * Contact: nathan.macnamara@outlook.com
  *
  */
-class FTPTest extends \PHPUnit\Framework\TestCase
+class FTPTest extends \PHPUnit_Framework_TestCase
 {
     protected $config = array(
         'host' => '127.0.0.1',
@@ -31,7 +31,7 @@ class FTPTest extends \PHPUnit\Framework\TestCase
         $this->module = new \Codeception\Module\FTP(make_container());
         $this->module->_setConfig($this->config);
 
-        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
+        $this->module->_before(Stub::make('\Codeception\TestCase'));
     }
 
     /**
@@ -119,6 +119,6 @@ class FTPTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown()
     {
-        $this->module->_after(Stub::makeEmpty('\Codeception\Test\Test'));
+        $this->module->_after();
     }
 }

@@ -7,38 +7,39 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
+use Doctrine\ORM\EntityManager;
 use Codeception\Util\Stub;
 
 /**
- * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
+ * Allows integration and testing for projects with Doctrine2 ORM.
+ * Doctrine2 uses EntityManager to perform all database operations.
  *
- * When used with Zend Framework 2 or Symfony2, Doctrine's Entity Manager is automatically retrieved from Service Locator.
- * Set up your `functional.suite.yml` like this:
+ * When using with Zend Framework 2 or Symfony2 Doctrine connection is automatically retrieved from Service Locator.
+ * In this case you should include either **Symfony** or **ZF2** module and specify it as dependent for Doctrine:
  *
  * ```
  * modules:
  *     enabled:
- *         - Symfony # 'ZF2' or 'Symfony'
+ *         - Symfony
  *         - Doctrine2:
  *             depends: Symfony
- *             cleanup: true # All doctrine queries will be wrapped in a transaction, which will be rolled back at the end of each test
  * ```
  *
- * If you don't use Symfony or Zend Framework, you need to specify a callback function to retrieve the Entity Manager:
+ * If you don't use any of frameworks above, you should specify a callback function to receive entity manager:
  *
  * ```
  * modules:
  *     enabled:
  *         - Doctrine2:
  *             connection_callback: ['MyDb', 'createEntityManager']
- *             cleanup: true # All doctrine queries will be wrapped in a transaction, which will be rolled back at the end of each test
  *
  * ```
  *
- * This will use static method of `MyDb::createEntityManager()` to establish the Entity Manager.
+ * This will use static method of `MyDb::createEntityManager()` to establish EntityManager.
  *
- * By default, the module will wrap everything into a transaction for each test and roll it back afterwards. By doing this
- * tests will run much faster and will be isolated from each other.
+ * By default module will wrap everything into transaction for each test and rollback it afterwards. By doing this
+ * tests won't write anything to database, and so will run much faster and will be isolate dfrom each other.
+ * This behavior can be changed by specifying `cleanup: false` in config.
  *
  * ## Status
  *
@@ -47,6 +48,17 @@ use Codeception\Util\Stub;
  * * Contact: codecept@davert.mail.ua
  *
  * ## Config
+ *
+ * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+ * * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
+ *
+ *  ### Example (`functional.suite.yml`)
+ *
+ *      modules:
+ *         enabled: [Doctrine2]
+ *         config:
+ *            Doctrine2:
+ *               cleanup: false
  *
  * ## Public Properties
  *
@@ -79,7 +91,7 @@ modules:
 EOF;
 
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface
+     * @var \Doctrine\ORM\EntityManager
      */
     public $em = null;
 
@@ -111,7 +123,6 @@ EOF;
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
             $this->em->getConnection()->beginTransaction();
-            $this->debugSection('Database', 'Transaction started');
         }
     }
 
@@ -137,10 +148,10 @@ EOF;
         }
 
 
-        if (!($this->em instanceof \Doctrine\ORM\EntityManagerInterface)) {
+        if (!($this->em instanceof \Doctrine\ORM\EntityManager)) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManagerInterface.\n"
+                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n"
                 . "Use `connection_callback` or dependent framework modules to specify one"
             );
         }
@@ -150,13 +161,12 @@ EOF;
 
     public function _after(TestInterface $test)
     {
-        if (!$this->em instanceof \Doctrine\ORM\EntityManagerInterface) {
+        if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
             return;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
                 $this->em->getConnection()->rollback();
-                $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
         }
@@ -259,46 +269,16 @@ EOF;
                 $methods
             )
         );
-
         $em->clear();
         $reflectedEm = new \ReflectionClass($em);
-
-
         if ($reflectedEm->hasProperty('repositories')) {
-            //Support doctrine versions before 2.4.0
-
             $property = $reflectedEm->getProperty('repositories');
             $property->setAccessible(true);
             $property->setValue($em, array_merge($property->getValue($em), [$classname => $mock]));
-        } elseif ($reflectedEm->hasProperty('repositoryFactory')) {
-            //For doctrine 2.4.0+ versions
-
-            $repositoryFactoryProperty = $reflectedEm->getProperty('repositoryFactory');
-            $repositoryFactoryProperty->setAccessible(true);
-            $repositoryFactory = $repositoryFactoryProperty->getValue($em);
-
-            $reflectedRepositoryFactory = new \ReflectionClass($repositoryFactory);
-
-            if ($reflectedRepositoryFactory->hasProperty('repositoryList')) {
-                $repositoryListProperty = $reflectedRepositoryFactory->getProperty('repositoryList');
-                $repositoryListProperty->setAccessible(true);
-
-                $repositoryListProperty->setValue(
-                    $repositoryFactory,
-                    [$classname => $mock]
-                );
-
-                $repositoryFactoryProperty->setValue($em, $repositoryFactory);
-            } else {
-                $this->debugSection(
-                    'Warning',
-                    'Repository can\'t be mocked, the EventManager\'s repositoryFactory doesn\'t have "repositoryList" property'
-                );
-            }
         } else {
             $this->debugSection(
                 'Warning',
-                'Repository can\'t be mocked, the EventManager class doesn\'t have "repositoryFactory" or "repositories" property'
+                'Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property'
             );
         }
     }
@@ -336,14 +316,15 @@ EOF;
     }
 
     /**
-     * Flushes changes to database, and executes a query with parameters defined in an array.
+     * Flushes changes to database executes a query defined by array.
+     * It builds query based on array of parameters.
      * You can use entity associations to build complex queries.
      *
      * Example:
      *
      * ``` php
      * <?php
-     * $I->seeInRepository('AppBundle:User', array('name' => 'davert'));
+     * $I->seeInRepository('User', array('name' => 'davert'));
      * $I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
      * $I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
      * ?>
@@ -361,7 +342,7 @@ EOF;
     }
 
     /**
-     * Flushes changes to database and performs `findOneBy()` call for current repository.
+     * Flushes changes to database and performs ->findOneBy() call for current repository.
      *
      * @param $entity
      * @param array $params
@@ -417,70 +398,6 @@ EOF;
     }
 
     /**
-     * Selects entities from repository.
-     * It builds query based on array of parameters.
-     * You can use entity associations to build complex queries.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $users = $I->grabEntitiesFromRepository('AppBundle:User', array('name' => 'davert'));
-     * ?>
-     * ```
-     *
-     * @version 1.1
-     * @param $entity
-     * @param array $params
-     * @return array
-     */
-    public function grabEntitiesFromRepository($entity, $params = [])
-    {
-        // we need to store to database...
-        $this->em->flush();
-        $data = $this->em->getClassMetadata($entity);
-        $qb = $this->em->getRepository($entity)->createQueryBuilder('s');
-        $qb->select('s');
-        $this->buildAssociationQuery($qb, $entity, 's', $params);
-        $this->debug($qb->getDQL());
-        
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Selects a single entity from repository.
-     * It builds query based on array of parameters.
-     * You can use entity associations to build complex queries.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $user = $I->grabEntityFromRepository('User', array('id' => '1234'));
-     * ?>
-     * ```
-     *
-     * @version 1.1
-     * @param $entity
-     * @param array $params
-     * @return object
-     */
-    public function grabEntityFromRepository($entity, $params = [])
-    {
-        // we need to store to database...
-        $this->em->flush();
-        $data = $this->em->getClassMetadata($entity);
-        $qb = $this->em->getRepository($entity)->createQueryBuilder('s');
-        $qb->select('s');
-        $this->buildAssociationQuery($qb, $entity, 's', $params);
-        $this->debug($qb->getDQL());
-        
-        return $qb->getQuery()->getSingleResult();
-    }
-
-    
-
-    /**
      * It's Fuckin Recursive!
      *
      * @param $qb
@@ -495,14 +412,14 @@ EOF;
             if (isset($data->associationMappings)) {
                 if ($map = array_key_exists($key, $data->associationMappings)) {
                     if (is_array($val)) {
-                        $qb->innerJoin("$alias.$key", "_$key");
+                        $qb->innerJoin("$alias.$key", $key);
                         foreach ($val as $column => $v) {
                             if (is_array($v)) {
                                 $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
                                 continue;
                             }
-                            $paramname = "_$key" . '__' . $column;
-                            $qb->andWhere("_$key.$column = :$paramname");
+                            $paramname = $key . '__' . $column;
+                            $qb->andWhere("$key.$column = :$paramname");
                             $qb->setParameter($paramname, $v);
                         }
                         continue;
@@ -521,9 +438,6 @@ EOF;
 
     public function _getEntityManager()
     {
-        if (is_null($this->em)) {
-            $this->retrieveEntityManager();
-        }
         return $this->em;
     }
 }

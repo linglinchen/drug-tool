@@ -7,7 +7,7 @@ use League\Flysystem\AdapterInterface;
 abstract class AbstractAdapter implements AdapterInterface
 {
     /**
-     * @var string|null path prefix
+     * @var string path prefix
      */
     protected $pathPrefix;
 
@@ -21,24 +21,23 @@ abstract class AbstractAdapter implements AdapterInterface
      *
      * @param string $prefix
      *
-     * @return void
+     * @return self
      */
     public function setPathPrefix($prefix)
     {
-        $prefix = (string) $prefix;
+        $is_empty = empty($prefix);
 
-        if ($prefix === '') {
-            $this->pathPrefix = null;
-            return;
+        if ( ! $is_empty) {
+            $prefix = rtrim($prefix, $this->pathSeparator) . $this->pathSeparator;
         }
 
-        $this->pathPrefix = rtrim($prefix, '\\/') . $this->pathSeparator;
+        $this->pathPrefix = $is_empty ? null : $prefix;
     }
 
     /**
      * Get the path prefix.
      *
-     * @return string|null path prefix or null if pathPrefix is empty
+     * @return string path prefix
      */
     public function getPathPrefix()
     {
@@ -54,7 +53,17 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     public function applyPathPrefix($path)
     {
-        return $this->getPathPrefix() . ltrim($path, '\\/');
+        $path = ltrim($path, '\\/');
+
+        if (strlen($path) === 0) {
+            return $this->getPathPrefix() ?: '';
+        }
+
+        if ($prefix = $this->getPathPrefix()) {
+            $path = $prefix . $path;
+        }
+
+        return $path;
     }
 
     /**
@@ -66,6 +75,12 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     public function removePathPrefix($path)
     {
-        return substr($path, strlen($this->getPathPrefix()));
+        $pathPrefix = $this->getPathPrefix();
+
+        if ($pathPrefix === null) {
+            return $path;
+        }
+
+        return substr($path, strlen($pathPrefix));
     }
 }

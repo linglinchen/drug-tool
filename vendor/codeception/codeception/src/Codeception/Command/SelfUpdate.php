@@ -41,11 +41,7 @@ class SelfUpdate extends Command
      */
     protected function configure()
     {
-        if (isset($_SERVER['argv'], $_SERVER['argv'][0])) {
-            $this->filename = $_SERVER['argv'][0];
-        } else {
-            $this->filename = \Phar::running(false);
-        }
+        $this->filename = $_SERVER['argv'][0];
 
         $this
             // ->setAliases(array('selfupdate'))
@@ -302,7 +298,7 @@ class SelfUpdate extends Command
     protected function getPharUrl($version)
     {
         $sourceUrl = self::PHAR_URL;
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '5.6.0', '<')) {
             $sourceUrl = self::PHAR_URL_PHP54;
         }
 

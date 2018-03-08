@@ -6,6 +6,7 @@ use Codeception\Lib\Generator\Group as GroupGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -32,16 +33,16 @@ class GenerateGroup extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->getGlobalConfig();
+        $config = $this->getGlobalConfig($input->getOption('config'));
         $group = $input->getArgument('group');
 
         $class = ucfirst($group);
-        $path = $this->createDirectoryFor(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);
+        $path = $this->buildPath(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);
 
         $filename = $path . $class . '.php';
 
         $gen = new GroupGenerator($config, $group);
-        $res = $this->createFile($filename, $gen->produce());
+        $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
             $output->writeln("<error>Group $filename already exists</error>");

@@ -6,6 +6,7 @@ use Codeception\Lib\Generator\Helper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -35,12 +36,12 @@ class GenerateHelper extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $name = ucfirst($input->getArgument('name'));
-        $config = $this->getGlobalConfig();
+        $config = Configuration::config($input->getOption('config'));
 
-        $path = $this->createDirectoryFor(Configuration::supportDir() . 'Helper', $name);
-        $filename = $path . $this->getShortClassName($name) . '.php';
+        $path = $this->buildPath(Configuration::supportDir() . 'Helper', $name);
+        $filename = $path . $this->getClassName($name) . '.php';
 
-        $res = $this->createFile($filename, (new Helper($name, $config['namespace']))->produce());
+        $res = $this->save($filename, (new Helper($name, $config['namespace']))->produce());
         if ($res) {
             $output->writeln("<info>Helper $filename created</info>");
         } else {

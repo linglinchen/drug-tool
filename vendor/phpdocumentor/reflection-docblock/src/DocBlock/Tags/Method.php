@@ -91,15 +91,11 @@ final class Method extends BaseTag implements Factory\StaticMethod
                 )?
                 # Return type
                 (?:
-                    (   
-                        (?:[\w\|_\\\\]*\$this[\w\|_\\\\]*)
-                        |
-                        (?:
-                            (?:[\w\|_\\\\]+)
-                            # array notation           
-                            (?:\[\])*
-                        )*
-                    )
+                    (
+                        (?:[\w\|_\\\\]+)
+                        # array notation           
+                        (?:\[\])*
+                    )?
                     \s+
                 )?
                 # Legacy method name (not captured)
@@ -125,18 +121,13 @@ final class Method extends BaseTag implements Factory\StaticMethod
         list(, $static, $returnType, $methodName, $arguments, $description) = $matches;
 
         $static      = $static === 'static';
-
-        if ($returnType === '') {
-            $returnType = 'void';
-        }
-
         $returnType  = $typeResolver->resolve($returnType, $context);
         $description = $descriptionFactory->create($description, $context);
 
-        if (is_string($arguments) && strlen($arguments) > 0) {
+        if ('' !== $arguments) {
             $arguments = explode(',', $arguments);
             foreach($arguments as &$argument) {
-                $argument = explode(' ', self::stripRestArg(trim($argument)), 2);
+                $argument = explode(' ', trim($argument));
                 if ($argument[0][0] === '$') {
                     $argumentName = substr($argument[0], 1);
                     $argumentType = new Void_();
@@ -144,7 +135,6 @@ final class Method extends BaseTag implements Factory\StaticMethod
                     $argumentType = $typeResolver->resolve($argument[0], $context);
                     $argumentName = '';
                     if (isset($argument[1])) {
-                        $argument[1] = self::stripRestArg($argument[1]);
                         $argumentName = substr($argument[1], 1);
                     }
                 }
@@ -201,11 +191,11 @@ final class Method extends BaseTag implements Factory\StaticMethod
             $arguments[] = $argument['type'] . ' $' . $argument['name'];
         }
 
-        return trim(($this->isStatic() ? 'static ' : '')
+        return ($this->isStatic() ? 'static ' : '')
             . (string)$this->returnType . ' '
             . $this->methodName
             . '(' . implode(', ', $arguments) . ')'
-            . ($this->description ? ' ' . $this->description->render() : ''));
+            . ($this->description ? ' ' . $this->description->render() : '');
     }
 
     private function filterArguments($arguments)
@@ -226,14 +216,5 @@ final class Method extends BaseTag implements Factory\StaticMethod
         }
 
         return $arguments;
-    }
-
-    private static function stripRestArg($argument)
-    {
-        if (strpos($argument, '...') === 0) {
-            $argument = trim(substr($argument, 3));
-        }
-
-        return $argument;
     }
 }

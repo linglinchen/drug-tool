@@ -2,7 +2,6 @@
 namespace Codeception\Test;
 
 use Codeception\Exception\InjectionException;
-use Codeception\Util\Annotation;
 
 class Metadata
 {
@@ -10,24 +9,29 @@ class Metadata
     protected $filename;
     protected $feature;
 
-    protected $params = [
-        'env' => [],
-        'group' => [],
-        'depends' => [],
-        'skip' => null,
-        'incomplete' => null
-    ];
+    protected $env = [];
+    protected $groups = [];
+    protected $dependencies = [];
+    protected $skip = null;
+    protected $incomplete = null;
 
     protected $current = [];
     protected $services = [];
-    protected $reports = [];
 
     /**
      * @return mixed
      */
     public function getEnv()
     {
-        return $this->params['env'];
+        return $this->env;
+    }
+
+    /**
+     * @param mixed $env
+     */
+    public function setEnv($env)
+    {
+        $this->env = $env;
     }
 
     /**
@@ -35,7 +39,7 @@ class Metadata
      */
     public function getGroups()
     {
-        return array_unique($this->params['group']);
+        return array_unique($this->groups);
     }
 
     /**
@@ -43,7 +47,7 @@ class Metadata
      */
     public function setGroups($groups)
     {
-        $this->params['group'] = array_merge($this->params['group'], $groups);
+        $this->groups = array_merge($this->groups, $groups);
     }
 
     /**
@@ -51,7 +55,7 @@ class Metadata
      */
     public function getSkip()
     {
-        return $this->params['skip'];
+        return $this->skip;
     }
 
     /**
@@ -59,7 +63,7 @@ class Metadata
      */
     public function setSkip($skip)
     {
-        $this->params['skip'] = $skip;
+        $this->skip = $skip;
     }
 
     /**
@@ -67,7 +71,7 @@ class Metadata
      */
     public function getIncomplete()
     {
-        return $this->params['incomplete'];
+        return $this->incomplete;
     }
 
     /**
@@ -75,25 +79,21 @@ class Metadata
      */
     public function setIncomplete($incomplete)
     {
-        $this->params['incomplete'] = $incomplete;
+        $this->incomplete = $incomplete;
     }
 
     /**
-     * @param string|null $key
-     * @return mixed
+     * @param null $key
+     * @return array
      */
     public function getCurrent($key = null)
     {
+        if ($key && isset($this->current[$key])) {
+            return $this->current[$key];
+        }
         if ($key) {
-            if (isset($this->current[$key])) {
-                return $this->current[$key];
-            }
-            if ($key === 'name') {
-                return $this->getName();
-            }
             return null;
         }
-
         return $this->current;
     }
 
@@ -139,12 +139,20 @@ class Metadata
      */
     public function getDependencies()
     {
-        return $this->params['depends'];
+        return $this->dependencies;
+    }
+
+    /**
+     * @param array $dependencies
+     */
+    public function setDependencies($dependencies)
+    {
+        $this->dependencies = $dependencies;
     }
 
     public function isBlocked()
     {
-        return $this->getSkip() !== null || $this->getIncomplete() !== null;
+        return $this->skip !== null || $this->incomplete !== null;
     }
 
     /**
@@ -182,64 +190,5 @@ class Metadata
     public function setServices($services)
     {
         $this->services = $services;
-    }
-
-    /**
-     * Returns all test reports
-     * @return array
-     */
-    public function getReports()
-    {
-        return $this->reports;
-    }
-
-    /**
-     * @param $type
-     * @param $report
-     */
-    public function addReport($type, $report)
-    {
-        $this->reports[$type] = $report;
-    }
-
-    /**
-     * Returns test params like: env, group, skip, incomplete, etc
-     * Can return by annotation or return all if no key passed
-     *
-     * @param null $key
-     * @return array|mixed|null
-     */
-    public function getParam($key = null)
-    {
-        if ($key) {
-            if (isset($this->params[$key])) {
-                return $this->params[$key];
-            }
-            return null;
-        }
-
-        return $this->params;
-    }
-
-    /**
-     * @param mixed $annotations
-     */
-    public function setParamsFromAnnotations($annotations)
-    {
-        $params = Annotation::fetchAllAnnotationsFromDocblock($annotations);
-        $this->params = array_merge_recursive($this->params, $params);
-
-        // set singular value for some params
-        foreach (['skip', 'incomplete'] as $single) {
-            $this->params[$single] = empty($this->params[$single]) ? null : (string) $this->params[$single][0];
-        }
-    }
-
-    /**
-     * @param $params
-     */
-    public function setParams($params)
-    {
-        $this->params = array_merge_recursive($this->params, $params);
     }
 }

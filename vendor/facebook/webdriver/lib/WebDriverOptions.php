@@ -35,17 +35,18 @@ class WebDriverOptions
      * Add a specific cookie.
      *
      * Here are the valid attributes of a cookie array.
-     *  'name'    : string The name of the cookie; may not be null or an empty string.
-     *  'value'   : string The cookie value; may not be null.
-     *  'path'    : string OPTIONAL The path the cookie is visible to. Defaults to "/" if omitted.
-     *  'domain'  : string OPTIONAL The domain the cookie is visible to. Defaults to the current browsing context's
-     *                     document's URL domain if omitted.
-     *  'secure'  : bool   OPTIONAL Whether this cookie requires a secure connection (https). Defaults to false if
-     *                     omitted.
-     *  'httpOnly': bool   OPTIONAL Whether the cookie is an HTTP only cookie. Defaults to false if omitted.
-     *  'expiry'  : int    OPTIONAL The cookie's expiration date, specified in seconds since Unix Epoch.
+     *  'name'  : string The name of the cookie; may not be null or an empty
+     *                    string.
+     *  'value' : string The cookie value; may not be null.
+     *  'path'  : string The path the cookie is visible to. If left blank or set
+     *                   to null, will be set to "/".
+     *  'domain': string The domain the cookie is visible to. It should be null or
+     *                   the same as the domain of the current URL.
+     *  'secure': bool   Whether this cookie requires a secure connection(https?).
+     *                   It should be null or equal to the security of the current
+     *                   URL.
+     *  'expiry': int    The cookie's expiration date; may be null.
      *
-     * @see https://w3c.github.io/webdriver/webdriver-spec.html#cookies
      * @param array $cookie An array with key as the attributes mentioned above.
      * @return WebDriverOptions The current instance.
      */
@@ -54,7 +55,7 @@ class WebDriverOptions
         $this->validate($cookie);
         $this->executor->execute(
             DriverCommand::ADD_COOKIE,
-            ['cookie' => $cookie]
+            array('cookie' => $cookie)
         );
 
         return $this;
@@ -82,7 +83,7 @@ class WebDriverOptions
     {
         $this->executor->execute(
             DriverCommand::DELETE_COOKIE,
-            [':name' => $name]
+            array(':name' => $name)
         );
 
         return $this;
@@ -92,7 +93,8 @@ class WebDriverOptions
      * Get the cookie with a given name.
      *
      * @param string $name
-     * @return array The cookie, or null if no cookie with the given name is presented.
+     * @return array The cookie, or null if no cookie with the given name is
+     *               presented.
      */
     public function getCookieNamed($name)
     {
@@ -172,7 +174,7 @@ class WebDriverOptions
     {
         return $this->executor->execute(
             DriverCommand::GET_LOG,
-            ['type' => $log_type]
+            array('type' => $log_type)
         );
     }
 

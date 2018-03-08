@@ -1,5 +1,6 @@
 # Filesystem
 
+
 Module for testing local filesystem.
 Fork it to extend the module for FTP, Amazon S3, others.
 
@@ -11,17 +12,19 @@ Fork it to extend the module for FTP, Amazon S3, others.
 
 Module was developed to test Codeception itself.
 
+
 ## Actions
 
 ### amInPath
-
+ 
 Enters a directory In local filesystem.
 Project root directory is used by default
 
- * `param string` $path
+ * `param` $path
+
 
 ### cleanDir
-
+ 
 Erases directory contents
 
 ``` php
@@ -30,10 +33,11 @@ $I->cleanDir('logs');
 ?>
 ```
 
- * `param string` $dirname
+ * `param` $dirname
+
 
 ### copyDir
-
+ 
 Copies directory with all contents
 
 ``` php
@@ -42,11 +46,12 @@ $I->copyDir('vendor','old_vendor');
 ?>
 ```
 
- * `param string` $src
- * `param string` $dst
+ * `param` $src
+ * `param` $dst
+
 
 ### deleteDir
-
+ 
 Deletes directory with all subdirectories
 
 ``` php
@@ -55,10 +60,11 @@ $I->deleteDir('vendor');
 ?>
 ```
 
- * `param string` $dirname
+ * `param` $dirname
+
 
 ### deleteFile
-
+ 
 Deletes a file
 
 ``` php
@@ -67,21 +73,24 @@ $I->deleteFile('composer.lock');
 ?>
 ```
 
- * `param string` $filename
+ * `param` $filename
+
 
 ### deleteThisFile
-
+ 
 Deletes a file
 
-### dontSeeFileFound
 
+### dontSeeFileFound
+ 
 Checks if file does not exist in path
 
- * `param string` $filename
+ * `param` $filename
  * `param string` $path
 
-### dontSeeInThisFile
 
+### dontSeeInThisFile
+ 
 Checks If opened file doesn't contain `text` in it
 
 ``` php
@@ -91,10 +100,11 @@ $I->dontSeeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param string` $text
+ * `param` $text
+
 
 ### openFile
-
+ 
 Opens a file and stores it's content.
 
 Usage:
@@ -106,10 +116,11 @@ $I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param string` $filename
+ * `param` $filename
+
 
 ### seeFileContentsEqual
-
+ 
 Checks the strict matching of file contents.
 Unlike `seeInThisFile` will fail if file has something more than expected lines.
 Better to use with HEREDOC strings.
@@ -122,10 +133,11 @@ $I->seeFileContentsEqual('3192');
 ?>
 ```
 
- * `param string` $text
+ * `param` $text
+
 
 ### seeFileFound
-
+ 
 Checks if file exists in path.
 Opens a file when it's exists
 
@@ -135,11 +147,12 @@ $I->seeFileFound('UserModel.php','app/models');
 ?>
 ```
 
- * `param string` $filename
+ * `param` $filename
  * `param string` $path
 
-### seeInThisFile
 
+### seeInThisFile
+ 
 Checks If opened file has `text` in it.
 
 Usage:
@@ -151,10 +164,11 @@ $I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param string` $text
+ * `param` $text
+
 
 ### seeNumberNewLines
-
+ 
 Checks If opened file has the `number` of new lines.
 
 Usage:
@@ -168,17 +182,19 @@ $I->seeNumberNewLines(5);
 
  * `param int` $number New lines
 
-### seeThisFileMatches
 
+### seeThisFileMatches
+ 
 Checks that contents of currently opened file matches $regex
 
- * `param string` $regex
+ * `param` $regex
+
 
 ### writeToFile
-
+ 
 Saves contents to file
 
- * `param string` $filename
- * `param string` $contents
+ * `param` $filename
+ * `param` $contents
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>

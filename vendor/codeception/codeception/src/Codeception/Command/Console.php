@@ -6,7 +6,6 @@ use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
@@ -53,7 +52,7 @@ class Console extends Command
         $suiteName = $input->getArgument('suite');
         $this->output = $output;
 
-        $config = Configuration::config();
+        $config = Configuration::config($input->getOption('config'));
         $settings = Configuration::suiteSettings($suiteName, $config);
 
         $options = $input->getOptions();
@@ -81,13 +80,10 @@ class Console extends Command
         ]);
 
         $scenario = new Scenario($this->test);
-        if (!$settings['actor']) {
-            throw new ConfigurationException("Interactive shell can't be started without an actor");
-        }
         if (isset($config["namespace"])) {
-            $settings['actor'] = $config["namespace"] .'\\' . $settings['actor'];
+            $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
         }
-        $actor = $settings['actor'];
+        $actor = $settings['class_name'];
         $I = new $actor($scenario);
 
         $this->listenToSignals();
@@ -103,7 +99,7 @@ class Console extends Command
         $dispatcher->dispatch(Events::TEST_PARSED, new TestEvent($this->test));
         $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
 
-        $output->writeln("\n\n<comment>\$I</comment> = new {$settings['actor']}(\$scenario);");
+        $output->writeln("\n\n<comment>\$I</comment> = new {$settings['class_name']}(\$scenario);");
         $this->executeCommands($input, $output, $I, $settings['bootstrap']);
 
         $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));
@@ -140,7 +136,7 @@ class Console extends Command
                 if ($value && !is_object($value)) {
                     codecept_debug($value);
                 }
-            } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
+            } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
             } catch (\Exception $e) {
                 $output->writeln("<error>error</error> " . $e->getMessage());

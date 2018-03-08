@@ -10,7 +10,7 @@ class Oci extends Db
             "BEGIN
                         FOR i IN (SELECT trigger_name FROM user_triggers)
                           LOOP
-                            EXECUTE IMMEDIATE('DROP TRIGGER ' || user || '.\"' || i.trigger_name || '\"');
+                            EXECUTE IMMEDIATE('DROP TRIGGER ' || user || '.' || i.trigger_name);
                           END LOOP;
                       END;"
         );
@@ -18,7 +18,7 @@ class Oci extends Db
             "BEGIN
                         FOR i IN (SELECT table_name FROM user_tables)
                           LOOP
-                            EXECUTE IMMEDIATE('DROP TABLE ' || user || '.\"' || i.table_name || '\" CASCADE CONSTRAINTS');
+                            EXECUTE IMMEDIATE('DROP TABLE ' || user || '.' || i.table_name || ' CASCADE CONSTRAINTS');
                           END LOOP;
                       END;"
         );
@@ -26,15 +26,7 @@ class Oci extends Db
             "BEGIN
                         FOR i IN (SELECT sequence_name FROM user_sequences)
                           LOOP
-                            EXECUTE IMMEDIATE('DROP SEQUENCE ' || user || '.\"' || i.sequence_name || '\"');
-                          END LOOP;
-                      END;"
-        );
-        $this->dbh->exec(
-            "BEGIN
-                        FOR i IN (SELECT view_name FROM user_views)
-                          LOOP
-                            EXECUTE IMMEDIATE('DROP VIEW ' || user || '.\"' || i.view_name || '\"');
+                            EXECUTE IMMEDIATE('DROP SEQUENCE ' || user || '.' || i.sequence_name);
                           END LOOP;
                       END;"
         );
@@ -69,13 +61,10 @@ class Oci extends Db
             $query .= "\n" . rtrim($sqlLine);
 
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $this->sqlQuery(substr($query, 0, -1 * $delimiterLength));
+                $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
+                $this->sqlQuery($this->sqlToRun);
                 $query = "";
             }
-        }
-
-        if ($query !== '') {
-            $this->sqlQuery($query);
         }
     }
 
@@ -99,7 +88,7 @@ class Oci extends Db
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['COLUMN_NAME'];
+                $primaryKey []= $column['column_name'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

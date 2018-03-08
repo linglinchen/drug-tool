@@ -42,7 +42,7 @@ class RemoteTargetLocator implements WebDriverTargetLocator
      */
     public function defaultContent()
     {
-        $params = ['id' => null];
+        $params = array('id' => null);
         $this->executor->execute(DriverCommand::SWITCH_TO_FRAME, $params);
 
         return $this->driver;
@@ -58,12 +58,12 @@ class RemoteTargetLocator implements WebDriverTargetLocator
     public function frame($frame)
     {
         if ($frame instanceof WebDriverElement) {
-            $id = ['ELEMENT' => $frame->getID()];
+            $id = array('ELEMENT' => $frame->getID());
         } else {
             $id = (string) $frame;
         }
 
-        $params = ['id' => $id];
+        $params = array('id' => $id);
         $this->executor->execute(DriverCommand::SWITCH_TO_FRAME, $params);
 
         return $this->driver;
@@ -78,7 +78,7 @@ class RemoteTargetLocator implements WebDriverTargetLocator
      */
     public function window($handle)
     {
-        $params = ['name' => (string) $handle];
+        $params = array('name' => (string) $handle);
         $this->executor->execute(DriverCommand::SWITCH_TO_WINDOW, $params);
 
         return $this->driver;

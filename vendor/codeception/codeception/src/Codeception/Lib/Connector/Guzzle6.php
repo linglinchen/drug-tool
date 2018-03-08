@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Aws\Credentials\Credentials;
-use Aws\Signature\SignatureV4;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
@@ -27,9 +27,6 @@ class Guzzle6 extends Client
         'headers'         => [],
     ];
     protected $refreshMaxInterval = 0;
-
-    protected $awsCredentials = null;
-    protected $awsSignature = null;
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -59,7 +56,7 @@ class Guzzle6 extends Client
      * Sets the request header to the passed value.  The header will be
      * sent along with the next request.
      *
-     * Passing an empty value clears the header, which is the equivalent
+     * Passing an empty value clears the header, which is the equivelant
      * of calling deleteHeader.
      *
      * @param string $name the name of the header
@@ -163,7 +160,7 @@ class Guzzle6 extends Client
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->client->getConfig('base_uri');
-        if (strpos($uri, '://') === false && strpos($uri, '//') !== 0) {
+        if (strpos($uri, '://') === false) {
             if (strpos($uri, '/') === 0) {
                 $baseUriPath = $baseUri->getPath();
                 if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
@@ -202,11 +199,7 @@ class Guzzle6 extends Client
         }
 
         try {
-            if (null !== $this->awsCredentials) {
-                $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials), $options);
-            } else {
-                $response = $this->client->send($guzzleRequest, $options);
-            }
+            $response = $this->client->send($guzzleRequest, $options);
         } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 throw $e;
@@ -223,7 +216,7 @@ class Guzzle6 extends Client
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
-            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
+            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
             } elseif (isset($contentHeaders[$header])) {
@@ -235,7 +228,7 @@ class Guzzle6 extends Client
 
     protected function extractFormData(BrowserKitRequest $request)
     {
-        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH'])) {
             return null;
         }
 
@@ -330,7 +323,7 @@ class Guzzle6 extends Client
         }
         return new CookieJar(false, $jar);
     }
-
+    
     public static function createHandler($handler)
     {
         if ($handler === 'curl') {
@@ -346,11 +339,5 @@ class Guzzle6 extends Client
             return HandlerStack::create($handler);
         }
         return HandlerStack::create();
-    }
-
-    public function setAwsAuth($config)
-    {
-        $this->awsCredentials = new Credentials($config['key'], $config['secret']);
-        $this->awsSignature = new SignatureV4($config['service'], $config['region']);
     }
 }

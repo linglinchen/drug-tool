@@ -8,7 +8,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GeneratePageObject');
         $this->config = array(
-            'actor' => 'HobbitGuy',
+            'class_name' => 'HobbitGuy',
             'path' => 'tests/shire',
             'paths' => array('tests' => 'tests'),
             'settings' => array('bootstrap' => '_bootstrap.php')
@@ -17,7 +17,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
 
     public function testBasic()
     {
-        unset($this->config['actor']);
+        unset($this->config['class_name']);
         $this->execute(array('suite' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertContains('class Login', $this->content);
@@ -28,7 +28,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
 
     public function testNamespace()
     {
-        unset($this->config['actor']);
+        unset($this->config['class_name']);
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('suite' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);

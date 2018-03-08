@@ -7,7 +7,7 @@ if (!defined('PHPUNIT_TESTSUITE')) {
  * @group core
  * Class SuiteManagerTest
  */
-class SuiteManagerTest extends \PHPUnit\Framework\TestCase
+class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\SuiteManager
@@ -28,10 +28,10 @@ class SuiteManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
-        $settings['actor'] = 'CodeGuy';
+        $settings['class_name'] = 'CodeGuy';
         $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
         
-        $printer = \Codeception\Util\Stub::makeEmpty('PHPUnit\TextUI\ResultPrinter');
+        $printer = \Codeception\Util\Stub::makeEmpty('PHPUnit_TextUI_ResultPrinter');
         $this->runner = new \Codeception\PHPUnit\Runner;
         $this->runner->setPrinter($printer);
     }
@@ -49,8 +49,8 @@ class SuiteManagerTest extends \PHPUnit\Framework\TestCase
         $this->dispatcher->addListener('suite.after', $eventListener);
         $this->suiteman->run(
             $this->runner,
-            new \PHPUnit\Framework\TestResult,
-            ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
+            new \PHPUnit_Framework_TestResult,
+            ['colors' => false, 'steps' => true, 'debug' => false]
         );
         $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
@@ -109,13 +109,13 @@ class SuiteManagerTest extends \PHPUnit\Framework\TestCase
         $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
-        $result = new \PHPUnit\Framework\TestResult;
+        $result = new \PHPUnit_Framework_TestResult;
         $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
         $result->addListener($listener);
         $this->suiteman->run(
             $this->runner,
             $result,
-            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
+            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]
         );
         $this->assertContains('test.before', $events);
         $this->assertContains('test.before.admin', $events);

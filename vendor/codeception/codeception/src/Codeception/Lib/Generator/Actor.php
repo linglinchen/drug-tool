@@ -54,13 +54,9 @@ EOF;
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
 
-        if (!isset($this->settings['actor']) && isset($this->settings['class_name'])) {
-            $this->settings['actor'] = $this->settings['class_name'];
-        }
-
         return (new Template($this->template))
             ->place('hasNamespace', $namespace ? "namespace $namespace;" : '')
-            ->place('actor', $this->settings['actor'])
+            ->place('actor', $this->settings['class_name'])
             ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();
     }
@@ -113,7 +109,7 @@ EOF;
 
     public function getActorName()
     {
-        return $this->settings['actor'];
+        return $this->settings['class_name'];
     }
 
     public function getModules()

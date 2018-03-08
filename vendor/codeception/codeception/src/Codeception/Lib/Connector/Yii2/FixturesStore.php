@@ -2,7 +2,6 @@
 namespace Codeception\Lib\Connector\Yii2;
 
 use yii\test\FixtureTrait;
-use yii\test\InitDbFixture;
 
 class FixturesStore
 {
@@ -24,12 +23,5 @@ class FixturesStore
     public function fixtures()
     {
         return $this->data;
-    }
-
-    public function globalFixtures()
-    {
-        return [
-            InitDbFixture::className()
-        ];
     }
 }

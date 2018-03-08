@@ -1,7 +1,8 @@
 <?php
 
+use Codeception\Util\Stub;
 
-class ConfigurationTest extends \PHPUnit\Framework\TestCase
+class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
 
     public function setUp()

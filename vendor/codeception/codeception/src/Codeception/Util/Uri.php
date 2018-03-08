@@ -37,19 +37,14 @@ class Uri
         }
         if (isset($parts['path'])) {
             $path = $parts['path'];
-            $basePath = $base->getPath();
-            if ((strpos($path, '/') !== 0) && !empty($path)) {
-                if ($basePath) {
-                    // if it ends with a slash, relative paths are below it
-                    if (preg_match('~/$~', $basePath)) {
-                        $path = $basePath . $path;
-                    } else {
-                        // remove double slashes
-                        $dir = rtrim(dirname($basePath), '\\/');
-                        $path = $dir . '/' . $path;
-                    }
+            if ($base->getPath() && (strpos($path, '/') !== 0) && !empty($path)) {
+                // if it ends with a slash, relative paths are below it
+                if (preg_match('~/$~', $base->getPath())) {
+                    $path = $base->getPath() . $path;
                 } else {
-                    $path = '/' . ltrim($path, '/');
+                    // remove double slashes
+                    $dir = rtrim(dirname($base->getPath()), '\\/');
+                    $path = $dir . '/' . $path;
                 }
             }
             $base = $base->withPath($path);
@@ -101,8 +96,8 @@ class Uri
 
         if ($path === '' || $path[0] === '#') {
             return $cutUrl . $path;
+        } else {
+            return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
         }
-
-        return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
     }
 }

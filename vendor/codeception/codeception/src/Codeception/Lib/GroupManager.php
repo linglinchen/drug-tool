@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
+use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
 use Symfony\Component\Finder\Finder;
@@ -42,13 +43,14 @@ class GroupManager
             }
             $files = Finder::create()->files()
                 ->name(basename($pattern))
+                ->path(dirname($pattern))
                 ->sortByName()
-                ->in(Configuration::projectDir().dirname($pattern));
+                ->in(Configuration::projectDir());
 
             $i = 1;
             foreach ($files as $file) {
                 /** @var SplFileInfo $file * */
-                $this->configuredGroups[str_replace('*', $i, $group)] = dirname($pattern).DIRECTORY_SEPARATOR.$file->getRelativePathname();
+                $this->configuredGroups[str_replace('*', $i, $group)] = $file->getRelativePathname();
                 $i++;
             }
             unset($this->configuredGroups[$group]);
@@ -85,7 +87,7 @@ class GroupManager
         }
     }
 
-    public function groupsForTest(\PHPUnit\Framework\Test $test)
+    public function groupsForTest(\PHPUnit_Framework_Test $test)
     {
         $groups = [];
         $filename = Descriptor::getTestFileName($test);
@@ -95,14 +97,14 @@ class GroupManager
         if ($test instanceof Reported) {
             $info = $test->getReportFields();
             if (isset($info['class'])) {
-                $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups($info['class'], $info['name']));
+                $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups($info['class'], $info['name']));
             }
             $filename = str_replace(['\\\\', '//'], ['\\', '/'], $info['file']);
         }
-        if ($test instanceof \PHPUnit\Framework\TestCase) {
-            $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
+        if ($test instanceof \PHPUnit_Framework_TestCase) {
+            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
         }
-        if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
+        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             $firstTest = $test->testAt(0);
             if ($firstTest != false && $firstTest instanceof TestInterface) {
                 $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
@@ -115,16 +117,9 @@ class GroupManager
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
+
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
-                }
-                if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
-                    $firstTest = $test->testAt(0);
-                    if ($firstTest != false && $firstTest instanceof TestInterface) {
-                        if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {
-                            $groups[] = $group;
-                        }
-                    }
                 }
             }
         }

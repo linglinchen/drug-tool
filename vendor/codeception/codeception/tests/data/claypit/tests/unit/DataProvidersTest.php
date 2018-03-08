@@ -8,7 +8,6 @@ class DataProvidersTest extends \Codeception\Test\Unit
     protected $codeGuy;
 
     /**
-     * @group data-providers
      * @dataProvider triangles
      */
     public function testIsTriangle($a, $b, $c)

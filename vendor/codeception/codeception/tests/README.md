@@ -1,6 +1,7 @@
 # Codeception Internal Tests
 
-In case you submit a pull request, you will be asked for writing a test.
+In case you submit pull request you will be asking for writing a test.
+But it's pretty hard to figure out where to start and how to make all tests pass.
 
 There are 3 suites for testing
 
@@ -8,25 +9,9 @@ There are 3 suites for testing
 * coverage - acceptance tests of code coverage
 * unit - all unit/integration/etc tests.
 
-## Set up
-1. Clone the repository to your local machine
-1. Make sure you have the MongoDB extension enabled. It's not included in PHP by default, you can download it from http://pecl.php.net/package/mongodb
-1. Run `composer install` in the cloned project directory
-
-To run the web tests:
-1. Start PHP's internal webserver in the project directory:
-    ```
-    php -S 127.0.0.1:8000 -t tests/data/app
-    ```
-1. Start Selenium server
-1. Run:
-    ```
-    php codecept run web --env chrome
-    ```
-
 ## Unit
 
-The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect, most of tests there are integrational tests. For example, `WebDriverTest` requires an actual Selenium Server to be running.
+The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect most of tests there are integrational tests. For example, `WebDriverTest` require actual selenium server to be executed.
 
 ### Testing a Module
 
@@ -46,7 +31,7 @@ Requirements:
 
 ### Demo Application
 
-When a module requires a web server with the demo application running, you can find this app in `tests/data/app`. To execute tests for **PhpBrowser** or **WebDriver** you need to start a web server for this dir:
+When module require a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
 
 ```
 php -S 127.0.0.1:8000 -t tests/data/app
@@ -54,21 +39,31 @@ php -S 127.0.0.1:8000 -t tests/data/app
 
 If you run `FrameworkTest` for various frameworks, you don't need a web server running.
 
-It is a very basic PHP application developed with `glue` microframework. To add a new html page for a test:
+It is a very basic PHP application developed with `glue` microframework. There are various html pages in `view` subdir that are used in tests. To add a new html page, you should add a file into `tests/data/view`, then add it to routes of `tests/data/app/index.php` file:
 
-1. Create a new file in `tests/data/app/view`
-1. Add a route in `tests/data/app/index.php`
-1. Add a class in `tests/data/app/controllers.php`
+```
+$urls = array(
+    '/' => 'index',
+    '/info' => 'info',
+    '/cookies' => 'cookies',
+    '/search.*' => 'search',
+    '/login' => 'login',
+    '/redirect' => 'redirect',
+    '/facebook\??.*' => 'facebookController',
+    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1)(#)?' => 'form',
+    '/articles\??.*' => 'articles'
+)
+```
 
-To see the page in the browser, open `http://localhost:8000/your-route`
+And into `tests/data/app/controllers.php`.
 
-Then create a test in `tests/web/WebDriverTest.php`, and run it with `php codecept run web WebDriverTest::yourTest --env chrome`
+For regression testing, and real world HTML page examples that you can add a html page into `tests/data/app/view/form/exampleX.php` file and add its name to routes. 
 
 ### How to write module tests
 
-Learn by examples! There are pretty much other tests already written. Please follow their structure.
+Learn by examples! There are pretty much other tests already written. Please follow their structure. 
 
-By default you are supposed to access module methods via `module` property.
+By default you are supposed to access module methods via `module` property. 
 
 ```php
 <?php
@@ -104,6 +99,7 @@ protected function shouldFail()
     $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
 }
 
+
 public function testAppendFieldRadioButtonByValueFails()
 {
     $this->shouldFail();
@@ -118,7 +114,7 @@ public function testAppendFieldRadioButtonByValueFails()
 
 For most cases Codeception is self-tested using acceptance tests in *cli* suite. That is how Codeception core classes are tested. And actually there is no possibility to unit test many cases. Because you can't ask PHPUnit to mock PHPUnit classes.
 
-If you send Pull Request to Codeception core and you don't know how to get it tested, just create new cli test for that. Probably you will need some additional files, maybe another suite configurations, so add them.
+If you send Pull Request to Codeception core and you don't know how to get it tested, just create new cli test for that. Probably you will need some additional files, maybe another suite configurations, so add them. 
 
 That is why Codeception can't have code coverage reports, as we rely on acceptance tests in testing core.
 
@@ -136,7 +132,7 @@ Test cases are:
 * running multi-app tests
 * etc
 
-### Claypit + Sandbox
+### Claypit + Sandbox 
 
 Before each test `tests/data/claypit` is copied to `tests/data/sandbox`, and all the test actions will be executed inside that sandbox. In the end this directory is removed. In sandbox different codeception tests may be executed and checked for exepected output.
 
@@ -166,19 +162,19 @@ Acceptance tests that use demo application and `c3` collector, to check that a c
 
 ### Local testing and development with `docker-compose`
 
-Using `docker-compose` for test configurations
+Using `docker-compose` for test configurations 
 
     cd tests
 
 Build the `codeception/codeception` image
 
     docker-compose build
+    
+Start 
 
-Start
-
-    docker-compose up -d
-
-By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command
+    docker-compose up -d    
+    
+By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command    
 
     docker-compose run --rm codecept help
 
@@ -189,24 +185,25 @@ Run suite
 Run folder
 
     docker-compose run --rm codecept run unit Codeception/Command
-
+    
 Run single test
-
+    
     docker-compose run --rm codecept run cli ExtensionsCest
 
 Development bash
 
     docker-compose run --rm --entrypoint bash codecept
-
+    
 Cleanup
 
     docker-compose run --rm codecept clean
 
 In parallel
-
+    
     docker-compose --project-name test-cli run -d --rm codecept run --html report-cli.html cli & \
     docker-compose --project-name test-unit-command run -d --rm codecept run --html report-unit-command.html unit Codeception/Command & \
     docker-compose --project-name test-unit-constraints run -d --rm codecept run --html report-unit-constraints.html unit Codeception/Constraints
+    
 
 ### Adding services
 

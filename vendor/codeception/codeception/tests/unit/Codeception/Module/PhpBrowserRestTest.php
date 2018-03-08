@@ -1,9 +1,8 @@
 <?php
 
-use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
-class PhpBrowserRestTest extends Unit
+class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\REST
@@ -19,7 +18,7 @@ class PhpBrowserRestTest extends Unit
     {
         $this->phpBrowser = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8010';
-        $this->phpBrowser->_setConfig(['url' => $url]);
+        $this->phpBrowser->_setConfig(array('url' => $url));
         $this->phpBrowser->_initialize();
 
         $this->module = Stub::make('\Codeception\Module\REST');
@@ -42,7 +41,7 @@ class PhpBrowserRestTest extends Unit
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
-        $this->module->seeResponseContainsJson(['name' => 'davert']);
+        $this->module->seeResponseContainsJson(array('name' => 'davert'));
         $this->module->seeResponseCodeIs(200);
         $this->module->dontSeeResponseCodeIs(404);
     }
@@ -55,9 +54,9 @@ class PhpBrowserRestTest extends Unit
 
     public function testPost()
     {
-        $this->module->sendPOST('/rest/user/', ['name' => 'john']);
+        $this->module->sendPOST('/rest/user/', array('name' => 'john'));
         $this->module->seeResponseContains('john');
-        $this->module->seeResponseContainsJson(['name' => 'john']);
+        $this->module->seeResponseContainsJson(array('name' => 'john'));
     }
 
     public function testValidJson()
@@ -71,7 +70,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidJson()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
         $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
@@ -87,7 +86,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidXml()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
         $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
@@ -98,10 +97,10 @@ class PhpBrowserRestTest extends Unit
             '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}'
         );
         $this->module->seeResponseIsJson();
-        $this->module->seeResponseContainsJson(['name' => 'Davert']);
-        $this->module->seeResponseContainsJson(['user' => ['name' => 'Davert']]);
-        $this->module->seeResponseContainsJson(['ticket' => ['title' => 'Bug should be fixed']]);
-        $this->module->seeResponseContainsJson(['ticket' => ['user' => ['name' => 'Davert']]]);
+        $this->module->seeResponseContainsJson(array('name' => 'Davert'));
+        $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
+        $this->module->seeResponseContainsJson(array('ticket' => array('title' => 'Bug should be fixed')));
+        $this->module->seeResponseContainsJson(array('ticket' => array('user' => array('name' => 'Davert'))));
         $this->module->seeResponseContainsJson(array('ticket' => array('labels' => null)));
     }
 
@@ -116,28 +115,13 @@ class PhpBrowserRestTest extends Unit
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
     }
 
+
     public function testArrayJson()
     {
         $this->setStubResponse(
             '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]'
         );
         $this->module->seeResponseContainsJson(array('id' => 1));
-    }
-
-    /**
-     * @issue https://github.com/Codeception/Codeception/issues/4202
-     */
-    public function testSeeResponseContainsJsonFailsGracefullyWhenJsonResultIsNotArray()
-    {
-        $this->shouldFail();
-        $this->setStubResponse(json_encode('no_status'));
-        $this->module->seeResponseContainsJson(array('id' => 1));
-    }
-
-    public function testDontSeeResponseJsonMatchesJsonPathPassesWhenJsonResultIsNotArray()
-    {
-        $this->setStubResponse(json_encode('no_status'));
-        $this->module->dontSeeResponseJsonMatchesJsonPath('$.error');
     }
 
     public function testDontSeeInJson()
@@ -156,21 +140,6 @@ class PhpBrowserRestTest extends Unit
         /** @var $request \Symfony\Component\BrowserKit\Request  **/
         $request = $this->module->client->getRequest();
         $this->assertContains('application/json', $request->getServer());
-        $server = $request->getServer();
-        $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
-        $this->assertJson($request->getContent());
-        $this->assertEmpty($request->getParameters());
-    }
-
-    /**
-     * @issue https://github.com/Codeception/Codeception/issues/3516
-     */
-    public function testApplicationJsonHeaderCheckIsCaseInsensitive()
-    {
-        $this->module->haveHttpHeader('content-type', 'application/json');
-        $this->module->sendPOST('/', array('name' => 'john'));
-        /** @var $request \Symfony\Component\BrowserKit\Request  **/
-        $request = $this->module->client->getRequest();
         $server = $request->getServer();
         $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
         $this->assertJson($request->getContent());
@@ -288,39 +257,8 @@ class PhpBrowserRestTest extends Unit
         $this->module->seeResponseContains('host: "www.example.com"');
     }
 
-    /**
-     * @Issue 4203 https://github.com/Codeception/Codeception/issues/4203
-     * @depends testHostHeader
-     */
-    public function testSessionHeaderBackup()
-    {
-        if (getenv('dependencies') === 'lowest') {
-            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
-        }
-
-        $this->module->haveHttpHeader('Host', 'www.example.com');
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.example.com"');
-
-        $session = $this->phpBrowser->_backupSession();
-
-        $this->module->haveHttpHeader('Host', 'www.localhost.com');
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.localhost.com"');
-
-        $this->phpBrowser->_loadSession($session);
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.example.com"');
-    }
-
     protected function shouldFail()
     {
-        $this->setExpectedException('PHPUnit\Framework\AssertionFailedError');
-    }
-
-    public function testGrabFromCurrentUrl()
-    {
-        $this->module->sendGET('/rest/http-host/');
-        $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 }

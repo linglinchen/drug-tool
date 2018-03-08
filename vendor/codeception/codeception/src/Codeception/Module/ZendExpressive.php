@@ -5,7 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
-use Codeception\Lib\Interfaces\DoctrineProvider;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * This module allows you to run tests inside Zend Expressive.
@@ -28,7 +28,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
  * * client - BrowserKit client
  *
  */
-class ZendExpressive extends Framework implements DoctrineProvider
+class ZendExpressive extends Framework
 {
     protected $config = [
         'container' => 'config/container.php',
@@ -54,22 +54,10 @@ class ZendExpressive extends Framework implements DoctrineProvider
     public function _initialize()
     {
         $cwd = getcwd();
-        $projectDir = Configuration::projectDir();
-        chdir($projectDir);
-        $this->container = require $projectDir . $this->config['container'];
-        $app = $this->container->get('Zend\Expressive\Application');
-
-        $pipelineFile = $projectDir . 'config/pipeline.php';
-        if (file_exists($pipelineFile)) {
-            require $pipelineFile;
-        }
-        $routesFile = $projectDir . 'config/routes.php';
-        if (file_exists($routesFile)) {
-            require $routesFile;
-        }
+        chdir(Configuration::projectDir());
+        $this->container = require Configuration::projectDir() . $this->config['container'];
         chdir($cwd);
-
-        $this->application = $app;
+        $this->application = $this->container->get('Zend\Expressive\Application');
         $this->initResponseCollector();
     }
 
@@ -102,15 +90,5 @@ class ZendExpressive extends Framework implements DoctrineProvider
 
         $this->responseCollector = new ZendExpressiveConnector\ResponseCollector;
         $emitterStack->unshift($this->responseCollector);
-    }
-
-    public function _getEntityManager()
-    {
-        $service = 'Doctrine\ORM\EntityManager';
-        if (!$this->container->has($service)) {
-            throw new \PHPUnit\Framework\AssertionFailedError("Service $service is not available in container");
-        }
-
-        return $this->container->get('Doctrine\ORM\EntityManager');
     }
 }

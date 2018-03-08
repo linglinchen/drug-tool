@@ -6,6 +6,7 @@
 
 namespace Shire;
 use Codeception\Module\Filesystem;
+use Shire\Codeception\Module\TestHelper;
 
 /**
  * Inherited Methods

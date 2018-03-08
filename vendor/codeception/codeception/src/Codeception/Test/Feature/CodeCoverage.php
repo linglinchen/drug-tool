@@ -2,12 +2,11 @@
 namespace Codeception\Test\Feature;
 
 use Codeception\Test\Descriptor;
-use Codeception\Test\Interfaces\StrictCoverage;
 
 trait CodeCoverage
 {
     /**
-     * @return \PHPUnit\Framework\TestResult
+     * @return \PHPUnit_Framework_TestResult
      */
     abstract public function getTestResultObject();
 
@@ -27,16 +26,8 @@ trait CodeCoverage
             return;
         }
 
-        if ($this instanceof StrictCoverage) {
-            $linesToBeCovered = $this->getLinesToBeCovered();
-            $linesToBeUsed = $this->getLinesToBeUsed();
-        } else {
-            $linesToBeCovered = [];
-            $linesToBeUsed = [];
-        }
-
         try {
-            $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
+            $codeCoverage->stop(true);
         } catch (\PHP_CodeCoverage_Exception $cce) {
             if ($status === \Codeception\Test\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);

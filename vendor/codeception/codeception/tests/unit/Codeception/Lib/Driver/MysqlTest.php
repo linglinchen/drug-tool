@@ -1,13 +1,11 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
-use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
- * @group db
  */
-class MysqlTest extends Unit
+class MysqlTest extends \PHPUnit_Framework_TestCase
 {
     protected static $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',
@@ -16,9 +14,6 @@ class MysqlTest extends Unit
     ];
 
     protected static $sql;
-    /**
-     * @var \Codeception\Lib\Driver\MySql
-     */
     protected $mysql;
     
     public static function setUpBeforeClass()
@@ -41,9 +36,8 @@ class MysqlTest extends Unit
         try {
             $this->mysql = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Couldn\'t establish connection to database: ' . $e->getMessage());
+            $this->markTestSkipped('Couldn\'t establish connection to database');
         }
-        $this->mysql->cleanup();
         $this->mysql->load(self::$sql);
     }
     
@@ -126,26 +120,10 @@ class MysqlTest extends Unit
 
     public function testInsertIntoBitField()
     {
-        if (getenv('WERCKER_ROOT')) {
-            $this->markTestSkipped('Disabled on Wercker CI');
-        }
         $res = $this->mysql->executeQuery(
             "insert into `users`(`id`,`name`,`email`,`is_active`,`created_at`) values (?,?,?,?,?)",
             [5,'insert.test','insert.test@mail.ua',false,'2012-02-01 21:17:47']
         );
         $this->assertEquals(1, $res->rowCount());
-    }
-
-    /**
-     * THis will fail if MariaDb is used
-     */
-    public function testLoadThrowsExceptionWhenDumpFileContainsSyntaxError()
-    {
-        $sql = "INSERT INTO `users` (`name`) VALS('')";
-        $expectedMessage = 'You have an error in your SQL syntax; ' .
-            'check the manual that corresponds to your MySQL server version for the right syntax to use near ' .
-            "'VALS('')' at line 1\nSQL query being executed: \n" . $sql;
-        $this->setExpectedException('Codeception\Exception\ModuleException', $expectedMessage);
-        $this->mysql->load([$sql]);
     }
 }

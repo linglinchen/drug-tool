@@ -1,12 +1,10 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\JsonContains;
-use Codeception\PHPUnit\Constraint\JsonType as JsonTypeConstraint;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
@@ -16,6 +14,7 @@ use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Util\JsonArray;
 use Codeception\Util\JsonType;
 use Codeception\Util\XmlStructure;
+use Symfony\Component\BrowserKit\Cookie;
 use Codeception\Util\Soap as XmlUtils;
 
 /**
@@ -59,7 +58,7 @@ class REST extends CodeceptionModule implements DependsOnModule, PartedModule, A
 {
     protected $config = [
         'url' => '',
-        'aws' => ''
+        'xdebug_remote' => false
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -92,6 +91,15 @@ EOF;
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
+
+        if ($this->config['xdebug_remote']
+            && function_exists('xdebug_is_enabled')
+            && ini_get('xdebug.remote_enable')
+            && !$this->isFunctional
+        ) {
+            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
+            $this->client->getCookieJar()->set($cookie);
+        }
     }
 
     protected function resetVariables()
@@ -99,6 +107,9 @@ EOF;
         $this->params = [];
         $this->response = "";
         $this->connectionModule->headers = [];
+        if ($this->client) {
+            $this->client->setServerParameters([]);
+        }
     }
 
     public function _conflicts()
@@ -173,8 +184,6 @@ EOF;
      * ```
      *
      * @param string $name the name of the header to delete.
-     * @part json
-     * @part xml
      */
     public function deleteHeader($name)
     {
@@ -287,9 +296,6 @@ EOF;
      */
     public function amDigestAuthenticated($username, $password)
     {
-        if ($this->isFunctional) {
-            throw new ModuleException(__METHOD__, 'Not supported by functional modules');
-        }
         $this->client->setAuth($username, $password, 'digest');
     }
 
@@ -306,112 +312,13 @@ EOF;
     }
 
     /**
-     * Adds NTLM authentication via username/password.
-     * Requires client to be Guzzle >=6.3.0
-     * Out of scope for functional modules.
+     * Sends a POST request to given uri.
      *
-     * Example:
-     * ```php
-     * <?php
-     * $I->amNTLMAuthenticated('jon_snow', 'targaryen');
-     * ?>
-     * ```
-     *
-     * @param $username
-     * @param $password
-     * @throws ModuleException
-     * @part json
-     * @part xml
-     */
-    public function amNTLMAuthenticated($username, $password)
-    {
-        if ($this->isFunctional) {
-            throw new ModuleException(__METHOD__, 'Not supported by functional modules');
-        }
-        if (!defined('\GuzzleHttp\Client::VERSION')) {
-            throw new ModuleException(__METHOD__, 'Not supported if not using a Guzzle client');
-        }
-        if (version_compare(\GuzzleHttp\Client::VERSION, '6.2.1', 'lt')) {
-            throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option');
-        }
-        $this->client->setAuth($username, $password, 'ntlm');
-    }
-
-    /**
-     * Allows to send REST request using AWS Authorization
-     * Only works with PhpBrowser
-     * Example
-     * Config -
-     *
-     * modules:
-     *      enabled:
-     *          - REST:
-     *              aws:
-     *                  key: accessKey
-     *                  secret: accessSecret
-     *                  service: awsService
-     *                  region: awsRegion
-     *
-     * ```php
-     * <?php
-     * $I->amAWSAuthenticated();
-     * ?>
-     * ```
-     * @param array $additionalAWSConfig
-     * @throws ModuleException
-     */
-    public function amAWSAuthenticated($additionalAWSConfig = [])
-    {
-        if (method_exists($this->client, 'setAwsAuth')) {
-            $config = array_merge($this->config['aws'], $additionalAWSConfig);
-
-            if (!isset($config['key'])) {
-                throw new ConfigurationException('AWS Key is not set');
-            }
-            if (!isset($config['secret'])) {
-                throw new ConfigurationException('AWS Secret is not set');
-            }
-            if (!isset($config['service'])) {
-                throw new ConfigurationException('AWS Service is not set');
-            }
-            if (!isset($config['region'])) {
-                throw new ConfigurationException('AWS Region is not set');
-            }
-
-            $this->client->setAwsAuth($config);
-        }
-    }
-
-    /**
-     * Sends a POST request to given uri. Parameters and files can be provided separately.
-     *
-     * Example:
-     * ```php
-     * <?php
-     * //simple POST call
-     * $I->sendPOST('/message', ['subject' => 'Read this!', 'to' => 'johndoe@example.com']);
-     * //simple upload method
-     * $I->sendPOST('/message/24', ['inline' => 0], ['attachmentFile' => codecept_data_dir('sample_file.pdf')]);
-     * //uploading a file with a custom name and mime-type. This is also useful to simulate upload errors.
-     * $I->sendPOST('/message/24', ['inline' => 0], [
-     *     'attachmentFile' => [
-     *          'name' => 'document.pdf',
-     *          'type' => 'application/pdf',
-     *          'error' => UPLOAD_ERR_OK,
-     *          'size' => filesize(codecept_data_dir('sample_file.pdf')),
-     *          'tmp_name' => codecept_data_dir('sample_file.pdf')
-     *     ]
-     * ]);
-     * ```
+     * Parameters and files (as array of filenames) can be provided.
      *
      * @param $url
      * @param array|\JsonSerializable $params
-     * @param array $files A list of filenames or "mocks" of $_FILES (each entry being an array with the following
-     *                     keys: name, type, error, size, tmp_name (pointing to the real file path). Each key works
-     *                     as the "name" attribute of a file input field.
-     *
-     * @see http://php.net/manual/en/features.file-upload.post-method.php
-     * @see codecept_data_dir()
+     * @param array $files
      * @part json
      * @part xml
      */
@@ -514,12 +421,12 @@ EOF;
     {
         $values = [];
         foreach ($linkEntries as $linkEntry) {
-            \PHPUnit\Framework\Assert::assertArrayHasKey(
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
                 'uri',
                 $linkEntry,
                 'linkEntry should contain property "uri"'
             );
-            \PHPUnit\Framework\Assert::assertArrayHasKey(
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
                 'link-param',
                 $linkEntry,
                 'linkEntry should contain property "link-param"'
@@ -569,9 +476,6 @@ EOF;
         // allow full url to be requested
         if (strpos($url, '://') === false) {
             $url = $this->config['url'] . $url;
-            if ($this->config['url'] && strpos($url, '://') === false && $this->config['url'][0] !== '/') {
-                $url = '/' . $url;
-            }
         }
 
         $this->params = $parameters;
@@ -597,39 +501,15 @@ EOF;
             $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
-            if ($this->isBinaryData($requestData)) {
-                $requestData = $this->binaryToDebugString($requestData);
+            if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
+                // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
+                // display string to signify the presence of request data
+                $requestData = '[binary-data length:' . strlen($requestData) . ' md5:' . md5($requestData) . ']';
             }
             $this->debugSection("Request", "$method $url " . $requestData);
             $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $printedResponse = $this->response;
-        if ($this->isBinaryData($printedResponse)) {
-            $printedResponse = $this->binaryToDebugString($printedResponse);
-        }
-        $this->debugSection("Response", $printedResponse);
-    }
-
-    /**
-     * Check if data has non-printable bytes and it is not a valid unicode string
-     *
-     * @param string $data the text or binary data string
-     * @return boolean
-     */
-    protected function isBinaryData($data)
-    {
-        return !ctype_print($data) && false === mb_detect_encoding($data, mb_detect_order(), true);
-    }
-
-    /**
-     * Format a binary string for debug printing
-     *
-     * @param string $data the binary data string
-     * @return string the debug string
-     */
-    protected function binaryToDebugString($data)
-    {
-        return '[binary-data length:' . strlen($data) . ' md5:' . md5($data) . ']';
+        $this->debugSection("Response", $this->response);
     }
 
     protected function encodeApplicationJson($method, $parameters)
@@ -668,13 +548,13 @@ EOF;
                 if (isset($value['tmp_name'])) {
                     $this->checkFileBeforeUpload($value['tmp_name']);
                     if (!isset($value['name'])) {
-                        $value['name'] = basename($value['tmp_name']);
+                        $value['name'] = basename($value);
                     }
                     if (!isset($value['size'])) {
-                        $value['size'] = filesize($value['tmp_name']);
+                        $value['size'] = filesize($value);
                     }
                     if (!isset($value['type'])) {
-                        $value['type'] = $this->getFileType($value['tmp_name']);
+                        $value['type'] = $this->getFileType($value);
                     }
                     if (!isset($value['error'])) {
                         $value['error'] = 0;
@@ -725,11 +605,11 @@ EOF;
     public function seeResponseIsJson()
     {
         $responseContent = $this->connectionModule->_getResponseContent();
-        \PHPUnit\Framework\Assert::assertNotEquals('', $responseContent, 'response is empty');
+        \PHPUnit_Framework_Assert::assertNotEquals('', $responseContent, 'response is empty');
         json_decode($responseContent);
         $errorCode = json_last_error();
         $errorMessage = json_last_error_msg();
-        \PHPUnit\Framework\Assert::assertEquals(
+        \PHPUnit_Framework_Assert::assertEquals(
             JSON_ERROR_NONE,
             $errorCode,
             sprintf(
@@ -790,7 +670,7 @@ EOF;
      */
     public function seeResponseContainsJson($json = [])
     {
-        \PHPUnit\Framework\Assert::assertThat(
+        \PHPUnit_Framework_Assert::assertThat(
             $this->connectionModule->_getResponseContent(),
             new JsonContains($json)
         );
@@ -884,7 +764,6 @@ EOF;
      * $I->seeResponseJsonMatchesXpath('/store//price');
      * ?>
      * ```
-     * @param string $xpath
      * @part json
      * @version 2.0.9
      */
@@ -895,22 +774,6 @@ EOF;
             0,
             (new JsonArray($response))->filterByXPath($xpath)->length,
             "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
-        );
-    }
-
-    /**
-     * Opposite to seeResponseJsonMatchesXpath
-     *
-     * @param string $xpath
-     * @part json
-     */
-    public function dontSeeResponseJsonMatchesXpath($xpath)
-    {
-        $response = $this->connectionModule->_getResponseContent();
-        $this->assertEquals(
-            0,
-            (new JsonArray($response))->filterByXPath($xpath)->length,
-            "Received JSON matched the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
 
@@ -955,7 +818,6 @@ EOF;
      * ?>
      * ```
      *
-     * @param string $jsonPath
      * @part json
      * @version 2.0.9
      */
@@ -964,14 +826,14 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertNotEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath `$jsonPath`.\nJson Response: \n" . $response
+            "Received JSON did not match the JsonPath provided\n" . $response
         );
     }
 
     /**
      * Opposite to seeResponseJsonMatchesJsonPath
      *
-     * @param string $jsonPath
+     * @param array $jsonPath
      * @part json
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
@@ -979,7 +841,7 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON matched the JsonPath `$jsonPath`.\nJson Response: \n" . $response
+            "Received JSON did (but should not) match the JsonPath provided\n" . $response
         );
     }
 
@@ -1044,7 +906,7 @@ EOF;
      * ?>
      * ```
      *
-     * You can also apply filters to check values. Filter can be applied with `:` char after the type declaration.
+     * You can also apply filters to check values. Filter can be applied with `:` char after the type declatation.
      *
      * Here is the list of possible filters:
      *
@@ -1086,8 +948,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-
-        \PHPUnit\Framework\Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType));
+        $matched = (new JsonType($jsonArray))->matches($jsonType);
+        $this->assertTrue($matched, $matched);
     }
 
     /**
@@ -1105,8 +967,12 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-
-        \PHPUnit\Framework\Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType, false));
+        $matched = (new JsonType($jsonArray))->matches($jsonType);
+        $this->assertNotEquals(
+            true,
+            $matched,
+            sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true))
+        );
     }
 
     /**
@@ -1180,7 +1046,7 @@ EOF;
             libxml_clear_errors();
         }
         libxml_use_internal_errors(false);
-        \PHPUnit\Framework\Assert::assertNotSame(
+        \PHPUnit_Framework_Assert::assertNotSame(
             false,
             $doc,
             "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
@@ -1188,7 +1054,7 @@ EOF;
     }
 
     /**
-     * Checks whether XML response matches XPath
+     * Checks wheather XML response matches XPath
      *
      * ```php
      * <?php
@@ -1204,7 +1070,7 @@ EOF;
     }
 
     /**
-     * Checks whether XML response does not match XPath
+     * Checks wheather XML response does not match XPath
      *
      * ```php
      * <?php
@@ -1262,7 +1128,7 @@ EOF;
      */
     public function seeXmlResponseEquals($xml)
     {
-        \PHPUnit\Framework\Assert::assertXmlStringEqualsXmlString($this->connectionModule->getResponseContent(), $xml);
+        \PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString($this->connectionModule->_getResponseContent(), $xml);
     }
 
 
@@ -1277,7 +1143,7 @@ EOF;
      */
     public function dontSeeXmlResponseEquals($xml)
     {
-        \PHPUnit\Framework\Assert::assertXmlStringNotEqualsXmlString(
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString(
             $this->connectionModule->_getResponseContent(),
             $xml
         );
@@ -1323,68 +1189,6 @@ EOF;
             XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(),
             "found in XML Response"
         );
-    }
-
-    /**
-     * Checks if the hash of a binary response is exactly the same as provided.
-     * Parameter can be passed as any hash string supported by hash(), with an
-     * optional second parameter to specify the hash type, which defaults to md5.
-     *
-     * Example: Using md5 hash key
-     *
-     * ```php
-     * <?php
-     * $I->seeBinaryResponseEquals("8c90748342f19b195b9c6b4eff742ded");
-     * ?>
-     * ```
-     *
-     * Example: Using md5 for a file contents
-     *
-     * ```php
-     * <?php
-     * $fileData = file_get_contents("test_file.jpg");
-     * $I->seeBinaryResponseEquals(md5($fileData));
-     * ?>
-     * ```
-     * Example: Using sha256 hash
-     *
-     * ```php
-     * <?php
-     * $fileData = '/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k='; // very small jpeg
-     * $I->seeBinaryResponseEquals(hash("sha256", base64_decode($fileData)), 'sha256');
-     * ?>
-     * ```
-     *
-     * @param $hash the hashed data response expected
-     * @param $algo the hash algorithm to use. Default md5.
-     * @part json
-     * @part xml
-     */
-    public function seeBinaryResponseEquals($hash, $algo = 'md5')
-    {
-        $responseHash = hash($algo, $this->connectionModule->_getResponseContent());
-        $this->assertEquals($hash, $responseHash);
-    }
-
-    /**
-     * Checks if the hash of a binary response is not the same as provided.
-     *
-     * ```php
-     * <?php
-     * $I->dontSeeBinaryResponseEquals("8c90748342f19b195b9c6b4eff742ded");
-     * ?>
-     * ```
-     * Opposite to `seeBinaryResponseEquals`
-     *
-     * @param $hash the hashed data response expected
-     * @param $algo the hash algorithm to use. Default md5.
-     * @part json
-     * @part xml
-     */
-    public function dontSeeBinaryResponseEquals($hash, $algo = 'md5')
-    {
-        $responseHash = hash($algo, $this->connectionModule->_getResponseContent());
-        $this->assertNotEquals($hash, $responseHash);
     }
 
     /**

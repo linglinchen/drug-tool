@@ -73,7 +73,7 @@ class WebDriverAlert
     {
         $this->executor->execute(
             DriverCommand::SET_ALERT_VALUE,
-            ['text' => $value]
+            array('text' => $value)
         );
 
         return $this;

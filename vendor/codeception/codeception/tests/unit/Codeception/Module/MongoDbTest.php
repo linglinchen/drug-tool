@@ -2,17 +2,14 @@
 
 use Codeception\Module\MongoDb;
 use Codeception\Exception\ModuleException;
-use Codeception\Test\Unit;
 
-class MongoDbTest extends Unit
+class MongoDbTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
      */
     private $mongoConfig = array(
-        'dsn' => 'mongodb://localhost:27017/test?connectTimeoutMS=300',
-        'dump' => 'tests/data/dumps/mongo.js',
-        'populate' => true
+        'dsn' => 'mongodb://localhost:27017/test'
     );
 
     /**
@@ -77,7 +74,7 @@ class MongoDbTest extends Unit
     public function testGrabFromCollection()
     {
         $user = $this->module->grabFromCollection('users', array('id' => 1));
-        $this->assertArrayHasKey('email', $user);
+        $this->assertTrue(isset($user['email']));
         $this->assertEquals('miles@davis.com', $user['email']);
     }
 
@@ -107,7 +104,7 @@ class MongoDbTest extends Unit
 
     public function testSeeElementIsArrayThrowsError()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
 
         $this->userCollection->insertOne(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->userCollection->insertOne(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
@@ -135,7 +132,7 @@ class MongoDbTest extends Unit
         $trumpet->pitch = 'B♭';
         $trumpet->price = array('min' => 458, 'max' => 891);
 
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
 
         $this->userCollection->insertOne(array('id' => 5, 'trumpet' => $trumpet));
         $this->userCollection->insertOne(array('id' => 6, 'trumpet' => $trumpet));
@@ -149,22 +146,5 @@ class MongoDbTest extends Unit
         $this->module->haveInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->seeInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->dontSeeInCollection('users', array('email' => 'miles@davis.com'));
-    }
-
-    public function testLoadDump()
-    {
-        $testRecords = [
-            ['name' => 'Michael Jordan', 'position' => 'sg'],
-            ['name' => 'Ron Harper','position' => 'pg'],
-            ['name' => 'Steve Kerr','position' => 'pg'],
-            ['name' => 'Toni Kukoc','position' => 'sf'],
-            ['name' => 'Luc Longley','position' => 'c'],
-            ['name' => 'Scottie Pippen','position' => 'sf'],
-            ['name' => 'Dennis Rodman','position' => 'pf']
-        ];
-
-        foreach ($testRecords as $testRecord) {
-            $this->module->haveInCollection('96_bulls', $testRecord);
-        }
     }
 }

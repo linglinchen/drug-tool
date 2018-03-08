@@ -2,7 +2,6 @@
 namespace Codeception\Module;
 
 use Codeception\Step;
-use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverBy;
 
 /**
@@ -11,7 +10,7 @@ use Facebook\WebDriver\WebDriverBy;
  * Performs **synchronization to ensure that page content is fully rendered**.
  * Uses Angular's and Protractor internals methods to synchronize with the page.
  *
- * ## Configuration
+ * ## Configurarion
  *
  * The same as for [WebDriver](http://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
  *
@@ -84,9 +83,9 @@ EOF;
         parent::_setConfig(array_merge($this->defaultAngularConfig, $config));
     }
 
-    public function _before(TestInterface $test)
+    public function _initialize()
     {
-        parent::_before($test);
+        parent::_initialize();
         $this->webDriver->manage()->timeouts()->setScriptTimeout($this->config['script_timeout']);
     }
 

@@ -9,7 +9,7 @@ class BuildTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\Build');
         $this->config = array(
-            'actor' => 'HobbitGuy',
+            'class_name' => 'HobbitGuy',
             'path' => 'tests/shire/',
             'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper')),
             'include' => []

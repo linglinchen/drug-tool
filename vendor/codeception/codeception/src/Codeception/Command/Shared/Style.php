@@ -8,9 +8,11 @@ trait Style
 {
     public function addStyles(OutputInterface $output)
     {
-        $output->getFormatter()->setStyle('notice', new OutputFormatterStyle('white', 'green', ['bold']));
-        $output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
-        $output->getFormatter()->setStyle('warning', new OutputFormatterStyle(null, 'yellow', ['bold']));
-        $output->getFormatter()->setStyle('debug', new OutputFormatterStyle('cyan'));
+        $style = new OutputFormatterStyle('white', 'green', ['bold']);
+        $output->getFormatter()->setStyle('notice', $style);
+        $style = new OutputFormatterStyle(null, null, ['bold']);
+        $output->getFormatter()->setStyle('bold', $style);
+        $style = new OutputFormatterStyle(null, 'yellow', ['bold']);
+        $output->getFormatter()->setStyle('warning', $style);
     }
 }

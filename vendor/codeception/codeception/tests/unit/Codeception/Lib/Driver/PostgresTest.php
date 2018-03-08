@@ -1,13 +1,10 @@
 <?php
-
 use \Codeception\Lib\Driver\Db;
-use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
- * @group db
  */
-class PostgresTest extends Unit
+class PostgresTest extends \PHPUnit_Framework_TestCase
 {
     protected static $config = [
         'dsn' => 'pgsql:host=localhost;dbname=codeception_test',
@@ -17,7 +14,7 @@ class PostgresTest extends Unit
 
     protected static $sql;
     protected $postgres;
-
+    
     public static function setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
@@ -26,32 +23,33 @@ class PostgresTest extends Unit
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $dumpFile = 'dumps/postgres.sql';
-        if (defined('HHVM_VERSION')) {
-            $dumpFile = 'dumps/postgres-hhvm.sql';
-        }
-        $sql = file_get_contents(codecept_data_dir($dumpFile));
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
+        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         self::$sql = explode("\n", $sql);
+        try {
+            $postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+            $postgres->cleanup();
+        } catch (\Exception $e) {
+        }
     }
 
     public function setUp()
     {
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
-            $this->postgres->cleanup();
         } catch (\Exception $e) {
             $this->markTestSkipped('Coudn\'t establish connection to database: ' . $e->getMessage());
         }
         $this->postgres->load(self::$sql);
     }
-
+    
     public function tearDown()
     {
         if (isset($this->postgres)) {
             $this->postgres->cleanup();
         }
     }
+
 
     public function testCleanupDatabase()
     {
@@ -126,12 +124,6 @@ class PostgresTest extends Unit
         $this->assertEquals([], $this->postgres->getPrimaryKey('no_pk'));
     }
 
-    public function testLastInsertIdReturnsSequenceValueWhenNonStandardSequenceNameIsUsed()
-    {
-        $this->postgres->executeQuery('INSERT INTO seqnames(name) VALUES(?)',['test']);
-        $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
-    }
-
     public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
     {
         $this->assertEquals('id', $this->postgres->getPrimaryColumn('order'));
@@ -144,17 +136,5 @@ class PostgresTest extends Unit
             'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
         );
         $this->postgres->getPrimaryColumn('composite_pk');
-    }
-
-    /**
-     * @issue https://github.com/Codeception/Codeception/issues/4059
-     */
-    public function testLoadDumpEndingWithoutDelimiter()
-    {
-        $newDriver = new \Codeception\Lib\Driver\PostgreSql(self::$config['dsn'], self::$config['user'], self::$config['password']);
-        $newDriver->load(['INSERT INTO empty_table VALUES(1, \'test\')']);
-        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
-        $this->assertNotEquals(false, $res);
-        $this->assertNotEmpty($res->fetchAll());
     }
 }

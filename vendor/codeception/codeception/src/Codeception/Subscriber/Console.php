@@ -18,7 +18,6 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -67,8 +66,7 @@ class Console implements EventSubscriberInterface
      * @var OutputInterface
      */
     protected $output;
-    protected $conditionalFails = [];
-    protected $failedStep = [];
+    protected $fails = [];
     protected $reports = [];
     protected $namespace = '';
     protected $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
@@ -156,7 +154,7 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(TestEvent $e)
     {
-        $this->conditionalFails = [];
+        $this->fails = [];
         $test = $e->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -187,14 +185,9 @@ class Console implements EventSubscriberInterface
     public function afterStep(StepEvent $e)
     {
         $step = $e->getStep();
-        if (!$step->hasFailed()) {
-            return;
+        if ($step->hasFailed() and $step instanceof Step\ConditionalAssertion) {
+            $this->fails[] = $step;
         }
-        if ($step instanceof Step\ConditionalAssertion) {
-            $this->conditionalFails[] = $step;
-            return;
-        }
-        $this->failedStep[] = $step;
     }
 
     /**
@@ -319,7 +312,7 @@ class Console implements EventSubscriberInterface
             $msg->style('bold');
         }
         $maxLength = $this->width - $prefixLength;
-        $msg->append(OutputFormatter::escape($step->toString($maxLength)));
+        $msg->append($step->toString($maxLength));
         if ($this->metaStep) {
             $msg->style('info');
         }
@@ -329,11 +322,8 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width($this->width, '-')->writeln();
-        $messages = Notification::all();
-        foreach (array_count_values($messages) as $message => $count) {
-            if ($count > 1) {
-                $message = $count . 'x ' . $message;
-            }
+        $deprecationMessages = Notification::all();
+        foreach ($deprecationMessages as $message) {
             $this->output->notification($message);
         }
     }
@@ -360,17 +350,17 @@ class Console implements EventSubscriberInterface
         $this->printExceptionTrace($fail);
     }
 
-    public function printException($e, $cause = null)
+    protected function printException($e, $cause = null)
     {
-        if ($e instanceof \PHPUnit\Framework\SkippedTestError or $e instanceof \PHPUnit\Framework_IncompleteTestError) {
+        if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
             if ($e->getMessage()) {
-                $this->message(OutputFormatter::escape($e->getMessage()))->prepend("\n")->writeln();
+                $this->message($e->getMessage())->prepend("\n")->writeln();
             }
 
             return;
         }
 
-        $class = $e instanceof \PHPUnit\Framework\ExceptionWrapper
+        $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
             ? $e->getClassname()
             : get_class($e);
 
@@ -379,51 +369,51 @@ class Console implements EventSubscriberInterface
         }
 
         $this->output->writeln('');
-        $message = $this->message(OutputFormatter::escape($e->getMessage()));
+        $message = $this->message($e->getMessage());
 
-        if ($e instanceof \PHPUnit\Framework\ExpectationFailedException) {
+        if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
             $comparisonFailure = $e->getComparisonFailure();
             if ($comparisonFailure) {
                 $message->append($this->messageFactory->prepareComparisonFailureMessage($comparisonFailure));
             }
         }
 
-        $isFailure = $e instanceof \PHPUnit\Framework\AssertionFailedError
-            || $class === 'PHPUnit\Framework\ExpectationFailedException'
-            || $class === 'PHPUnit\Framework\AssertionFailedError';
+        $isFailure = $e instanceof \PHPUnit_Framework_AssertionFailedError
+            || $class === 'PHPUnit_Framework_ExpectationFailedException'
+            || $class === 'PHPUnit_Framework_AssertionFailedError';
 
         if (!$isFailure) {
             $message->prepend("[$class] ")->block('error');
         }
 
         if ($isFailure && $cause) {
-            $cause = OutputFormatter::escape(ucfirst($cause));
+            $cause = ucfirst($cause);
             $message->prepend("<error> Step </error> $cause\n<error> Fail </error> ");
         }
 
         $message->writeln();
     }
 
-    public function printScenarioFail(ScenarioDriven $failedTest, $fail)
+    protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
-        if ($this->conditionalFails) {
-            $failedStep = (string) array_shift($this->conditionalFails);
-        } else {
-            $failedStep = (string) $failedTest->getScenario()->getMetaStep();
-            if ($failedStep === '') {
-                $failedStep = (string) array_shift($this->failedStep);
+        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+
+        $failedStep = "";
+        foreach ($failedTest->getScenario()->getSteps() as $step) {
+            if ($step->hasFailed()) {
+                $failedStep = (string) $step;
+                break;
             }
         }
-
         $this->printException($fail, $failedStep);
 
-        $this->printScenarioTrace($failedTest);
+        $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printExceptionTrace($fail);
 
             return;
         }
-        if (!$fail instanceof \PHPUnit\Framework\AssertionFailedError) {
+        if (!$fail instanceof \PHPUnit_Framework_AssertionFailedError) {
             $this->printExceptionTrace($fail);
 
             return;
@@ -434,17 +424,17 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($e instanceof \PHPUnit\Framework\SkippedTestError or $e instanceof \PHPUnit\Framework_IncompleteTestError) {
+        if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
             return;
         }
 
         if ($this->rawStackTrace) {
-            $this->message(OutputFormatter::escape(\PHPUnit\Util\Filter::getFilteredStacktrace($e, true, false)))->writeln();
+            $this->message(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false))->writeln();
 
             return;
         }
 
-        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($e, false);
+        $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
 
         $i = 0;
         foreach ($trace as $step) {
@@ -475,6 +465,25 @@ class Console implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Sample Message: create user in CreateUserCept.php is not ready for release
+     *
+     * @param $feature
+     * @param $fileName
+     * @param $failToString
+     */
+    public function printSkippedTest($feature, $fileName, $failToString)
+    {
+        $message = $this->message();
+        if ($feature) {
+            $message->append($feature)->style('focus')->append(' in ');
+        }
+        $message->append($fileName);
+        if ($failToString) {
+            $message->append(": $failToString");
+        }
+        $message->write(OutputInterface::VERBOSITY_VERBOSE);
+    }
 
     /**
      * @param $failedTest
@@ -503,7 +512,7 @@ class Console implements EventSubscriberInterface
                 ->prepend(' ')
                 ->width(strlen($length))
                 ->append(". ");
-            $message->append(OutputFormatter::escape($step->getPhpCode($this->width - $message->getLength())));
+            $message->append($step->getPhpCode($this->width - $message->getLength()));
 
             if ($step->hasFailed()) {
                 $message->style('bold');
@@ -523,29 +532,17 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("");
     }
 
-    public function detectWidth()
+    protected function detectWidth()
     {
         $this->width = 60;
         if (!$this->isWin()
-            && (php_sapi_name() === "cli")
+            && (php_sapi_name() == "cli")
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            // try to get terminal width from ENV variable (bash), see also https://github.com/Codeception/Codeception/issues/3788
-            if (getenv('COLUMNS')) {
-                $this->width = getenv('COLUMNS');
-            } else {
-                $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
-            }
-        } elseif ($this->isWin() && (php_sapi_name() === "cli")) {
-            exec('mode con', $output);
-            if (isset($output[4])) {
-                preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
-                if (!empty($matches[1])) {
-                    $this->width = (int) $matches[1];
-                }
-            }
+            $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
         }
+
         return $this->width;
     }
 
@@ -555,15 +552,15 @@ class Console implements EventSubscriberInterface
     }
 
     /**
-     * @param \PHPUnit\Framework\SelfDescribing $test
+     * @param \PHPUnit_Framework_SelfDescribing $test
      * @param bool                              $inProgress
      */
-    protected function writeCurrentTest(\PHPUnit\Framework\SelfDescribing $test, $inProgress = true)
+    protected function writeCurrentTest(\PHPUnit_Framework_SelfDescribing $test, $inProgress = true)
     {
         $prefix = ($this->output->isInteractive() and !$this->isDetailed($test) and $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
-        $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
 
         $this
             ->message($testString)
@@ -584,15 +581,15 @@ class Console implements EventSubscriberInterface
         $result->append(' ')->write();
         $this->writeCurrentTest($test, false);
 
-        $conditionalFailsMessage = "";
-        $numFails = count($this->conditionalFails);
+        $conditionalFails = "";
+        $numFails = count($this->fails);
         if ($numFails == 1) {
-            $conditionalFailsMessage = "[F]";
+            $conditionalFails = "[F]";
         } elseif ($numFails) {
-            $conditionalFailsMessage = "{$numFails}x[F]";
+            $conditionalFails = "{$numFails}x[F]";
         }
-        $conditionalFailsMessage = "<error>$conditionalFailsMessage</error> ";
-        $this->message($conditionalFailsMessage)->write();
+        $conditionalFails = "<error>$conditionalFails</error> ";
+        $this->message($conditionalFails)->write();
         $this->writeTimeInformation($event);
         $this->output->writeln('');
     }

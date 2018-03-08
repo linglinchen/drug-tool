@@ -1,13 +1,8 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
-use \Codeception\Test\Unit;
 
-/**
- * @group db
- * Class SqliteTest
- */
-class SqliteTest extends Unit
+class SqliteTest extends \PHPUnit_Framework_TestCase
 {
     protected static $config = array(
         'dsn' => 'sqlite:tests/data/sqlite.db',
@@ -15,39 +10,49 @@ class SqliteTest extends Unit
         'password' => ''
     );
 
-    /**
-     * @var \Codeception\Lib\Driver\Sqlite
-     */
     protected static $sqlite;
     protected static $sql;
-
+    
     public static function setUpBeforeClass()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $dumpFile = '/dumps/sqlite-54.sql';
-        } else {
-            $dumpFile = '/dumps/sqlite.sql';
-        }
-
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . $dumpFile);
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         self::$sql = explode("\n", $sql);
+        try {
+            self::$sqlite = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+            self::$sqlite->cleanup();
+        } catch (\Exception $e) {
+        }
     }
 
     public function setUp()
     {
-        self::$sqlite = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
-        self::$sqlite->cleanup();
+        if (!isset(self::$sqlite)) {
+            $this->markTestSkipped('Coudn\'t establish connection to database');
+        }
         self::$sqlite->load(self::$sql);
     }
-
+    
     public function tearDown()
     {
         if (isset(self::$sqlite)) {
             self::$sqlite->cleanup();
         }
     }
-
+    
+    
+    public function testCleanupDatabase()
+    {
+        $this->assertGreaterThan(
+            0,
+            count(self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll())
+        );
+        self::$sqlite->cleanup();
+        $this->assertEmpty(
+            self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll()
+        );
+    }
+    
     public function testLoadDump()
     {
         $res = self::$sqlite->getDbh()->query("select * from users where name = 'davert'");
@@ -59,45 +64,28 @@ class SqliteTest extends Unit
         $this->assertNotEmpty($res->fetchAll());
     }
 
-    public function testGetPrimaryKeyReturnsRowIdIfTableHasIt()
+    public function testGetSingleColumnPrimaryKey()
     {
-        $this->assertEquals(['_ROWID_'], self::$sqlite->getPrimaryKey('groups'));
-    }
-
-    public function testGetPrimaryKeyReturnsRowIdIfTableHasNoPrimaryKey()
-    {
-        $this->assertEquals(['_ROWID_'], self::$sqlite->getPrimaryKey('no_pk'));
-    }
-
-    public function testGetSingleColumnPrimaryKeyWhenTableHasNoRowId()
-    {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Sqlite does not support WITHOUT ROWID on travis');
-        }
         $this->assertEquals(['id'], self::$sqlite->getPrimaryKey('order'));
     }
 
-    public function testGetCompositePrimaryKeyWhenTableHasNoRowId()
+    public function testGetCompositePrimaryKey()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Sqlite does not support WITHOUT ROWID on travis');
-        }
         $this->assertEquals(['group_id', 'id'], self::$sqlite->getPrimaryKey('composite_pk'));
     }
 
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableNameWhenTableHasNoRowId()
+    public function testGetEmptyArrayIfTableHasNoPrimaryKey()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Sqlite does not support WITHOUT ROWID on travis');
-        }
+        $this->assertEquals([], self::$sqlite->getPrimaryKey('no_pk'));
+    }
+
+    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
+    {
         $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
     }
 
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Sqlite does not support WITHOUT ROWID on travis');
-        }
         $this->setExpectedException(
             '\Exception',
             'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
@@ -113,17 +101,5 @@ class SqliteTest extends Unit
         );
 
         Db::create('sqlite::memory:', '', '');
-    }
-
-    /**
-     * @issue https://github.com/Codeception/Codeception/issues/4059
-     */
-    public function testLoadDumpEndingWithoutDelimiter()
-    {
-        $newDriver = new \Codeception\Lib\Driver\Sqlite(self::$config['dsn'], '', '');
-        $newDriver->load(['INSERT INTO empty_table VALUES(1, "test")']);
-        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
-        $this->assertNotEquals(false, $res);
-        $this->assertNotEmpty($res->fetchAll());
     }
 }

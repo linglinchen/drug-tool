@@ -6,6 +6,8 @@ use Codeception\Test\Loader\Gherkin;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 class GherkinSnippets
 {
     protected $template = <<<EOF
@@ -14,7 +16,7 @@ class GherkinSnippets
      */
      public function {{methodName}}({{params}})
      {
-         throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
+        throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
      }
 
 EOF;
@@ -61,10 +63,6 @@ EOF;
             foreach ($steps as $step) {
                 $matched = false;
                 $text = $step->getText();
-                if (self::stepHasPyStringArgument($step)) {
-                    // pretend it is inline argument
-                    $text .= ' ""';
-                }
                 foreach (array_keys($allSteps) as $pattern) {
                     if (preg_match($pattern, $text)) {
                         $matched = true;
@@ -104,20 +102,11 @@ EOF;
                 $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
             }
         }
-        // Has multiline argument at the end of step?
-        if (self::stepHasPyStringArgument($step)) {
-            $num = count($args) + 1;
-            $pattern .= " :arg$num";
-            $args[] = '$arg' . $num;
-        }
         if (in_array($pattern, $this->processed)) {
             return;
         }
 
         $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
-        if (empty($methodName)) {
-            $methodName = 'step_' . substr(sha1($pattern), 0, 9);
-        }
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())
@@ -137,16 +126,5 @@ EOF;
     public function getFeatures()
     {
         return $this->features;
-    }
-
-    public static function stepHasPyStringArgument(StepNode $step)
-    {
-        if ($step->hasArguments()) {
-            $stepArgs = $step->getArguments();
-            if ($stepArgs[count($stepArgs) - 1]->getNodeType() == "PyString") {
-                return true;
-            }
-        }
-        return false;
     }
 }

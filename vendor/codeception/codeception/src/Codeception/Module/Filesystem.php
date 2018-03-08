@@ -35,7 +35,7 @@ class Filesystem extends CodeceptionModule
      * Enters a directory In local filesystem.
      * Project root directory is used by default
      *
-     * @param string $path
+     * @param $path
      */
     public function amInPath($path)
     {
@@ -43,10 +43,6 @@ class Filesystem extends CodeceptionModule
         $this->debug('Moved to ' . getcwd());
     }
 
-    /**
-     * @param string $path
-     * @return string
-     */
     protected function absolutizePath($path)
     {
         // *nix way
@@ -73,12 +69,11 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $filename
+     * @param $filename
      */
     public function openFile($filename)
     {
         $this->file = file_get_contents($this->absolutizePath($filename));
-        $this->filepath = $filename;
     }
 
     /**
@@ -90,12 +85,12 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $filename
+     * @param $filename
      */
     public function deleteFile($filename)
     {
         if (!file_exists($this->absolutizePath($filename))) {
-            \PHPUnit\Framework\Assert::fail('file not found');
+            \PHPUnit_Framework_Assert::fail('file not found');
         }
         unlink($this->absolutizePath($filename));
     }
@@ -109,7 +104,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $dirname
+     * @param $dirname
      */
     public function deleteDir($dirname)
     {
@@ -126,8 +121,8 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $src
-     * @param string $dst
+     * @param $src
+     * @param $dst
      */
     public function copyDir($src, $dst)
     {
@@ -146,7 +141,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $text
+     * @param $text
      */
     public function seeInThisFile($text)
     {
@@ -179,7 +174,7 @@ class Filesystem extends CodeceptionModule
     /**
      * Checks that contents of currently opened file matches $regex
      *
-     * @param string $regex
+     * @param $regex
      */
     public function seeThisFileMatches($regex)
     {
@@ -199,12 +194,12 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $text
+     * @param $text
      */
     public function seeFileContentsEqual($text)
     {
         $file = str_replace("\r", '', $this->file);
-        \PHPUnit\Framework\Assert::assertEquals($text, $file);
+        \PHPUnit_Framework_Assert::assertEquals($text, $file);
     }
 
     /**
@@ -217,7 +212,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $text
+     * @param $text
      */
     public function dontSeeInThisFile($text)
     {
@@ -242,74 +237,46 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $filename
+     * @param $filename
      * @param string $path
      */
     public function seeFileFound($filename, $path = '')
     {
-        if ($path === '' && file_exists($filename)) {
+        if (file_exists($filename) and !$path) {
             $this->openFile($filename);
-            \PHPUnit\Framework\Assert::assertFileExists($filename);
+            $this->filepath = $filename;
+            $this->debug($filename);
+            \PHPUnit_Framework_Assert::assertFileExists($path . $filename);
             return;
         }
 
-        $found = $this->findFileInPath($filename, $path);
-
-        if ($found === false) {
-            $this->fail("File \"$filename\" not found at \"$path\"");
-        }
-
-        $this->openFile($found);
-        \PHPUnit\Framework\Assert::assertFileExists($found);
-    }
-
-    /**
-     * Checks if file does not exist in path
-     *
-     * @param string $filename
-     * @param string $path
-     */
-    public function dontSeeFileFound($filename, $path = '')
-    {
-        if ($path === '') {
-            \PHPUnit\Framework\Assert::assertFileNotExists($filename);
-            return;
-        }
-
-        $found = $this->findFileInPath($filename, $path);
-
-        if ($found === false) {
-            //this line keeps a count of assertions correct
-            \PHPUnit\Framework\Assert::assertTrue(true);
-            return;
-        }
-
-        \PHPUnit\Framework\Assert::assertFileNotExists($found);
-    }
-
-    /**
-     * Finds the first matching file
-     *
-     * @param string $filename
-     * @param string $path
-     * @throws \PHPUnit\Framework\AssertionFailedError When path does not exist
-     * @return string|false Path to the first matching file
-     */
-    private function findFileInPath($filename, $path)
-    {
         $path = $this->absolutizePath($path);
+        $this->debug($path);
         if (!file_exists($path)) {
             $this->fail("Directory does not exist: $path");
         }
 
         $files = Finder::create()->files()->name($filename)->in($path);
-        if ($files->count() === 0) {
-            return false;
-        }
-
         foreach ($files as $file) {
-            return $file->getRealPath();
+            $file = $file->getRealPath();
+            $this->openFile($file);
+            $this->filepath = $file;
+            $this->debug($file);
+            \PHPUnit_Framework_Assert::assertFileExists($file);
+            return;
         }
+        $this->fail("$filename in $path");
+    }
+
+    /**
+     * Checks if file does not exist in path
+     *
+     * @param $filename
+     * @param string $path
+     */
+    public function dontSeeFileFound($filename, $path = '')
+    {
+        \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
     }
 
 
@@ -322,7 +289,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param string $dirname
+     * @param $dirname
      */
     public function cleanDir($dirname)
     {
@@ -333,8 +300,8 @@ class Filesystem extends CodeceptionModule
     /**
      * Saves contents to file
      *
-     * @param string $filename
-     * @param string $contents
+     * @param $filename
+     * @param $contents
      */
     public function writeToFile($filename, $contents)
     {

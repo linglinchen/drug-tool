@@ -1,9 +1,12 @@
 
 ## Codeception\Util\XmlBuilder
 
+
+
 That's a pretty simple yet powerful class to build XML structures in jQuery-like style.
 With no XML line actually written!
 Uses DOM extension to manipulate XML data.
+
 
 ```php
 <?php
@@ -62,76 +65,67 @@ Export:
 
 [Source code](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php)
 
-#### __construct()
 
- *public* __construct()
+### __construct 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L80)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L80)
 
-#### __get()
-
- *public* __get($tag)
+### __get 
 
 Appends child node
 
  * `param` $tag
- * `return` XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L93)
+ * `return`  XmlBuilder
 
-#### __toString()
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L93)
 
- *public* __toString()
+### __toString 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L165)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L165)
 
-#### attr()
-
- *public* attr($attr, $val)
+### attr 
 
 Sets attribute for current node
 
  * `param` $attr
  * `param` $val
- * `return` XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L120)
+ * `return`  XmlBuilder
 
-#### getDom()
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L120)
 
- *public* getDom()
- * `return` \DOMDocument
+### getDom 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L173)
+ * `return`  \DOMDocument
 
-#### parent()
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L173)
 
- *public* parent()
+### parent 
 
 Traverses to parent
- * `return` XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L131)
+ * `return`  XmlBuilder
 
-#### parents()
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L131)
 
- *public* parents($tag)
+### parents 
 
 Traverses to parent with $name
 
  * `param` $tag
- * `return` XmlBuilder
- * `throws` \Exception
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L145)
+ * `return`  XmlBuilder
+ * `throws`  \Exception
 
-#### val()
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L145)
 
- *public* val($val)
+### val 
 
  * `param` $val
- * `return` XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L106)
+ * `return`  XmlBuilder
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.3/src//Codeception/Util/XmlBuilder.php">Help us to improve documentation. Edit module reference</a></div>
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php#L106)
+
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/XmlBuilder.php">Help us to improve documentation. Edit module reference</a></div>

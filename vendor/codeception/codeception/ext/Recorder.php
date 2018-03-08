@@ -13,35 +13,35 @@ use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
 
 /**
- * Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](http://codeception.com/images/recorder.gif))
+ * Saves screenshots of each step in acceptance tests and shows them as a slideshow.
  * Activated only for suites with WebDriver module enabled.
  *
- * The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.
+ *  ![recorder](http://codeception.com/images/recorder.gif)
+ *
+ * Slideshows saves are saved into `tests/_output/record_*` directories.
+ * Open `index.html` to see the slideshow.
  *
  * #### Installation
  *
- * Add this to the list of enabled extensions in `codeception.yml` or `acceptance.suite.yml`:
+ * Add to list of enabled extensions
  *
  * ``` yaml
  * extensions:
- *     enabled:
- *         - Codeception\Extension\Recorder
+ *     enabled: [Codeception\Extension\Recorder]
  * ```
  *
  * #### Configuration
  *
- * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
- * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
- *
- *
- * #### Examples:
+ * * `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
+ * * `module` (default: WebDriver) - which module for screenshots to use.
+ * Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ * Currently only WebDriver or any its children can be used.
  *
  * ``` yaml
  * extensions:
- *     enabled:
+ *     config:
  *         Codeception\Extension\Recorder:
- *             module: AngularJS # enable for Angular
- *             delete_successful: false # keep screenshots of successful tests
+ *             delete_successful: false
  * ```
  *
  */
@@ -233,7 +233,6 @@ EOF;
     {
         $this->webDriverModule = null;
         if (!$this->hasModule($this->config['module'])) {
-            $this->writeln("Recorder is disabled, no available modules");
             return;
         }
         $this->seed = uniqid();
@@ -277,7 +276,7 @@ EOF;
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
-        $testName = preg_replace('~\W~', '_', Descriptor::getTestAsString($e->getTest()));
+        $testName = preg_replace('~\W~', '.', Descriptor::getTestAsString($e->getTest()));
         $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
         @mkdir($this->dir);
     }

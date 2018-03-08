@@ -10,16 +10,14 @@ class ConditionalAssertion extends Assertion
     {
         try {
             parent::run($container);
-        } catch (\PHPUnit\Framework\AssertionFailedError $e) {
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
             throw new ConditionalAssertionFailed($e->getMessage(), $e->getCode(), $e);
         }
     }
 
     public function getAction()
     {
-        $action = 'can' . ucfirst($this->action);
-        $action = preg_replace('/^canDont/', 'cant', $action);
-        return $action;
+        return 'can' . ucfirst($this->action);
     }
 
     public function getHumanizedAction()

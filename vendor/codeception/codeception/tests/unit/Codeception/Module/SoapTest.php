@@ -7,7 +7,7 @@ use Codeception\Util\Soap as SoapUtil;
  * Class SoapTest
  * @group appveyor
  */
-class SoapTest extends \PHPUnit\Framework\TestCase
+class SoapTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -28,6 +28,12 @@ class SoapTest extends \PHPUnit\Framework\TestCase
         $this->module->isFunctional = true;
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
         $this->module->client = Stub::makeEmpty('\Codeception\Lib\Connector\Universal');
+    }
+
+    public function testConflictsWithAPI()
+    {
+        $this->assertInstanceOf('Codeception\Lib\Interfaces\ConflictsWithModule', $this->module);
+        $this->assertEquals('Codeception\Lib\Interfaces\API', $this->module->_conflicts());
     }
     
     public function testXmlIsBuilt()

@@ -75,12 +75,12 @@ EOF;
 
     protected function produceActions()
     {
-        if (!isset($this->settings['actor'])) {
+        if (!isset($this->settings['class_name'])) {
             return ''; // global pageobject
         }
 
-        $actor = lcfirst($this->settings['actor']);
-        $actorClass = $this->settings['actor'];
+        $actor = lcfirst($this->settings['class_name']);
+        $actorClass = $this->settings['class_name'];
         if (!empty($this->settings['namespace'])) {
             $actorClass = rtrim($this->settings['namespace'], '\\') . '\\' . $actorClass;
         }

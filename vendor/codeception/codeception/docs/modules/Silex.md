@@ -1,9 +1,10 @@
 # Silex
 
+
 Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
 This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
 
-This module may be considered experimental and require feedback and pull requests from you.
+This module may be considered experimental and require feedback and pull requests from you )
 
 ## Status
 
@@ -21,10 +22,10 @@ This module may be considered experimental and require feedback and pull request
 Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase).
 
 ``` php
-<?php
+<?
 $app = require __DIR__.'/path/to/app.php';
 $app['debug'] = true;
-unset($app['exception_handler']);
+$app['exception_handler']->disable();
 
 return $app; // optionally
 ?>
@@ -37,19 +38,16 @@ return $app; // optionally
           - Silex:
              app: 'app/bootstrap.php'
 
-## Public Properties
-
-* app - `Silex\Application` instance received from bootstrap file
-
 Class Silex
 @package Codeception\Module
+
 
 ## Actions
 
 ### _findElements
 
 *hidden API method, expected to be used from Helper classes*
-
+ 
 Locates element using available Codeception locator types:
 
 * XPath
@@ -73,10 +71,11 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `param` $locator
  * `return` array of interactive elements
 
+
 ### _getResponseContent
 
 *hidden API method, expected to be used from Helper classes*
-
+ 
 Returns content of the last response
 Use it in Helpers when you want to retrieve response of request performed by another module.
 
@@ -91,12 +90,13 @@ public function seeResponseContains($text)
 ```
 
  * `return` string
-@throws ModuleException
+ * `throws`  ModuleException
+
 
 ### _loadPage
 
 *hidden API method, expected to be used from Helper classes*
-
+ 
 Opens a page with arbitrary request parameters.
 Useful for testing multi-step forms on a specific step.
 
@@ -116,10 +116,11 @@ public function openCheckoutFormStep2($orderId) {
  * `param array` $server
  * `param null` $content
 
+
 ### _request
 
 *hidden API method, expected to be used from Helper classes*
-
+ 
 Send custom request to a backend using method, uri, parameters, etc.
 Use it in Helpers to create special request actions, like accessing API
 Returns a string with response body.
@@ -144,13 +145,14 @@ To load arbitrary page for interaction, use `_loadPage` method.
  * `param array` $server
  * `param null` $content
  * `return` mixed|Crawler
-@throws ExternalUrlException
-@see `_loadPage`
+ * `throws`  ExternalUrlException
+ * `see`  `_loadPage`
+
 
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
-
+ 
 Saves page source of to a file
 
 ```php
@@ -158,15 +160,17 @@ $this->getModule('Silex')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
 
-### amHttpAuthenticated
 
+### amHttpAuthenticated
+ 
 Authenticates user for HTTP_AUTH
 
  * `param` $username
  * `param` $password
 
-### amOnPage
 
+### amOnPage
+ 
 Opens the page for the given relative URI.
 
 ``` php
@@ -177,24 +181,26 @@ $I->amOnPage('/');
 $I->amOnPage('/register');
 ```
 
- * `param string` $page
+ * `param` $page
+
 
 ### attachFile
-
-Attaches a file relative to the Codeception `_data` directory to the given file upload field.
+ 
+Attaches a file relative to the Codeception data directory to the given file upload field.
 
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[@type="file"]', 'prices.xls');
+$I->attachFile('input[ * `type="file"]',`  'prices.xls');
 ?>
 ```
 
  * `param` $field
  * `param` $filename
 
-### checkOption
 
+### checkOption
+ 
 Ticks a checkbox. For radio buttons, use the `selectOption` method instead.
 
 ``` php
@@ -205,8 +211,9 @@ $I->checkOption('#agree');
 
  * `param` $option
 
-### click
 
+### click
+ 
 Perform a click on a link or a button, given by a locator.
 If a fuzzy locator is given, the page will be searched for a button, link, or image matching the locator string.
 For buttons, the "value" attribute, "name" attribute, and inner text are searched.
@@ -226,7 +233,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[@type=submit]');
+$I->click('//form/*[ * `type=submit]');` 
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -237,8 +244,9 @@ $I->click(['link' => 'Login']);
  * `param` $link
  * `param` $context
 
-### deleteHeader
 
+### deleteHeader
+ 
 Deletes the header with the passed name.  Subsequent requests
 will not have the deleted header in its request.
 
@@ -255,17 +263,17 @@ $I->amOnPage('some-other-page.php');
 
  * `param string` $name the name of the header to delete.
 
-### dontSee
 
+### dontSee
+ 
 Checks that the current page doesn't contain the text specified (case insensitive).
 Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login');                         // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1');           // with XPath
-$I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
+$I->dontSee('Login');                    // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');      // with XPath
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -282,11 +290,12 @@ But will ignore strings like:
 
 For checking the raw source code, use `seeInSource()`.
 
- * `param string` $text
- * `param string` $selector optional
+ * `param`      $text
+ * `param null` $selector
+
 
 ### dontSeeCheckboxIsChecked
-
+ 
 Check that the specified checkbox is unchecked.
 
 ``` php
@@ -298,8 +307,9 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param` $checkbox
 
-### dontSeeCookie
 
+### dontSeeCookie
+ 
 Checks that there isn't a cookie with the given name.
 You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
@@ -307,8 +317,9 @@ You can set additional cookie params like `domain`, `path` as array passed in la
 
  * `param array` $params
 
-### dontSeeCurrentUrlEquals
 
+### dontSeeCurrentUrlEquals
+ 
 Checks that the current URL doesn't equal the given string.
 Unlike `dontSeeInCurrentUrl`, this only matches the full URL.
 
@@ -319,10 +330,11 @@ $I->dontSeeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### dontSeeCurrentUrlMatches
-
+ 
 Checks that current url doesn't match the given regular expression.
 
 ``` php
@@ -332,10 +344,11 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### dontSeeElement
-
+ 
 Checks that the given element is invisible or not present on the page.
 You can also specify expected attributes of this element.
 
@@ -351,8 +364,9 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param` $selector
  * `param array` $attributes
 
-### dontSeeInCurrentUrl
 
+### dontSeeInCurrentUrl
+ 
 Checks that the current URI doesn't contain the given string.
 
 ``` php
@@ -361,10 +375,11 @@ $I->dontSeeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### dontSeeInField
-
+ 
 Checks that an input field or textarea doesn't contain the given value.
 For fuzzy locators, the field is matched by label text, CSS and XPath.
 
@@ -374,7 +389,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[@name=search]','Search');
+$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -382,8 +397,9 @@ $I->dontSeeInField(['name' => 'search'], 'Search');
  * `param` $field
  * `param` $value
 
-### dontSeeInFormFields
 
+### dontSeeInFormFields
+ 
 Checks if the array of form parameters (name => value) are not set on the form matched with
 the passed selector.
 
@@ -424,8 +440,9 @@ $I->dontSeeInFormFields('#form-id', [
  * `param` $formSelector
  * `param` $params
 
-### dontSeeInSource
 
+### dontSeeInSource
+ 
 Checks that the current page contains the given string in its
 raw source code.
 
@@ -436,14 +453,17 @@ $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-### dontSeeInTitle
 
+### dontSeeInTitle
+ 
 Checks that the page title does not contain the given string.
 
  * `param` $title
 
-### dontSeeLink
 
+
+### dontSeeLink
+ 
 Checks that the page doesn't contain a link with the given string.
 If the second parameter is given, only links with a matching "href" attribute will be checked.
 
@@ -454,11 +474,12 @@ $I->dontSeeLink('Checkout now', '/store/cart.php');
 ?>
 ```
 
- * `param string` $text
- * `param string` $url optional
+ * `param` $text
+ * `param null` $url
+
 
 ### dontSeeOptionIsSelected
-
+ 
 Checks that the given option is not selected.
 
 ``` php
@@ -470,8 +491,10 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-### dontSeeResponseCodeIs
 
+
+### dontSeeResponseCodeIs
+ 
 Checks that response code is equal to value provided.
 
 ```php
@@ -483,28 +506,31 @@ $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 ```
  * `param` $code
 
-### fillField
 
+### fillField
+ 
 Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[@type='text']", "Hello World!");
-$I->fillField(['name' => 'email'], 'jon@mail.com');
+$I->fillField("//input[ * `type='text']",`  "Hello World!");
+$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
 ?>
 ```
 
  * `param` $field
  * `param` $value
 
-### getInternalDomains
 
+### getInternalDomains
+ 
 Returns a list of recognized domain names
 
  * `return` array
 
-### grabAttributeFrom
 
+### grabAttributeFrom
+ 
 Grabs the value of the given attribute value from the given element.
 Fails if element is not found.
 
@@ -514,11 +540,14 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ?>
 ```
 
+
  * `param` $cssOrXpath
  * `param` $attribute
 
-### grabCookie
 
+
+### grabCookie
+ 
 Grabs a cookie value.
 You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
@@ -526,9 +555,10 @@ You can set additional cookie params like `domain`, `path` in array passed as la
 
  * `param array` $params
 
-### grabFromCurrentUrl
 
-Executes the given regular expression against the current URI and returns the first capturing group.
+### grabFromCurrentUrl
+ 
+Executes the given regular expression against the current URI and returns the first match.
 If no parameters are provided, the full URI is returned.
 
 ``` php
@@ -538,10 +568,12 @@ $uri = $I->grabFromCurrentUrl();
 ?>
 ```
 
- * `param string` $uri optional
+ * `param null` $uri
+
+
 
 ### grabMultiple
-
+ 
 Grabs either the text content, or attribute values, of nodes
 matched by $cssOrXpath and returns them as an array.
 
@@ -565,16 +597,9 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $attribute
  * `return` string[]
 
-### grabPageSource
-
-Grabs current page source code.
-
-@throws ModuleException if no page was opened.
-
- * `return` string Current page source code.
 
 ### grabService
-
+ 
 Return an instance of a class from the Container.
 
 Example
@@ -586,8 +611,9 @@ $I->grabService('session');
 
  * `param`  string $service
 
-### grabTextFrom
 
+### grabTextFrom
+ 
 Finds and returns the text contents of the given element.
 If a fuzzy locator is used, the element is found using CSS, XPath,
 and by matching the full page source by regular expression.
@@ -602,33 +628,25 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
  * `param` $cssOrXPathOrRegex
 
-### grabValueFrom
 
+
+### grabValueFrom
+ 
  * `param` $field
 
  * `return` array|mixed|null|string
 
-### haveHttpHeader
 
+### haveHttpHeader
+ 
 Sets the HTTP header to the passed value - which is used on
 subsequent HTTP requests through PhpBrowser.
 
 Example:
 ```php
 <?php
-$I->haveHttpHeader('X-Requested-With', 'Codeception');
+$I->setHeader('X-Requested-With', 'Codeception');
 $I->amOnPage('test-headers.php');
-?>
-```
-
-To use special chars in Header Key use HTML Character Entities:
-Example:
-Header with underscore - 'Client_Id'
-should be represented as - 'Client&#x0005F;Id' or 'Client&#95;Id'
-
-```php
-<?php
-$I->haveHttpHeader('Client&#95;Id', 'Codeception');
 ?>
 ```
 
@@ -636,14 +654,16 @@ $I->haveHttpHeader('Client&#95;Id', 'Codeception');
  * `param string` $value the value to set it to for subsequent
        requests
 
-### moveBack
 
+### moveBack
+ 
 Moves back in history.
 
  * `param int` $numberOfSteps (default value 1)
 
-### resetCookie
 
+### resetCookie
+ 
 Unsets cookie with the given name.
 You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
@@ -651,8 +671,9 @@ You can set additional cookie params like `domain`, `path` in array passed as la
 
  * `param array` $params
 
-### see
 
+### see
+ 
 Checks that the current page contains the given string (case insensitive).
 
 You can specify a specific HTML element (via CSS or XPath) as the second
@@ -660,10 +681,9 @@ parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout');                        // I can suppose user is logged in
-$I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
-$I->see('Sign Up', '//body/h1');          // with XPath
-$I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
+$I->see('Logout');                 // I can suppose user is logged in
+$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');   // with XPath
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -680,25 +700,27 @@ But will *not* be true for strings like:
 
 For checking the raw source code, use `seeInSource()`.
 
- * `param string` $text
- * `param string` $selector optional
+ * `param`      $text
+ * `param null` $selector
+
 
 ### seeCheckboxIsChecked
-
+ 
 Checks that the specified checkbox is checked.
 
 ``` php
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
+$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
 ?>
 ```
 
  * `param` $checkbox
 
-### seeCookie
 
+### seeCookie
+ 
 Checks that a cookie with the given name is set.
 You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
@@ -711,8 +733,9 @@ $I->seeCookie('PHPSESSID');
  * `param` $cookie
  * `param array` $params
 
-### seeCurrentUrlEquals
 
+### seeCurrentUrlEquals
+ 
 Checks that the current URL is equal to the given string.
 Unlike `seeInCurrentUrl`, this only matches the full URL.
 
@@ -723,10 +746,11 @@ $I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### seeCurrentUrlMatches
-
+ 
 Checks that the current URL matches the given regular expression.
 
 ``` php
@@ -736,10 +760,11 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### seeElement
-
+ 
 Checks that the given element exists on the page and is visible.
 You can also specify expected attributes of this element.
 
@@ -757,10 +782,11 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
-@return
+ * `return` 
+
 
 ### seeInCurrentUrl
-
+ 
 Checks that current URI contains the given string.
 
 ``` php
@@ -772,12 +798,13 @@ $I->seeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param string` $uri
+ * `param` $uri
+
 
 ### seeInField
-
-Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
-Fields are matched by label text, the "name" attribute, CSS, or XPath.
+ 
+Checks that the given input field or textarea contains the given value.
+For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
 
 ``` php
 <?php
@@ -785,7 +812,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[@name=search]','Search');
+$I->seeInField('//form/*[ * `name=search]','Search');` 
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -793,8 +820,9 @@ $I->seeInField(['name' => 'search'], 'Search');
  * `param` $field
  * `param` $value
 
-### seeInFormFields
 
+### seeInFormFields
+ 
 Checks if the array of form parameters (name => value) are set on the form matched with the
 passed selector.
 
@@ -846,17 +874,18 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[@id=my-form]', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
 ?>
 ```
 
  * `param` $formSelector
  * `param` $params
 
-### seeInSource
 
+### seeInSource
+ 
 Checks that the current page contains the given string in its
 raw source code.
 
@@ -867,8 +896,9 @@ $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-### seeInTitle
 
+### seeInTitle
+ 
 Checks that the page title contains the given string.
 
 ``` php
@@ -879,8 +909,10 @@ $I->seeInTitle('Blog - Post #1');
 
  * `param` $title
 
-### seeLink
 
+
+### seeLink
+ 
 Checks that there's a link with the specified text.
 Give a full URL as the second parameter to match links with that exact URL.
 
@@ -891,24 +923,28 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param string` $text
- * `param string` $url optional
+ * `param`      $text
+ * `param null` $url
+
 
 ### seeNumberOfElements
-
+ 
 Checks that there are a certain number of elements matched by the given locator on the page.
 
 ``` php
 <?php
 $I->seeNumberOfElements('tr', 10);
-$I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
+$I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 ?>
 ```
  * `param` $selector
- * `param mixed` $expected int or int[]
+ * `param mixed` $expected :
+- string: strict number
+- array: range of numbers [0,10]
+
 
 ### seeOptionIsSelected
-
+ 
 Checks that the given option is selected.
 
 ``` php
@@ -920,12 +956,15 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-### seePageNotFound
 
+
+### seePageNotFound
+ 
 Asserts that current page has 404 response status code.
 
-### seeResponseCodeIs
 
+### seeResponseCodeIs
+ 
 Checks that response code is equal to value provided.
 
 ```php
@@ -938,15 +977,16 @@ $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 
  * `param` $code
 
-### selectOption
 
+### selectOption
+ 
 Selects an option in a select tag or in radio button group.
 
 ``` php
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[@name=account]', 'Monthly');
+$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
 ?>
 ```
 
@@ -970,8 +1010,9 @@ $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only s
  * `param` $select
  * `param` $option
 
-### sendAjaxGetRequest
 
+### sendAjaxGetRequest
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends a GET ajax request with specified params.
 
@@ -980,8 +1021,9 @@ See ->sendAjaxPostRequest for examples.
  * `param` $uri
  * `param` $params
 
-### sendAjaxPostRequest
 
+### sendAjaxPostRequest
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends a POST ajax request with specified params.
 Additional params can be passed as array.
@@ -1001,8 +1043,9 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
  * `param` $uri
  * `param` $params
 
-### sendAjaxRequest
 
+### sendAjaxRequest
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends an ajax request with specified method and params.
 
@@ -1020,8 +1063,9 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $uri
  * `param` $params
 
-### setCookie
 
+### setCookie
+ 
 Sets a cookie with the given name and value.
 You can set additional cookie params like `domain`, `path`, `expires`, `secure` in array passed as last argument.
 
@@ -1035,9 +1079,11 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
  * `param` $val
  * `param array` $params
 
-### submitForm
 
-Submits the given form on the page, with the given form
+
+### submitForm
+ 
+Submits the given form on the page, optionally with the given form
 values.  Pass the form field's values as an array in the second
 parameter.
 
@@ -1207,8 +1253,9 @@ $I->submitForm('#my-form', [
  * `param` $params
  * `param` $button
 
-### switchToIframe
 
+### switchToIframe
+ 
 Switch to iframe or frame on the page.
 
 Example:
@@ -1224,8 +1271,9 @@ $I->switchToIframe("another_frame");
 
  * `param string` $name
 
-### uncheckOption
 
+### uncheckOption
+ 
 Unticks a checkbox.
 
 ``` php
@@ -1236,4 +1284,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Silex.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Silex.php">Help us to improve documentation. Edit module reference</a></div>

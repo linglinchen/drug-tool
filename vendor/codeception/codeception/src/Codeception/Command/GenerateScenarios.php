@@ -44,7 +44,7 @@ class GenerateScenarios extends Command
     {
         $suite = $input->getArgument('suite');
 
-        $suiteConf = $this->getSuiteConfig($suite);
+        $suiteConf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $path = $input->getOption('path')
             ? $input->getOption('path')
@@ -94,13 +94,13 @@ class GenerateScenarios extends Command
                 $output->writeln("* $name rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
-                $this->createFile($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
+                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
                 $output->writeln("* $name generated");
             }
         }
 
         if ($input->getOption('single-file')) {
-            $this->createFile($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
+            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 

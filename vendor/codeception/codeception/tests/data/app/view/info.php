@@ -28,7 +28,6 @@
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
 <a href="/">Franšízy - pobočky</a>
-<a href="/cookies">Link 3</a>
 
 <a href="/login" class="sign">Sign in!</a>
 
@@ -43,15 +42,6 @@
     <a id="second-link">Second</a>
     <a id="third-link">Third</a>
 </div>
-
-<script>
-    var a = 2;
-    var b = 3;
-    if (a <= b) {
-        console.log('a is less than b!');
-    }
-</script>
-<p>Text behind JS comparision</p>
 
 </body>
 </html>

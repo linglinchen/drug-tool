@@ -94,7 +94,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
         $command = new WebDriverCommand(
             null,
             DriverCommand::NEW_SESSION,
-            ['desiredCapabilities' => $desired_capabilities]
+            array('desiredCapabilities' => $desired_capabilities)
         );
 
         $response = $executor->execute($command);
@@ -133,7 +133,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     public function close()
     {
-        $this->execute(DriverCommand::CLOSE, []);
+        $this->execute(DriverCommand::CLOSE, array());
 
         return $this;
     }
@@ -148,7 +148,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     public function findElement(WebDriverBy $by)
     {
-        $params = ['using' => $by->getMechanism(), 'value' => $by->getValue()];
+        $params = array('using' => $by->getMechanism(), 'value' => $by->getValue());
         $raw_element = $this->execute(
             DriverCommand::FIND_ELEMENT,
             $params
@@ -168,13 +168,13 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     public function findElements(WebDriverBy $by)
     {
-        $params = ['using' => $by->getMechanism(), 'value' => $by->getValue()];
+        $params = array('using' => $by->getMechanism(), 'value' => $by->getValue());
         $raw_elements = $this->execute(
             DriverCommand::FIND_ELEMENTS,
             $params
         );
 
-        $elements = [];
+        $elements = array();
         foreach ($raw_elements as $raw_element) {
             $elements[] = $this->newElement($raw_element['ELEMENT']);
         }
@@ -191,7 +191,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     public function get($url)
     {
-        $params = ['url' => (string) $url];
+        $params = array('url' => (string) $url);
         $this->execute(DriverCommand::GET, $params);
 
         return $this;
@@ -237,7 +237,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
     {
         return $this->execute(
             DriverCommand::GET_CURRENT_WINDOW_HANDLE,
-            []
+            array()
         );
     }
 
@@ -248,7 +248,7 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     public function getWindowHandles()
     {
-        return $this->execute(DriverCommand::GET_WINDOW_HANDLES, []);
+        return $this->execute(DriverCommand::GET_WINDOW_HANDLES, array());
     }
 
     /**
@@ -268,10 +268,10 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      */
     private function prepareScriptArguments(array $arguments)
     {
-        $args = [];
+        $args = array();
         foreach ($arguments as $key => $value) {
             if ($value instanceof WebDriverElement) {
-                $args[$key] = ['ELEMENT' => $value->getID()];
+                $args[$key] = array('ELEMENT' => $value->getID());
             } else {
                 if (is_array($value)) {
                     $value = $this->prepareScriptArguments($value);
@@ -292,12 +292,12 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      * @param array $arguments The arguments of the script.
      * @return mixed The return value of the script.
      */
-    public function executeScript($script, array $arguments = [])
+    public function executeScript($script, array $arguments = array())
     {
-        $params = [
+        $params = array(
             'script' => $script,
             'args' => $this->prepareScriptArguments($arguments),
-        ];
+        );
 
         return $this->execute(DriverCommand::EXECUTE_SCRIPT, $params);
     }
@@ -315,12 +315,12 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
      * @param array $arguments The arguments of the script.
      * @return mixed The value passed by the script to the callback.
      */
-    public function executeAsyncScript($script, array $arguments = [])
+    public function executeAsyncScript($script, array $arguments = array())
     {
-        $params = [
+        $params = array(
             'script' => $script,
             'args' => $this->prepareScriptArguments($arguments),
-        ];
+        );
 
         return $this->execute(
             DriverCommand::EXECUTE_ASYNC_SCRIPT,
@@ -529,13 +529,13 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
         $command = new WebDriverCommand(
             null,
             DriverCommand::GET_ALL_SESSIONS,
-            []
+            array()
         );
 
         return $executor->execute($command)->getValue();
     }
 
-    public function execute($command_name, $params = [])
+    public function execute($command_name, $params = array())
     {
         $command = new WebDriverCommand(
             $this->sessionID,
@@ -547,8 +547,8 @@ class RemoteWebDriver implements WebDriver, JavaScriptExecutor
             $response = $this->executor->execute($command);
 
             return $response->getValue();
+        } else {
+            return null;
         }
-
-        return null;
     }
 }

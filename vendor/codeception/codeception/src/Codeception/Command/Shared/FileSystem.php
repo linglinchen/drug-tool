@@ -7,19 +7,36 @@ trait FileSystem
 {
     use Namespaces;
 
-    protected function createDirectoryFor($basePath, $className = '')
+    protected function buildPath($basePath, $testName)
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
-        if ($className) {
-            $className = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
-            $path = $basePath . DIRECTORY_SEPARATOR . $className;
-            $basePath = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
-        }
-        if (!file_exists($basePath)) {
+        $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
+        $path = $basePath . DIRECTORY_SEPARATOR . $testName;
+        $path = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
+        if (!file_exists($path)) {
             // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
-            mkdir($basePath, 0775, true); // Third parameter commands to create directories recursively
+            mkdir($path, 0775, true); // Third parameter commands to create directories recursively
         }
-        return $basePath;
+        return $path;
+    }
+
+    protected function getClassName($class)
+    {
+        $namespaces = $this->breakParts($class);
+        return array_pop($namespaces);
+    }
+
+    protected function breakParts($class)
+    {
+        $class      = str_replace('/', '\\', $class);
+        $namespaces = explode('\\', $class);
+        if (count($namespaces)) {
+            $namespaces[0] = ltrim($namespaces[0], '\\');
+        }
+        if (!$namespaces[0]) {
+            array_shift($namespaces);
+        } // remove empty namespace caused of \\
+        return $namespaces;
     }
 
     protected function completeSuffix($filename, $suffix)
@@ -43,7 +60,7 @@ trait FileSystem
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function createFile($filename, $contents, $force = false, $flags = null)
+    protected function save($filename, $contents, $force = false, $flags = null)
     {
         if (file_exists($filename) && !$force) {
             return false;

@@ -9,9 +9,4 @@ class UniversalFramework extends \Codeception\Lib\Framework
         $this->client = new \Codeception\Lib\Connector\Universal();
         $this->client->setIndex(\Codeception\Configuration::dataDir().$index);
     }
-
-    public function useUniversalFramework()
-    {
-
-    }
 }

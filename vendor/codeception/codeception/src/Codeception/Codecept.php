@@ -2,19 +2,19 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
-use Codeception\Subscriber\ExtensionLoader;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Codecept
 {
-    const VERSION = "2.4.0";
+    const VERSION = "2.2.4";
 
     /**
      * @var \Codeception\PHPUnit\Runner
      */
     protected $runner;
     /**
-     * @var \PHPUnit\Framework\TestResult
+     * @var \PHPUnit_Framework_TestResult
      */
     protected $result;
 
@@ -29,39 +29,32 @@ class Codecept
     protected $dispatcher;
 
     /**
-     * @var ExtensionLoader
-     */
-    protected $extensionLoader;
-
-    /**
      * @var array
      */
     protected $options = [
-        'silent'          => false,
-        'debug'           => false,
-        'steps'           => false,
-        'html'            => false,
-        'xml'             => false,
-        'json'            => false,
-        'tap'             => false,
-        'report'          => false,
-        'colors'          => false,
-        'coverage'        => false,
-        'coverage-xml'    => false,
-        'coverage-html'   => false,
-        'coverage-text'   => false,
-        'coverage-crap4j' => false,
-        'coverage-phpunit'=> false,
-        'groups'          => null,
-        'excludeGroups'   => null,
-        'filter'          => null,
-        'env'             => null,
-        'fail-fast'       => false,
-        'ansi'            => true,
-        'verbosity'       => 1,
-        'interactive'     => true,
-        'no-rebuild'      => false,
-        'quiet'           => false,
+        'silent'        => false,
+        'debug'         => false,
+        'steps'         => false,
+        'html'          => false,
+        'xml'           => false,
+        'json'          => false,
+        'tap'           => false,
+        'report'        => false,
+        'colors'        => false,
+        'coverage'      => false,
+        'coverage-xml'  => false,
+        'coverage-html' => false,
+        'coverage-text' => false,
+        'groups'        => null,
+        'excludeGroups' => null,
+        'filter'        => null,
+        'env'           => null,
+        'fail-fast'     => false,
+        'ansi'          => true,
+        'verbosity'     => 1,
+        'interactive'   => true,
+        'no-rebuild'    => false,
+        'quiet'         => false,
     ];
 
     protected $config = [];
@@ -73,19 +66,23 @@ class Codecept
 
     public function __construct($options = [])
     {
-        $this->result = new \PHPUnit\Framework\TestResult;
+        $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
-        $this->extensionLoader = new ExtensionLoader($this->dispatcher);
 
         $baseOptions = $this->mergeOptions($options);
-        $this->extensionLoader->bootGlobalExtensions($baseOptions); // extensions may override config
+
+        $this->loadExtensions($baseOptions);
 
         $this->config = Configuration::config();
-        $this->options = $this->mergeOptions($options); // options updated from config
+
+        $this->options = $this->mergeOptions($options);
 
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
-        $this->registerPrinter();
+
+        $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
+        $this->runner = new PHPUnit\Runner();
+        $this->runner->setPrinter($printer);
     }
 
     /**
@@ -102,6 +99,30 @@ class Codecept
         return array_merge($baseOptions, $options);
     }
 
+    protected function loadExtensions($options)
+    {
+        $config = Configuration::config();
+        foreach ($config['extensions']['enabled'] as $extensionClass) {
+            if (!class_exists($extensionClass)) {
+                throw new ConfigurationException(
+                    "Class `$extensionClass` is not defined. Autoload it or include into "
+                    . "'_bootstrap.php' file of 'tests' directory"
+                );
+            }
+            $extensionConfig = isset($config['extensions']['config'][$extensionClass])
+                ? $config['extensions']['config'][$extensionClass]
+                : [];
+
+            $extension = new $extensionClass($extensionConfig, $options);
+            if (!$extension instanceof EventSubscriberInterface) {
+                throw new ConfigurationException(
+                    "Class $extensionClass is not an EventListener. Please create it as Extension or Group class."
+                );
+            }
+            $this->extensions[] = $extension;
+        }
+    }
+
     protected function registerPHPUnitListeners()
     {
         $listener = new PHPUnit\Listener($this->dispatcher);
@@ -115,7 +136,6 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Dependencies());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
-        $this->dispatcher->addSubscriber(new Subscriber\PrepareTest());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
 
@@ -136,20 +156,20 @@ class Codecept
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
         }
-        $this->dispatcher->addSubscriber($this->extensionLoader);
-        $this->extensionLoader->registerGlobalExtensions();
+
+        // extensions
+        foreach ($this->extensions as $subscriber) {
+            $this->dispatcher->addSubscriber($subscriber);
+        }
     }
 
-    public function run($suite, $test = null, array $config = null)
+    public function run($suite, $test = null)
     {
         ini_set(
             'memory_limit',
             isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M'
         );
-
-        $config = $config ?: Configuration::config();
-
-        $settings = Configuration::suiteSettings($suite, $config);
+        $settings = Configuration::suiteSettings($suite, Configuration::config());
 
         $selectedEnvironments = $this->options['env'];
         $environments = Configuration::suiteEnvironments($suite);
@@ -207,7 +227,7 @@ class Codecept
     }
 
     /**
-     * @return \PHPUnit\Framework\TestResult
+     * @return \PHPUnit_Framework_TestResult
      */
     public function getResult()
     {
@@ -225,12 +245,5 @@ class Codecept
     public function getDispatcher()
     {
         return $this->dispatcher;
-    }
-
-    protected function registerPrinter()
-    {
-        $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
-        $this->runner = new PHPUnit\Runner();
-        $this->runner->setPrinter($printer);
     }
 }

@@ -5,12 +5,14 @@ use Codeception\Configuration;
 use Codeception\Util\FileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Recursively cleans `output` directory and generated code.
+ * Cleans `output` directory
  *
  * * `codecept clean`
+ * * `codecept clean -c path/to/project`
  *
  */
 class Clean extends Command
@@ -19,28 +21,18 @@ class Clean extends Command
 
     public function getDescription()
     {
-        return 'Recursively cleans log and generated code';
+        return 'Cleans or creates _output directory';
+    }
+
+    protected function configure()
+    {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $projectDir = Configuration::projectDir();
-        $this->cleanProjectsRecursively($output, $projectDir);
+        $this->getGlobalConfig($input->getOption('config'));
+        $output->writeln("<info>Cleaning up " . Configuration::outputDir() . "...</info>");
+        FileSystem::doEmptyDir(Configuration::outputDir());
         $output->writeln("Done");
-    }
-
-    private function cleanProjectsRecursively(OutputInterface $output, $projectDir)
-    {
-        $config = Configuration::config($projectDir);
-
-        $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['output'];
-        $output->writeln("<info>Cleaning up output " . $logDir . "...</info>");
-        FileSystem::doEmptyDir($logDir);
-
-        $subProjects = $config['include'];
-        foreach ($subProjects as $subProject) {
-            $subProjectDir = $projectDir . $subProject;
-            $this->cleanProjectsRecursively($output, $subProjectDir);
-        }
     }
 }

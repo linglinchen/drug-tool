@@ -2,9 +2,8 @@
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module\Redis;
-use Codeception\Test\Unit;
 
-class RedisTest extends Unit
+class RedisTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
@@ -60,16 +59,11 @@ class RedisTest extends Unit
         }
         /** @var ModuleContainer $container */
         $container = make_container();
-
-        try {
-            $this->module = new Redis($container);
-            $this->module->_setConfig(self::$config);
-            $this->module->_initialize();
-
-            $this->module->driver->flushDb();
-        } catch (Predis\Connection\ConnectionException $e) {
-            $this->markTestSkipped($e->getMessage());
-        }
+        $this->module = new Redis($container);
+        $this->module->_setConfig(self::$config);
+        $this->module->_initialize();
+        
+        $this->module->driver->flushDb();
 
         $addMethods = [
             'string' => 'set',
@@ -94,7 +88,7 @@ class RedisTest extends Unit
     protected function shouldFail($exceptionClass = null)
     {
         if (!$exceptionClass) {
-            $exceptionClass = 'PHPUnit\Framework\AssertionFailedError';
+            $exceptionClass = 'PHPUnit_Framework_AssertionFailedError';
         }
 
         $this->setExpectedException($exceptionClass);
