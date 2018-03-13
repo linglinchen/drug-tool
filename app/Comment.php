@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use DB;
+
 class Comment extends AppModel {
     use SoftDeletes;
 
@@ -37,6 +39,19 @@ class Comment extends AppModel {
                 ->toArray();
 
         return $comments;
+    }
+
+    /**
+     * Get comments for the given comment Id.
+     *
+     * @param string|string[] $entityId The atom's entityId(s)
+     * @param integer $productId The current product's id
+     *
+     * @return object[] The comments
+     */
+    protected static function getByCommentId($commentId) {
+        $commentRecord = self::select('comments.*')->where('id', '=', $commentId);
+        return $commentRecord;
     }
 
     /**
@@ -75,4 +90,30 @@ class Comment extends AppModel {
             $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
         }
     }
+
+/*get a list of max atoms ids so it is just a list of current atoms
+     *
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function getSuggestionIds($entityId) {
+
+/*       select the Comment id and the figure src info for records that have figure queries with uploaded images.
+*/
+        $sql = 'select id, text,
+            unnest(xpath(\'//query[@type="figure"]/suggestion/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as reviewstatus,
+            unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/ce_caption/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as caption,
+            unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/credit/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as credit,
+            unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments
+            where atom_entity_id=\''. $entityId .'\'';
+
+        $idArray= DB::select($sql);
+        $idArray = json_decode(json_encode($idArray), true);
+
+        return $idArray;
+
+    }
+
 }

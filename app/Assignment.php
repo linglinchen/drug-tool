@@ -54,6 +54,7 @@ class Assignment extends AppModel {
 			Comment::addSummaries($atoms, $productId);
 			foreach ($atoms as $atom){
 				$atom->addDomains($productId);
+				$atom->addCommentSuggestions($atom['entity_id']);
 			}
 			$atoms = $atoms->toArray();
 
