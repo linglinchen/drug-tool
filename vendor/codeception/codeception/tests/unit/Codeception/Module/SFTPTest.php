@@ -12,7 +12,7 @@ use Codeception\Util\Stub;
  * Contact: nathan.macnamara@outlook.com
  *
  */
-class SFTPTest extends \PHPUnit_Framework_TestCase
+class SFTPTest extends \PHPUnit\Framework\TestCase
 {
     protected $config = array(
         'host' => '127.0.0.1',
@@ -33,7 +33,7 @@ class SFTPTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\FTP(make_container());
         $this->module->_setConfig($this->config);
 
-        $this->module->_before(Stub::make('\Codeception\TestCase'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 
     /**
@@ -108,6 +108,6 @@ class SFTPTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->module->_after();
+        $this->module->_after(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 }

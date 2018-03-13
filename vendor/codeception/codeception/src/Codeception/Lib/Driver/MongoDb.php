@@ -4,6 +4,7 @@ namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
+use MongoDB\Database;
 
 class MongoDb
 {
@@ -17,6 +18,7 @@ class MongoDb
     private $user;
     private $password;
     private $client;
+    private $quiet = '';
 
     public static function connect($dsn, $user, $password)
     {
@@ -94,17 +96,20 @@ class MongoDb
      */
     public function __construct($dsn, $user, $password)
     {
-        $this->legacy = class_exists('\\MongoClient');
+        $this->legacy = extension_loaded('mongodb') === false &&
+            class_exists('\\MongoClient') &&
+            strpos(\MongoClient::VERSION, 'mongofill') === false;
 
         /* defining DB name */
-        $this->dbName = substr($dsn, strrpos($dsn, '/') + 1);
+        $this->dbName = preg_replace('/\?.*/', '', substr($dsn, strrpos($dsn, '/') + 1));
+
         if (strlen($this->dbName) == 0) {
             throw new ModuleConfigException($this, 'Please specify valid $dsn with DB name after the host:port');
         }
 
         /* defining host */
-        if (false !== strpos($dsn, 'mongodb://')) {
-            $this->host = str_replace('mongodb://', '', $dsn);
+        if (strpos($dsn, 'mongodb://') !== false) {
+            $this->host = str_replace('mongodb://', '', preg_replace('/\?.*/', '', $dsn));
         } else {
             $this->host = $dsn;
         }
@@ -168,9 +173,11 @@ class MongoDb
     {
         list($host, $port) = $this->getHostPort();
         $cmd = sprintf(
-            "mongorestore --host %s --port %s %s%s",
+            "mongorestore %s --host %s --port %s -d %s %s %s",
+            $this->quiet,
             $host,
             $port,
+            $this->dbName,
             $this->createUserPasswordCmdString(),
             escapeshellarg($dumpFile)
         );
@@ -193,10 +200,12 @@ class MongoDb
         }
         $dirName = trim(shell_exec($getDirCmd));
         $cmd = sprintf(
-            'tar -xzf %s && mongorestore --host %s --port %s%s %s && rm -r %s',
+            'tar -xzf %s && mongorestore %s --host %s --port %s -d %s %s %s && rm -r %s',
             escapeshellarg($dumpFile),
+            $this->quiet,
             $host,
             $port,
+            $this->dbName,
             $this->createUserPasswordCmdString(),
             $dirName,
             $dirName
@@ -246,5 +255,10 @@ class MongoDb
             return [$hostPort[0], self::DEFAULT_PORT];
         }
         throw new ModuleException($this, '$dsn MUST be like (mongodb://)<host>:<port>/<db name>');
+    }
+
+    public function setQuiet($quiet)
+    {
+        $this->quiet = $quiet ? '--quiet' : '';
     }
 }

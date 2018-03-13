@@ -10,7 +10,7 @@ class Sqlite extends Db
     protected $filename = '';
     protected $con = null;
 
-    public function __construct($dsn, $user, $password)
+    public function __construct($dsn, $user, $password, $options = null)
     {
         $filename = substr($dsn, 7);
         if ($filename === ':memory:') {
@@ -19,7 +19,7 @@ class Sqlite extends Db
 
         $this->filename = Configuration::projectDir() . $filename;
         $this->dsn = 'sqlite:' . $this->filename;
-        parent::__construct($this->dsn, $user, $password);
+        parent::__construct($this->dsn, $user, $password, $options);
     }
 
     public function cleanup()
@@ -53,6 +53,10 @@ class Sqlite extends Db
     public function getPrimaryKey($tableName)
     {
         if (!isset($this->primaryKeys[$tableName])) {
+            if ($this->hasRowId($tableName)) {
+                return $this->primaryKeys[$tableName] = ['_ROWID_'];
+            }
+
             $primaryKey = [];
             $query = 'PRAGMA table_info(' . $this->getQuotedName($tableName) . ')';
             $stmt = $this->executeQuery($query, []);
@@ -68,5 +72,18 @@ class Sqlite extends Db
         }
 
         return $this->primaryKeys[$tableName];
+    }
+
+    /**
+     * @param $tableName
+     * @return bool
+     */
+    private function hasRowId($tableName)
+    {
+        $params = ['type' => 'table', 'name' => $tableName];
+        $select = $this->select('sql', 'sqlite_master', $params);
+        $result = $this->executeQuery($select, $params);
+        $sql = $result->fetchColumn(0);
+        return strpos($sql, ') WITHOUT ROWID') === false;
     }
 }

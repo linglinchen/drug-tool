@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,11 +15,38 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Usage:
  *
- * * `codecept run acceptance` - run all acceptance tests
- * * `codecept run tests/acceptance/MyCept.php` - run only MyCept
- * * `codecept run acceptance MyCept` - same as above
- * * `codecept run acceptance MyCest:myTestInIt` - run one test from a Cest
- * * `codecept run acceptance checkout.feature` - run feature-file
+ * * `codecept run acceptance`: run all acceptance tests
+ * * `codecept run tests/acceptance/MyCept.php`: run only MyCept
+ * * `codecept run acceptance MyCept`: same as above
+ * * `codecept run acceptance MyCest:myTestInIt`: run one test from a Cest
+ * * `codecept run acceptance checkout.feature`: run feature-file
+ * * `codecept run acceptance -g slow`: run tests from *slow* group
+ * * `codecept run unit,functional`: run only unit and functional suites
+ *
+ * Verbosity modes:
+ *
+ * * `codecept run -v`:
+ * * `codecept run --steps`: print step-by-step execution
+ * * `codecept run -vv`:
+ * * `codecept run --debug`: print steps and debug information
+ * * `codecept run -vvv`: print internal debug information
+ *
+ * Load config:
+ *
+ * * `codecept run -c path/to/another/config`: from another dir
+ * * `codecept run -c another_config.yml`: from another config file
+ *
+ * Override config values:
+ *
+ * * `codecept run -o "settings: shuffle: true"`: enable shuffle
+ * * `codecept run -o "settings: lint: false"`: disable linting
+ * * `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
+ *
+ * Run with specific extension
+ *
+ * * `codecept run --ext Recorder` run with Recorder extension enabled
+ * * `codecept run --ext DotReporter` run with DotReporter printer
+ * * `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
  *
  * Full reference:
  * ```
@@ -27,6 +55,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  test                  test to be run
  *
  * Options:
+ *  -o, --override=OVERRIDE Override config values (multiple values allowed)
  *  --config (-c)         Use custom path for config
  *  --report              Show output in compact style
  *  --html                Generate html with results (default: "report.html")
@@ -42,6 +71,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
  *  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  *  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
+ *  --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
  *  --no-exit             Don't finish with exit code
  *  --group (-g)          Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)           Skip selected suites (multiple values allowed)
@@ -60,6 +90,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Run extends Command
 {
+    use Shared\Config;
     /**
      * @var Codecept
      */
@@ -90,6 +121,8 @@ class Run extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
+            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Override config values'),
+            new InputOption('ext', 'e', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Run with extension enabled'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
@@ -109,29 +142,37 @@ class Run extends Command
                 'coverage',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Run with code coverage',
-                'coverage.serialized'
+                'Run with code coverage'
             ),
             new InputOption(
                 'coverage-html',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage HTML report in path',
-                'coverage'
+                'Generate CodeCoverage HTML report in path'
             ),
             new InputOption(
                 'coverage-xml',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage XML report in file',
-                'coverage.xml'
+                'Generate CodeCoverage XML report in file'
             ),
             new InputOption(
                 'coverage-text',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage text report in file',
-                'coverage.txt'
+                'Generate CodeCoverage text report in file'
+            ),
+            new InputOption(
+                'coverage-crap4j',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage report in Crap4J XML format'
+            ),
+            new InputOption(
+                'coverage-phpunit',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage PHPUnit report in path'
             ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption(
@@ -184,14 +225,23 @@ class Run extends Command
         $this->options = $input->getOptions();
         $this->output = $output;
 
-        $config = Configuration::config($this->options['config']);
+        // load config
+        $config = $this->getGlobalConfig();
+
+        // update config from options
+        if (count($this->options['override'])) {
+            $config = $this->overrideConfig($this->options['override']);
+        }
+        if ($this->options['ext']) {
+            $config = $this->enableExtensions($this->options['ext']);
+        }
 
         if (!$this->options['colors']) {
             $this->options['colors'] = $config['settings']['colors'];
         }
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
         }
         if ($this->options['debug']) {
@@ -201,7 +251,17 @@ class Run extends Command
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
         $userOptions = array_merge(
             $userOptions,
-            $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html'])
+            $this->booleanOptions($input, [
+                'xml' => 'report.xml',
+                'html' => 'report.html',
+                'json' => 'report.json',
+                'tap' => 'report.tap.log',
+                'coverage' => 'coverage.serialized',
+                'coverage-xml' => 'coverage.xml',
+                'coverage-html' => 'coverage',
+                'coverage-text' => 'coverage.txt',
+                'coverage-crap4j' => 'crap4j.xml',
+                'coverage-phpunit' => 'coverage-phpunit'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
@@ -219,7 +279,7 @@ class Run extends Command
         if ($this->options['report']) {
             $userOptions['silent'] = true;
         }
-        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text']) {
+        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j'] or $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
@@ -229,15 +289,59 @@ class Run extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
-            list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
-        }
-
         if ($this->options['group']) {
             $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
         }
         if ($input->getArgument('test')) {
             $this->options['steps'] = true;
+        }
+
+        if (!$test) {
+            // Check if suite is given and is in an included path
+            if (!empty($suite) && !empty($config['include'])) {
+                $isIncludeTest = false;
+                // Remember original projectDir
+                $projectDir = Configuration::projectDir();
+
+                foreach ($config['include'] as $include) {
+                    // Find if the suite begins with an include path
+                    if (strpos($suite, $include) === 0) {
+                        // Use include config
+                        $config = Configuration::config($projectDir.$include);
+
+                        if (!isset($config['paths']['tests'])) {
+                            throw new \RuntimeException(
+                                sprintf("Included '%s' has no tests path configured", $include)
+                            );
+                        }
+
+                        $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
+
+                        try {
+                            list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
+                            $isIncludeTest = true;
+                        } catch (\InvalidArgumentException $e) {
+                            // Incorrect include match, continue trying to find one
+                            continue;
+                        }
+                    } else {
+                        $result = $this->matchSingleTest($suite, $config);
+                        if ($result) {
+                            list(, $suite, $test) = $result;
+                        }
+                    }
+                }
+
+                // Restore main config
+                if (!$isIncludeTest) {
+                    $config = Configuration::config($projectDir);
+                }
+            } elseif (!empty($suite)) {
+                $result = $this->matchSingleTest($suite, $config);
+                if ($result) {
+                    list(, $suite, $test) = $result;
+                }
+            }
         }
 
         if ($test) {
@@ -248,9 +352,10 @@ class Run extends Command
         $this->codecept = new Codecept($userOptions);
 
         if ($suite and $test) {
-            $this->codecept->run($suite, $test);
+            $this->codecept->run($suite, $test, $config);
         }
 
+        // Run all tests of given suite or all suites
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
@@ -274,6 +379,38 @@ class Run extends Command
             if (!$this->codecept->getResult()->wasSuccessful()) {
                 exit(1);
             }
+        }
+    }
+
+    protected function matchSingleTest($suite, $config)
+    {
+        // Workaround when codeception.yml is inside tests directory and tests path is set to "."
+        // @see https://github.com/Codeception/Codeception/issues/4432
+        if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+            $suite = './' . $suite;
+        }
+
+        // running a single test when suite has a configured path
+        if (isset($config['suites'])) {
+            foreach ($config['suites'] as $s => $suiteConfig) {
+                if (!isset($suiteConfig['path'])) {
+                    continue;
+                }
+                $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
+                if ($suiteConfig['path'] === '.') {
+                    $testsPath = $config['paths']['tests'];
+                }
+                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                    $matches[2] = $matches[1];
+                    $matches[1] = $s;
+                    return $matches;
+                }
+            }
+        }
+
+        // Run single test without included tests
+        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+            return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
     }
 
@@ -333,12 +470,17 @@ class Run extends Command
         return $executed;
     }
 
-    protected function matchTestFromFilename($filename, $tests_path)
+    protected function matchTestFromFilename($filename, $testsPath)
     {
+        $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
+        $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
+
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
+        }
+        if (!isset($matches[2])) {
+            $matches[2] = null;
         }
 
         return $matches;
@@ -346,9 +488,15 @@ class Run extends Command
 
     private function matchFilteredTestName(&$path)
     {
-        $test_parts = explode(':', $path);
+        $test_parts = explode(':', $path, 2);
         if (count($test_parts) > 1) {
             list($path, $filter) = $test_parts;
+            // use carat to signify start of string like in normal regex
+            // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
+            $carat_pos = strpos($filter, '^');
+            if ($carat_pos !== false) {
+                $filter = substr_replace($filter, ':', $carat_pos, 1);
+            }
             return $filter;
         }
 
@@ -362,11 +510,18 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            if (strpos($token, '--') === 0 && $token !== '--') {
-                $options[] = substr($token, 2);
+
+            if (empty($token)) {
                 continue;
             }
-            if (strpos($token, '-') === 0) {
+
+            if ($token == '--') {
+                break; // there should be no options after ' -- ', only arguments
+            }
+
+            if (substr($token, 0, 2) === '--') {
+                $options[] = substr($token, 2);
+            } elseif ($token[0] === '-') {
                 $shortOption = substr($token, 1);
                 $options[] = $this->getDefinition()->getOptionForShortcut($shortOption)->getName();
             }
@@ -378,15 +533,14 @@ class Run extends Command
     {
         $values = [];
         $request = (string)$input;
-        foreach ($options as $option) {
+        foreach ($options as $option => $defaultValue) {
             if (strpos($request, "--$option")) {
-                $values[$option] = $input->hasParameterOption($option)
-                    ? $input->getParameterOption($option)
-                    : $input->getOption($option);
+                $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
             } else {
                 $values[$option] = false;
             }
         }
+
         return $values;
     }
 
