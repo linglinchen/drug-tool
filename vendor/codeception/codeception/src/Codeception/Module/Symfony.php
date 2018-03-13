@@ -9,6 +9,8 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
  * This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
@@ -17,12 +19,45 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * <https://github.com/Codeception/symfony-demo>
  *
- * ## Status
- *
- * * Maintainer: **raistlin**
- * * Stability: **stable**
- *
  * ## Config
+ *
+ * ### Symfony 4.x
+ *
+ * * app_path: 'src' - in Symfony 4 Kernel is located inside `src`
+ * * environment: 'local' - environment used for load kernel
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * debug: true - turn on/off debug mode
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * rebootable_client: 'true' - reboot client's kernel before each request
+ *
+ * #### Example (`functional.suite.yml`) - Symfony 4 Directory Structure
+ *
+ *     modules:
+ *        enabled:
+ *           - Symfony:
+ *               app_path: 'src'
+ *               environment: 'test'
+ *
+ *
+ * ### Symfony 3.x
+ *
+ * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+ * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+ * * environment: 'local' - environment used for load kernel
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * debug: true - turn on/off debug mode
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * rebootable_client: 'true' - reboot client's kernel before each request
+ *
+ * #### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+ *
+ *     modules:
+ *        enabled:
+ *           - Symfony:
+ *               app_path: 'app/front'
+ *               var_path: 'var'
+ *               environment: 'local_test'
+ *
  *
  * ### Symfony 2.x
  *
@@ -42,26 +77,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *            environment: 'local_test'
  * ```
  *
- * ### Symfony 3.x Directory Structure
- *
- * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
- * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
- * * environment: 'local' - environment used for load kernel
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
- * * rebootable_client: 'true' - reboot client's kernel before each request
- *
- * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
- *
- *     modules:
- *        enabled:
- *           - Symfony:
- *               app_path: 'app/front'
- *               var_path: 'var'
- *               environment: 'local_test'
- *
- *
  * ## Public Properties
  *
  * * kernel - HttpKernel instance
@@ -74,7 +89,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Usage example:
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - Symfony:
@@ -133,20 +148,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) {
-            throw new ModuleRequireException(
-                __CLASS__,
-                "Symfony bootstrap file not found in $cache\n \n" .
-                "Please specify path to bootstrap file using `var_path` config option\n \n" .
-                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
-                "modules:\n    enabled:\n" .
-                "    - Symfony:\n" .
-                "        var_path: '../../app'\n" .
-                "        app_path: '../../app'"
-            );
-        }
-        require_once $cache;
+
+        $this->initializeSymfonyCache();
         $this->kernelClass = $this->getKernelClass();
         $maxNestingLevel = 200; // Symfony may have very long nesting level
         $xdebugMaxLevelKey = 'xdebug.max_nesting_level';
@@ -159,6 +162,31 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         if ($this->config['cache_router'] === true) {
             $this->persistService('router', true);
+        }
+    }
+
+    /**
+     * Require Symfonys bootstrap.php.cache only for PHP Version < 7
+     *
+     * @throws ModuleRequireException
+     */
+    private function initializeSymfonyCache()
+    {
+        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (PHP_VERSION_ID < 70000 && !file_exists($cache)) {
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Symfony bootstrap file not found in $cache\n \n" .
+                "Please specify path to bootstrap file using `var_path` config option\n \n" .
+                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
+                "modules:\n    enabled:\n" .
+                "    - Symfony:\n" .
+                "        var_path: '../../app'\n" .
+                "        app_path: '../../app'"
+            );
+        }
+        if (file_exists($cache)) {
+            require_once $cache;
         }
     }
 
@@ -202,6 +230,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             if ($this->_getContainer()->has('doctrine.orm.default_entity_manager')) {
                 $this->persistService('doctrine.orm.default_entity_manager', true);
             }
+            if ($this->_getContainer()->has('doctrine.dbal.backend_connection')) {
+                $this->persistService('doctrine.dbal.backend_connection', true);
+            }
         }
         return $this->permanentServices[$this->config['em_service']];
     }
@@ -225,8 +256,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getKernelClass()
     {
-        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
+        $path = codecept_root_dir() . $this->config['app_path'];
+        if (!file_exists(codecept_root_dir() . $this->config['app_path'])) {
             throw new ModuleRequireException(
                 __CLASS__,
                 "Can't load Kernel from $path.\n"
@@ -240,17 +271,37 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if (!count($results)) {
             throw new ModuleRequireException(
                 __CLASS__,
-                "AppKernel was not found at $path. "
-                . "Specify directory where Kernel class for your application is located with `app_path` parameter."
+                "File with Kernel class was not found at $path. "
+                . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
             );
         }
-
         $file = current($results);
-        $class = $file->getBasename('.php');
+
+        if (file_exists(codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+            // ensure autoloader from this dir is loaded
+            require_once codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        }
 
         require_once $file;
 
-        return $class;
+        $possibleKernelClasses = [
+            'AppKernel', // Symfony Standard
+            'App\Kernel', // Symfony Flex
+        ];
+        foreach ($possibleKernelClasses as $class) {
+            if (class_exists($class)) {
+                $refClass = new \ReflectionClass($class);
+                if ($refClass->getFileName() === $file->getRealpath()) {
+                    return $class;
+                }
+            }
+        }
+
+        throw new ModuleRequireException(
+            __CLASS__,
+            "Kernel class was not found in $file. "
+            . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
+        );
     }
 
     /**
@@ -347,7 +398,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
-        $expected = array_merge(array('_route' => $routeName), $params);
+        $expected = array_merge(['_route' => $routeName], $params);
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
@@ -471,10 +522,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
+                    $roles = $profile->getCollector('security')->getRoles();
+
+                    if ($roles instanceof Data) {
+                        $roles = $this->extractRawRoles($roles);
+                    }
+
                     $this->debugSection(
                         'User',
                         $profile->getCollector('security')->getUser()
-                        . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']'
+                        . ' [' . implode(',', $roles) . ']'
                     );
                 } else {
                     $this->debugSection('User', 'Anonymous');
@@ -490,6 +547,22 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                 $this->debugSection('Time', $profile->getCollector('timer')->getTime());
             }
         }
+    }
+
+    /**
+     * @param Data $data
+     * @return array
+     */
+    private function extractRawRoles(Data $data)
+    {
+        if ($this->dataRevealsValue($data)) {
+            $roles = $data->getValue();
+        } else {
+            $raw = $data->getRawData();
+            $roles = isset($raw[1]) ? $raw[1] : [];
+        }
+
+        return $roles;
     }
 
     /**
@@ -538,5 +611,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($this->client) {
             $this->client->rebootKernel();
         }
+    }
+
+    /**
+     * Public API from Data changed from Symfony 3.2 to 3.3.
+     *
+     * @param \Symfony\Component\VarDumper\Cloner\Data $data
+     *
+     * @return bool
+     */
+    private function dataRevealsValue(Data $data)
+    {
+        return method_exists($data, 'getValue');
     }
 }

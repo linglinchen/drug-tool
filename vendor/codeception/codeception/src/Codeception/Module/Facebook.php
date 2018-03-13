@@ -6,6 +6,7 @@ use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\RequiresPackage;
+use Codeception\Lib\Notification;
 use Codeception\Module as BaseModule;
 
 /**
@@ -116,7 +117,7 @@ EOF;
 
     public function _requires()
     {
-        return ['Facebook\Facebook' => '"facebook/php-sdk-v4": "~5.0"'];
+        return ['Facebook\Facebook' => '"facebook/graph-sdk": "~5.3"'];
     }
 
     public function _depends()
@@ -140,6 +141,7 @@ EOF;
 
     public function _initialize()
     {
+        Notification::deprecate('Facebook module is not maintained and will be deprecated. Contact Codeception team if you are interested in maintaining it');
         if (!array_key_exists('test_user', $this->config)) {
             $this->config['test_user'] = [
                 'permissions' => [],

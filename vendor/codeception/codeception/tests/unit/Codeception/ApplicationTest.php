@@ -1,10 +1,8 @@
 <?php
 
-namespace Codception;
+namespace Codeception;
 
-use Codeception\Application;
-
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()
