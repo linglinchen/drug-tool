@@ -52,11 +52,12 @@ class User extends Authenticatable {
      */
     public static function publicList() {
         $output = [];
-
-        $users = self::select()->get();
-        foreach($users as $user) {
-            unset($user['password'], $user['remember_token']);
-            $user->userProducts;
+//added with here, but only because there is a relationship to userproducts setup in this table.
+        $users = self::with('userProducts')->select()->get();
+     foreach($users as $user) {
+           unset($user['password'], $user['remember_token']);
+//this part of the loop was the additional database call
+//            $user->userProducts;
             $output[$user['id']] = $user;
         }
 
@@ -71,7 +72,7 @@ class User extends Authenticatable {
     public function loadACL($productId = null) {
         $ACL = new AccessControl($productId);
         $ACL->loadPermissions($this->toArray());
-        
+
         $this->ACL = $ACL;
     }
 
@@ -102,7 +103,7 @@ class User extends Authenticatable {
                 $query->where($subQueryFunction);
             }
         }
-        
+
         return $query->get();
     }
 
