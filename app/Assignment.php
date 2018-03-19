@@ -61,12 +61,14 @@ class Assignment extends AppModel {
 					->get();
 
 			Comment::addSummaries($atoms, $productId);
-
-
+/*
+//Removed as this was looping through unused stuff (addDomains) or was absorbed into the above addSummaries in Comment model
 			foreach ($atoms as $atom){
-				$atom->addDomains($productId);
-				$atom->addCommentSuggestions($atom['entity_id']);
-			}
+//Below is actually not being used since only the main domain in the domain_code field of atom is being looked at
+//				$atom->addDomains($productId);
+//replaced the below call by adding to the commentsummary in comment model
+//				$atom->addCommentSuggestions($atom['entity_id']);
+			}*/
 
 			$atoms = $atoms->toArray();
 

@@ -358,6 +358,8 @@ class Atom extends AppModel {
      *
      * @return object This object
      */
+
+ //Below is  not being used in assignments since only the main domain in the domain_code field of atom is being looked at
     public function addDomains($productId) {
         preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $this->xml, $matches);
         array_shift($matches[1]); //exclude main word's domain info since it has been stored in atom table
@@ -385,10 +387,10 @@ class Atom extends AppModel {
      */
     public function addCommentSuggestions($entityId) {
 
-        $suggestedFigures = [];
+        $suggestedFiguresB = [];
         $suggestedFigureIds = Comment::getSuggestionIds($entityId);
 
-        $this->suggestedFigures=$suggestedFigureIds;
+        $this->suggestedFiguresB=$suggestedFigureIds;
         return $this;
     }
 
