@@ -44,7 +44,7 @@ class QuickFixAssignLaser extends Command {
                                              ->where('task_id', '=', 556)
                                              ->where('user_id', '=', 513)
                                              ->get();
-                if (sizeof($existing_assignments) == 0){ // if Laser contributor has not been assigned
+                if (sizeof($existing_laser_assignments) == 0){ // if Laser contributor has not been assigned
                     $assignment = [
                         'atom_entity_id' => $atom['entity_id'],
                         'user_id' => 513,
