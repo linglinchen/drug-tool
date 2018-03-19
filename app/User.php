@@ -45,24 +45,26 @@ class User extends Authenticatable {
         return $this->hasMany('App\UserProduct');
     }
 
-    /**
+    /** NEWVERSION
      * Returns a list of all users with sensitive fields excluded.
      *
      * @return array The list of users, indexed by id
      */
     public static function publicList() {
         $output = [];
-//added with here, but only because there is a relationship to userproducts setup in this table.
+//added 'with' here to bring in userProducts. This works only because there is a relationship to userProducts setup in this model.
         $users = self::with('userProducts')->select()->get();
+        //print_r($users);
      foreach($users as $user) {
            unset($user['password'], $user['remember_token']);
-//this part of the loop was the additional database call
+//this part of the loop was an additional database call., now removed
 //            $user->userProducts;
             $output[$user['id']] = $user;
         }
 
         return $output;
     }
+
 
     /**
      * Load this user's ACL.
@@ -83,6 +85,8 @@ class User extends Authenticatable {
      */
     public function getPermissions() {
 		$userProducts = $this->userProducts;
+//userProducts creates a whole collection .. for pluck, maybe a select('product_id')->get()
+       // print_r($userProducts);
         $productIds = $userProducts->pluck('product_id')->all();
 
         //ORMs make everything so easy!

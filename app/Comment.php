@@ -67,7 +67,6 @@ class Comment extends AppModel {
         $commentSummaries = [];
         $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
         $comments = self::getByAtomEntityId($entityIds, $productId);
-
         foreach($comments as $comment) {
             if(!isset($groupedComments[$comment['atom_entity_id']])) {
                 $groupedComments[$comment['atom_entity_id']] = [];

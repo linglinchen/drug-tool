@@ -18,6 +18,8 @@ use App\Status;
 class Atom extends AppModel {
     use SoftDeletes;
 
+
+/*could add some relationships here for simpler relationships, for instance 'has many' comments*/
     /**
      * @var string This model's corresponding database table
      */
@@ -48,6 +50,9 @@ class Atom extends AppModel {
         'pill' => 'pl'
     ];
 
+
+
+
     /**
      * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
      *
@@ -61,9 +66,6 @@ class Atom extends AppModel {
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
 
-        // if ($this->modified_by == NULL){
-        //     $this->modified_by = 200;
-        // }
 
         $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
         $devStatusId = Status::getDevStatusId($this->product_id)->id;
