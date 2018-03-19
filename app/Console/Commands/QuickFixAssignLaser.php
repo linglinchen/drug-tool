@@ -51,10 +51,12 @@ class QuickFixAssignLaser extends Command {
                         'created_by' => 200
                     ];
                     //Assignment::query()->insert($assignment);
-                    echo "assigned to LASER contributor for $atom[entity_id]\n";
+                    echo "assigned to LASER contributor for\t$atom[entity_id]\t\t$atom[alpha_title]\n\n";
+                } else {
+                    echo "already assigned to LASER contributor:\t$atom[entity_id]\t\t$atom[alpha_title]\n";
                 }
             } else {
-                echo "No open task (556): $atom[entity_id]\n";
+                echo "No open task (556):\t$atom[entity_id]\t\t$atom[alpha_title]\n";
             }
         }
     }
