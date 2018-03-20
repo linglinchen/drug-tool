@@ -416,9 +416,15 @@ class Assignment extends AppModel {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
+
+
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
+//selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
+				->whereIn('atoms.id', function ($q) {
+                        Atom::buildLatestIDQuery(null, $q)->select('id');
+                    })
+	//			->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
 				->groupBy('atoms.entity_id');
 	}
