@@ -53,7 +53,7 @@ class User extends Authenticatable {
     public static function publicList() {
         $output = [];
 //added 'with' here to bring in userProducts. This works only because there is a relationship to userProducts setup in this model.
-        $users = self::with('userProducts')->select()->get();
+        $users = self::with('userProducts')->get();
         //print_r($users);
      foreach($users as $user) {
            unset($user['password'], $user['remember_token']);

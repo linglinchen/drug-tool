@@ -18,6 +18,18 @@ class Molecule extends AppModel {
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at'];
 
+
+    /**
+     * Set up the Atoms relationship.
+     *
+     * @returns hasOne
+     */
+    public function atoms() {
+        return $this->hasOne('App\Atom', 'code', 'molecule_code');
+    }
+
+
+
     /*
      * Returns all molecule titles as an associative array.
      * code => title
@@ -56,7 +68,7 @@ class Molecule extends AppModel {
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
             $atom->addDomains($productId);
-            $atom->addCommentSuggestions($atom['entity_id']);
+ //           $atom->addCommentSuggestions($atom['entity_id']);
             $atom = $atom->toArray();
             unset($atom['xml']);
             $atoms[$key] = $atom;

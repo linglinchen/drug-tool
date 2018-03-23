@@ -35,7 +35,7 @@ class Comment extends AppModel {
                 ->where('product_id', '=', $productId)
                 ->groupBy('comments.id')
                 ->orderBy('comments.id')
-                ->get()
+                ->get(['id', 'atom_entity_id', 'user_id', 'text', 'created_at','updated_at','deleted_at'])
                 ->toArray();
 
         return $comments;
@@ -67,6 +67,7 @@ class Comment extends AppModel {
         $commentSummaries = [];
         $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
         $comments = self::getByAtomEntityId($entityIds, $productId);
+//$comments = $atoms['comments'];
         foreach($comments as $comment) {
 
             if(!isset($groupedComments[$comment['atom_entity_id']])) {
@@ -92,8 +93,9 @@ class Comment extends AppModel {
         foreach($atoms as $atom) {
             $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
  //Adds on the suggestedFigures summary
-            $atom->suggestedFigures =  self::getSuggestionIds($atom->entity_id);
+           $atom->suggestedFigures =  self::getSuggestionIds($atom->entity_id);
         }
+   //     self::getSuggestionIds($atom->entity_id);
     }
 
 /*get a list of suggested figure ids

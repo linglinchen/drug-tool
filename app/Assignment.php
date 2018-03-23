@@ -20,6 +20,13 @@ class Assignment extends AppModel {
 
 
 */
+
+
+
+
+
+
+
 	/**
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
 	 * Adds the appropriate atoms.
@@ -42,7 +49,6 @@ class Assignment extends AppModel {
 		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
-
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
@@ -57,8 +63,11 @@ class Assignment extends AppModel {
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
+//just bring in necessary columns. exclude xml, edition, sort
 			$atoms = Atom::findNewest($entityIds, $productId)
-					->get();
+					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);
+/*			$atoms = Atom::findNewest($entityIds, $productId)
+					->get();*/
 
 			Comment::addSummaries($atoms, $productId);
 /*
@@ -73,9 +82,9 @@ class Assignment extends AppModel {
 			$atoms = $atoms->toArray();
 
 			//remove xml
-			foreach($atoms as $atomKey => $atom) {
+/*			foreach($atoms as $atomKey => $atom) {
 				unset($atom['xml']);		//a waste of bandwidth in this case
-			}
+			}*/
 
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
@@ -139,7 +148,7 @@ class Assignment extends AppModel {
 	 */
 	protected static function _addListFilters($query, $filters) {
 
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'atom.suggestedFigures', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -160,6 +169,13 @@ class Assignment extends AppModel {
 							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
 						}
 					}
+					else if ($validFilter == 'atom.suggestedFigures'){
+						if ($filterValue == 1){
+							$query->having('atom.suggestedFigures', '>', 0);
+						}else if ($filterValue == 0){
+							$query->having('atom.suggestedFigures', '=', 0);
+						}
+					}
 					else if ($validFilter == 'atom_entity_id'){
 						$query->where('assignments.atom_entity_id', '=', $filterValue);
 					}
@@ -173,6 +189,7 @@ class Assignment extends AppModel {
 			}
 		}
 	}
+
 
 	/**
 	 * Order the list query.
@@ -224,9 +241,9 @@ class Assignment extends AppModel {
 
 		if(array_key_exists('task_id', $promotion)) {
 			if ($currentAssignment){
-				if(array_key_exists('maxId', $currentAssignment)){
+/*				if(array_key_exists('maxId', $currentAssignment)){
 					unset($currentAssignment->maxId);
-				}
+				}*/
 				if ($currentAssignment->task_id == $promotion['task_id']){ //mass assignment
 					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
 				}
@@ -320,9 +337,9 @@ class Assignment extends AppModel {
 		 if (array_key_exists('assignment_ids', $promotion)){ //the request is from mass assignment
 			 foreach ($promotion['assignment_ids'] as $assignmentId){
 				$assignment = self::getAssignment($assignmentId, $productId);
-				if($assignment['maxId']){
+/*				if($assignment['maxId']){
 					unset($assignment['maxId']);
-				}
+				}*/
 				if($assignment && !$assignment->task_end) {
 					$newAssignment = $assignment->replicate();
 					$newAssignment->created_by = $user->id;
@@ -347,10 +364,10 @@ class Assignment extends AppModel {
 		else{
 			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
-				if($assignment['maxId']){
+/*				if($assignment['maxId']){
 					unset($assignment['maxId']);
-				}
-				//self::_endCurrentAssignment($atomEntityId, $productId);
+				}*/
+				self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
 				$assignment->user_id = $promotion['user_id'];
@@ -408,6 +425,7 @@ class Assignment extends AppModel {
 		return null;
 	}
 
+
 	/**
 	 * Select all that belong to the specified product.
 	 *
@@ -421,11 +439,11 @@ class Assignment extends AppModel {
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 //selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
+				->where('atoms.product_id', '=', (int)$productId)
 				->whereIn('atoms.id', function ($q) {
                         Atom::buildLatestIDQuery(null, $q)->select('id');
                     })
 	//			->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
-				->where('atoms.product_id', '=', (int)$productId)
-				->groupBy('atoms.entity_id');
+				;
 	}
 }

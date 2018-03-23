@@ -66,10 +66,11 @@ class AccessControl extends AppModel {
 
 		$accessControlStructure = new AccessControlStructure();
 		$structure = $accessControlStructure->getStructure()->toArray();
-		
+
 		$this->permissions = [];
 		$permissions = $user->getPermissions()->toArray();
 		$productIds = $user->userProducts->pluck('product_id')->all();
+
 		foreach($productIds as $productId) {
 			$this->permissions[$productId] = self::_applyPermissions($structure, $permissions, $productId);
 		}
@@ -130,7 +131,7 @@ class AccessControl extends AppModel {
 	 */
 	protected function _getProductPermissions() {
 		$productId = $this->productId;
-		
+
 		return $this->permissions[$productId];
 	}
 

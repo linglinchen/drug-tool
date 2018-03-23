@@ -50,7 +50,31 @@ class Atom extends AppModel {
         'pill' => 'pl'
     ];
 
+    /**
+     * Set up the Molecules relationship.
+     *
+     * @returns hasOne
+     */
+/*    public function molecule() {
+        return $this->belongsTo('App\Molecule', 'molecule_code', 'code');
+    }
 
+    public function comments() {
+        return $this->hasMany('App\Comment', 'atom_entity_id', 'entity_id');
+    }
+
+*/
+/*public function scopeJustCurrent($query){
+    return $query->where(function($q){
+                            $q->has('childItems','==',0)->has('parentItem','==',0)->whereDate('due_date','=', Carbon::today()->toDateString())->whereNull('return_date');
+                        })->orWhere(function($q2){
+                            $q2->has('childItems')->has('parentItem','==',0)->whereHas('childItems',function($q3) use($q2){
+                                $q3->whereDate('due_date','=', Carbon::today()->toDateString())->whereNull('return_date');
+                            });
+                        })->with('latestChild');
+
+}
+*/
 
 
     /**
@@ -387,10 +411,10 @@ class Atom extends AppModel {
      */
     public function addCommentSuggestions($entityId) {
 
-        $suggestedFiguresB = [];
+        $suggestedFigures = [];
         $suggestedFigureIds = Comment::getSuggestionIds($entityId);
 
-        $this->suggestedFiguresB=$suggestedFigureIds;
+        $this->suggestedFigures=$suggestedFigureIds;
         return $this;
     }
 
