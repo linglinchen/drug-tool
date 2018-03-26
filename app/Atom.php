@@ -55,7 +55,7 @@ class Atom extends AppModel {
      *
      * @returns hasOne
      */
-/*    public function molecule() {
+    public function molecule() {
         return $this->belongsTo('App\Molecule', 'molecule_code', 'code');
     }
 
@@ -63,7 +63,7 @@ class Atom extends AppModel {
         return $this->hasMany('App\Comment', 'atom_entity_id', 'entity_id');
     }
 
-*/
+
 /*public function scopeJustCurrent($query){
     return $query->where(function($q){
                             $q->has('childItems','==',0)->has('parentItem','==',0)->whereDate('due_date','=', Carbon::today()->toDateString())->whereNull('return_date');

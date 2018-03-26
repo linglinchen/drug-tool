@@ -41,6 +41,7 @@ class Assignment extends AppModel {
 	 * @return array The list of assignments
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+
 		$columns = $this->getMyColumns();
 //		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
@@ -148,7 +149,8 @@ class Assignment extends AppModel {
 	 */
 	protected static function _addListFilters($query, $filters) {
 
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'atom.suggestedFigures', 'task_ended', 'has_discussion'];
+
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'has_figures', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -165,15 +167,18 @@ class Assignment extends AppModel {
 					else if ($validFilter == 'has_discussion'){
 						if ($filterValue == 1){
 							$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
+							// print_r($query->toSql());
 						}else if ($filterValue == 0){
 							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
 						}
 					}
-					else if ($validFilter == 'atom.suggestedFigures'){
+					else if ($validFilter == 'has_figures'){
 						if ($filterValue == 1){
-							$query->having('atom.suggestedFigures', '>', 0);
-						}else if ($filterValue == 0){
-							$query->having('atom.suggestedFigures', '=', 0);
+
+						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
+
+						}else if($filterValue == 0){
+							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
 						}
 					}
 					else if ($validFilter == 'atom_entity_id'){
