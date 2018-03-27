@@ -479,7 +479,6 @@ class Assignment extends AppModel {
 	 */
 	public static function allForProduct($productId) {
 
-
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
 //selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
