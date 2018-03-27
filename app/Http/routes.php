@@ -52,7 +52,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
 
             Route::get('{productId}/atom/{entityId}/comment', ['uses' => 'AtomCommentController@getAction']);
             Route::post('{productId}/atom/{entityId}/comment', ['uses' => 'AtomCommentController@postAction']);
-            Route::delete('{productId}/atom/{entityId}/comment/{commentId}', ['uses' => 'AtomCommentController@deleteAction']);
+            Route::post('{productId}/atom/{entityId}/comment/update/{commentId}', ['uses' => 'AtomCommentController@updateAction']);
 
             Route::get('{productId}/molecule', ['uses' => 'MoleculeController@listAction']);
             Route::get('{productId}/molecule/{code}', ['uses' => 'MoleculeController@getAction']);

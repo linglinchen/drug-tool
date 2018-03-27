@@ -67,6 +67,8 @@ php artisan optimize
 ```
 # Notes
 
+- **<a href="https://github.com/itsgoingd/clockwork" target="_blank">Clockwork</a>, a handy developer tool has been added** as of March 2018. First, delete your local 'vendor' directory. Next, in your local VM, as 'sudo su' run 'composer install' to get the server-side component. Then, <a href="https://chrome.google.com/webstore/detail/clockwork/dmggabnehkmmfmdffgajcflpdjlnoemp" target="_blank">Install the Chrome extension</a> to make a new "Clockwork" tab available in your F12 dev tools, then enable the extension.
+Finally, before accessing your local host, hit Ctrl+Shift+Delete to clear the browser cache. If any issues arise, see below for 'Sometimes Lavavel will fail to find a class' procedures.
 - **All** modifications to the database structure should be handled with migrations. If you make the change with something like pgAdmin or Heidi, *you're doing it wrong!*
 - Migration scripts are stored in the database/migrations directory.
 - If new migrations are added, refresh database by running this command from the metis root directory: `php artisan migrate` *Never do this on production!!!*
