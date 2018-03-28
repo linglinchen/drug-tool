@@ -450,7 +450,7 @@ class Assignment extends AppModel {
 
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-//selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
+//selects only current/latest atoms.
 				->where('atoms.product_id', '=', (int)$productId)
 				->whereIn('atoms.id', function ($q) {
                         Atom::buildLatestIDQuery(null, $q)->select('id');
