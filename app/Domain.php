@@ -52,6 +52,7 @@ class Domain extends AppModel {
                 ->orderBy('alpha_title', 'ASC')
                 ->get();
         Comment::addSummaries($atoms, $productId);
+//this functionality now part of the above 'Comment::addSummaries'
 /*        foreach ($atoms as $atom){
                 $atom->addCommentSuggestions($atom['entity_id']);
         }*/

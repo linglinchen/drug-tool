@@ -68,7 +68,7 @@ class Molecule extends AppModel {
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
             $atom->addDomains($productId);
- //           $atom->addCommentSuggestions($atom['entity_id']);
+ //           $atom->addCommentSuggestions($atom['entity_id']); //this functionality now part of the above 'Comment::addSummaries'
             $atom = $atom->toArray();
             unset($atom['xml']);
             $atoms[$key] = $atom;
