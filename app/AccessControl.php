@@ -70,7 +70,6 @@ class AccessControl extends AppModel {
 		$this->permissions = [];
 		$permissions = $user->getPermissions()->toArray();
 		$productIds = $user->userProducts->pluck('product_id')->all();
-
 		foreach($productIds as $productId) {
 			$this->permissions[$productId] = self::_applyPermissions($structure, $permissions, $productId);
 		}
