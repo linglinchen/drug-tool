@@ -18,6 +18,8 @@ use App\Status;
 class Atom extends AppModel {
     use SoftDeletes;
 
+
+/*could add some relationships here for simpler relationships, for instance 'has many' comments*/
     /**
      * @var string This model's corresponding database table
      */
@@ -49,6 +51,33 @@ class Atom extends AppModel {
     ];
 
     /**
+     * Set up the Molecules relationship.
+     *
+     * @returns hasOne
+     */
+    public function molecule() {
+        return $this->belongsTo('App\Molecule', 'molecule_code', 'code');
+    }
+
+    public function comments() {
+        return $this->hasMany('App\Comment', 'atom_entity_id', 'entity_id');
+    }
+
+
+/*public function scopeJustCurrent($query){
+    return $query->where(function($q){
+                            $q->has('childItems','==',0)->has('parentItem','==',0)->whereDate('due_date','=', Carbon::today()->toDateString())->whereNull('return_date');
+                        })->orWhere(function($q2){
+                            $q2->has('childItems')->has('parentItem','==',0)->whereHas('childItems',function($q3) use($q2){
+                                $q3->whereDate('due_date','=', Carbon::today()->toDateString())->whereNull('return_date');
+                            });
+                        })->with('latestChild');
+
+}
+*/
+
+
+    /**
      * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
      *
      * @param array $options
@@ -61,9 +90,6 @@ class Atom extends AppModel {
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
 
-        // if ($this->modified_by == NULL){
-        //     $this->modified_by = 200;
-        // }
 
         $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
         $devStatusId = Status::getDevStatusId($this->product_id)->id;
@@ -146,13 +172,15 @@ class Atom extends AppModel {
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
         $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
+        //limit the search to current product to cut down on database effort
+        $currentProductId = (int)self::getCurrentProductId();
 
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
 
-        $query->whereIn('id', function ($q) use ($table, $statusId) {
+        $query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
                     $q->select(DB::raw('MAX(id)'))
-                            ->from($table);
+                            ->from($table)->where('product_id', '=', $currentProductId);
 
                     if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
                         $q->whereIn('status_id', $statusId);
@@ -356,6 +384,8 @@ class Atom extends AppModel {
      *
      * @return object This object
      */
+
+ //Below is  not being used in assignments since only the main domain in the domain_code field of atom is being looked at
     public function addDomains($productId) {
         preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $this->xml, $matches);
         array_shift($matches[1]); //exclude main word's domain info since it has been stored in atom table

@@ -52,9 +52,10 @@ class Domain extends AppModel {
                 ->orderBy('alpha_title', 'ASC')
                 ->get();
         Comment::addSummaries($atoms, $productId);
-        foreach ($atoms as $atom){
+//this functionality now part of the above 'Comment::addSummaries'
+/*        foreach ($atoms as $atom){
                 $atom->addCommentSuggestions($atom['entity_id']);
-        }
+        }*/
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
             $atom = $atom->toArray();
