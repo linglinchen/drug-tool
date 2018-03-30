@@ -178,7 +178,15 @@ class Assignment extends AppModel {
 
 							// print_r($query->toSql());
 						}else if ($filterValue == 0){
-						$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
+						$query->leftJoin(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($leftJoin){
+								        $leftJoin->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  })
+								  ->where("commentstemp.text","=", null);
 
 						}else if($filterValue == 4){
 						//has suggested figures
