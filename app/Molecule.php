@@ -19,15 +19,6 @@ class Molecule extends AppModel {
     protected $dates = ['created_at', 'updated_at'];
 
 
-    /**
-     * Set up the Atoms relationship.
-     *
-     * @returns hasOne
-     */
-    public function atoms() {
-        return $this->hasOne('App\Atom', 'code', 'molecule_code');
-    }
-
 
 
     /*

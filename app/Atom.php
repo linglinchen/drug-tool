@@ -50,18 +50,6 @@ class Atom extends AppModel {
         'pill' => 'pl'
     ];
 
-    /**
-     * Set up the Molecules relationship.
-     *
-     * @returns hasOne
-     */
-    public function molecule() {
-        return $this->belongsTo('App\Molecule', 'molecule_code', 'code');
-    }
-
-    public function comments() {
-        return $this->hasMany('App\Comment', 'atom_entity_id', 'entity_id');
-    }
 
 
 /*public function scopeJustCurrent($query){
