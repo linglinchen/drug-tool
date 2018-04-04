@@ -208,7 +208,7 @@ class Assignment extends AppModel {
 
 						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
 
-						}else if($filterValue == 0){
+						}else if($filterValue !== 1){
 							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
 						}
 					}
