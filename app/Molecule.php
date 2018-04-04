@@ -18,6 +18,18 @@ class Molecule extends AppModel {
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at'];
 
+
+    /**
+     * Set up the Atoms relationship.
+     *
+     * @returns hasOne
+     */
+    public function atoms() {
+        return $this->hasOne('App\Atom', 'code', 'molecule_code');
+    }
+
+
+
     /*
      * Returns all molecule titles as an associative array.
      * code => title
@@ -27,13 +39,13 @@ class Molecule extends AppModel {
      * @return string[]
      */
     public static function getLookups($productId) {
-    	$output = [];
-    	$molecules = self::allForProduct($productId);
-    	foreach($molecules as $molecule) {
-    		$output[$molecule['code']] = $molecule['title'];
-    	}
+        $output = [];
+        $molecules = self::allForProduct($productId);
+        foreach($molecules as $molecule) {
+            $output[$molecule['code']] = $molecule['title'];
+        }
 
-    	return $output;
+        return $output;
     }
 
     /**
@@ -56,7 +68,7 @@ class Molecule extends AppModel {
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
             $atom->addDomains($productId);
-            $atom->addCommentSuggestions($atom['entity_id']);
+ //           $atom->addCommentSuggestions($atom['entity_id']); //this functionality now part of the above 'Comment::addSummaries'
             $atom = $atom->toArray();
             unset($atom['xml']);
             $atoms[$key] = $atom;
