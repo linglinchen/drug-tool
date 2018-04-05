@@ -58,7 +58,7 @@ class Molecule extends AppModel {
             $atom->addDomains($productId);
             $atom->addCommentSuggestions($atom['entity_id']);
             $atom = $atom->toArray();
-            unset($atom['xml']);
+//            unset($atom['xml']);
             $atoms[$key] = $atom;
         }
 

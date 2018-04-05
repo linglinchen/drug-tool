@@ -65,15 +65,19 @@ class Assignment extends AppModel {
 
 		$assignments = $query->get()
 				->toArray();
+		if(!$limit){
+
+				$count = sizeof($assignments);
+		}
 
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
 //just bring in necessary columns. exclude xml, edition, sort
-/*			$atoms = Atom::findNewest($entityIds, $productId)
-					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);*/
 			$atoms = Atom::findNewest($entityIds, $productId)
-					->get();
+					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);
+/*			$atoms = Atom::findNewest($entityIds, $productId)
+					->get();*/
 
 			Comment::addSummaries($atoms, $productId);
 
