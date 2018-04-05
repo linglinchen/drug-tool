@@ -41,7 +41,7 @@ class Assignment extends AppModel {
 	 * @return array The list of assignments
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
-
+		ini_set('memory_limit', '1280M');
 		$columns = $this->getMyColumns();
 //removed because this comments count is not currently used for anything and just adds extra fields.
 //		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
@@ -51,21 +51,23 @@ class Assignment extends AppModel {
 		self::_addOrder($query, $order);
 
 //infinite scroll pages have no limit and get hung up on this count, which is used for pagination
-		if($limit){
+		if($limit = null){
 				$countQuery = clone $query->getQuery();
 				$countQuery->select(DB::raw('COUNT(*)'));
 				$count = sizeof($countQuery->get());
 		} else {
-			$count = null;
+
+				$count = null;
+
 		}
 		//paginate the results
-		if($limit) {
+		if($limit != null) {
 			$query->skip($limit * ($page - 1))->take($limit);
 		}
 
 		$assignments = $query->get()
 				->toArray();
-		if(!$limit){
+		if($limit = null){
 
 				$count = sizeof($assignments);
 		}
@@ -84,7 +86,7 @@ class Assignment extends AppModel {
 //Removed as this was looping through unused stuff (addDomains) or was absorbed into the above addSummaries in Comment model
 			foreach ($atoms as $atom){
 //Below is actually not being used since only the main domain in the domain_code field of atom is being looked at
-//				$atom->addDomains($productId);
+				$atom->addDomains($productId);
 //replaced the below call by adding to the commentsummary in comment model
 				$atom->addCommentSuggestions($atom['entity_id']);
 			}
