@@ -13,6 +13,13 @@ class Assignment extends AppModel {
 	protected $guarded = ['id'];
 	protected $dates = ['created_at', 'updated_at'];
 
+/*
+
+	Does Assignment have any clear relationships we could define in this model?
+
+
+
+*/
 	/**
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
 	 * Adds the appropriate atoms.
@@ -46,25 +53,23 @@ class Assignment extends AppModel {
 
 		$assignments = $query->get()
 				->toArray();
-//print_r($assignments);
+
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
 			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
-//See the object brought back with lazy loading
-//print_r($atoms);
-			Comment::addSummaries($atoms, $productId);
-//See new blob with comments added. lazy loading
-/*$newblob=Comment::addSummaries($atoms, $productId);
-print_r($newblob);*/
 
+			Comment::addSummaries($atoms, $productId);
+/*
+//Removed as this was looping through unused stuff (addDomains) or was absorbed into the above addSummaries in Comment model
 			foreach ($atoms as $atom){
-				$atom->addDomains($productId);
-				$atom->addCommentSuggestions($atom['entity_id']);
-			}
-//See new blob with comments added. lazy loading
-//print_r($atoms);
+//Below is actually not being used since only the main domain in the domain_code field of atom is being looked at
+//				$atom->addDomains($productId);
+//replaced the below call by adding to the commentsummary in comment model
+//				$atom->addCommentSuggestions($atom['entity_id']);
+			}*/
+
 			$atoms = $atoms->toArray();
 
 			//remove xml
@@ -411,9 +416,15 @@ print_r($newblob);*/
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
+
+
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-				->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
+//selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
+				->whereIn('atoms.id', function ($q) {
+                        Atom::buildLatestIDQuery(null, $q)->select('id');
+                    })
+	//			->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
 				->where('atoms.product_id', '=', (int)$productId)
 				->groupBy('atoms.entity_id');
 	}

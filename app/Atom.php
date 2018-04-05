@@ -146,13 +146,15 @@ class Atom extends AppModel {
     public static function buildLatestIDQuery($statusId = null, $q = null) {
         $table = (new self)->getTable();
         $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
+        //limit the search to current product to cut down on database effort
+        $currentProductId = (int)self::getCurrentProductId();
 
         $query = $q ? $q->select('id') : self::select('id');
         $query->from($table);
 
-        $query->whereIn('id', function ($q) use ($table, $statusId) {
+        $query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
                     $q->select(DB::raw('MAX(id)'))
-                            ->from($table);
+                            ->from($table)->where('product_id', '=', $currentProductId);
 
                     if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
                         $q->whereIn('status_id', $statusId);
@@ -164,6 +166,7 @@ class Atom extends AppModel {
                 ->orderBy('alpha_title', 'ASC');
         return $query;
     }
+
 
     /**
      * Get a list of discontinued monographs.
