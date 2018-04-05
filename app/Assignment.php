@@ -50,10 +50,14 @@ class Assignment extends AppModel {
 		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
-		$countQuery = clone $query->getQuery();
-		$countQuery->select(DB::raw('COUNT(*)'));
-		$count = sizeof($countQuery->get());
-
+//infinite scroll pages have no limit and get hung up on this count, which is used for pagination
+		if($limit){
+				$countQuery = clone $query->getQuery();
+				$countQuery->select(DB::raw('COUNT(*)'));
+				$count = sizeof($countQuery->get());
+		} else {
+			$count = null;
+		}
 		//paginate the results
 		if($limit) {
 			$query->skip($limit * ($page - 1))->take($limit);
