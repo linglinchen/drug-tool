@@ -28,13 +28,14 @@ class Assignment extends AppModel {
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
 		$columns = $this->getMyColumns();
-		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
+//		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
-		self::_addListFilters($query, $filters);
 
+		self::_addListFilters($query, $filters);
 		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
+
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
@@ -45,17 +46,25 @@ class Assignment extends AppModel {
 
 		$assignments = $query->get()
 				->toArray();
-
+//print_r($assignments);
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
 			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
+//See the object brought back with lazy loading
+//print_r($atoms);
 			Comment::addSummaries($atoms, $productId);
+//See new blob with comments added. lazy loading
+/*$newblob=Comment::addSummaries($atoms, $productId);
+print_r($newblob);*/
+
 			foreach ($atoms as $atom){
 				$atom->addDomains($productId);
 				$atom->addCommentSuggestions($atom['entity_id']);
 			}
+//See new blob with comments added. lazy loading
+//print_r($atoms);
 			$atoms = $atoms->toArray();
 
 			//remove xml
