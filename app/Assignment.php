@@ -78,7 +78,7 @@ class Assignment extends AppModel {
 //Below is actually not being used since only the main domain in the domain_code field of atom is being looked at
 //				$atom->addDomains($productId);
 //replaced the below call by adding to the commentsummary in comment model
-//				$atom->addCommentSuggestions($atom['entity_id']);
+				$atom->addCommentSuggestions($atom['entity_id']);
 			}
 
 			$atoms = $atoms->toArray();
