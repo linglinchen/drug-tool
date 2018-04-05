@@ -66,20 +66,20 @@ class Assignment extends AppModel {
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
 //just bring in necessary columns. exclude xml, edition, sort
-			$atoms = Atom::findNewest($entityIds, $productId)
-					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);
 /*			$atoms = Atom::findNewest($entityIds, $productId)
-					->get();*/
+					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);*/
+			$atoms = Atom::findNewest($entityIds, $productId)
+					->get();
 
 			Comment::addSummaries($atoms, $productId);
-/*
+
 //Removed as this was looping through unused stuff (addDomains) or was absorbed into the above addSummaries in Comment model
 			foreach ($atoms as $atom){
 //Below is actually not being used since only the main domain in the domain_code field of atom is being looked at
 //				$atom->addDomains($productId);
 //replaced the below call by adding to the commentsummary in comment model
 //				$atom->addCommentSuggestions($atom['entity_id']);
-			}*/
+			}
 
 			$atoms = $atoms->toArray();
 //already excluded 'xml' column by not bringing it in in $atoms

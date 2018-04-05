@@ -35,7 +35,7 @@ class Comment extends AppModel {
                 ->where('product_id', '=', $productId)
                 ->groupBy('comments.id')
                 ->orderBy('comments.id')
-                ->get(['id', 'atom_entity_id', 'user_id', 'text', 'created_at','updated_at','deleted_at'])
+                ->get()
                 ->toArray();
 
         return $comments;
@@ -67,16 +67,13 @@ class Comment extends AppModel {
         $commentSummaries = [];
         $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
         $comments = self::getByAtomEntityId($entityIds, $productId);
-//$comments = $atoms['comments'];
-        foreach($comments as $comment) {
 
+        foreach($comments as $comment) {
             if(!isset($groupedComments[$comment['atom_entity_id']])) {
                 $groupedComments[$comment['atom_entity_id']] = [];
             }
 
-
             $groupedComments[$comment['atom_entity_id']][] = $comment;
-
         }
 
         foreach($groupedComments as $entityId => $group) {
@@ -87,18 +84,14 @@ class Comment extends AppModel {
                         'user_id' => sizeof($group) ? $group[0]['user_id'] : null
                     ]
                 ];
-
         }
 
         foreach($atoms as $atom) {
             $atom->comment_summary = isset($commentSummaries[$atom->entity_id]) ? $commentSummaries[$atom->entity_id] : null;
- //Adds on the suggestedFigures summary
-           $atom->suggestedFigures =  self::getSuggestionIds($atom->entity_id);
         }
-   //     self::getSuggestionIds($atom->entity_id);
     }
 
-/*get a list of suggested figure ids
+/*get a list of max atoms ids so it is just a list of current atoms
      *
      * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
      * @param ?object $q (optional) Subquery object
@@ -116,10 +109,10 @@ class Comment extends AppModel {
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments
             where atom_entity_id=\''. $entityId .'\'';
 
-      //  $idArray= DB::select($sql);
-      return $idArray = json_decode(json_encode(DB::select($sql)), true);
+        $idArray= DB::select($sql);
+        $idArray = json_decode(json_encode($idArray), true);
 
-    //    return $idArray;
+        return $idArray;
 
     }
 
