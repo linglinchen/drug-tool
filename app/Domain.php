@@ -58,7 +58,7 @@ class Domain extends AppModel {
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
             $atom = $atom->toArray();
-   //         unset($atom['xml']);
+            unset($atom['xml']);
             $atoms[$key] = $atom;
         }
 
