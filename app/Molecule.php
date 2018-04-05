@@ -48,7 +48,7 @@ class Molecule extends AppModel {
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
-                    Atom::buildLegacyLatestIDQuery(null, $q);
+                    Atom::buildLatestIDQuery(null, $q);
                 })
                 ->orderBy('sort', 'ASC')
                 ->get();
