@@ -41,8 +41,17 @@ class Assignment extends AppModel {
 	 * @return array The list of assignments
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
-		ini_set('memory_limit', '1280M');
-		$columns = $this->getMyColumns();
+$columns = array( 0 => "assignments.id",
+  1 => "assignments.atom_entity_id",
+  2 => "assignments.user_id",
+  3 => "assignments.task_id",
+  4 => "assignments.task_end",
+  5 => "assignments.created_at",
+  6 => "assignments.updated_at",
+  7 => "assignments.created_by"
+);
+//		$columns = $this->getMyColumns();
+//		dd($columns);
 //removed because this comments count is not currently used for anything and just adds extra fields.
 //		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
