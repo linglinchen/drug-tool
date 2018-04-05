@@ -20,6 +20,13 @@ class Assignment extends AppModel {
 
 
 */
+
+
+
+
+
+
+
 	/**
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
 	 * Adds the appropriate atoms.
@@ -34,7 +41,9 @@ class Assignment extends AppModel {
 	 * @return array The list of assignments
 	 */
 	public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+
 		$columns = $this->getMyColumns();
+//removed because this comments count is not currently used for anything and just adds extra fields.
 //		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
 
@@ -42,7 +51,6 @@ class Assignment extends AppModel {
 		self::_addOrder($query, $order);
 
 		$countQuery = clone $query->getQuery();
-
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
 
@@ -57,8 +65,11 @@ class Assignment extends AppModel {
 		//Laravel's built-in hasOne functionality won't work on atoms
 		if($addAtoms) {
 			$entityIds = array_column($assignments, 'atom_entity_id');
+//just bring in necessary columns. exclude xml, edition, sort
 			$atoms = Atom::findNewest($entityIds, $productId)
-					->get();
+					->get(['id','entity_id','molecule_code','title','alpha_title','modified_by', 'created_at', 'updated_at', 'deleted_at', 'status_id', 'product_id', 'domain_code']);
+/*			$atoms = Atom::findNewest($entityIds, $productId)
+					->get();*/
 
 			Comment::addSummaries($atoms, $productId);
 /*
@@ -71,11 +82,11 @@ class Assignment extends AppModel {
 			}*/
 
 			$atoms = $atoms->toArray();
-
+//already excluded 'xml' column by not bringing it in in $atoms
 			//remove xml
-			foreach($atoms as $atomKey => $atom) {
+/*			foreach($atoms as $atomKey => $atom) {
 				unset($atom['xml']);		//a waste of bandwidth in this case
-			}
+			}*/
 
 			foreach($assignments as &$row) {
 				foreach($atoms as $atomKey => $atom) {
@@ -139,7 +150,8 @@ class Assignment extends AppModel {
 	 */
 	protected static function _addListFilters($query, $filters) {
 
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'has_figures', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -155,9 +167,49 @@ class Assignment extends AppModel {
 					}
 					else if ($validFilter == 'has_discussion'){
 						if ($filterValue == 1){
-							$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
+						$query->join(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($join){
+								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  });
+
+							// print_r($query->toSql());
 						}else if ($filterValue == 0){
-							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
+						$query->leftJoin(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($leftJoin){
+								        $leftJoin->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  })
+								  ->where("commentstemp.text","=", null);
+
+						}else if($filterValue == 4){
+						//has suggested figures
+ 						$query->join(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($join){
+								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  })
+								  ->where('commentstemp.text', 'LIKE', '%<suggestion>%')
+								  ->groupBy("commentstemp.atom_entity_id");
+						}
+					}
+					// has any figures in the atom record
+					else if ($validFilter == 'has_figures'){
+						if ($filterValue == 1){
+
+						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
+
+						}else if($filterValue !== 1){
+							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
 						}
 					}
 					else if ($validFilter == 'atom_entity_id'){
@@ -173,6 +225,7 @@ class Assignment extends AppModel {
 			}
 		}
 	}
+
 
 	/**
 	 * Order the list query.
@@ -224,9 +277,7 @@ class Assignment extends AppModel {
 
 		if(array_key_exists('task_id', $promotion)) {
 			if ($currentAssignment){
-				if(array_key_exists('maxId', $currentAssignment)){
-					unset($currentAssignment->maxId);
-				}
+
 				if ($currentAssignment->task_id == $promotion['task_id']){ //mass assignment
 					self::_changeAssignmentOwner($atomEntityId, $productId, $promotion);
 				}
@@ -320,9 +371,7 @@ class Assignment extends AppModel {
 		 if (array_key_exists('assignment_ids', $promotion)){ //the request is from mass assignment
 			 foreach ($promotion['assignment_ids'] as $assignmentId){
 				$assignment = self::getAssignment($assignmentId, $productId);
-				if($assignment['maxId']){
-					unset($assignment['maxId']);
-				}
+
 				if($assignment && !$assignment->task_end) {
 					$newAssignment = $assignment->replicate();
 					$newAssignment->created_by = $user->id;
@@ -347,10 +396,8 @@ class Assignment extends AppModel {
 		else{
 			$assignment = self::getCurrentAssignment($atomEntityId, $productId);
 			if($assignment) {
-				if($assignment['maxId']){
-					unset($assignment['maxId']);
-				}
-				//self::_endCurrentAssignment($atomEntityId, $productId);
+
+				self::_endCurrentAssignment($atomEntityId, $productId);
 				$assignment = $assignment->replicate();
 				$assignment->created_by = $user->id;
 				$assignment->user_id = $promotion['user_id'];
@@ -408,6 +455,7 @@ class Assignment extends AppModel {
 		return null;
 	}
 
+
 	/**
 	 * Select all that belong to the specified product.
 	 *
@@ -417,15 +465,14 @@ class Assignment extends AppModel {
 	 */
 	public static function allForProduct($productId) {
 
-
 		return self::select('assignments.*')
 				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
-//selects only current/latest atoms. May need to redo buildlatestIDQuery to return minimum
+//selects only current/latest atoms.
+				->where('atoms.product_id', '=', (int)$productId)
 				->whereIn('atoms.id', function ($q) {
                         Atom::buildLatestIDQuery(null, $q)->select('id');
                     })
 	//			->leftJoin('comments', 'assignments.atom_entity_id', '=', 'comments.atom_entity_id')
-				->where('atoms.product_id', '=', (int)$productId)
-				->groupBy('atoms.entity_id');
+				;
 	}
 }
