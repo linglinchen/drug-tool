@@ -133,7 +133,7 @@ class Assignment extends AppModel {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
 
 					if($validFilter == 'task_ended') {
-						if($filterValue) {
+						if($filterValue > 0) {
 							$query->whereNotNull('task_end');
 						}
 						else {
