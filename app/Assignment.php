@@ -181,6 +181,7 @@ class Assignment extends AppModel {
 					else if ($validFilter == 'has_figures'){
 						if($filterValue > 1){
 						//do nothing
+						return;
 						} else if ($filterValue == 1){
 						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
 						return;
