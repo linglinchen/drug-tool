@@ -125,7 +125,8 @@ class Assignment extends AppModel {
 	 */
 	protected static function _addListFilters($query, $filters) {
 
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion'];
+
+		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'has_figures', 'task_ended', 'has_discussion'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
@@ -141,9 +142,49 @@ class Assignment extends AppModel {
 					}
 					else if ($validFilter == 'has_discussion'){
 						if ($filterValue == 1){
-							$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
+						$query->join(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($join){
+								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  });
+
+							// print_r($query->toSql());
 						}else if ($filterValue == 0){
-							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
+						$query->leftJoin(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($leftJoin){
+								        $leftJoin->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  })
+								  ->where("commentstemp.text","=", null);
+
+						}else if($filterValue == 4){
+						//has suggested figures
+ 						$query->join(DB::raw("(SELECT
+								     comments.text,
+								     comments.atom_entity_id
+								      FROM comments
+								      GROUP BY comments.atom_entity_id, comments.text
+								      ) as commentstemp"),function($join){
+								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								  })
+								  ->where('commentstemp.text', 'LIKE', '%<suggestion>%')
+								  ->groupBy("commentstemp.atom_entity_id");
+						}
+					}
+					// has any figures in the atom record
+					else if ($validFilter == 'has_figures'){
+						if ($filterValue == 1){
+
+						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
+
+						}else if($filterValue !== 1){
+							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
 						}
 					}
 					else if ($validFilter == 'atom_entity_id'){
