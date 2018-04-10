@@ -139,12 +139,12 @@ class ImportAtoms extends Command
 			$chapters = $doctype->extractAtomXML($xml);
 			if($chapters) {
 				foreach($chapters as $moleculeCode => $atoms) {
-					$atomCount = $this->_importAtoms($atoms, $productId, $moleculeCode);
+					$atomCount = $this->_importAtoms($atoms, $moleculeCode);
 					echo "\t", $moleculeCode, ' - ', $atomCount, ' atom' . ($atomCount != 1 ? 's' : '') . "\n";
 				}
 			}
 			else {
-				$atomCount = $this->_importAtoms($atoms, $productId);
+				$atomCount = $this->_importAtoms($atoms);
 				echo "\t<no molecule detected> ", $atomCount, "\n";
 			}
 
@@ -162,25 +162,16 @@ class ImportAtoms extends Command
 	 *
 	 * @return int The number of atoms imported
 	 */
-	public function _importAtoms($atoms, $productId, $moleculeCode = null) {
+	public function _importAtoms($atoms, $moleculeCode = null) {
 		$atom = new Atom();
 		$doctype = Product::find($this->productId)->getDoctype();
 		$sort = 0;
 		foreach($atoms as $atomString) {
-			$category = null;
-			if ($productId == 7){
-				preg_match('/<content_area>\s*(\r\n|\n|\r)\s*<entry>(.*)<\/entry>\s*(\r\n|\n|\r)\s*<\/content_area>/Si', $atomString, $matches);
-				if ($matches){
-					$category = $matches[2];
-				}
+			$category = '';
+			preg_match('/<category[^>]*>(.*)<\/category>/Si', $atomString, $matches);
+			if ($matches){
+				$category = $matches[1];
 			}
-			else{
-				preg_match('/<category[^>]*>(.*)<\/category>/Si', $atomString, $matches);
-				if ($matches){
-					$category = $matches[1];
-				}
-			}
-
 			$title = $doctype->detectTitle($atomString);
 			$alphaTitle = Atom::makeAlphaTitle($title);
 			$timestamp = $atom->freshTimestampString();

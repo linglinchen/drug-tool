@@ -8,15 +8,14 @@ use App\Atom;
 
 class QuestionDoctype extends AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => ['question', 'label', 'title'],
-        'validTitleElements' => ['qnum'],
+        'validAtomRootElements' => ['entry'],
+        'validTitleElements' => ['headw'],
         'idPrefixes' => [
-            'question' => 'q',
-            'label' => 'l',
+            'entry' => 'me'
         ],
         'chapterElement' => [
-            'elementXpath' => '//chapter',
-            'keyAttributeName' => 'number',
+            'elementXpath' => '//alpha',
+            'keyAttributeName' => 'letter',
         ]
     ];
 
@@ -26,10 +25,10 @@ class QuestionDoctype extends AbstractDoctype {
             $originalDomainCode = $originalAtom->domain_code;
             if($originalDomainCode != $atom->domain_code) {
                 $replacement = '$1' . $atom->domain_code . '$3';
-                $atom->xml = preg_replace('/(<content_area><entry>)(.*)(<\/entry><\/content_area>)/Ssi', $replacement, $atom->xml);
+                $atom->xml = preg_replace('/(<category[^>]*>)(.*)(<\/category>)/Ssi', $replacement, $atom->xml);
             }
             else {
-                preg_match('/<content_area><entry>(.*)<\/entry><\/content_area>/Si', $atom->xml, $matches);
+                preg_match('/<category[^>]*>(.*)<\/category>/Si', $atom->xml, $matches);
                 if($matches) {
                     $atom->domain_code = trim($matches[1]);
                 }
