@@ -195,7 +195,7 @@ abstract class AbstractDoctype {
                 if(!isset($atomNode->tagName)) {
                     continue;
                 }
-                
+
                 if(!in_array(strtolower($atomNode->tagName), $validAtomRootElements)) {
                     throw new \Exception('Invalid atom root element: ' . $atomNode->tagName);
                 }

@@ -156,7 +156,6 @@ class Assignment extends AppModel {
 			foreach($validFilters as $validFilter) {
 				if(isset($filters[$validFilter])) {
 					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
-
 					if($validFilter == 'task_ended') {
 						if($filterValue) {
 							$query->whereNotNull('task_end');
@@ -204,11 +203,13 @@ class Assignment extends AppModel {
 					}
 					// has any figures in the atom record
 					else if ($validFilter == 'has_figures'){
-						if ($filterValue == 1){
-
+						if($filterValue > 1){
+						//do nothing
+						return;
+						} else if ($filterValue == 1){
 						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
-
-						}else if($filterValue !== 1){
+						return;
+						} else if($filterValue < 1){
 							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
 						}
 					}
