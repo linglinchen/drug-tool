@@ -173,6 +173,7 @@ class Assignment extends AppModel {
 						return;
 						} else if($filterValue < 1){
 							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
+							return;
 						}
 					}
 					else if ($validFilter == 'atom_entity_id'){
