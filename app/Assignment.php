@@ -153,7 +153,7 @@ class Assignment extends AppModel {
 								      ) as commentstemp"),function($join){
 								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
 								  })
-								  ->where('commentstemp.text', 'LIKE', '%<suggestion>%')
+								  ->where('commentstemp.text', 'LIKE', '%<suggestion>pending%')
 								  ->groupBy("commentstemp.atom_entity_id");
 						}
 					}
