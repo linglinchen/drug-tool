@@ -30,7 +30,7 @@ class Assignment extends AppModel {
 		$columns = $this->getMyColumns();
 		array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
 		$query = self::allForProduct($productId)->select($columns);
-		self::_addListFilters($query, $filters);
+		self::_addListFilters($query, $filters, $productId);
 
 		self::_addOrder($query, $order);
 
@@ -123,9 +123,7 @@ class Assignment extends AppModel {
 	 * @param object $query The query object to modify
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
-	protected static function _addListFilters($query, $filters) {
-
-
+	protected static function _addListFilters($query, $filters, $productId) {
 		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion', 'has_figures'];
 		if($filters) {
 			foreach($validFilters as $validFilter) {
@@ -161,6 +159,12 @@ class Assignment extends AppModel {
 					}
 					// has any figures in the atom record
 					else if ($validFilter == 'has_figures'){
+						$query->whereIn('atoms.id', function ($q) use ($productId) {
+							$q->select(DB::raw('MAX(id)'))
+									->from('atoms');
+							$q->where('product_id', '=', $productId);
+							$q->groupBy('entity_id');
+						});
 						if($filterValue > 1){
 						//do nothing
 						return;
