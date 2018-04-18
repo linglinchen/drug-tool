@@ -387,6 +387,7 @@ class Atom extends AppModel {
         $suggestedFigureIds = Comment::getSuggestionIds($entityId);
 
         $this->suggestedFigures=$suggestedFigureIds;
+        $this->xmlFigures = strpos($this->xml, 'type="figure"') !== false;  //return true if there's figure in xml
         return $this;
     }
 
