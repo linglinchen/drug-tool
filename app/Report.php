@@ -40,9 +40,12 @@ class Report extends AppModel {
 		//check if product is either dictionary and if so give separate menus.
 		//Otherwise, provide generic drug type menu
 		$categoryType = Product::find($productId)->getCategorytype();
-
+//Discontinued report is only for drugs since it is a drug content status (is the drug discontinued)/not a status of the MS record. Only include the discontinued report option for drug products.
+		$drugProds = array(1,2,4);
+		if (in_array($productId, $drugProds)) {
+ 			 $reportTypes['discontinued'] = 'Discontinued Monographs';
+			}
 		$reportTypes = [
-			'discontinued' => 'Discontinued '.Product::find($productId)->getTermtype(),
 			'statuses' => 'Status Breakdown',
 			'edits' => 'Edits',
 			'openAssignments' => 'Open Assignments',
