@@ -58,7 +58,7 @@ class QuickFixAssignToMargaret extends Command {
                 else{ //atom with open assignments
                     if (count($openAssignments) == 1){ //only one open assignment
                         $openAssignment = $openAssignments[0];
-                        $userId = $openAssignment->userId;
+                        $userId = $openAssignment->user_id;
                         if ($userId == 241 || $userId == 533 || $userId == 534){ //assigned to Margaret/pharm1/pharm2
                             fwrite($file, $entityId."\tdo nothing\n");
                         }else{
