@@ -59,7 +59,7 @@ class QuickFixAssignToMargaret extends Command {
                     if (count($openAssignments) == 1){ //only one open assignment
                         $openAssignment = $openAssignments[0];
                         $userId = $openAssignment->userId;
-                        if ($userId != 241 && $userId != 533 && $userId != 534){ //not assigned to Margaret/pharm1/pharm2
+                        if ($userId != 241 || $userId != 533 || $userId != 534){ //not assigned to Margaret/pharm1/pharm2
                             $openAssignment->task_end = $timestamp;
                             fwrite($file, $entityId."\tclosed assignment, single\n");
                             //$openAssignment->save();
