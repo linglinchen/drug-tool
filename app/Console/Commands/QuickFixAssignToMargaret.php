@@ -53,7 +53,7 @@ class QuickFixAssignToMargaret extends Command {
 
                 if (sizeof($openAssignments) == 0){  //the atom doesn't have an open assignment
                     fwrite($file, $entityId."\tno open assignment\n");
-                    //Assignment::query()->insert($newAssignment);
+                    Assignment::query()->insert($newAssignment);
                 }
                 else{ //atom with open assignments
                     if (count($openAssignments) == 1){ //only one open assignment
@@ -64,16 +64,16 @@ class QuickFixAssignToMargaret extends Command {
                         }else{
                             $openAssignment->task_end = $timestamp;
                             fwrite($file, $entityId."\tclosed assignment, single\n");
-                            //$openAssignment->save();
-                            // Assignment::query()->insert($newAssignment);
+                            $openAssignment->save();
+                            Assignment::query()->insert($newAssignment);
                         }
                     }else{ //multiple open assignments
                         foreach ($openAssignments as $openAssignment){
                             $openAssignment->task_end = $timestamp;     //close the each assignment
-                            //$openAssignment->save();
+                            $openAssignment->save();
                         }
                         fwrite($file, $entityId."\tclosed assignment, multiple\n");
-                        //Assignment::query()->insert($newAssignment);
+                        Assignment::query()->insert($newAssignment);
                     }
                 }
             }
