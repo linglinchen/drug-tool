@@ -10,6 +10,7 @@ use App\Molecule;
 
 use App\ApiError;
 use App\ApiPayload;
+ini_set('memory_limit', '256M');
 
 /**
  * All endpoint methods should return an ApiPayload or Response.
