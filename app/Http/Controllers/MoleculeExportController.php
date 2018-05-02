@@ -31,10 +31,11 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($productId, $code, Request $request) {
-//$doctype = (string)Product::find(5)->getDoctype();
 
         $statusId = $request->input('statusId');
         $statusId = $statusId === '' ? null : $statusId;
+        $withFigures = $request->input('withFigures');
+        $withFigures = $withFigures === '' ? null : $withFigures;
 
 //receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
         if ($productId !== 1){
@@ -80,27 +81,52 @@ class MoleculeExportController extends Controller {
         }
 
         $zip = new \ZipArchive();
-        $filename = $code . '_xml.zip';
+        $zipDate = date('Y-m-d_H:i:s');
+        $filename = $code . '_xml_'. $zipDate .'.zip';
         $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
         $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
+//Top Header material for tab delimited illustration log download. static content added to log.
+$metaheader_vet = <<<METAHEADER
+Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t\t\t
+Author: Saunders\t\t\t\t\t\tISBN: 9780702074639\t\t\t\t\t\t\t
+Title: Vet Dictionary\t\t\t\t\t\tEdition: 5\t\t\t\t\t\t
+Processor: Erin Garner\t\t\t\t\t\tChapter: {$code}\t\t\t\t\t\t
+Phone/Email:  314 447 8971\e.garner@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t
+\n
+Pieces\tDigital?\tPrevious Edition Figure Number\tSource Citation\tDigital Filename\tTo Come\tFINAL FIGURE NAME\t1/C\t2/C\t4/C\tArt Category\tArt point of Contact\tComments\tAdditional art comments and reference\n"
+METAHEADER;
+$metaheader_dental = <<<METAHEADER
+Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t\t\t\n
+Author: Mosby\t\t\t\t\t\tISBN: 9780323546355\t\t\t\t\t\t\t\n
+Title: Dental Dictionary\t\t\t\t\t\tEdition: 4\t\t\t\t\t\t\n
+Processor: Sarah Vora\t\t\t\t\t\tChapter: {$code}\t\t\t\t\t\t\n
+Phone/Email:  314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t\n
+\n
+Pieces\tDigital?\tPrevious Edition Figure Number\tSource Citation\tDigital Filename\tTo Come\tFINAL FIGURE NAME\t1/C\t2/C\t4/C\tArt Category\tArt point of Contact\tComments\tAdditional art comments and reference\n"
+METAHEADER;
 
 //If doctype is dictionary, different xml wrapper is written.
           if ($doctype === 'dictionary'){
+             $moleculeXml = $molecule->export($statusId);
                 switch ((int)$productId) { //TODO: make the ISBN dynamic
                     case 3:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
                             $xml .= '<dictionary isbn="9780702074639">' . "\n";
-                            $xml .= $molecule->export($statusId);
+                            $xml .= $moleculeXml;
                             $xml .= '</dictionary>';
+                            $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_vet);
                             $zip->addFromString($code . '.xml', $xml);
+                            $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
                             $zip->close();
                         break;
                     case 5:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
                             $xml .= '<dictionary isbn="9780323546355">' . "\n";
-                            $xml .= $molecule->export($statusId);
+                            $xml .= $moleculeXml;
                             $xml .= '</dictionary>';
+                            $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
                             $zip->addFromString($code . '.xml', $xml);
+                            $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
                             $zip->close();
                         break;
 
@@ -119,7 +145,7 @@ class MoleculeExportController extends Controller {
         $xml .= '<drug_guide isbn="9780323448260">' . "\n";     //TODO: make the ISBN dynamic
         $xml .= $molecule->export($statusId);
         $xml .= '</drug_guide>';
-        $zip->addFromString($code . '.xml', $xml);
+        $zip->addFromString($code .'_xml_'. date('Y-m-d_H:i:s') .'.xml', $xml);
         $zip->close();
         }
 
