@@ -102,12 +102,11 @@ class Molecule extends AppModel {
     public function addFigureLog($moleculeXml, $metaheader) {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
-        $tab = "\t";
-        $newline = "\n";
+
              if($figureNodes){
 
                 $figureNodes = json_encode($figureNodes);
-                 $figureNodes = (array)json_decode($figureNodes, true);
+                $figureNodes = (array)json_decode($figureNodes, true);
 
                 $figureRows =" \t";
                     foreach($figureNodes as $figureNode){
@@ -116,14 +115,13 @@ class Molecule extends AppModel {
 
                     }
 
-       //         $figureNodes = json_encode($figureNodes);
-
                 $figureLogRows = $metaheader . $figureRows;
              } else {
                 $figureLogRows = $metaheader . 'No figures in this Chapter';
 
              }
-     //            $figureLogRows = $metaheader . $figureRows;
+
+
          return  $figureLogRows;
     }
 
