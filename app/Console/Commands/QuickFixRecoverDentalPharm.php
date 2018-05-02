@@ -61,10 +61,10 @@ class QuickFixRecoverDentalPharm extends Command {
                                         ->where('task_id', '=', 557)  //editor-in-chief review
                                         ->get();
                     if (sizeof($toBeDeleted) == 1){ //delete this record
-                        $toBeDeleted[0]->delete();
+                        //$toBeDeleted[0]->delete();
                         foreach ($assignments as $assignment){
                             $assignment->task_end = null;     //open each assignment
-                            $assignment->save();
+                            //$assignment->save();
                     }
 
                     }else if (sizeof($toBeDeleted) > 1){
