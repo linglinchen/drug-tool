@@ -41,7 +41,7 @@ class QuickFixRecoverDentalPharm extends Command {
 
             //check if the atom has been assigned
                 $assignments = Assignment::where('atom_entity_id', '=', $entityId)
-                                        ->where('task_end','>=', '2018-04-27 01:00:00')
+                                        ->where('task_end','>=', '2018-04-27 02:00:00')
                                         ->where('task_end','<=', '2018-04-27 02:34:00')
                                         ->where('task_id', '=', 556) //author revision
                                         ->where(function($q){
@@ -55,7 +55,7 @@ class QuickFixRecoverDentalPharm extends Command {
                 if (sizeof($assignments) > 0){  
                     fwrite($file, $entityId."\treopened\n");
                     $toBeDeleted = Assignment::where('atom_entity_id', '=', $entityId)
-                                        ->where('created_at','>=', '2018-04-27 01:00:00')
+                                        ->where('created_at','>=', '2018-04-27 02:00:00')
                                         ->where('created_at','<=', '2018-04-27 02:34:00')
                                         ->where('user_id', '=', 241)  //Margaret
                                         ->where('task_id', '=', 557)  //editor-in-chief review
