@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixVetXref::class,
         Commands\QuickFixAssignLaser::class,
         Commands\QuickFixAssignToMargaret::class,
+        Commands\QuickFixRecoverDentalPharm::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
