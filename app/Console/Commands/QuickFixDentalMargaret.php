@@ -52,7 +52,7 @@ class QuickFixDentalMargaret extends Command {
                                         ->get();
                     if (sizeof($openAssignments) == 1 && $openAssignments[0]->user_id == 241){ //Margaret is the only author
                         $openAssignments[0]->task_end = $timestamp; //close the Margaret's 556 assignment
-                        $openAssignments[0]->save();
+                        //$openAssignments[0]->save();
 
                         $newAssignment = [
                             'atom_entity_id' => $entityId,
@@ -60,7 +60,7 @@ class QuickFixDentalMargaret extends Command {
                             'task_id' => 557,
                             'task_end' => null
                         ];
-                        Assignment::query()->insert($newAssignment);
+                        //Assignment::query()->insert($newAssignment);
                         fwrite($file, $entityId."\tprocessed\n");
                     }
                 }
