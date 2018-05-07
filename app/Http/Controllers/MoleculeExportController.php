@@ -101,9 +101,8 @@ Title: Dental Dictionary\t\t\t\t\t\t\t\t\t\t\t\tEdition: 4\t\t\t\t
 Processor: Sarah Vora\t\t\t\t\t\t\t\t\t\t\t\tChapter: {$code}\t\t\t\t
 Phone/Email:  314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\t\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t
 Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
-METAHEADER;\n
- Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
+
 
 //If doctype is dictionary, different xml wrapper is written.
           if ($doctype === 'dictionary'){
