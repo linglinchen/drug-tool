@@ -72,8 +72,8 @@ class Molecule extends AppModel {
      *
      * @returns string
      */
-    public function export($statusId = null) {
-
+    public function export($statusId = null, $withFigures=0) {
+   //     print_r($withFigures);
         //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain 'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export. Changed January 2018 - JZ.
         $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
 
@@ -89,9 +89,41 @@ class Molecule extends AppModel {
         }
         $xml .= "\t" . '</alpha>' . "\n";
 
+/*        if($withFigures=1){
+            $figuresLog=self::addFigureLog($xml);
+        }*/
         return $xml;
     }
+    /**
+     * take the xml from above and reduce it to a log of figures.
+     *
+     * @returns csv
+     */
+    public function addFigureLog($moleculeXml, $metaheader) {
+        $ob = simplexml_load_string($moleculeXml);
+        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
+             if($figureNodes){
+
+                $figureNodes = json_encode($figureNodes);
+                $figureNodes = (array)json_decode($figureNodes, true);
+
+                $figureRows =" \t";
+                    foreach($figureNodes as $figureNode){
+
+                        $figureRows .="\n\tYes\t" .$figureNode['@attributes']['id']."\t\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t". "Comp"."\t\t".' ';
+
+                    }
+
+                $figureLogRows = $metaheader . $figureRows;
+             } else {
+                $figureLogRows = $metaheader . 'No figures in this Chapter';
+
+             }
+
+
+         return  $figureLogRows;
+    }
 
     /**
      * Gets a list of properly sorted atoms that are ready for publication.
