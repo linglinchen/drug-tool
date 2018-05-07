@@ -91,7 +91,7 @@ Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t\t\t
 Author: Saunders\t\t\t\t\t\tISBN: 9780702074639\t\t\t\t\t\t\t
 Title: Vet Dictionary\t\t\t\t\t\tEdition: 5\t\t\t\t\t\t
 Processor: Erin Garner\t\t\t\t\t\tChapter: {$code}\t\t\t\t\t\t
-Phone/Email:  314 447 8971\e.garner@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t
+Phone/Email:  314 447 8971/e.garner@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t
 \n
 Pieces\tDigital?\tPrevious Edition Figure Number\tSource Citation\tDigital Filename\tTo Come\tFINAL FIGURE NAME\t1/C\t2/C\t4/C\tArt Category\tArt point of Contact\tComments\tAdditional art comments and reference\n"
 METAHEADER;
