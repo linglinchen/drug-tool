@@ -113,6 +113,7 @@ class Molecule extends AppModel {
                     foreach($figureNodes as $figureNode){
                         empty($val)?0:$val;
                             $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                            $sourceItem =htmlentities($sourceItem);
             //                print_r(gettype($sourceItem));
             $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
 
