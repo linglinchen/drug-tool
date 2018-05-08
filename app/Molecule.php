@@ -51,7 +51,9 @@ class Molecule extends AppModel {
                 })
                 ->orderBy('sort', 'ASC')
                 ->get();
-        Comment::addSummaries($atoms, $productId);
+
+
+        /*Comment::addSummaries($atoms, $productId);
 
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
@@ -62,7 +64,48 @@ class Molecule extends AppModel {
             $atoms[$key] = $atom;
         }
 
-        $molecule['atoms'] = $atoms;
+        $molecule['atoms'] = $atoms;*/
+
+        $sql_assignment = 
+            "SELECT ass.*
+            FROM atoms a
+            join assignments ass on a.entity_id = ass.atom_entity_id
+            WHERE product_id = ".$productId."
+                and molecule_code = '".$molecule['code']."'
+	            and a.id in 
+                    (SELECT id FROM atoms WHERE id in
+                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                    and deleted_at IS NULL)
+                and a.deleted_at IS NULL
+            ORDER BY sort ASC, ass.id ASC";
+		
+        $assignmentsByAtom = [];
+        $assignments = DB::select($sql_assignment);
+        $assignmentsArray = json_decode(json_encode($assignments), true);
+        foreach ($assignmentsArray as $assignment){
+            $assignmentsByAtom[$assignment['atom_entity_id']][] = $assignment;
+        }
+
+        foreach($atoms as $key => $atom) {
+            $atom['assignments'] = $assignmentsByAtom[$atom['entity_id']];
+        }
+
+        $sql_comment = 
+            "SELECT a.entity_id, a.alpha_title, a.xml, a.modified_by, a.created_at, a.deleted_at, a.status_id, a.product_id, a.domain_code, 
+                c.user_id as comment_user_id, c.text
+            FROM atoms a
+            join comments c on a.entity_id = c.atom_entity_id
+            WHERE product_id = ".$productId."
+                and molecule_code = '".$molecule['code']."'
+                and a.id in 
+                    (SELECT id FROM atoms WHERE id in 
+                        (SELECT MAX(id) FROM atoms where product_id=3 GROUP BY entity_id) 
+                    and deleted_at IS NULL ) 
+                and a.deleted_at IS NULL 
+            ORDER BY sort ASC";
+        $comments = DB::select($sql_comment);
+        $commentsArray = json_decode(json_encode($comments), true);
+
 
         return $molecule;
     }
