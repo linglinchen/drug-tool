@@ -97,8 +97,8 @@ METAHEADER;
 $metaheader_dental = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
 Author:\Mosby\t\t\t\t\t\t\t\t\t\t\tISBN:\t9780323546355\t\t\t\t
-Title:\tDental Dictionary\t\t\t\t\t\t\t\t\t\t\tEdition:\t5\t\t\t\t
-Processor:\tSaraj Vora\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
+Title:\tDental Dictionary\t\t\t\t\t\t\t\t\t\t\tEdition:\t4\t\t\t\t
+Processor:\tSarah Vora\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
 Phone/Email:\t314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
 Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
