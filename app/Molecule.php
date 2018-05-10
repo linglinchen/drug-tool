@@ -86,26 +86,57 @@ class Molecule extends AppModel {
             $assignmentsByAtom[$assignment['atom_entity_id']][] = $assignment;
         }
 
-        foreach($atoms as $key => $atom) {
-            $atom['assignments'] = $assignmentsByAtom[$atom['entity_id']];
-        }
-
         $sql_comment = 
-            "SELECT a.entity_id, a.alpha_title, a.xml, a.modified_by, a.created_at, a.deleted_at, a.status_id, a.product_id, a.domain_code, 
-                c.user_id as comment_user_id, c.text
+            "SELECT c.*
             FROM atoms a
             join comments c on a.entity_id = c.atom_entity_id
             WHERE product_id = ".$productId."
                 and molecule_code = '".$molecule['code']."'
                 and a.id in 
                     (SELECT id FROM atoms WHERE id in 
-                        (SELECT MAX(id) FROM atoms where product_id=3 GROUP BY entity_id) 
+                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id) 
                     and deleted_at IS NULL ) 
                 and a.deleted_at IS NULL 
             ORDER BY sort ASC";
+        $commentsByAtom = [];
         $comments = DB::select($sql_comment);
         $commentsArray = json_decode(json_encode($comments), true);
+        foreach ($commentsArray as $comment){
+            if (strpos($comment['text'], 'type="figure"') !== false){
+                $commentsInfo = [];
+                $commentXml = '<?xml version="1.0" encoding="UTF-8"?>'.$comment['text'];
+                $xmlObject = simplexml_load_string($commentXml);
+                $reviewStatusObj = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()')[0];
+                $reviewStatus = json_decode(json_encode($reviewStatusObj), true)[0];
 
+                $captionObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/ce_caption/text()')[0];
+                $caption = json_decode(json_encode($captionObj), true)[0];
+
+                $creditObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/credit/text()')[0];
+                $credit = json_decode(json_encode($creditObj), true)[0];
+
+                $figureFileObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src')[0];
+                $figureFile = json_decode(json_encode($figureFileObj), true)['@attributes']['src'];
+
+                $commentsInfo['reviewstatus'] = $reviewStatus;
+                $commentsInfo['caption'] = $caption;
+                $commentsInfo['credit'] = $credit;
+                $commentsInfo['figurefile'] = $figureFile;
+                $commentsInfo['text'] = $comment['text'];
+                $commentsInfo['id'] = $comment['id'];
+                $commentsByAtom[$comment['atom_entity_id']][] = $commentsInfo;
+            }
+            
+        }
+
+        foreach($atoms as $key => $atom) {
+            $atom->addDomains($productId);
+            $atom['assignments'] = $assignmentsByAtom[$atom['entity_id']];
+            $atom['xmlFigures'] = strpos($atom->xml, 'type="figure"') !== false;
+            $atom['suggestedFigures'] = $commentsByAtom[$atom['entity_id']];
+        }
+
+        print_r($atoms);
 
         return $molecule;
     }
