@@ -87,23 +87,24 @@ class MoleculeExportController extends Controller {
         $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 //Top Header material for tab delimited illustration log download. static content added to log.
 $metaheader_vet = <<<METAHEADER
-Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t\t\t
-Author: Saunders\t\t\t\t\t\tISBN: 9780702074639\t\t\t\t\t\t\t
-Title: Vet Dictionary\t\t\t\t\t\tEdition: 5\t\t\t\t\t\t
-Processor: Erin Garner\t\t\t\t\t\tChapter: {$code}\t\t\t\t\t\t
-Phone/Email:  314 447 8971\e.garner@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t
-\n
-Pieces\tDigital?\tPrevious Edition Figure Number\tSource Citation\tDigital Filename\tTo Come\tFINAL FIGURE NAME\t1/C\t2/C\t4/C\tArt Category\tArt point of Contact\tComments\tAdditional art comments and reference\n"
+Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
+Author:\tSaunders\t\t\t\t\t\t\t\t\t\t\tISBN:\t9780702074639\t\t\t\t
+Title:\tVet Dictionary\t\t\t\t\t\t\t\t\t\t\tEdition:\t5\t\t\t\t
+Processor:\tErin Garner\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
+Phone/Email:\t314 447 8971/e.garner@elsevier.com\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
+Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 $metaheader_dental = <<<METAHEADER
-Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t\t\t\n
-Author: Mosby\t\t\t\t\t\tISBN: 9780323546355\t\t\t\t\t\t\t\n
-Title: Dental Dictionary\t\t\t\t\t\tEdition: 4\t\t\t\t\t\t\n
-Processor: Sarah Vora\t\t\t\t\t\tChapter: {$code}\t\t\t\t\t\t\n
-Phone/Email:  314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\tDate: {$zipDate}\t\t\t\t\t\t\n
-\n
-Pieces\tDigital?\tPrevious Edition Figure Number\tSource Citation\tDigital Filename\tTo Come\tFINAL FIGURE NAME\t1/C\t2/C\t4/C\tArt Category\tArt point of Contact\tComments\tAdditional art comments and reference\n"
+Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
+Author:\Mosby\t\t\t\t\t\t\t\t\t\t\tISBN:\t9780323546355\t\t\t\t
+Title:\tDental Dictionary\t\t\t\t\t\t\t\t\t\t\tEdition:\t4\t\t\t\t
+Processor:\tSarah Vora\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
+Phone/Email:\t314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
+Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
+
+
+
 
 //If doctype is dictionary, different xml wrapper is written.
           if ($doctype === 'dictionary'){
