@@ -438,4 +438,14 @@ class Assignment extends AppModel {
 				->where('atoms.product_id', '=', (int)$productId)
 				->groupBy('atoms.entity_id');
 	}
+
+	public static function getByProductIdForMolecule($productId, $moleculeCode) {
+		return self::select('assignments.*')
+				->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
+				->whereIn('atoms.id', function ($q) use ($productId, $moleculeCode) {
+					Atom::buildLatestIDQuery(null, $q);
+					$q->where('molecule_code', '=', $moleculeCode);
+				})
+				->orderBy('assignments.id', 'ASC');
+	}
 }

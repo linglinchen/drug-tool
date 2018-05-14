@@ -8,6 +8,7 @@ use DB;
 
 use App\AppModel;
 use App\Atom;
+use App\Assignment;
 use App\Comment;
 use App\Status;
 
@@ -77,12 +78,13 @@ class Molecule extends AppModel {
                     (SELECT id FROM atoms WHERE id in
                         (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
                     and deleted_at IS NULL)
-                and a.deleted_at IS NULL
-            ORDER BY sort ASC, ass.id ASC";
-		
+            ORDER BY sort ASC, ass.id ASC"; //join atoms and assignments tables, atom will be the lastest version, not deleted
+
         $assignmentsByAtom = [];
         $assignments = DB::select($sql_assignment);
         $assignmentsArray = json_decode(json_encode($assignments), true);
+
+        //$assignmentsArray = Assignment::getByProductIdForMolecule($productId, $molecule['code']); print_r($assignmentsArray); exit;
         foreach ($assignmentsArray as $assignment){
             $assignmentsByAtom[$assignment['atom_entity_id']][] = $assignment;
         }
@@ -97,9 +99,9 @@ class Molecule extends AppModel {
                 and a.id in 
                     (SELECT id FROM atoms WHERE id in 
                         (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id) 
-                    and deleted_at IS NULL ) 
-                and a.deleted_at IS NULL 
-            ORDER BY c.id DESC";
+                    and deleted_at IS NULL )
+            ORDER BY c.id DESC"; //join atoms and comments tables, atom will be the lastest version, not deleted
+
         $commentsFigure = [];
         $commentsByAtom = [];
         $commentSummaries = [];

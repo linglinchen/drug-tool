@@ -53,6 +53,7 @@ class Comment extends AppModel {
 
         $comments = $comments->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
                 ->where('product_id', '=', $productId)
+                //->where('comments.deleted_at' '=', null)
                 ->groupBy('comments.id')
                 ->orderBy('comments.id')
                 ->get()
