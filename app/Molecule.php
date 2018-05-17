@@ -8,6 +8,7 @@ use DB;
 
 use App\AppModel;
 use App\Atom;
+use App\Assignment;
 use App\Comment;
 use App\Status;
 
@@ -51,7 +52,9 @@ class Molecule extends AppModel {
                 })
                 ->orderBy('sort', 'ASC')
                 ->get();
-        Comment::addSummaries($atoms, $productId);
+
+
+        /*Comment::addSummaries($atoms, $productId);
 
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
@@ -62,8 +65,100 @@ class Molecule extends AppModel {
             $atoms[$key] = $atom;
         }
 
-        $molecule['atoms'] = $atoms;
+        $molecule['atoms'] = $atoms;*/
 
+        //get assignments for each atom
+        $sql_assignment = 
+            "SELECT ass.*
+            FROM atoms a
+            join assignments ass on a.entity_id = ass.atom_entity_id
+            WHERE product_id = ".$productId."
+                and molecule_code = '".$molecule['code']."'
+	            and a.id in 
+                    (SELECT id FROM atoms WHERE id in
+                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                    and deleted_at IS NULL)
+            ORDER BY sort ASC, ass.id ASC"; //join atoms and assignments tables, atom will be the lastest version, not deleted
+
+        $assignmentsByAtom = [];
+        $assignments = DB::select($sql_assignment);
+        $assignmentsArray = json_decode(json_encode($assignments), true);
+
+        //$assignmentsArray = Assignment::getByProductIdForMolecule($productId, $molecule['code']); print_r($assignmentsArray); exit;
+        foreach ($assignmentsArray as $assignment){
+            $assignmentsByAtom[$assignment['atom_entity_id']][] = $assignment;
+        }
+
+        //get comments for each atom
+        $sql_comment = 
+            "SELECT c.*
+            FROM atoms a
+            join comments c on a.entity_id = c.atom_entity_id
+            WHERE product_id = ".$productId."
+                and molecule_code = '".$molecule['code']."'
+                and a.id in 
+                    (SELECT id FROM atoms WHERE id in 
+                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id) 
+                    and deleted_at IS NULL )
+            ORDER BY c.id DESC"; //join atoms and comments tables, atom will be the lastest version, not deleted
+
+        $commentsFigure = [];
+        $commentsByAtom = [];
+        $commentSummaries = [];
+        $comments = DB::select($sql_comment);
+        $commentsArray = json_decode(json_encode($comments), true);
+
+        foreach ($commentsArray as $comment){
+            if (strpos($comment['text'], 'type="figure"') !== false){
+                $commentsInfo = [];
+                $commentXml = '<?xml version="1.0" encoding="UTF-8"?>'.$comment['text'];
+                $xmlObject = simplexml_load_string($commentXml);
+                $reviewStatusObj = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()')[0];
+                $reviewStatus = json_decode(json_encode($reviewStatusObj), true)[0];
+
+                $captionObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/ce_caption/text()')[0];
+                $caption = json_decode(json_encode($captionObj), true)[0];
+
+                $creditObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/credit/text()')[0];
+                $credit = json_decode(json_encode($creditObj), true)[0];
+
+                $figureFileObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src')[0];
+                $figureFile = json_decode(json_encode($figureFileObj), true)['@attributes']['src'];
+
+                $commentsInfo['reviewstatus'] = $reviewStatus;
+                $commentsInfo['caption'] = $caption;
+                $commentsInfo['credit'] = $credit;
+                $commentsInfo['figurefile'] = $figureFile;
+                $commentsInfo['text'] = $comment['text'];
+                $commentsInfo['id'] = $comment['id'];
+                $commentsFigure[$comment['atom_entity_id']][] = $commentsInfo;
+            }
+
+            $commentsByAtom[$comment['atom_entity_id']][] = $comment;
+        }
+
+        foreach($commentsByAtom as $entityId => $group) {
+            $commentSummaries[$entityId] = [
+                'count' => sizeof($group),
+                'last_comment' => [
+                    'date' => sizeof($group) ? $group[0]['created_at'] : null,
+                    'user_id' => sizeof($group) ? $group[0]['user_id'] : null
+                ]
+            ];
+        }
+
+        foreach($atoms as $key => $atom) {
+            $atom->addDomains($productId);
+            $atom['xmlFigures'] = strpos($atom->xml, 'type="figure"') !== false;
+            $atom = $atom->toArray();
+            $atom['assignments'] = array_key_exists($atom['entity_id'], $assignmentsByAtom) ? $assignmentsByAtom[$atom['entity_id']] : [];
+            $atom['suggestedFigures'] = array_key_exists($atom['entity_id'], $commentsFigure) ? $commentsFigure[$atom['entity_id']] : [];
+            $atom['commentSummary'] = array_key_exists($atom['entity_id'], $commentSummaries) ? $commentSummaries[$atom['entity_id']] : null;
+            unset($atom['xml']);
+            $atoms[$key] = $atom;
+        }
+
+        $molecule['atoms'] = $atoms;
         return $molecule;
     }
 

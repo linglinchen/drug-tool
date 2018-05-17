@@ -42,6 +42,27 @@ class Comment extends AppModel {
     }
 
     /**
+     * Get comments for the given product.
+     *
+     * @param integer $productId The current product's id
+     *
+     * @return object[] The comments
+     */
+    protected static function getByProductId($productId) {
+        $comments = self::select('comments.*');
+
+        $comments = $comments->join('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
+                ->where('product_id', '=', $productId)
+                //->where('comments.deleted_at' '=', null)
+                ->groupBy('comments.id')
+                ->orderBy('comments.id')
+                ->get()
+                ->toArray();
+
+        return $comments;
+    }
+
+    /**
      * Get comments for the given comment Id.
      *
      * @param string|string[] $entityId The atom's entityId(s)
@@ -65,8 +86,9 @@ class Comment extends AppModel {
     public static function addSummaries($atoms, $productId) {
         $groupedComments = [];
         $commentSummaries = [];
-        $entityIds = array_unique($atoms->pluck('entity_id')->toArray());
-        $comments = self::getByAtomEntityId($entityIds, $productId);
+        //$entityIds = array_unique($atoms->pluck('entity_id')->toArray());
+        //$comments = self::getByAtomEntityId($entityIds, $productId);
+        $comments = self::getByProductId($productId);
 
         foreach($comments as $comment) {
             if(!isset($groupedComments[$comment['atom_entity_id']])) {
