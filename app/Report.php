@@ -357,7 +357,7 @@ class Report extends AppModel {
 		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title', 'molecule_code', 'domain_code')
                 ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
-					Atom::buildLatestIDQuery(null, $q);
+					Atom::legacyBuildLatestIDQuery(null, $q);
 				});
 
 		$rawAtomSubQuery = DB::raw('(' . $atomSubQuery->toSql() . ') AS atom_subquery');
