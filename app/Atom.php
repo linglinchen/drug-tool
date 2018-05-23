@@ -168,6 +168,36 @@ class Atom extends AppModel {
                 //->orderBy('alpha_title', 'ASC');
         return $query;
     }
+    /**
+     * Legacy version of build a query to find the latest version of every atom that hasn't been deleted.
+     *  Used by reports and potentially other functions that pass different variables
+     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
+     * @param ?object $q (optional) Subquery object
+     *
+     * @return object The constructed query object
+     */
+    public static function legacyBuildLatestIDQuery($statusId = null, $q = null) {
+        $table = (new self)->getTable();
+        $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
+
+        $query = $q ? $q->select('id') : self::select('id');
+        $query->from($table);
+
+        $query->whereIn('id', function ($q) use ($table, $statusId) {
+                    $q->select(DB::raw('MAX(id)'))
+                            ->from($table);
+
+                    if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
+                        $q->whereIn('status_id', $statusId);
+                    }
+
+                    $q->groupBy('entity_id');
+                })
+                ->whereNull('deleted_at')
+                ->orderBy('alpha_title', 'ASC');
+        return $query;
+    }
+
 
     /**
      * Get a list of discontinued monographs.
