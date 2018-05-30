@@ -51,6 +51,10 @@ class ReportController extends Controller {
         return new ApiPayload(Report::links($productId));
     }
 
+    public static function newFiguresAction($productId) {
+        return new ApiPayload(Report::newFigures($productId));
+    }
+
     public function commentsAction($productId, Request $request) {
         $timezoneOffset = $request->input('timezoneOffset');
         $startTime = $request->input('startTime');

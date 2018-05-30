@@ -84,6 +84,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/report/edits', ['uses' => 'ReportController@editsAction']);
             Route::get('{productId}/report/openAssignments', ['uses' => 'ReportController@openAssignmentsAction']);
             Route::get('{productId}/report/brokenLinks', ['uses' => 'ReportController@brokenLinksAction']);
+            Route::get('{productId}/report/newFigures', ['uses' => 'ReportController@newFiguresAction']);
             Route::get('{productId}/report/comments', ['uses' => 'ReportController@commentsAction']);
             Route::get('{productId}/report/moleculeStats', ['uses' => 'ReportController@moleculeStatsAction']);
             Route::get('{productId}/report/domainStats', ['uses' => 'ReportController@domainStatsAction']);

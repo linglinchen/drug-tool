@@ -334,6 +334,72 @@ class Report extends AppModel {
 	}
 
 	/**
+	 * Generate a list of new figures, and get the total.
+	 *
+     * @param integer $productId Limit to this product
+	 *
+	 * @return array
+	 */
+	public static function newFigures($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null, $moleculeCode = 'Any', $domainCode = 'Any') {
+
+		$startTime = $startTime ? (int)$startTime : null;
+		$endTime = $endTime ? (int)$endTime : null;
+		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
+
+		$newImplementedFigures = [];
+		$total = 0;
+		//use getRobustKeyedAtoms to get the data fields needed
+		$atoms = self::_getRobustKeyedAtoms($productId);
+		$molecules = self::_getKeyedMolecules($productId);
+		foreach($atoms as $atom) {
+			$atom->xml = simplexml_load_string($atom->xml);
+		}
+
+		foreach($atoms as $atom) {
+
+			//look for implemented suggested figures components in current atom and save the snippet to $elements
+//			$elements = $atom->xml->xpath('//component[@type="figure"]/file/@src[starts-with(., "suggested/")]');
+			$elements = $atom->xml->xpath('//component[@type="figure"][file/@src[starts-with(., "suggested/")]]');
+
+			$total += sizeof($elements);
+			foreach($elements as $element) {
+
+					$sourceEntityId = ' a:' . $atom->entity_id;
+
+					$newImplementedFigures[] = [
+//						'currentAtomId' => $currentAtomId,
+						'currentAtomId' => $atom->id,
+						'type' => $element[@type],
+						'atomDomain' => $atom->domain_code,
+						'atomMolecule' => $atom->molecule_code,
+						'atomTitle' => $atom->title,
+						'createdAt' => $atom->created_at,
+						'updatedAt' => $atom->updated_at,
+						'deletedAt' => $atom->deleted_at,
+						'modifiedByUser' => $atom->modified_by,
+						'filestub' => $element->file[@src],
+						'linkRefid' => trim($sourceEntityId),
+						'availability' => $element->availability,
+						'label' => $element->label,
+//						'component'=> $element,
+						'caption' => $element->caption,
+						'credit' => $element->credit,
+					];
+
+			}
+		}
+
+		return [
+			'newImplementedFigures' => $newImplementedFigures,
+			'total' => $total
+		];
+	}
+
+
+
+
+
+	/**
 	 * Generate a list of comment containing queries posted during a time period.
 	 *
 	 * @param integer $productId Limit to this product
@@ -357,7 +423,7 @@ class Report extends AppModel {
 		$atomSubQuery = Atom::select('entity_id', 'product_id', 'title', 'alpha_title', 'molecule_code', 'domain_code')
                 ->where('product_id', '=', DB::raw((int)$productId))		//laravel doesn't like bindings in subqueries
 				->whereIn('id', function ($q) {
-					Atom::legacyBuildLatestIDQuery(null, $q);
+					Atom::legacyBuildLatestIDQuery(null, $q); //uses legacyBuildLatestIDQuery because of subquery/binding complications
 				});
 
 		$rawAtomSubQuery = DB::raw('(' . $atomSubQuery->toSql() . ') AS atom_subquery');
@@ -402,11 +468,13 @@ class Report extends AppModel {
 		}else{
 			if ($domainCode != 'Any'){//domainCode is not Any
 				$query->where('atom_subquery.domain_code', '=', $domainCode);
+				$query->orderBy('comments.id', 'DESC');
 			}
 			if ($moleculeCode != 'Any'){//moleculeCode is not Any
 				$query->where('atom_subquery.molecule_code', '=', $moleculeCode);
+				$query->orderBy('comments.id', 'DESC');
 			}
-			$query->orderBy('atom_subquery.alpha_title', 'DESC');//moleculeCode or domainCode is not Any
+		//	$query->orderBy('atom_subquery.alpha_title', 'DESC');//moleculeCode or domainCode is not Any
 		}
 
 		return $query->get();
@@ -613,6 +681,31 @@ class Report extends AppModel {
 
 		return $atoms;
 	}
+
+	/**
+	 * Get a robust list of all atoms keyed by their entity_id. Include id, modified by user and dates. Needed for reports.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object[]
+	 */
+	protected static function _getRobustKeyedAtoms($productId) {
+
+		$results = Atom::select('id', 'entity_id', 'molecule_code', 'title', 'alpha_title', 'domain_code', 'modified_by', 'created_at', 'updated_at', 'deleted_at', 'xml')
+                ->where('product_id', '=', $productId)
+				->whereIn('id', function ($q) {
+					Atom::buildLatestIDQuery(null, $q);
+				})
+				->get();
+
+		$atoms = [];
+		foreach($results as $atom) {
+			$atoms[$atom->entity_id] = $atom;
+		}
+
+		return $atoms;
+	}
+
 
 	/**
 	 * Get a list of all molecules keyed by their code.
