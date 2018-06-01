@@ -14,6 +14,7 @@ use App\Assignment;
 
 
 class Report extends AppModel {
+	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 	// $reportTypes left here to support defunct listAction function. Remove after routing it on front and back.
 	public static $reportTypes = [
 		'discontinued' => 'Discontinued Monographs',
@@ -57,7 +58,12 @@ class Report extends AppModel {
 
 		if ($productId == 3){
 			$reportTypes['reviewerStats'] = 'Reviewer Process Stats';
+			$reportTypes['newFigures'] = 'New Figures (Implemented new this edition)';
 		}
+		if ($productId == 5){
+			$reportTypes['newFigures'] = 'New Figures (Implemented new this edition)';
+		}
+
 
 		return $reportTypes;
 	}
@@ -364,35 +370,34 @@ class Report extends AppModel {
 			$total += sizeof($elements);
 			foreach($elements as $element) {
 
-					$sourceEntityId = ' a:' . $atom->entity_id;
+//					$sourceEntityId = ' a:' . $atom->entity_id;
+					$sourceEntityId = $atom->entity_id;
+
 
 					$newImplementedFigures[] = [
 //						'currentAtomId' => $currentAtomId,
 						'currentAtomId' => $atom->id,
-						'type' => $element[@type],
+						'type' => (string)$element[@type],
 						'atomDomain' => $atom->domain_code,
 						'atomMolecule' => $atom->molecule_code,
-						'atomTitle' => $atom->title,
-						'createdAt' => $atom->created_at,
-						'updatedAt' => $atom->updated_at,
-						'deletedAt' => $atom->deleted_at,
-						'modifiedByUser' => $atom->modified_by,
-						'filestub' => $element->file[@src],
-						'linkRefid' => trim($sourceEntityId),
-						'availability' => $element->availability,
-						'label' => $element->label,
+						'title' => $atom->title,
+						'createdAt' => (string)$atom->created_at,
+						'updatedAt' => (string)$atom->updated_at,
+						'deletedAt' => (string)$atom->deleted_at,
+						'modifiedByUser' => (string)$atom->modified_by,
+						'filestub' => (string)$element->file[@src],
+						'entityId' => trim($sourceEntityId),
+						'availability' => (string)$element->availability,
+						'label' => (string)$element->label[0],
 //						'component'=> $element,
-						'caption' => $element->caption,
-						'credit' => $element->credit,
+						'caption' => (string)$element->caption[0],
+						'credit' => (string)$element->credit[0],
 					];
 
 			}
 		}
 
-		return [
-			'newImplementedFigures' => $newImplementedFigures,
-			'total' => $total
-		];
+		return  $newImplementedFigures;
 	}
 
 
@@ -495,6 +500,23 @@ class Report extends AppModel {
 
 		return self::arrayToCsv('queries.csv', $headings, $queries);
 	}
+
+		/**
+	 * Builds a CSV from a list of queries.
+	 *
+	 * @param object[] $comments
+	 * @param ?string $queryType (optional) Filter down to this type of query
+	 *
+	 * @return Response
+	 */
+	public static function buildFiguresCSV($comments, $queryType = null) {
+		$headings = ['atom_title', 'query_type', 'text', 'firstname', 'lastname', 'created_at'];
+
+		$queries = self::_extractQueries($newFigures, $queryType);
+
+		return self::arrayToCsv('newFigures.csv', $headings, $queries);
+	}
+
 
 	/**
 	 * Provide an array of statistics about the molecules.
