@@ -111,7 +111,7 @@ class Molecule extends AppModel {
         foreach ($commentsArray as $comment){
             if (strpos($comment['text'], 'type="figure"') !== false){
                 $commentsInfo = [];
-                $commentXml = '<?xml version="1.0" encoding="UTF-8"?>'.$comment['text'];
+                $commentXml = '<?xml version="1.0" encoding="UTF-8"?><documents>'.$comment['text'].'</documents>';
                 $xmlObject = simplexml_load_string($commentXml);
                 $reviewStatusObj = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()')[0];
                 $reviewStatus = json_decode(json_encode($reviewStatusObj), true)[0];
