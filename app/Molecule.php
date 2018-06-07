@@ -68,13 +68,13 @@ class Molecule extends AppModel {
         $molecule['atoms'] = $atoms;*/
 
         //get assignments for each atom
-        $sql_assignment = 
+        $sql_assignment =
             "SELECT ass.*
             FROM atoms a
             join assignments ass on a.entity_id = ass.atom_entity_id
             WHERE product_id = ".$productId."
                 and molecule_code = '".$molecule['code']."'
-	            and a.id in 
+	            and a.id in
                     (SELECT id FROM atoms WHERE id in
                         (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
                     and deleted_at IS NULL)
@@ -90,15 +90,15 @@ class Molecule extends AppModel {
         }
 
         //get comments for each atom
-        $sql_comment = 
+        $sql_comment =
             "SELECT c.*
             FROM atoms a
             join comments c on a.entity_id = c.atom_entity_id
             WHERE product_id = ".$productId."
                 and molecule_code = '".$molecule['code']."'
-                and a.id in 
-                    (SELECT id FROM atoms WHERE id in 
-                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id) 
+                and a.id in
+                    (SELECT id FROM atoms WHERE id in
+                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
                     and deleted_at IS NULL )
             ORDER BY c.id DESC"; //join atoms and comments tables, atom will be the lastest version, not deleted
 
@@ -111,7 +111,7 @@ class Molecule extends AppModel {
         foreach ($commentsArray as $comment){
             if (strpos($comment['text'], 'type="figure"') !== false){
                 $commentsInfo = [];
-                $commentXml = '<?xml version="1.0" encoding="UTF-8"?>'.$comment['text'];
+                $commentXml = '<?xml version="1.0" encoding="UTF-8"?><documents>'.$comment['text'].'</documents>';
                 $xmlObject = simplexml_load_string($commentXml);
                 $reviewStatusObj = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()')[0];
                 $reviewStatus = json_decode(json_encode($reviewStatusObj), true)[0];
