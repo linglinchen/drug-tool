@@ -24,8 +24,7 @@ class Report extends AppModel {
 		'brokenLinks' => 'Broken Links',
 		'comments' => 'Comments',
 		'moleculeStats' => 'Chapter Stats',
-		'domainStats' => 'Domain Stats',
-		'reviewerStats' => 'Reviewer Process Stats'
+		'domainStats' => 'Domain Stats'
 	];
 
 
