@@ -113,17 +113,21 @@ class Molecule extends AppModel {
                 $commentsInfo = [];
                 $commentXml = '<?xml version="1.0" encoding="UTF-8"?><documents>'.$comment['text'].'</documents>';
                 $xmlObject = simplexml_load_string($commentXml);
-                $reviewStatusObj = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()')[0];
-                $reviewStatus = json_decode(json_encode($reviewStatusObj), true)[0];
+                $reviewPart = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()');
+                $reviewStatusObj = $reviewPart ? $reviewPart[0] : '';
+                $reviewStatus = $reviewStatusObj ? json_decode(json_encode($reviewStatusObj), true)[0] : '';
 
-                $captionObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/ce_caption/text()')[0];
-                $caption = json_decode(json_encode($captionObj), true)[0];
+                $captionPart = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/ce_caption/text()');
+                $captionObj = $captionPart ? $captionPart[0] : '';
+                $caption = $captionObj ? json_decode(json_encode($captionObj), true)[0] : '';
 
-                $creditObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/credit/text()')[0];
-                $credit = json_decode(json_encode($creditObj), true)[0];
+                $creditPart = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/credit/text()');
+                $creditObj = $creditPart ? $creditPart[0] : '';
+                $credit = $creditObj ? json_decode(json_encode($creditObj), true)[0] : '';
 
-                $figureFileObj = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src')[0];
-                $figureFile = json_decode(json_encode($figureFileObj), true)['@attributes']['src'];
+                $figureFilePart = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src');
+                $figureFileObj = $figureFilePart ? $figureFilePart[0] : '';
+                $figureFile = $figureFileObj ? json_decode(json_encode($figureFileObj), true)['@attributes']['src'] : '';
 
                 $commentsInfo['reviewstatus'] = $reviewStatus;
                 $commentsInfo['caption'] = $caption;
