@@ -16,7 +16,7 @@ use App\Assignment;
 class Report extends AppModel {
 	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 	// $reportTypes left here to support defunct listAction function. Remove after routing it on front and back.
-/*	public static $reportTypes = [
+	public static $reportTypes = [
 		'discontinued' => 'Discontinued Monographs',
 		'statuses' => 'Status Breakdown',
 		'edits' => 'Edits',
@@ -26,7 +26,7 @@ class Report extends AppModel {
 		'moleculeStats' => 'Chapter Stats',
 		'domainStats' => 'Domain Stats',
 		'reviewerStats' => 'Reviewer Process Stats'
-	];*/
+	];
 
 
 	/**
