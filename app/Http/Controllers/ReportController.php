@@ -52,7 +52,9 @@ class ReportController extends Controller {
     }
 
     public static function newFiguresAction($productId) {
+        ini_set('memory_limit', '1280M');
         return new ApiPayload(Report::newFigures($productId));
+
     }
 
     public function commentsAction($productId, Request $request) {

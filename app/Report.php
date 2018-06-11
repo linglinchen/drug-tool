@@ -347,13 +347,13 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function newFigures($productId, $timezoneOffset = 0, $startTime = null, $endTime = null, $queriesOnly = false, $queryType = null, $moleculeCode = 'Any', $domainCode = 'Any') {
-
+		ini_set('memory_limit', '1280M');
 		$startTime = $startTime ? (int)$startTime : null;
 		$endTime = $endTime ? (int)$endTime : null;
 		list($startTime, $endTime) = self::_enforceRangeSanity($startTime, $endTime);
 
 		$newImplementedFigures = [];
-		$total = 0;
+				$total = 0;
 		//use getRobustKeyedAtoms to get the data fields needed
 		$atoms = self::_getRobustKeyedAtoms($productId);
 		$molecules = self::_getKeyedMolecules($productId);
@@ -365,6 +365,7 @@ class Report extends AppModel {
 
 			//look for implemented suggested figures components in current atom and save the snippet to $elements
 //			$elements = $atom->xml->xpath('//component[@type="figure"]/file/@src[starts-with(., "suggested/")]');
+
 			$elements = $atom->xml->xpath('//component[@type="figure"][file/@src[starts-with(., "suggested/")]]');
 
 			$total += sizeof($elements);
