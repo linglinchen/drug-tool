@@ -11,7 +11,7 @@ use App\Molecule;
 
 use App\ApiError;
 use App\ApiPayload;
-
+use Aws\S3\S3Client;
 /**
  * This controller handles atoms.
  * All endpoint methods should return an ApiPayload or Response.
@@ -20,7 +20,9 @@ use App\ApiPayload;
  */
 class BucketController extends Controller
 {
-
+ public function getAction($code='A') {
+    // Include the SDK using the Composer autoloader
+//require 'vendor/autoload.php';
 /*
  * Copyright 2013. Amazon Web Services, Inc. All Rights Reserved.
  *
@@ -161,4 +163,5 @@ $s3->deleteBucket(['Bucket' => $bucket]);
  See the Error Handling section in the developer guide for more information:
  http://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/basic-usage.html#synchronous-error-handling
 */
+}
 }
