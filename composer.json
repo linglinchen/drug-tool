@@ -9,6 +9,7 @@
         "laravel/framework": "5.2.*",
         "doctrine/dbal": "^2.5",
         "aws/aws-sdk-php": "^3.61",
+        "aws/aws-sdk-php-laravel": "~3.0",
         "itsgoingd/clockwork": "^2.1"
     },
     "require-dev": {

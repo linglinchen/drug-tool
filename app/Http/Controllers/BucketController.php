@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Request;
-use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
+use App;
+//use App\Http\Controllers\Controller;
+//use App\Library\Services\DemoOne;
 
-use App\Atom;
-use App\Molecule;
-
-use App\ApiError;
-use App\ApiPayload;
-use Aws\S3\S3Client;
 /**
  * This controller handles atoms.
  * All endpoint methods should return an ApiPayload or Response.
@@ -20,7 +14,16 @@ use Aws\S3\S3Client;
  */
 class BucketController extends Controller
 {
+
  public function getAction($code='A') {
+$s3 = App::make('aws')->createClient('s3');
+print_r($s3);
+$s3->putObject(array(
+    'Bucket'     => 'YOUR_BUCKET',
+    'Key'        => 'YOUR_OBJECT_KEY',
+    'SourceFile' => '/the/path/to/the/file/you/are/uploading.ext',
+));
+
     // Include the SDK using the Composer autoloader
 //require 'vendor/autoload.php';
 /*
