@@ -56,10 +56,18 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
+            'key' => 'AKIAIPLNNR2SZFNQL3YQ',
+            'secret' => '9R0MevS44QkW8mIO+ryIY0hYWN5/elHTtB/DQNVf',
+            'region' => 'us-east-1',
+            'bucket' => 'metis-imageserver.elseviermultimedia.us',
+        ],
+
+        's3devsuggested' => [
+            'driver' => 's3',
+            'key' => 'AKIAIPLNNR2SZFNQL3YQ',
+            'secret' => '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',
+            'region' => 'us-east-1',
+            'bucket' => 'metis-dev-imageserver.elseviermultimedia.us/suggested/',
         ],
 
     ],

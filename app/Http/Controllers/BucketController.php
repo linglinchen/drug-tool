@@ -15,14 +15,22 @@ use App;
 class BucketController extends Controller
 {
 
- public function getAction($code='A') {
+public function getAction($code='A') {
 $s3 = App::make('aws')->createClient('s3');
+// Call listBuckets with no parameters
+$buckets = $s3->listBuckets();
+
+print_r($buckets);
+//$s3 = AWS::get('s3');
+/*print_r(env('API_DOMAIN'));
+print_r('this is $s3');
 print_r($s3);
-$s3->putObject(array(
+print_r('that was $s3');*/
+/*$s3->putObject(array(
     'Bucket'     => 'YOUR_BUCKET',
     'Key'        => 'YOUR_OBJECT_KEY',
     'SourceFile' => '/the/path/to/the/file/you/are/uploading.ext',
-));
+));*/
 
     // Include the SDK using the Composer autoloader
 //require 'vendor/autoload.php';
