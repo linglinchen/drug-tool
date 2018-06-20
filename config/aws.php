@@ -17,14 +17,14 @@ return [
     |
     */
     'credentials' => [
-        'key'    => 'AKIAIPLNNR2SZFNQL3YQ',
-        'secret' => '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',
+        'key'    => env('AWS_s3_KEY', ''),
+        'secret' => env('AWS_s3_SECRET', ''),
     ],
 
-    'region' => env('AWS_REGION', 'us-east-1'),
+    'region' => env('AWS_s3_REGION', ''),
     'version' => 'latest',
 
-        // You can override settings for specific services
+    // You can override settings for specific services
     'Ses' => [
         'region' => 'us-east-1',
     ],

@@ -38,6 +38,7 @@ return [
     | Here you may configure as many filesystem "disks" as you wish, and you
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
+    | -- Uses environment variables from .env to ensure consistency across app
     |
     */
 
@@ -53,21 +54,21 @@ return [
             'root' => storage_path('app/public'),
             'visibility' => 'public',
         ],
-
+//Figures that were used in previous edition are only stored in prod
         's3' => [
             'driver' => 's3',
-            'key' => 'AKIAIPLNNR2SZFNQL3YQ',
-            'secret' => '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',
-            'region' => 'us-east-1',
-            'bucket' => 'metis-imageserver.elseviermultimedia.us',
+            'key'    => env('AWS_s3_KEY', ''),
+            'secret' => env('AWS_s3_SECRET', ''),
+            'region' => env('AWS_s3_REGION', ''),
+            'bucket' =>  env('AWS_s3_PROD', ''),
         ],
-
+//Figures that were newly suggested on Dev in testing will still only be in the Dev suggested bucket.
         's3devsuggested' => [
             'driver' => 's3',
-            'key' => 'AKIAIPLNNR2SZFNQL3YQ',
-            'secret' => '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',
-            'region' => 'us-east-1',
-            'bucket' => 'metis-dev-imageserver.elseviermultimedia.us/suggested/',
+            'key'    => env('AWS_s3_KEY', ''),
+            'secret' => env('AWS_s3_SECRET', ''),
+            'region' => env('AWS_REGION', ''),
+            'bucket' => env('AWS_s3_DEV', '').'/suggested/',
         ],
 
     ],
