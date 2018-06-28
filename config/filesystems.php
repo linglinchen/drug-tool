@@ -55,7 +55,7 @@ return [
             'visibility' => 'public',
         ],
 //Figures that were used in previous edition are only stored in prod
-        's3' => [
+        's3prod' => [
             'driver' => 's3',
             'key'    => env('AWS_s3_KEY', ''),
             'secret' => env('AWS_s3_SECRET', ''),
@@ -67,7 +67,7 @@ return [
             'driver' => 's3',
             'key'    => env('AWS_s3_KEY', ''),
             'secret' => env('AWS_s3_SECRET', ''),
-            'region' => env('AWS_REGION', ''),
+            'region' => env('AWS_s3_REGION', ''),
             'bucket' => env('AWS_s3_DEV', '').'/suggested/',
         ],
 
