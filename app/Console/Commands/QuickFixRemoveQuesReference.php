@@ -45,14 +45,14 @@ class QuickFixRemoveQuesReference extends Command {
         $count = 0;
         foreach($atomsArray as $atom) {
                 $atomModel = Atom::find($atom['id']);
-            
-                $count++;
+
                 $newAtom = $atomModel->replicate();
                 preg_match('/<reference>.*<\/reference>/', $atomModel->xml, $matches2);
                 if ($matches2){
-                        echo $atomModel->id."\t".$atomModel->entity_id."\t".$atomModel->alpha_title."\treference removed\n";
-			            $newAtom->xml = preg_replace('/<reference>.*<\/reference>/','', $atomModel->xml);
-                        $newAtom->save();
+                    $count++;
+                    echo $atomModel->id."\t".$atomModel->entity_id."\t".$atomModel->alpha_title."\treference removed\n";
+                    $newAtom->xml = preg_replace('/<reference>.*<\/reference>/','', $atomModel->xml);
+                    $newAtom->save();
                        
                 }
 	}
