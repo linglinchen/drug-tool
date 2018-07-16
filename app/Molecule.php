@@ -209,16 +209,17 @@ class Molecule extends AppModel {
 
                 $figureRows =" \t";
 
-                    foreach($figureNodes as $figureNode){
-                        empty($val)?0:$val;
-                            $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
-                            $sourceItem =htmlentities($sourceItem);
+                foreach($figureNodes as $figureNode){
+                    empty($val)?0:$val;
+                        $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                        $sourceItem =htmlentities($sourceItem);
             //                print_r(gettype($sourceItem));
-            $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
-
+                    if (isset($figureNode['@attributes']) && isset($figureNode['file']) && isset($figureNode['file']['@attributes'])){
+                        $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                    }
 //                        $figureRows .="\n\tYes\t" .$figureNode['@attributes']['id']."\t\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t". "Comp"."\t\t".' ';
 
-                    }
+                }
 
                 $figureLogRows = $metaheader . $figureRows;
              } else {
