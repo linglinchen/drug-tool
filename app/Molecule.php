@@ -202,29 +202,30 @@ class Molecule extends AppModel {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
-             if($figureNodes){
+        if($figureNodes){
 
-                $figureNodes = json_encode($figureNodes);
-                $figureNodes = (array)json_decode($figureNodes, true);
+            $figureNodes = json_encode($figureNodes);
+            $figureNodes = (array)json_decode($figureNodes, true);
 
-                $figureRows =" \t";
+            $figureRows =" \t";
 
-                    foreach($figureNodes as $figureNode){
-                        empty($val)?0:$val;
-                            $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
-                            $sourceItem =htmlentities($sourceItem);
-            //                print_r(gettype($sourceItem));
-            $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+            foreach($figureNodes as $figureNode){
+                empty($val)?0:$val;
+                $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                $sourceItem =htmlentities($sourceItem);
+    //                print_r(gettype($sourceItem));
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file']) && isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                    $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
 
 //                        $figureRows .="\n\tYes\t" .$figureNode['@attributes']['id']."\t\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t". "Comp"."\t\t".' ';
+                }
+            }
 
-                    }
+            $figureLogRows = $metaheader . $figureRows;
+        } else {
+            $figureLogRows = $metaheader . 'No figures in this Chapter';
 
-                $figureLogRows = $metaheader . $figureRows;
-             } else {
-                $figureLogRows = $metaheader . 'No figures in this Chapter';
-
-             }
+        }
 
 
          return  $figureLogRows;
