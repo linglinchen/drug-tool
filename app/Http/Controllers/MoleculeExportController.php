@@ -128,7 +128,7 @@ METAHEADER;
                             $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
                             $zip->addFromString($code . '.xml', $xml);
                             $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
-                            $zip->addFromString('MyImage.jpg', file_get_contents("https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us/suggested/2018/1531759130097_p6v0RkxH.JPG"));
+                            $zip->addFromString('MyImage.jpg', file_get_contents("https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us/suggested/2018/1516721496329_nZG9JStr.jpg"));
                             $zip->close();
                         break;
 
