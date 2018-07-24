@@ -231,6 +231,32 @@ class Molecule extends AppModel {
          return  $figureLogRows;
     }
 
+
+    /**
+     * take the xml from above and return an array of image file names
+     *
+     * @returns array
+     */
+    public function getImageFileName($moleculeXml) {
+        $ob = simplexml_load_string($moleculeXml);
+        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
+        $imageFiles = [];
+
+        if($figureNodes){
+
+            $figureNodes = json_encode($figureNodes);
+            $figureNodes = (array)json_decode($figureNodes, true);
+
+            foreach($figureNodes as $figureNode){
+                if (isset($figureNode['file']) && isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                    $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                }
+            }
+        }
+
+         return  $imageFiles;
+    }
+
     /**
      * Gets a list of properly sorted atoms that are ready for publication.
      * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort order (sort based on current atom in any status but ids are most current and ready to publish atoms)
