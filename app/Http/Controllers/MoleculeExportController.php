@@ -155,7 +155,7 @@ METAHEADER;
 
                     default:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355
+                            $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355 Mosby nursing drug reference
                             $xml .= $molecule->export($statusId);
                             $xml .= '</dictionary>';
                             $zip->addFromString($code . '.xml', $xml);
