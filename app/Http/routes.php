@@ -89,16 +89,6 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/report/moleculeStats', ['uses' => 'ReportController@moleculeStatsAction']);
             Route::get('{productId}/report/domainStats', ['uses' => 'ReportController@domainStatsAction']);
             Route::get('{productId}/report/reviewerStats', ['uses' => 'ReportController@reviewerStatsAction']);
-
-            //Simple controller for adding an  AWS s3 image zip to molecule export
-            Route::get('{productId}/bucket/{code}', ['uses' => 'BucketController@getAction']);
-            Route::get('{productId}/s3-image-upload', ['uses' => 'S3ImageController@testMeAction']);
-            //AWS s3 using league/flysystem-aws-s3-v3 for Laravel File Storage Service provider
-//            Route::get('s3-image-upload','S3ImageController@imageUpload');
-//            Route::post('s3-image-upload','S3ImageController@imageUploadPost');
-//            Route::get('{productId}/s3-image-upload', ['uses' => 'S3ImageController@imageUploadAction']);
-            Route::post('{productId}/s3-image-upload', ['uses' => 'S3ImageController@imageUploadAction']);
-
         });
     });
 });
