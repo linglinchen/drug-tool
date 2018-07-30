@@ -399,7 +399,7 @@ class Molecule extends AppModel {
 
         //output all status for Sarah Vora
         $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-        select * from atoms where id in (select MAX(id) from atoms where group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
         inner join  (
         select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
                                 where a.product_id=$productId and b.product_id=$productId;";
