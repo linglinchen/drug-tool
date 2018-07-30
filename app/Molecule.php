@@ -202,17 +202,53 @@ class Molecule extends AppModel {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
+
         if($figureNodes){
-            $figureNodes = json_encode($figureNodes);
-            $figureNodes = (array)json_decode($figureNodes, true);
+            //$figureNodes = json_encode($figureNodes);
+            //$figureNodes = (array)json_decode($figureNodes, true);
             $figureRows =" \t";
 
-            foreach($figureNodes as $figureNode){
-                empty($val)?0:$val;
+            foreach($figureNodes as $figureNode){ 
+                $closestEntryNodes = $figureNode->xpath('ancestor::entry[1]/headw//text()');
+                $closestEntryNodes = json_encode($closestEntryNodes);
+                $closestEntryNodes = (array)json_decode($closestEntryNodes, true);
+                $closestEntry = '';
+                foreach ($closestEntryNodes as $closestEntryNode){
+                    if (isset($closestEntryNode[0])){
+                        $closestEntry = $closestEntryNode[0];
+                    }
+                }
+
+                $mainEntryNodes = $figureNode->xpath('ancestor::entry[parent::alpha]/headw//text()');
+                $mainEntryNodes = json_encode($mainEntryNodes);
+                $mainEntryNodes = (array)json_decode($mainEntryNodes, true);
+                $mainEntry = '';
+                foreach ($mainEntryNodes as $mainEntryNode){
+                    if (isset($mainEntryNode[0])){
+                        $mainEntry = $mainEntryNode[0];
+                    }
+                }
+
+                $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry.'/'.$closestEntry;
+
+                $figureNode = json_encode($figureNode);
+                $figureNode = json_decode($figureNode, true);
+                //empty($val)?0:$val;
                 $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                //$sourceItem = isset($figureNode->credit[0])? $figureNode->credit[0]: '';
                 $sourceItem =htmlentities($sourceItem);
-                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file']) && isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                    $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
+                    if (count($figureNode['file']) > 1){
+                        foreach ($figureNode['file'] as $file){
+                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                $figureRows .="\n".$term."\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                            }
+                        }
+                    }else{
+                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                            $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                        }
+                    }
                 }
             }
 
@@ -241,8 +277,22 @@ class Molecule extends AppModel {
             $figureNodes = (array)json_decode($figureNodes, true);
 
             foreach($figureNodes as $figureNode){
-                if (isset($figureNode['file']) && isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                    $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                //if (isset($figureNode['file']) && isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                    //$imageFiles[] = $figureNode['file']['@attributes']['src'];
+                //}
+
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
+                    if (count($figureNode['file']) > 1){
+                        foreach ($figureNode['file'] as $file){
+                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                $imageFiles[] = $file['@attributes']['src'];
+                            }
+                        }
+                    }else{
+                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                            $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                        }
+                    }
                 }
             }
         }
