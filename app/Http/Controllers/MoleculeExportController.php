@@ -135,11 +135,11 @@ METAHEADER;
                             $imageFiles = $molecule->getImageFileName($moleculeXml);
                             foreach ($imageFiles as $imageFile){
                                 if (substr($imageFile, 0, 9) == 'suggested'){ //suggested image
-                                    $fileName1 = $s3UrlDev."/".$imageFile.".jpg";
+                                    $fileName1 = $s3UrlProd."/".$imageFile.".jpg";
                                     if (@file_get_contents($fileName1)){
                                         $zip->addFromString($imageFile.'.jpg', file_get_contents($fileName1));
                                     }
-                                    $fileName2 = $s3UrlDev."/".$imageFile.".JPG";
+                                    $fileName2 = $s3UrlProd."/".$imageFile.".JPG";
                                     if (@file_get_contents($fileName2)){
                                         $zip->addFromString($imageFile.'.JPG', file_get_contents($fileName2));
                                     }
