@@ -233,20 +233,34 @@ class Molecule extends AppModel {
 
                 $figureNode = json_encode($figureNode);
                 $figureNode = json_decode($figureNode, true);
-                //empty($val)?0:$val;
+
                 $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
-                //$sourceItem = isset($figureNode->credit[0])? $figureNode->credit[0]: '';
                 $sourceItem =htmlentities($sourceItem);
+
+                $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
+                if ($availability == 'electronic'){
+                    $availability = 'online only';
+                }
+                else if ($availability == 'print'){
+                    $availability = 'print only';
+                }
+                else if ($availability == 'both'){
+                    $availablity = 'print and online';
+                }
+                else {
+                    $availablity = '';
+                }
+
                 if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
                     if (count($figureNode['file']) > 1){
                         foreach ($figureNode['file'] as $file){
                             if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
-                                $figureRows .="\n".$term."\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                                $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                             }
                         }
                     }else{
                         if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                            $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+                            $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                         }
                     }
                 }
