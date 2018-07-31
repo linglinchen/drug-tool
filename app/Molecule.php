@@ -202,33 +202,113 @@ class Molecule extends AppModel {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
-             if($figureNodes){
 
-                $figureNodes = json_encode($figureNodes);
-                $figureNodes = (array)json_decode($figureNodes, true);
+        if($figureNodes){
+            //$figureNodes = json_encode($figureNodes);
+            //$figureNodes = (array)json_decode($figureNodes, true);
+            $figureRows =" \t";
 
-                $figureRows =" \t";
-
-                foreach($figureNodes as $figureNode){
-                    empty($val)?0:$val;
-                        $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
-                        $sourceItem =htmlentities($sourceItem);
-            //                print_r(gettype($sourceItem));
-                    if (isset($figureNode['@attributes']) && isset($figureNode['file']) && isset($figureNode['file']['@attributes'])){
-                        $figureRows .="\n\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp"."\t".' ';
+            foreach($figureNodes as $figureNode){ 
+                $closestEntryNodes = $figureNode->xpath('ancestor::entry[1]/headw//text()');
+                $closestEntryNodes = json_encode($closestEntryNodes);
+                $closestEntryNodes = (array)json_decode($closestEntryNodes, true);
+                $closestEntry = '';
+                foreach ($closestEntryNodes as $closestEntryNode){
+                    if (isset($closestEntryNode[0])){
+                        $closestEntry = $closestEntryNode[0];
                     }
-//                        $figureRows .="\n\tYes\t" .$figureNode['@attributes']['id']."\t\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t". "Comp"."\t\t".' ';
-
                 }
 
-                $figureLogRows = $metaheader . $figureRows;
-             } else {
+                $mainEntryNodes = $figureNode->xpath('ancestor::entry[parent::alpha]/headw//text()');
+                $mainEntryNodes = json_encode($mainEntryNodes);
+                $mainEntryNodes = (array)json_decode($mainEntryNodes, true);
+                $mainEntry = '';
+                foreach ($mainEntryNodes as $mainEntryNode){
+                    if (isset($mainEntryNode[0])){
+                        $mainEntry = $mainEntryNode[0];
+                    }
+                }
+
+                $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry.'/'.$closestEntry;
+
+                $figureNode = json_encode($figureNode);
+                $figureNode = json_decode($figureNode, true);
+
+                $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                $sourceItem =htmlentities($sourceItem);
+
+                $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
+                if ($availability == 'electronic'){
+                    $availability = 'online only';
+                }
+                else if ($availability == 'print'){
+                    $availability = 'print only';
+                }
+                else if ($availability == 'both'){
+                    $availablity = 'print and online';
+                }
+                else {
+                    $availablity = '';
+                }
+
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
+                    if (count($figureNode['file']) > 1){
+                        foreach ($figureNode['file'] as $file){
+                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                            }
+                        }
+                    }else{
+                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                            $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                        }
+                    }
+                }
+            }
+
+            $figureLogRows = $metaheader . $figureRows;
+        } else {
                 $figureLogRows = $metaheader . 'No figures in this Chapter';
-
-             }
-
+        }
 
          return  $figureLogRows;
+    }
+
+
+    /**
+     * take the xml from above and return an array of image file names
+     *
+     * @returns array
+     */
+    public function getImageFileName($moleculeXml) {
+        $ob = simplexml_load_string($moleculeXml);
+        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
+        $imageFiles = [];
+
+        if($figureNodes){
+
+            $figureNodes = json_encode($figureNodes);
+            $figureNodes = (array)json_decode($figureNodes, true);
+
+            foreach($figureNodes as $figureNode){
+
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
+                    if (count($figureNode['file']) > 1){
+                        foreach ($figureNode['file'] as $file){
+                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                $imageFiles[] = $file['@attributes']['src'];
+                            }
+                        }
+                    }else{
+                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                            $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                        }
+                    }
+                }
+            }
+        }
+
+         return  $imageFiles;
     }
 
     /**
@@ -325,8 +405,15 @@ class Molecule extends AppModel {
 
         $moleculecode=$this->code;
 
+        // $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
+        // select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        // inner join  (
+        // select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
+        //                         where a.product_id=$productId and b.product_id=$productId;";
+
+        //output all status for Sarah Vora
         $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-        select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
+        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
         inner join  (
         select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
                                 where a.product_id=$productId and b.product_id=$productId;";

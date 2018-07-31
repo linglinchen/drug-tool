@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App;
+
 use App\Http\Requests\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -36,6 +38,8 @@ class MoleculeExportController extends Controller {
         $statusId = $statusId === '' ? null : $statusId;
         $withFigures = $request->input('withFigures');
         $withFigures = $withFigures === '' ? null : $withFigures;
+        $s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
+        $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 
 //receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
         if ($productId !== 1){
@@ -112,7 +116,7 @@ METAHEADER;
                 switch ((int)$productId) { //TODO: make the ISBN dynamic
                     case 3:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="9780702074639">' . "\n";
+                            $xml .= '<dictionary isbn="9780702074639">' . "\n"; //vet edition 5           vet 4 is 9780702032318
                             $xml .= $moleculeXml;
                             $xml .= '</dictionary>';
                             $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_vet);
@@ -122,18 +126,36 @@ METAHEADER;
                         break;
                     case 5:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
+                            $xml .= '<dictionary isbn="9780323546355">' . "\n"; //dental edition 4          dental 3 is 9780323100120
                             $xml .= $moleculeXml;
                             $xml .= '</dictionary>';
                             $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
                             $zip->addFromString($code . '.xml', $xml);
                             $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+                            $imageFiles = $molecule->getImageFileName($moleculeXml);
+                            foreach ($imageFiles as $imageFile){
+                                if (substr($imageFile, 0, 9) == 'suggested'){ //suggested image
+                                    $fileName1 = $s3UrlProd."/".$imageFile.".jpg";
+                                    if (@file_get_contents($fileName1)){
+                                        $zip->addFromString($imageFile.'.jpg', file_get_contents($fileName1));
+                                    }
+                                    $fileName2 = $s3UrlProd."/".$imageFile.".JPG";
+                                    if (@file_get_contents($fileName2)){
+                                        $zip->addFromString($imageFile.'.JPG', file_get_contents($fileName2));
+                                    }
+                                }
+                                else{ //legacy image
+                                    $zip->addFromString($imageFile.'.jpg', file_get_contents($s3UrlProd."/9780323100120/".$imageFile.".jpg"));
+                                }
+                            }
+
+                            //$zip->addFromString('MyImage.jpg', file_get_contents("https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us/9780323100120/on001-007-9780323100120tn.jpg"));
                             $zip->close();
                         break;
 
                     default:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="9780323546355">' . "\n";
+                            $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355 Mosby nursing drug reference
                             $xml .= $molecule->export($statusId);
                             $xml .= '</dictionary>';
                             $zip->addFromString($code . '.xml', $xml);
@@ -143,7 +165,7 @@ METAHEADER;
 
         } else {      //drug doctypes just get orginal code
         $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "Y:\WWW1\tools\Drugs\3_4_drug.dtd">' . "\n";
-        $xml .= '<drug_guide isbn="9780323448260">' . "\n";     //TODO: make the ISBN dynamic
+        $xml .= '<drug_guide isbn="">' . "\n";     //TODO: make the ISBN dynamic JUDY used 9780323448260
         $xml .= $molecule->export($statusId);
         $xml .= '</drug_guide>';
         $zip->addFromString($code .'_xml_'. date('Y-m-d_H:i:s') .'.xml', $xml);

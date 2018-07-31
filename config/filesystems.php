@@ -38,6 +38,7 @@ return [
     | Here you may configure as many filesystem "disks" as you wish, and you
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
+    | -- Uses environment variables from .env to ensure consistency across app
     |
     */
 
@@ -53,13 +54,21 @@ return [
             'root' => storage_path('app/public'),
             'visibility' => 'public',
         ],
-
-        's3' => [
+//Figures that were used in previous edition are only stored in prod
+        's3prod' => [
             'driver' => 's3',
-            'key' => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
+            'key'    => env('AWS_s3_KEY', ''),
+            'secret' => env('AWS_s3_SECRET', ''),
+            'region' => env('AWS_s3_REGION', ''),
+            'bucket' =>  env('AWS_s3_PROD', ''),
+        ],
+//Figures that were newly suggested on Dev in testing will still only be in the Dev suggested bucket.
+        's3devsuggested' => [
+            'driver' => 's3',
+            'key'    => env('AWS_s3_KEY', ''),
+            'secret' => env('AWS_s3_SECRET', ''),
+            'region' => env('AWS_s3_REGION', ''),
+            'bucket' => env('AWS_s3_DEV', '').'/suggested/',
         ],
 
     ],
