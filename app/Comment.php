@@ -126,6 +126,7 @@ class Comment extends AppModel {
 */
         $sql = 'select id, text,
             unnest(xpath(\'//query[@type="figure"]/suggestion/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as reviewstatus,
+            unnest(xpath(\'//query[@type="figure"]/availability/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as availability,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/ce_caption/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as caption,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/credit/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as credit,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments
