@@ -100,7 +100,7 @@ class QuickFixImageAvailability extends Command {
                             $newXml = preg_replace('/<\?xml version="1\.0" encoding="UTF-8"\?>\n/', '', $xmlString);
 
                             if($newXml !== $atomModel->xml) {
-                                $atomModel->xml = newXml;
+                                $atomModel->xml = $newXml;
                                 //$newAtom = $atomModel->replicate();
                                 //$newAtom->xml = $newXml;
                                 //$newAtom->modified_by = null;
