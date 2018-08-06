@@ -108,7 +108,7 @@ class QuickFixImageAvailability extends Command {
                                 //$newAtom->xml = $newXml;
                                 //$newAtom->modified_by = null;
                                 //$newAtom->save();
-                                //$atomModel->save();
+                                $atomModel->save();
                                  $changed++;
                                 echo 'atom: '.$atom['entity_id'].' '.$atom['alpha_title'].' '.$src."\n";
                             }
