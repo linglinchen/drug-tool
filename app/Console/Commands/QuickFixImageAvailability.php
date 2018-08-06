@@ -95,7 +95,7 @@ class QuickFixImageAvailability extends Command {
 
                     if ($figureNode->attributes() && $figureNode->attributes()->availability){
                         $attributes = $figureNode->attributes();
-                        if ($attributes->availability == 'undefined'){
+                        if ($attributes->availability == 'undefined' && defined($availabilityInfo[$srcSimple])){
                             $attributes->availability = $availabilityInfo[$srcSimple];
                             $xmlString = $xmlObject->asXML();
         
@@ -108,7 +108,7 @@ class QuickFixImageAvailability extends Command {
                                 //$newAtom->xml = $newXml;
                                 //$newAtom->modified_by = null;
                                 //$newAtom->save();
-                                $atomModel->save();
+                                //$atomModel->save();
                                  $changed++;
                                 echo 'atom: '.$atom['entity_id'].' '.$atom['alpha_title'].' '.$src."\n";
                             }
