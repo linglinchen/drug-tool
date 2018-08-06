@@ -95,7 +95,7 @@ class QuickFixImageAvailability extends Command {
 
                     if ($figureNode->attributes() && $figureNode->attributes()->availability){
                         $attributes = $figureNode->attributes();
-                        if ($attributes->availability == 'undefined' && defined($availabilityInfo[$srcSimple])){
+                        if ($attributes->availability == 'undefined' && isset($availabilityInfo[$srcSimple])){
                             $attributes->availability = $availabilityInfo[$srcSimple];
                             $xmlString = $xmlObject->asXML();
         
