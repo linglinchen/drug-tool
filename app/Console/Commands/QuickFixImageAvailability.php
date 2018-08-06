@@ -51,7 +51,8 @@ class QuickFixImageAvailability extends Command {
             $commentsArray = json_decode(json_encode($comments), true);
             foreach($commentsArray as $comment){
                 $commentModel = Comment::find($comment['id']);
-                if (substr($commentModel->text, 0, 6) == '<query'){
+                preg_match('/<\/query>$/', $commentModel->text, $matches);
+                if (substr($commentModel->text, 0, 6) == '<query' && $matches){
                     $obj = simplexml_load_string($commentModel->text);
                     $src = '';
                     $availability = '';
@@ -94,7 +95,7 @@ class QuickFixImageAvailability extends Command {
 
                     if ($figureNode->attributes() && $figureNode->attributes()->availability){
                         $attributes = $figureNode->attributes();
-                        if ($attributes->availability == 'undefined'){
+                        if ($attributes->availability == 'undefined' && isset($availabilityInfo[$srcSimple]){
                             $attributes->availability = $availabilityInfo[$srcSimple];
                             $xmlString = $xmlObject->asXML();
         
