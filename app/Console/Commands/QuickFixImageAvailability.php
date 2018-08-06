@@ -51,27 +51,29 @@ class QuickFixImageAvailability extends Command {
             $commentsArray = json_decode(json_encode($comments), true);
             foreach($commentsArray as $comment){
                 $commentModel = Comment::find($comment['id']);
-                $obj = simplexml_load_string($commentModel->text);
-                $src = '';
-                $availability = '';
+                if (substr($commentModel->text, 0, 6) == '<query'){
+                    $obj = simplexml_load_string($commentModel->text);
+                    $src = '';
+                    $availability = '';
 
-                $availabilityNodes = $obj->xpath('//availability');
-                if ($availabilityNodes){
-                    $availabilityNodes = json_encode($availabilityNodes);
-                    $availabilityNodes = (array)json_decode($availabilityNodes, true);
-                    $availability = $availabilityNodes[0][0];
-                }
-
-                $fileNodes = $obj->xpath('//file');
-                if ($fileNodes){
-                    $fileNodes = json_encode($fileNodes);
-                    $fileNodes = (array)json_decode($fileNodes, true);
-                    if ($fileNodes[0] && $fileNodes[0]['@attributes'] && $fileNodes[0]['@attributes']['src']){
-                        $src = $fileNodes[0]['@attributes']['src'];
-                        $src = preg_replace('/\.\w+$/i', '', $src); //get rid of .JPG
+                    $availabilityNodes = $obj->xpath('//availability');
+                    if ($availabilityNodes){
+                        $availabilityNodes = json_encode($availabilityNodes);
+                        $availabilityNodes = (array)json_decode($availabilityNodes, true);
+                        $availability = $availabilityNodes[0][0];
                     }
+
+                    $fileNodes = $obj->xpath('//file');
+                    if ($fileNodes){
+                        $fileNodes = json_encode($fileNodes);
+                        $fileNodes = (array)json_decode($fileNodes, true);
+                        if ($fileNodes[0] && $fileNodes[0]['@attributes'] && $fileNodes[0]['@attributes']['src']){
+                            $src = $fileNodes[0]['@attributes']['src'];
+                            $src = preg_replace('/\.\w+$/i', '', $src); //get rid of .JPG
+                        }
+                    }
+                    $availabilityInfo[$src]=$availability;
                 }
-                $availabilityInfo[$src]=$availability;
             }
 
             $atomModel = Atom::find($atom['id']);
