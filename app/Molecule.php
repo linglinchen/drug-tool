@@ -125,11 +125,16 @@ class Molecule extends AppModel {
                 $creditObj = $creditPart ? $creditPart[0] : '';
                 $credit = $creditObj ? json_decode(json_encode($creditObj), true)[0] : '';
 
+                $availabilityPart = $xmlObject->xpath('//query[@type="figure"]/availability/text()');
+                $availabilityObj = $availabilityPart ? $availabilityPart[0] : '';
+                $availability = $availabilityObj ? json_decode(json_encode($availabilityObj), true)[0] : '';
+
                 $figureFilePart = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src');
                 $figureFileObj = $figureFilePart ? $figureFilePart[0] : '';
                 $figureFile = $figureFileObj ? json_decode(json_encode($figureFileObj), true)['@attributes']['src'] : '';
 
                 $commentsInfo['reviewstatus'] = $reviewStatus;
+                $commentsInfo['availability'] = $availability;
                 $commentsInfo['caption'] = $caption;
                 $commentsInfo['credit'] = $credit;
                 $commentsInfo['figurefile'] = $figureFile;
