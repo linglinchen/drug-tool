@@ -256,7 +256,7 @@ class Molecule extends AppModel {
                     $availablity = '';
                 }
 
-                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])){
                     if (isset($figureNode['file'])){
                         if (count($figureNode['file']) > 1){
                             foreach ($figureNode['file'] as $file){
