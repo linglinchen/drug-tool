@@ -299,29 +299,33 @@ class Molecule extends AppModel {
         $imageFiles = [];
 
         if($figureNodes){
-
             $figureNodes = json_encode($figureNodes);
             $figureNodes = (array)json_decode($figureNodes, true);
 
             foreach($figureNodes as $figureNode){
-
-                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
-                    if (count($figureNode['file']) > 1){
-                        foreach ($figureNode['file'] as $file){
-                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
-                                $imageFiles[] = $file['@attributes']['src'];
+                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])){
+                    if (isset($figureNode['file'])){
+                        if (count($figureNode['file']) > 1){
+                            foreach ($figureNode['file'] as $file){
+                                if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                    $imageFiles[] = $file['@attributes']['src'];
+                                }else if (isset($file['src'])){  //for situation when abdomen: [0]=>
+                                    $imageFiles[] = $file['src'];
+                                }
+                            }
+                        }else{
+                            if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                                $imageFiles[] = $figureNode['file']['@attributes']['src'];
                             }
                         }
-                    }else{
-                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                            $imageFiles[] = $figureNode['file']['@attributes']['src'];
-                        }
+                    }else if (isset($figureNode['p']) && isset($figureNode['p']['@attributes']) && isset($figureNode['p']['@attributes']['src_stub'])){
+                        //img situation: [p]->[src_stub] is equal to [file][src]
+                        $imageFiles[] = $figureNode['p']['@attributes']['src_stub'];
                     }
                 }
             }
         }
-
-         return  $imageFiles;
+        return  $imageFiles;
     }
 
     /**
