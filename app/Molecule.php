@@ -213,7 +213,7 @@ class Molecule extends AppModel {
             //$figureNodes = (array)json_decode($figureNodes, true);
             $figureRows =" \t";
 
-            foreach($figureNodes as $figureNode){ 
+            foreach($figureNodes as $figureNode){
                 $closestEntryNodes = $figureNode->xpath('ancestor::entry[1]/headw//text()');
                 $closestEntryNodes = json_encode($closestEntryNodes);
                 $closestEntryNodes = (array)json_decode($closestEntryNodes, true);
@@ -257,16 +257,24 @@ class Molecule extends AppModel {
                 }
 
                 if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id']) && isset($figureNode['file'])){
-                    if (count($figureNode['file']) > 1){
-                        foreach ($figureNode['file'] as $file){
-                            if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
-                                $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                    if (isset($figureNode['file'])){
+                        if (count($figureNode['file']) > 1){
+                            foreach ($figureNode['file'] as $file){
+                                if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+                                    $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                                }else if (isset($file['src'])){  //for situation when abdomen: [0]=>
+                                    $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                                }
+
+                            }
+                        }else{
+                            if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
+                                $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                             }
                         }
-                    }else{
-                        if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                            $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
-                        }
+                    }else if (isset($figureNode['p']) && isset($figureNode['p']['@attributes']) && isset($figureNode['p']['@attributes']['src_stub'])){
+                        //img situation: [p]->[src_stub] is equal to [file][src]
+                        $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['p']['@attributes']['src_stub']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                     }
                 }
             }

@@ -112,7 +112,7 @@ METAHEADER;
 
 //If doctype is dictionary, different xml wrapper is written.
           if ($doctype === 'dictionary'){
-             $moleculeXml = $molecule->export($statusId);
+              $moleculeXml = $molecule->export($statusId);
                 switch ((int)$productId) { //TODO: make the ISBN dynamic
                     case 3:
                             $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
