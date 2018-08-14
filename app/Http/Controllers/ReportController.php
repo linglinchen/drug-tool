@@ -114,4 +114,15 @@ class ReportController extends Controller {
 
         return new ApiPayload($stats);
     }
+
+    public function suggestedImageStatsAction($productId, Request $request) {
+        try {
+            $stats = Report::suggestedImageStats($productId);
+        }
+        catch(Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No suggested image statistics were found.');
+        }
+
+        return new ApiPayload($stats);
+    }
 }
