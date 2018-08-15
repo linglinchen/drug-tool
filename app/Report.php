@@ -64,7 +64,7 @@ class Report extends AppModel {
 		}
 		if (in_array($productId, $dicProds)){
 			$reportTypes['newFigures'] = 'New Figures (Implemented new this edition)';
-			$reportTypes['suggestedImageStats'] = 'Suggested Image Stats';
+			$reportTypes['suggestedImageStats'] = 'Suggested Image Report';
 		}
 
 		return $reportTypes;
@@ -1117,6 +1117,12 @@ class Report extends AppModel {
      */
     protected static function _countOfSuggestedImage($productId) {
 		$stats = [];
+		$stats['sum'] = [
+			'implemented' => 0,
+			'accepted' => 0,
+			'pending' => 0,
+			'rejected' => 0
+		];
 		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
 
 		//for implemented images
@@ -1162,6 +1168,8 @@ class Report extends AppModel {
 							'label' => $label,
 							'imageStatus' => 'implemented'
 						];
+
+						$stats['sum']['implemented'] += 1;
 					}
 				}
 			}
@@ -1236,6 +1244,8 @@ class Report extends AppModel {
 							'label' => $label,
 							'imageStatus' => $imageStatus
 							];
+
+							$stats['sum'][$imageStatus] += 1;
 						}
 					}
 				}
