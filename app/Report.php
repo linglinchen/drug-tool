@@ -1121,7 +1121,8 @@ class Report extends AppModel {
 			'implemented' => 0,
 			'accept' => 0,
 			'pending' => 0,
-			'reject' => 0
+			'reject' => 0,
+			'' => 0            //for image without availability
 		];
 		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
 
