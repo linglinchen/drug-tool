@@ -65,6 +65,7 @@ class Report extends AppModel {
 		if (in_array($productId, $dicProds)){
 			$reportTypes['newFigures'] = 'New Figures (Implemented new this edition)';
 			$reportTypes['suggestedImageStats'] = 'Suggested Image Report';
+			$reportTypes['legacyImageStats'] = 'Legacy Image Report';
 		}
 
 		return $reportTypes;
