@@ -1119,9 +1119,9 @@ class Report extends AppModel {
 		$stats = [];
 		$stats['sum'] = [
 			'implemented' => 0,
-			'accepted' => 0,
+			'accept' => 0,
 			'pending' => 0,
-			'rejected' => 0
+			'reject' => 0
 		];
 		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
 
