@@ -90,6 +90,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/report/domainStats', ['uses' => 'ReportController@domainStatsAction']);
             Route::get('{productId}/report/reviewerStats', ['uses' => 'ReportController@reviewerStatsAction']);
             Route::get('{productId}/report/suggestedImageStats', ['uses' => 'ReportController@suggestedImageStatsAction']);
+            Route::get('{productId}/report/legacyImageStats', ['uses' => 'ReportController@legacyImageStatsAction']);
         });
     });
 });

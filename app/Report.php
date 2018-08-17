@@ -594,6 +594,23 @@ class Report extends AppModel {
 		return $stats;
 	}
 
+	/**
+	 * Provide an array of statistics about the legacy images.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return array
+	 */
+	public static function legacyImageStats($productId) {
+		$suggestedImageStats = self::_countOfLegacyImage($productId);
+
+		$stats = [
+			'legacyImage' => $legacyImageStats
+		];
+
+		return $stats;
+	}
+
 
 
 	/**
@@ -1109,6 +1126,7 @@ class Report extends AppModel {
         return $stats;
     }
 
+	
 	/**
      * Calculate counts for suggested images.
 	 *
@@ -1136,7 +1154,154 @@ class Report extends AppModel {
 					and status_id != '.$deactivatedStatus->id.'
 				GROUP BY entity_id)
 			and xml like '."'".'%<file src='.'"'.'suggested/%'."'".
-			' and product_id=5
+			' and product_id = '. $productId.'
+			and deleted_at is null
+			and status_id != '.$deactivatedStatus->id;
+
+        $implementedQuery = DB::select($implementedSql);
+        $implementedArray = json_decode(json_encode($implementedQuery), true);
+
+        foreach ($implementedArray as $implemented){
+			$ob = simplexml_load_string($implemented['xml']);
+			$figureNodes = $ob->$implemented['xml']->xpath('//component[@type="figure"]');
+			if($figureNodes){
+				$figureNodes = json_encode($figureNodes);
+				$figureNodes = (array)json_decode($figureNodes, true);
+
+				foreach ($figureNodes as $figureNode){
+					$file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
+					if (substr($file, 0, 9) == 'suggested'){ //if it's suggested image
+						$availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
+						$caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
+						$credit = isset($figureNode['credit']) ? $figureNode['credit'] : '';
+						$title = isset($figureNode['comp_title']) ? $figureNode['comp_title'] : '';
+						$label = isset($figureNode['label']) ? $figureNode['label'] : '';
+
+						$stats[] = [
+							'entity_id' => $implemented['entity_id'],
+							'alpha_title' => $implemented['alpha_title'],
+							'availability' => $availability,
+							'file' => $file,
+							'caption' => $caption,
+							'credit' => $credit,
+							'title' => $title,
+							'label' => $label,
+							'imageStatus' => 'implemented'
+						];
+
+						$stats['sum']['implemented'] += 1;
+					}
+				}
+			}
+		}
+
+		//for pending/accepted/rejected images
+		$commentsSql = 'select * from comments c
+			join atoms a on c.atom_entity_id=a.entity_id
+			where a.id in
+				(
+					select MAX(id) from atoms
+						where product_id ='. $productId.'
+							and deleted_at is null
+							and status_id != '.$deactivatedStatus->id.'
+						Group By entity_id
+				)
+			and a.product_id ='. $productId.'
+			and a.deleted_at is null
+			and a.status_id	 != '.$deactivatedStatus->id.'
+			and c.text like '."'".'%type="figure"%'."'";
+
+		$commentsQuery = DB::select($commentsSql);
+		$commentsArray = json_decode(json_encode($commentsQuery), true);
+		foreach ($commentsArray as $comment){
+			$entityId = $comment['entity_id'];
+			$alphaTitle = $comment['alpha_title'];
+			$ob = simplexml_load_string($comment['text']);
+			$queryNodes = $ob->$comment['text']->xpath('//query[@type="figure"]');
+			if($queryNodes){
+				$suggestionNodes = $queryNodes[0]->xpath('//suggestion//text()');
+				$suggestionNodes = json_encode($suggestionNodes);
+                $suggestionNodes = (array)json_decode($suggestionNodes, true);
+                $imageStatus = '';
+                foreach ($suggestionNodes as $suggestionNode){
+                    if (isset($suggestionNode[0])){
+                        $imageStatus = $suggestionNode[0];
+                    }
+                }
+				if ($imageStatus != 'implemented'){  //for pending, accepted, rejected images
+					$availabilityNodes = $queryNodes[0]->xpath('//availability//text()');
+					$availabilityNodes = json_encode($availabilityNodes);
+					$availabilityNodes = (array)json_decode($availabilityNodes, true);
+					$availability = '';
+					foreach ($availabilityNodes as $availabilityNode){
+						if (isset($availabilityNode[0])){
+							$availability = $availabilityNode[0];
+						}
+					}
+
+					$figureNodes = $queryNodes[0]->xpath('//component[@type="figure"]');
+					if ($figureNodes){
+						foreach ($figureNodes as $figureNode){
+							$figureNode = json_encode($figureNode);
+							$figureNode = json_decode($figureNode, true);
+							$file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
+							$credit = isset($figureNode['credit']) ? $figureNode['credit'] : '';
+							$title = isset($figureNode['comp_title']) ? $figureNode['comp_title'] : '';
+							$label = isset($figureNode['label']) ? $figureNode['label'] : '';
+
+							$caption1 = isset($figureNode['caption']) ? $figureNode['caption'] : '';
+							$caption2 = isset($figureNode['ce_caption']) ? $figureNode['ce_caption'] : '';
+							$caption = $caption1 == '' ? $caption2 : $caption1;
+
+							$stats[] = [
+							'entity_id' => $entityId,
+							'alpha_title' => $alphaTitle,
+							'availability' => $availability,
+							'file' => $file,
+							'caption' => $caption,
+							'credit' => $credit,
+							'title' => $title,
+							'label' => $label,
+							'imageStatus' => $imageStatus
+							];
+
+							$stats['sum'][$imageStatus] += 1;
+						}
+					}
+				}
+			}
+		}
+        return $stats;
+    }
+
+	/**
+     * Calculate counts for legacy images.
+	 *
+	 * @param integer $productId Limit to this product
+     *
+     * @return integer[]
+     */
+    protected static function _countOfLegacyImage($productId) {
+		$stats = [];
+		$stats['sum'] = [
+			'implemented' => 0,
+			'accept' => 0,
+			'pending' => 0,
+			'reject' => 0,
+			'' => 0            //for image without availability
+		];
+		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
+
+		//for implemented images
+		$implementedSql = 'select id, entity_id, alpha_title, xml from atoms
+			where id in
+				(select MAX(id) from atoms
+				where product_id = '. $productId.'
+					and deleted_at is null
+					and status_id != '.$deactivatedStatus->id.'
+				GROUP BY entity_id)
+			and xml like '."'".'%<file src='.'"'.'suggested/%'."'".
+			' and product_id = '. $productId.'
 			and deleted_at is null
 			and status_id != '.$deactivatedStatus->id;
 
