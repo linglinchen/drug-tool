@@ -1135,7 +1135,7 @@ class Report extends AppModel {
 					and status_id != '.$deactivatedStatus->id.'
 				GROUP BY entity_id)
 			and xml like '."'".'%<file src='.'"'.'suggested/%'."'".
-			' and product_id=5
+			' and product_id = '. $productId.'
 			and deleted_at is null
 			and status_id != '.$deactivatedStatus->id;
 
