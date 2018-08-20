@@ -602,7 +602,7 @@ class Report extends AppModel {
 	 * @return array
 	 */
 	public static function legacyImageStats($productId) {
-		$suggestedImageStats = self::_countOfLegacyImage($productId);
+		$legacyImageStats = self::_countOfLegacyImage($productId);
 
 		$stats = [
 			'legacyImage' => $legacyImageStats
@@ -1284,12 +1284,22 @@ class Report extends AppModel {
     protected static function _countOfLegacyImage($productId) {
 		$stats = [];
 		$stats['sum'] = [];
-		$chapter_arr = range("A", "Z");
+		$chapter_arr = range('A', 'Z');
+		array_push($chapter_arr, 'None');
+
+		$stats['electronic'] = 0;
+		$stats['print'] = 0;
+		$stats['both'] = 0;
+		$stats['none'] = 0;
+		$stats['total'] = 0;
+
 		foreach ($chapter_arr as $chapter){
 			$stats['sum'][$chapter]['electronic']= 0;
 			$stats['sum'][$chapter]['print']= 0;
 			$stats['sum'][$chapter]['both']= 0;
-			$stats['sum'][$chapter]['']= 0;
+			$stats['sum'][$chapter]['none']= 0;
+			$stats['sum'][$chapter]['chapter'] = '';
+			$stats['sum'][$chapter]['total'] = 0;
 		}
 		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
 
@@ -1309,6 +1319,7 @@ class Report extends AppModel {
         $arr = json_decode(json_encode($query), true);
 
         foreach ($arr as $atom){
+			$atom['molecule_code'] = $atom['molecule_code'] == null ? 'None' : $atom['molecule_code'];
 			$ob = simplexml_load_string($atom['xml']);
 			$figureNodes = $ob->$atom['xml']->xpath('//component[@type="figure"]');
 			if($figureNodes){
@@ -1318,14 +1329,35 @@ class Report extends AppModel {
 				foreach ($figureNodes as $figureNode){
 					$file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
 					if (substr($file, 0, 9) != 'suggested'){ //if it's not suggested image
-						$availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
+						$availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : 'none';
+						if (isset($stats['sum'][$atom['molecule_code']][$availability])){
+							$stats['sum'][$atom['molecule_code']][$availability] += 1;
+							$stats['sum'][$atom['molecule_code']]['molecule'] = $atom['molecule_code'];
+							$stats['sum'][$atom['molecule_code']]['total'] += 1;
+							$stats['total'] += 1;
 
-						$stats['sum'][$atom['molecule_code']][$availability] += 1;
+							switch ($availability){
+								case 'electronic':
+									$stats['electronic'] += 1;
+									break;
+								case 'print':
+									$stats['print'] += 1;
+									break;
+								case 'both':
+									$stats['both'] += 1;
+									break;
+								case 'none':
+									$stats['none'] += 1;
+									break;
+								default:
+									break;
+
+							}
+						}
 					}
 				}
 			}
 		}
-
         return $stats;
     }
 }
