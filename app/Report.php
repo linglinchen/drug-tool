@@ -1196,7 +1196,7 @@ class Report extends AppModel {
 		$commentsArray = json_decode(json_encode($commentsQuery), true);
 		foreach ($commentsArray as $comment){
 			$entityId = $comment['entity_id'];
-			$alphaTitle = $comment['alpha_title']; print_r($comment['text']);
+			$alphaTitle = $comment['alpha_title'];
 			$ob = simplexml_load_string($comment['text']);
 			$queryNodes = $ob->$comment['text']->xpath('//query[@type="figure"]');
 			if($queryNodes){
