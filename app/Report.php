@@ -1298,7 +1298,7 @@ class Report extends AppModel {
 			$stats['sum'][$chapter]['print']= 0;
 			$stats['sum'][$chapter]['both']= 0;
 			$stats['sum'][$chapter]['none']= 0;
-			$stats['sum'][$chapter]['chapter'] = '';
+			$stats['sum'][$chapter]['chapter'] = $chapter;
 			$stats['sum'][$chapter]['total'] = 0;
 		}
 		$deactivatedStatus = Status::getDeactivatedStatusId($productId);
