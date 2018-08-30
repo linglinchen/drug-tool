@@ -164,6 +164,9 @@ class AtomController extends Controller
     public function massUpdateAction($productId, Request $request) {
         $entityIds = $request->input('entityIds');
         $updates = $request->input('updates');
+        $options = [
+            'fromMassUpdate'    => true
+        ];
 
         $atoms = Atom::findNewest($entityIds, $productId)->get();
 
@@ -175,7 +178,9 @@ class AtomController extends Controller
 
             $locked = current(Molecule::locked($moleculeCodes, $productId));
             if($locked) {
-                throw new \Exception('Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.');
+                throw new \Exception(
+                    'Chapter "' . $locked->title . '" is locked, and cannot be modified at this time.'
+                );
             }
 
             \DB::transaction(function () use ($atoms, $updates, $productId) {
@@ -184,12 +189,9 @@ class AtomController extends Controller
                     foreach($this->_allowedMassUpdateProperties as $allowed) {
                         if(array_key_exists($allowed, $updates)) {
                             $atom->$allowed = $updates[$allowed];
-                            if ($allowed == 'status_id'){
-                                $atom['massupdate'] = 'massupdate'; //indicating it's from massupdate
-                            }
                         }
                     }
-                    $atom->save();
+                    $atom->save($options);
                     $atoms[$atomKey] = $atom->addAssignments($productId);
                 }
             });

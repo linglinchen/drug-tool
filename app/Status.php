@@ -24,7 +24,6 @@ class Status extends AppModel {
                 ->all();
     }
 
-
     /**
      * Get a list of statuses that are considered trashed within the specified product.
      *
@@ -40,7 +39,6 @@ class Status extends AppModel {
                 ->all();
     }
 
-
     /**
      * Get the ID of a status by name
      *
@@ -48,26 +46,24 @@ class Status extends AppModel {
      *
      * @return integer[]
      */
-	// _100
+    // _100
     public static function getDevStatusId($productId){
         return self::allForProduct($productId)
             ->where('title', '=', 'Development')
             ->first();
     }
 
-	// _200
+    // _200
     public static function getReadyForPublicationStatusId($productId) {
          return self::allForProduct($productId)
             ->where('title', '=', 'Ready for publication')
             ->first();
     }
 
-	// _300
+    // _300
     public static function getDeactivatedStatusId($productId) {
          return self::allForProduct($productId)
             ->where('title', '=', 'Deactivated')
             ->first();
     }
-
-
 }
