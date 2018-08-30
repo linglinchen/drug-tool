@@ -165,7 +165,7 @@ class AtomController extends Controller
         $entityIds = $request->input('entityIds');
         $updates = $request->input('updates');
         $options = [
-            'fromMassUpdate'    => true
+            'autoStatus'    => false
         ];
 
         $atoms = Atom::findNewest($entityIds, $productId)->get();
@@ -183,7 +183,7 @@ class AtomController extends Controller
                 );
             }
 
-            \DB::transaction(function () use ($atoms, $updates, $productId) {
+            \DB::transaction(function () use ($atoms, $updates, $productId, $options) {
                 foreach($atoms as $atomKey => $atom) {
                     $atom = $atom->replicate();
                     foreach($this->_allowedMassUpdateProperties as $allowed) {

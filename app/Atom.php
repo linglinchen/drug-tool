@@ -60,9 +60,7 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
-
-        $fromMassUpdate = !array_get($options, 'fromMassUpdate', false);
-        $fromPromotion = !array_get($options, 'fromPromotion', false);
+        $autoStatus = array_get($options, 'autoStatus', true);
 
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
@@ -72,7 +70,7 @@ class Atom extends AppModel {
                 self::findNewest($this->entity_id, $this->product_id) :
                 null;
 
-        if(!$fromMassUpdate && !$fromPromotion) {
+        if($autoStatus) {
             $devStatusId = Status::getDevStatusId($this->product_id)->id;
             $this->status_id = $devStatusId; //change status to be development when saving
         }
@@ -501,7 +499,7 @@ class Atom extends AppModel {
             if(isset($promotion['status_id'])) {
                 $atom->status_id = $promotion['status_id'];
                 $atom->save([
-                    'fromPromotion' => true
+                    'autoStatus'    => false
                 ]);
             }
 
