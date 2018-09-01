@@ -45,6 +45,7 @@ class Molecule extends AppModel {
      * @param mixed[] $molecule The molecule
      */
     public static function addAtoms($molecule, $productId) {
+        $productId = (int)$productId;       //protect against sql injection attacks
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
