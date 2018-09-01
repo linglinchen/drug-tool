@@ -57,12 +57,12 @@ class Molecule extends AppModel {
         $sql_assignment =
             "SELECT ass.*
             FROM atoms a
-            join assignments ass on a.entity_id = ass.atom_entity_id
-            WHERE product_id = ".$productId."
-                and molecule_code = '".$molecule['code']."'
+            JOIN assignments ass ON a.entity_id = ass.atom_entity_id
+            WHERE product_id = " . $productId . "
+                and molecule_code = '" . $molecule['code'] . "'
                 and a.id in
                     (SELECT id FROM atoms WHERE id in
-                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                        (SELECT MAX(id) FROM atoms where product_id=" . $productId . " GROUP BY entity_id)
                     and deleted_at IS NULL)
             ORDER BY sort ASC, ass.id ASC"; //join atoms and assignments tables, atom will be the lastest version, not deleted
 
@@ -78,12 +78,12 @@ class Molecule extends AppModel {
         $sql_comment =
             "SELECT c.*
             FROM atoms a
-            join comments c on a.entity_id = c.atom_entity_id
-            WHERE product_id = ".$productId."
-                and molecule_code = '".$molecule['code']."'
+            JOIN comments c ON a.entity_id = c.atom_entity_id
+            WHERE product_id = " . $productId . "
+                and molecule_code = '" . $molecule['code'] . "'
                 and a.id in
                     (SELECT id FROM atoms WHERE id in
-                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                        (SELECT MAX(id) FROM atoms where product_id=" . $productId . " GROUP BY entity_id)
                     and deleted_at IS NULL )
             ORDER BY c.id DESC"; //join atoms and comments tables, atom will be the lastest version, not deleted
 
@@ -157,12 +157,14 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId (if passed).
+     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId
+     * (if passed).
      *
      * @returns string
      */
     public function export($statusId = null, $withFigures=0) {
-        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain 'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export. Changed January 2018 - JZ.
+        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
+        //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
         $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
@@ -179,6 +181,7 @@ class Molecule extends AppModel {
 
         return $xml;
     }
+
     /**
      * take the xml from above and reduce it to a log of figures.
      *
@@ -264,14 +267,14 @@ class Molecule extends AppModel {
             $figureLogRows = $metaheader . 'No figures in this Chapter';
         }
 
-         return  $figureLogRows;
+        return $figureLogRows;
     }
 
 
     /**
      * take the xml from above and return an array of image file names
      *
-     * @returns array
+     * @return array
      */
     public function getImageFileName($moleculeXml) {
         $ob = simplexml_load_string($moleculeXml);
@@ -306,12 +309,17 @@ class Molecule extends AppModel {
                 }
             }
         }
-        return  $imageFiles;
+
+        return $imageFiles;
     }
 
     /**
      * Gets a list of properly sorted atoms that are ready for publication.
-     * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort order (sort based on current atom in any status but ids are most current and ready to publish atoms)
+     * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort
+     * order (sort based on current atom in any status but ids are most current and ready to publish atoms)
+     *
+     * @param integer[] $orderedIds Sorted atom IDs
+     *
      * @return object[]
      */
     protected function _getMysortedPublishedAtoms($orderedIds) {
@@ -322,7 +330,7 @@ class Molecule extends AppModel {
                     ->where('id', '=', $orderedId)
                     ->get();
             foreach($versions as $version) {
-                    $atoms[] = $version;
+                $atoms[] = $version;
             }
         }
 
