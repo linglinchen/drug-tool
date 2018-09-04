@@ -135,39 +135,63 @@ class Atom extends AppModel {
         return str_replace('.', '', uniqid('', true));
     }
 
-    /**
-     * Build a query to find the latest version of every atom that hasn't been deleted.
-     *
-     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
-     * @param ?object $q (optional) Subquery object
-     *
-     * @return object The constructed query object
-     */
-    public static function buildLatestIDQuery($statusId = null, $q = null) {
-        $table = (new self)->getTable();
-        $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
+	/**
+	 * Build a query to find the latest version of every atom that hasn't been *deleted* (not same as "deactivated" status)
+	 *
+	 * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es) (accepts 0-prefixed patterns)
+	 * @param ?object $q (optional) Subquery object
+	 *
+	 * @return object The constructed query object
+	*/
+	public static function buildLatestIDQuery($statusId = null, $q = null) {
+		$table = (new self)->getTable();
+		$statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
 
-        //limit the search to current product to cut down on database effort
-        $currentProductId = (int)self::getCurrentProductId();
+		//limit the search to current product to cut down on database effort
+		$currentProductId = (int)self::getCurrentProductId();
 
+		//prefixing with '0' will fetch statuses based on the naming convention pattern established on product 1
+		$statusCount = true;
+		foreach($statusId as &$statusPattern) {
+			if(substr($statusPattern, 0, 1) == '0') {
+				switch ($statusPattern) {
+					case '0100':
+						$statusPattern = Status::getDevStatusId($currentProductId)->id;
+						break;
+					case '0200':
+						$statusPattern = Status::getReadyForPublicationStatusId($currentProductId)->id;
+						break;
+					case '0300':
+						$statusPattern = Status::getDeactivatedStatusId($currentProductId)->id;
+						break;
+					default:
+						$statusCount = false;
+				}
+			}
+		}
 
-        $query = $q ? $q->select('id') : self::select('id');
-        $query->from($table);
+		if(!$statusCount) {
+			throw new \Exception('Invalid status ID.');
+		}
 
-        $query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
-                    $q->select(DB::raw('MAX(id)'))
-                        ->from($table)->where('product_id', '=', $currentProductId);
+		$query = $q ? $q->select('id') : self::select('id');
+		$query->from($table);
 
-                    if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
-                        $q->whereIn('status_id', $statusId);
-                    }
+		$query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
+				$q->select(DB::raw('MAX(id)'))
+					->from($table)->where('product_id', '=', $currentProductId);
 
-                    $q->groupBy('entity_id');
-                })
-                ->whereNull('deleted_at');
-                //->orderBy('alpha_title', 'ASC');
-        return $query;
-    }
+				if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
+					$q->whereIn('status_id', $statusId);
+				}
+
+				$q->groupBy('entity_id');
+			})
+			->whereNull('deleted_at');
+			//->orderBy('alpha_title', 'ASC');
+
+		return $query;
+	}
     /**
      * Legacy version of build a query to find the latest version of every atom that hasn't been deleted.
      *  Used by reports and potentially other functions that pass different variables

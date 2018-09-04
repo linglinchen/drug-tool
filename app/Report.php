@@ -532,10 +532,42 @@ class Report extends AppModel {
 	public static function moleculeStats($productId) {
 		$moleculeStats = self::_countCharsPerMolecule($productId);
 
-		$stats = [
-			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
+		//Note: if product isn't defined in $productStats, the report output will be infinity instead
+		$charsMean = $charsStdErr = $wordsMean = $wordsStdErr = 0;
+
+		//these magic numbers need to be moved out into the products table when it exists
+		$productStats = [
+			//Skidmore NDR
+			1 => [
 				'charsMean' => 2826,
-				'charsStdErr' => 445
+				'charsStdErr' => 445,
+				'wordsMean' => 0,
+				'wordsStdErr' => 0,
+			],
+
+			//Dental Dictionary
+			5 => [
+				'charsMean' => 3357,
+				'charsStdErr' => 596,
+				'wordsMean' => 509,
+				'wordsStdErr' => 88,
+			],
+
+		];
+
+		if (array_key_exists($productId, $productStats) ) {
+			$charsMean = $productStats[$productId]['charsMean'];
+			$charsStdErr = $productStats[$productId]['charsStdErr'];
+			$wordsMean = $productStats[$productId]['wordsMean'];
+			$wordsStdErr = $productStats[$productId]['wordsStdErr'];
+		}
+
+		$stats = [
+			'pageStats' => [
+				'charsMean' => $charsMean,
+				'charsStdErr' => $charsStdErr,
+				'wordsMean' => $wordsMean,
+				'wordsStdErr' => $wordsStdErr,
 			],
 			'molecules' => $moleculeStats
 		];
@@ -850,52 +882,52 @@ class Report extends AppModel {
 		return $blankSeries;
 	}
 
-    /**
-     * Estimate the number of printable characters in each chapter.
+	/**
+	 * Estimate the number of printable characters in each chapter.
 	 *
 	 * @param integer $productId Limit to this product
-     *
-     * @return integer[]
-     */
-    protected static function _countCharsPerMolecule($productId) {
-        $latestIds = Atom::select()
-				->where('product_id', '=', $productId)
-                ->whereNotNull('molecule_code')
-                ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                });
+	 *
+	 * @return integer[]
+	*/
+	protected static function _countCharsPerMolecule($productId) {
+		$latestIds = Atom::select()
+			->where('product_id', '=', $productId)
+			->whereNotNull('molecule_code')
+			->whereIn('id', function ($q) {
+				Atom::buildLatestIDQuery(['0100', '0200'], $q); //patterns for Development and Ready for Publication (exclude Deactivated)
+		});
 
-        $wordsQuery = DB::table(DB::raw('(' . $latestIds->toSql() . ') AS latestIds'))
-                ->select(
-                    'molecule_code AS code',
-                    DB::raw("char_length(trim(regexp_replace(regexp_replace(xml, '<[^>]*>', '', 'g'), '[\\r\\n\\t ]+', ' ', 'g'))) as char_count")
-                )
-                ->mergeBindings($latestIds->getQuery());
+		$wordsQuery = DB::table(DB::raw('(' . $latestIds->toSql() . ') AS latestIds'))
+			->select(
+				'molecule_code AS code',
+				DB::raw("char_length(trim(regexp_replace(regexp_replace(xml, '<[^>]*>', '', 'g'), '[\\r\\n\\t ]+', ' ', 'g'))) as char_count")
+			)
+			->mergeBindings($latestIds->getQuery());
 
-        $countQuery = DB::table(DB::raw('(' . $wordsQuery->toSql() . ') AS wordsQuery'))
-                ->select('code', DB::raw('sum(char_count) AS chars'))
-                ->mergeBindings($wordsQuery)
-                ->groupBy('code');
+		$countQuery = DB::table(DB::raw('(' . $wordsQuery->toSql() . ') AS wordsQuery'))
+			->select('code', DB::raw('sum(char_count) AS chars'))
+			->mergeBindings($wordsQuery)
+			->groupBy('code');
 
-        $counts = $countQuery->get();
+		$counts = $countQuery->get();
 
-        $stats = [];
-        $molecules = Molecule::where('product_id', '=', $productId)
-				->orderBy('sort', 'ASC')
-				->get();
-        foreach($molecules as $molecule) {
-            $stats[$molecule['code']] = [
-            	'code' => $molecule['code'],
-            	'chars' => 0
-            ];
-        }
+		$stats = [];
+		$molecules = Molecule::where('product_id', '=', $productId)
+			->orderBy('sort', 'ASC')
+			->get();
+		foreach($molecules as $molecule) {
+			$stats[$molecule['code']] = [
+				'code' => $molecule['code'],
+				'chars' => 0
+			];
+		}
 
-        foreach($counts as $row) {
-            $stats[$row->code]['chars'] = $row->chars;
-        }
+		foreach($counts as $row) {
+			$stats[$row->code]['chars'] = $row->chars;
+		}
 
-        return $stats;
-    }
+		return $stats;
+	}
 
 	/**
      * Calculate process for each domain.
@@ -1126,7 +1158,7 @@ class Report extends AppModel {
         return $stats;
     }
 
-	
+
 	/**
      * Calculate counts for suggested images.
 	 *
