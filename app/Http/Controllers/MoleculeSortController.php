@@ -50,6 +50,7 @@ class MoleculeSortController extends Controller {
 
         $atoms = Atom::allForCurrentProduct()
                 ->where('molecule_code', '=', $code)
+                ->where('product_id', '=', $productId)
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
@@ -71,5 +72,32 @@ class MoleculeSortController extends Controller {
         });
 
         return new ApiPayload(Molecule::addAtoms($molecule, $productId));
+    }
+
+    /**
+     * Automatically sort a molecule's atoms.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param string $code The molecule code
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function autoAction($productId, $code) {
+        $molecule = Molecule::allForCurrentProduct()
+                ->where('code', '=', $code)
+                ->get()
+                ->first();
+        if(!$molecule) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+        }
+
+        if($molecule->locked) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
+        }
+
+        return new ApiPayload(Molecule::autoSort($productId, $code));
     }
 }

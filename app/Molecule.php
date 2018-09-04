@@ -431,6 +431,45 @@ class Molecule extends AppModel {
     }
 
     /**
+     * Automatically sort a molecule's atoms.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param string $code The molecule code
+     *
+     * @return object[] The sorted atoms
+     */
+    public static function auto($productId, $code) {
+        \DB::transaction(function () use ($productId, $code) {
+            $atomEntityIds = $request->input('atomEntityIds');
+            if(!$atomEntityIds || !is_array($atomEntityIds)) {
+                return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing atomEntityIds.');
+            }
+
+            $atoms = Atom::allForCurrentProduct()
+                    ->where('molecule_code', '=', $code)
+                    ->where('product_id', '=', $productId)
+                    ->whereIn('id', function ($q) {
+                        Atom::buildLatestIDQuery(null, $q);
+                    })
+                    ->get();
+
+            usort($atoms, function ($a, $b) {
+                return strcmp($a->title, $b->title);
+            });
+
+            $i = -1;
+            foreach($atoms as $atom) {
+                $atom->sort = ++$i;
+                $atom->simpleSave();
+            }
+
+            return $atoms;
+        });
+    }
+
+    /**
      * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it
      * with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the
      * current desired sort order.
