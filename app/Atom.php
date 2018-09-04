@@ -60,38 +60,37 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
+        $autoStatus = array_get($options, 'autoStatus', true);
 
-        // if ($this->modified_by == NULL){
-        //     $this->modified_by = 200;
-        // }
-
-        $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
-        $devStatusId = Status::getDevStatusId($this->product_id)->id;
-        if (array_key_exists('massupdate', $this->attributes)){
-            array_pop($this->attributes); //remove 'massupdate' element
-        }
-        else {
-            if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
-            {
-                $this->status_id = $devStatusId; //change status to be 'development when saving'
-            } //if status is deactivated or development, no need to change
-        }
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
         }
 
-        if($this->_isTitleInUse()) {
-            $usedtitle = $this->alpha_title;
-            $usedid = $this->entity_id;
-            throw new \Exception('That title  '. $usedtitle .' with entityid ' .$usedid. ' is already used by another atom within this product.');
+        $previousVersion = ($this->entity_id && $this->product_id) ?
+                self::findNewest($this->entity_id, $this->product_id) :
+                null;
+
+        if($autoStatus) {
+            $devStatusId = Status::getDevStatusId($this->product_id)->id;
+            $this->status_id = $devStatusId; //change status to be development when saving
+        }
+
+        if(!$previousVersion && $this->_isTitleInUse()) {
+            $usedTitle = $this->alpha_title;
+            $usedId = $this->entity_id;
+            throw new \Exception(
+                'That title  ' . $usedTitle . ' with entityId ' . $usedId . ' is already used by another atom within ' .
+                'this product.'
+            );
         }
 
         $doctype->beforeSave($this);
         parent::save($options);
     }
 
-/**
-     * Save this atom in simply way, e.g. when only sort order of atom changes
+    /**
+     * Save this atom in simple way, e.g. when only sort order of atom changes. Does not generate a new version of the
+     * atom.
      *
      * @param array $options
      *
@@ -499,7 +498,9 @@ class Atom extends AppModel {
             //we might need to update the atom
             if(isset($promotion['status_id'])) {
                 $atom->status_id = $promotion['status_id'];
-                $atom->save();
+                $atom->save([
+                    'autoStatus'    => false
+                ]);
             }
 
             $atom = $atom->addAssignments($productId)->toArray();

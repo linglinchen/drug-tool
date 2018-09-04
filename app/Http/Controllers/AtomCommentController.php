@@ -41,7 +41,8 @@ class AtomCommentController extends Controller {
 
         return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
-        /**
+
+    /**
      * Update the text column of an atom's comments.
      *
      * @api
@@ -53,9 +54,7 @@ class AtomCommentController extends Controller {
      *
      * @return ApiPayload|Response
      */
-
     public function updateAction($productId, $atomEntityId, $commentId, Request $request) {
-
         if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
@@ -68,8 +67,7 @@ class AtomCommentController extends Controller {
         }
 
         $comment = Comment::where('id', $commentId)
-          ->update(['text' => $text]);
-
+            ->update(['text' => $text]);
 
         return new ApiPayload(Comment::getByAtomEntityId($atomEntityId, $productId));
     }
@@ -83,7 +81,7 @@ class AtomCommentController extends Controller {
                 ['id', '=', $commentId],
                 ['atom_entity_id', '=', $atomEntityId]
             ])
-        	->first();
+            ->first();
 
         if(!$comment) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested comment could not be found. It might have been deleted.');
