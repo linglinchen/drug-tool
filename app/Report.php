@@ -532,10 +532,42 @@ class Report extends AppModel {
 	public static function moleculeStats($productId) {
 		$moleculeStats = self::_countCharsPerMolecule($productId);
 
-		$stats = [
-			'pageStats' => [		//these magic numbers need to be moved out into the products table when it exists
+		//Note: if product isn't defined in $productStats, the report output will be infinity instead
+		$charsMean = $charsStdErr = $wordsMean = $wordsStdErr = 0;
+
+		//these magic numbers need to be moved out into the products table when it exists
+		$productStats = [
+			//Skidmore NDR
+			1 => [
 				'charsMean' => 2826,
-				'charsStdErr' => 445
+				'charsStdErr' => 445,
+				'wordsMean' => 0,
+				'wordsStdErr' => 0,
+			],
+
+			//Dental Dictionary
+			5 => [
+				'charsMean' => 3357,
+				'charsStdErr' => 596,
+				'wordsMean' => 509,
+				'wordsStdErr' => 88,
+			],
+
+		];
+
+		if (array_key_exists($productId, $productStats) ) {
+			$charsMean = $productStats[$productId]['charsMean'];
+			$charsStdErr = $productStats[$productId]['charsStdErr'];
+			$wordsMean = $productStats[$productId]['wordsMean'];
+			$wordsStdErr = $productStats[$productId]['wordsStdErr'];
+		}
+
+		$stats = [
+			'pageStats' => [
+				'charsMean' => $charsMean,
+				'charsStdErr' => $charsStdErr,
+				'wordsMean' => $wordsMean,
+				'wordsStdErr' => $wordsStdErr,
 			],
 			'molecules' => $moleculeStats
 		];
@@ -1126,7 +1158,7 @@ class Report extends AppModel {
         return $stats;
     }
 
-	
+
 	/**
      * Calculate counts for suggested images.
 	 *
