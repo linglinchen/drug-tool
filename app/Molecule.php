@@ -28,13 +28,13 @@ class Molecule extends AppModel {
      * @return string[]
      */
     public static function getLookups($productId) {
-    	$output = [];
-    	$molecules = self::allForProduct($productId);
-    	foreach($molecules as $molecule) {
-    		$output[$molecule['code']] = $molecule['title'];
-    	}
+        $output = [];
+        $molecules = self::allForProduct($productId);
+        foreach($molecules as $molecule) {
+            $output[$molecule['code']] = $molecule['title'];
+        }
 
-    	return $output;
+        return $output;
     }
 
     /**
@@ -45,6 +45,7 @@ class Molecule extends AppModel {
      * @param mixed[] $molecule The molecule
      */
     public static function addAtoms($molecule, $productId) {
+        $productId = (int)$productId;       //protect against sql injection attacks
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
@@ -53,39 +54,25 @@ class Molecule extends AppModel {
                 ->orderBy('sort', 'ASC')
                 ->get();
 
-
-        /*Comment::addSummaries($atoms, $productId);
-
-        foreach($atoms as $key => $atom) {
-            $atom->addAssignments($productId);
-            $atom->addDomains($productId);
-            $atom->addCommentSuggestions($atom['entity_id']);
-            $atom = $atom->toArray();
-            unset($atom['xml']);
-            $atoms[$key] = $atom;
-        }
-
-        $molecule['atoms'] = $atoms;*/
-
         //get assignments for each atom
+        //join atoms and assignments tables, atom will be the lastest version, not deleted
         $sql_assignment =
             "SELECT ass.*
             FROM atoms a
-            join assignments ass on a.entity_id = ass.atom_entity_id
-            WHERE product_id = ".$productId."
-                and molecule_code = '".$molecule['code']."'
-	            and a.id in
+            JOIN assignments ass ON a.entity_id = ass.atom_entity_id
+            WHERE product_id = " . $productId . "
+                and molecule_code = '" . $molecule['code'] . "'
+                and a.id in
                     (SELECT id FROM atoms WHERE id in
-                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                        (SELECT MAX(id) FROM atoms where product_id=" . $productId . " GROUP BY entity_id)
                     and deleted_at IS NULL)
-            ORDER BY sort ASC, ass.id ASC"; //join atoms and assignments tables, atom will be the lastest version, not deleted
+            ORDER BY sort ASC, ass.id ASC";
 
         $assignmentsByAtom = [];
         $assignments = DB::select($sql_assignment);
         $assignmentsArray = json_decode(json_encode($assignments), true);
 
-        //$assignmentsArray = Assignment::getByProductIdForMolecule($productId, $molecule['code']); print_r($assignmentsArray); exit;
-        foreach ($assignmentsArray as $assignment){
+        foreach($assignmentsArray as $assignment) {
             $assignmentsByAtom[$assignment['atom_entity_id']][] = $assignment;
         }
 
@@ -93,12 +80,12 @@ class Molecule extends AppModel {
         $sql_comment =
             "SELECT c.*
             FROM atoms a
-            join comments c on a.entity_id = c.atom_entity_id
-            WHERE product_id = ".$productId."
-                and molecule_code = '".$molecule['code']."'
+            JOIN comments c ON a.entity_id = c.atom_entity_id
+            WHERE product_id = " . $productId . "
+                and molecule_code = '" . $molecule['code'] . "'
                 and a.id in
                     (SELECT id FROM atoms WHERE id in
-                        (SELECT MAX(id) FROM atoms where product_id=".$productId." GROUP BY entity_id)
+                        (SELECT MAX(id) FROM atoms where product_id=" . $productId . " GROUP BY entity_id)
                     and deleted_at IS NULL )
             ORDER BY c.id DESC"; //join atoms and comments tables, atom will be the lastest version, not deleted
 
@@ -108,8 +95,8 @@ class Molecule extends AppModel {
         $comments = DB::select($sql_comment);
         $commentsArray = json_decode(json_encode($comments), true);
 
-        foreach ($commentsArray as $comment){
-            if (strpos($comment['text'], 'type="figure"') !== false){
+        foreach($commentsArray as $comment) {
+            if(strpos($comment['text'], 'type="figure"') !== false) {
                 $commentsInfo = [];
                 $commentXml = '<?xml version="1.0" encoding="UTF-8"?><documents>'.$comment['text'].'</documents>';
                 $xmlObject = simplexml_load_string($commentXml);
@@ -131,7 +118,9 @@ class Molecule extends AppModel {
 
                 $figureFilePart = $xmlObject->xpath('//query[@type="figure"]/component[@type="figure"]/file/@src');
                 $figureFileObj = $figureFilePart ? $figureFilePart[0] : '';
-                $figureFile = $figureFileObj ? json_decode(json_encode($figureFileObj), true)['@attributes']['src'] : '';
+                $figureFile = $figureFileObj ?
+                        json_decode(json_encode($figureFileObj), true)['@attributes']['src'] :
+                        '';
 
                 $commentsInfo['reviewstatus'] = $reviewStatus;
                 $commentsInfo['availability'] = $availability;
@@ -160,9 +149,15 @@ class Molecule extends AppModel {
             $atom->addDomains($productId);
             $atom['xmlFigures'] = strpos($atom->xml, 'type="figure"') !== false;
             $atom = $atom->toArray();
-            $atom['assignments'] = array_key_exists($atom['entity_id'], $assignmentsByAtom) ? $assignmentsByAtom[$atom['entity_id']] : [];
-            $atom['suggestedFigures'] = array_key_exists($atom['entity_id'], $commentsFigure) ? $commentsFigure[$atom['entity_id']] : [];
-            $atom['commentSummary'] = array_key_exists($atom['entity_id'], $commentSummaries) ? $commentSummaries[$atom['entity_id']] : null;
+            $atom['assignments'] = array_key_exists($atom['entity_id'], $assignmentsByAtom) ?
+                    $assignmentsByAtom[$atom['entity_id']] :
+                    [];
+            $atom['suggestedFigures'] = array_key_exists($atom['entity_id'], $commentsFigure) ?
+                    $commentsFigure[$atom['entity_id']] :
+                    [];
+            $atom['commentSummary'] = array_key_exists($atom['entity_id'], $commentSummaries) ?
+                    $commentSummaries[$atom['entity_id']] :
+                    null;
             unset($atom['xml']);
             $atoms[$key] = $atom;
         }
@@ -172,13 +167,14 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId (if passed).
+     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId
+     * (if passed).
      *
-     * @returns string
+     * @return string
      */
     public function export($statusId = null, $withFigures=0) {
-   //     print_r($withFigures);
-        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain 'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export. Changed January 2018 - JZ.
+        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
+        //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
         $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
@@ -193,33 +189,28 @@ class Molecule extends AppModel {
         }
         $xml .= "\t" . '</alpha>' . "\n";
 
-/*        if($withFigures=1){
-            $figuresLog=self::addFigureLog($xml);
-        }*/
         return $xml;
     }
+
     /**
-     * take the xml from above and reduce it to a log of figures.
+     * Take the xml from above and reduce it to a log of figures.
      *
-     * @returns csv
+     * @return string A CSV string
      */
     public function addFigureLog($moleculeXml, $metaheader) {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
-
-        if($figureNodes){
-            //$figureNodes = json_encode($figureNodes);
-            //$figureNodes = (array)json_decode($figureNodes, true);
+        if($figureNodes) {
             $figureRows =" \t";
 
-            foreach($figureNodes as $figureNode){
+            foreach($figureNodes as $figureNode) {
                 $closestEntryNodes = $figureNode->xpath('ancestor::entry[1]/headw//text()');
                 $closestEntryNodes = json_encode($closestEntryNodes);
                 $closestEntryNodes = (array)json_decode($closestEntryNodes, true);
                 $closestEntry = '';
-                foreach ($closestEntryNodes as $closestEntryNode){
-                    if (isset($closestEntryNode[0])){
+                foreach($closestEntryNodes as $closestEntryNode) {
+                    if(isset($closestEntryNode[0])) {
                         $closestEntry = $closestEntryNode[0];
                     }
                 }
@@ -228,109 +219,138 @@ class Molecule extends AppModel {
                 $mainEntryNodes = json_encode($mainEntryNodes);
                 $mainEntryNodes = (array)json_decode($mainEntryNodes, true);
                 $mainEntry = '';
-                foreach ($mainEntryNodes as $mainEntryNode){
-                    if (isset($mainEntryNode[0])){
+                foreach($mainEntryNodes as $mainEntryNode) {
+                    if(isset($mainEntryNode[0])) {
                         $mainEntry = $mainEntryNode[0];
                     }
                 }
 
-                $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry.'/'.$closestEntry;
+                $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry . '/' . $closestEntry;
 
                 $figureNode = json_encode($figureNode);
                 $figureNode = json_decode($figureNode, true);
 
                 $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
-                $sourceItem =htmlentities($sourceItem);
+                $sourceItem = htmlentities($sourceItem);
 
-                $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
-                if ($availability == 'electronic'){
+                $availability = isset($figureNode['@attributes']['availability']) ?
+                        $figureNode['@attributes']['availability'] :
+                        '';
+                if($availability == 'electronic') {
                     $availability = 'online only';
                 }
-                else if ($availability == 'print'){
+                else if($availability == 'print') {
                     $availability = 'print only';
                 }
-                else if ($availability == 'both'){
+                else if($availability == 'both') {
                     $availablity = 'print and online';
                 }
                 else {
                     $availablity = '';
                 }
 
-                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])){
-                    if (isset($figureNode['file'])){
-                        if (count($figureNode['file']) > 1){
-                            foreach ($figureNode['file'] as $file){
-                                if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
-                                    $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
-                                }else if (isset($file['src'])){  //for situation when abdomen: [0]=>
-                                    $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$file['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])) {
+                    if(isset($figureNode['file'])) {
+                        if(count($figureNode['file']) > 1) {
+                            foreach($figureNode['file'] as $file) {
+                                if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
+                                    $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] .
+                                            "\t" . $sourceItem . "\t" . $file['@attributes']['src'] .
+                                            "\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                                }
+                                else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
+                                    $figureRows .= "\n" . $term."\t\tYes\t\t" . $figureNode['@attributes']['id'] .
+                                            "\t" . $sourceItem."\t" . $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
+                                            $availability.' ';
                                 }
 
                             }
-                        }else{
-                            if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                                $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['file']['@attributes']['src']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
-                            }
                         }
-                    }else if (isset($figureNode['p']) && isset($figureNode['p']['@attributes']) && isset($figureNode['p']['@attributes']['src_stub'])){
+                        else if(
+                            isset($figureNode['file']['@attributes']) &&
+                            isset($figureNode['file']['@attributes']['src'])
+                        ) {
+                            $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
+                                    $sourceItem . "\t" . $figureNode['file']['@attributes']['src'] .
+                                    "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
+                        }
+                    }
+                    else if(
+                        isset($figureNode['p']) && isset($figureNode['p']['@attributes']) &&
+                        isset($figureNode['p']['@attributes']['src_stub'])
+                    ) {
                         //img situation: [p]->[src_stub] is equal to [file][src]
-                        $figureRows .="\n".$term."\t\tYes\t\t" .$figureNode['@attributes']['id']."\t".$sourceItem."\t".$figureNode['p']['@attributes']['src_stub']."\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
+                        $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
+                                $sourceItem . "\t" . $figureNode['p']['@attributes']['src_stub'] .
+                                "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                     }
                 }
             }
 
             $figureLogRows = $metaheader . $figureRows;
-        } else {
-                $figureLogRows = $metaheader . 'No figures in this Chapter';
+        }
+        else {
+            $figureLogRows = $metaheader . 'No figures in this Chapter';
         }
 
-         return  $figureLogRows;
+        return $figureLogRows;
     }
 
-
     /**
-     * take the xml from above and return an array of image file names
+     * Take the xml from above and return an array of image file names
      *
-     * @returns array
+     * @return array
      */
     public function getImageFileName($moleculeXml) {
         $ob = simplexml_load_string($moleculeXml);
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
         $imageFiles = [];
 
-        if($figureNodes){
+        if($figureNodes) {
             $figureNodes = json_encode($figureNodes);
             $figureNodes = (array)json_decode($figureNodes, true);
 
-            foreach($figureNodes as $figureNode){
-                if (isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])){
-                    if (isset($figureNode['file'])){
-                        if (count($figureNode['file']) > 1){
-                            foreach ($figureNode['file'] as $file){
-                                if (isset($file['@attributes']) && isset($file['@attributes']['src'])){
+            foreach($figureNodes as $figureNode) {
+                if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])) {
+                    if(isset($figureNode['file'])) {
+                        if(count($figureNode['file']) > 1) {
+                            foreach($figureNode['file'] as $file) {
+                                if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
                                     $imageFiles[] = $file['@attributes']['src'];
-                                }else if (isset($file['src'])){  //for situation when abdomen: [0]=>
+                                }
+                                else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
                                     $imageFiles[] = $file['src'];
                                 }
                             }
-                        }else{
-                            if (isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])){
-                                $imageFiles[] = $figureNode['file']['@attributes']['src'];
-                            }
                         }
-                    }else if (isset($figureNode['p']) && isset($figureNode['p']['@attributes']) && isset($figureNode['p']['@attributes']['src_stub'])){
+                        else if(
+                            isset($figureNode['file']['@attributes']) &&
+                            isset($figureNode['file']['@attributes']['src'])
+                        ) {
+                            $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                        }
+                    }
+                    else if(
+                        isset($figureNode['p']) && isset($figureNode['p']['@attributes']) &&
+                        isset($figureNode['p']['@attributes']['src_stub'])
+                    ) {
                         //img situation: [p]->[src_stub] is equal to [file][src]
                         $imageFiles[] = $figureNode['p']['@attributes']['src_stub'];
                     }
                 }
             }
         }
-        return  $imageFiles;
+
+        return $imageFiles;
     }
 
     /**
      * Gets a list of properly sorted atoms that are ready for publication.
-     * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort order (sort based on current atom in any status but ids are most current and ready to publish atoms)
+     * param array $orderedIds from molecule export(), the array of publishable ids for the chapter, in the current sort
+     * order (sort based on current atom in any status but ids are most current and ready to publish atoms)
+     *
+     * @param integer[] $orderedIds Sorted atom IDs
+     *
      * @return object[]
      */
     protected function _getMysortedPublishedAtoms($orderedIds) {
@@ -341,7 +361,7 @@ class Molecule extends AppModel {
                     ->where('id', '=', $orderedId)
                     ->get();
             foreach($versions as $version) {
-                    $atoms[] = $version;
+                $atoms[] = $version;
             }
         }
 
@@ -411,7 +431,48 @@ class Molecule extends AppModel {
     }
 
     /**
-     * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the current desired sort order.
+     * Automatically sort a molecule's atoms.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param string $code The molecule code
+     */
+    public static function autoSort($productId, $code) {
+        \DB::transaction(function () use ($productId, $code) {
+            $atoms = Atom::allForCurrentProduct()
+                    ->where('molecule_code', '=', $code)
+                    ->where('product_id', '=', $productId)
+                    ->whereIn('id', function ($q) {
+                        Atom::buildLatestIDQuery(null, $q);
+                    })
+                    ->get();
+
+            $keyedAtoms = [];
+            foreach($atoms as $atom) {
+                $key = strtolower($atom->alpha_title);
+
+                //ensure key is unique
+                while(isset($keyedAtoms[$key])) {
+                    $key .= '_z';
+                }
+
+                $keyedAtoms[$key] = $atom;
+            }
+            ksort($keyedAtoms);
+
+            $i = -1;
+            foreach($keyedAtoms as $atom) {
+                $atom->sort = ++$i;
+                $atom->simpleSave();
+            }
+        });
+    }
+
+    /**
+     * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it
+     * with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the
+     * current desired sort order.
      *
      * @param integer $productId Limit to this product
      * @param ?integer $statusId (optional) Only export atoms with this status
@@ -419,25 +480,35 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getExportSortOrder($productId, $statusId = null) {
-
-        $moleculecode=$this->code;
-
-        // $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-        // select * from atoms where id in (select MAX(id) from atoms where status_id=$statusId group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
-        // inner join  (
-        // select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
-        //                         where a.product_id=$productId and b.product_id=$productId;";
+        $moleculecode = $this->code;
 
         //output all status for Sarah Vora
-        $sql="select a.id as pubid, a.entity_id as pubentityid, b.id as currentid, b.entity_id as currententityid, b.sort as currentsort from (
-        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) a
-        inner join  (
-        select * from atoms where id in (select MAX(id) from atoms group by entity_id) and molecule_code='".$moleculecode."' and deleted_at is null order by sort asc ) b on a.entity_id=b.entity_id
-                                where a.product_id=$productId and b.product_id=$productId;";
+        $sql = "SELECT a.id AS pubid, a.entity_id AS pubentityid, b.id AS currentid, b.entity_id AS currententityid,
+                    b.sort AS currentsort
+                FROM (
+                    SELECT * FROM atoms
+                    WHERE id IN (
+                        SELECT MAX(id)
+                        FROM atoms
+                        GROUP BY entity_id
+                    ) AND molecule_code='" . $moleculecode."' AND deleted_at IS NULL ORDER BY sort ASV
+                ) a
+                INNER JOIN (
+                    SELECT * FROM atoms
+                    WHERE id IN (
+                        SELECT MAX(id) FROM atoms GROUP BY entity_id
+                    ) AND molecule_code='" . $moleculecode . "' AND deleted_at IS NULL ORDER BY sort ASC
+                ) b ON a.entity_id=b.entity_id
+                WHERE a.product_id=" . $productId . " AND b.product_id=" . $productId . ";";
 
         $atoms = DB::select($sql);
 
-        $atomIds = array_map(function($a) { return $a->pubid; }, $atoms);
+        $atomIds = array_map(
+            function ($a) {
+                return $a->pubid;
+            },
+            $atoms
+        );
 
         return $atomIds;
     }
@@ -451,7 +522,6 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getSortOrder($productId, $statusId = null) {
-
         $atoms = Atom::allForProduct($productId)
                 ->where('molecule_code', '=', $this->code)
                 ->whereIn('id', function ($q) {
