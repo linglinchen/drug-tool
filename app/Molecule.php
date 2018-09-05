@@ -437,16 +437,9 @@ class Molecule extends AppModel {
      *
      * @param integer $productId The current product's id
      * @param string $code The molecule code
-     *
-     * @return object[] The sorted atoms
      */
-    public static function auto($productId, $code) {
+    public static function autoSort($productId, $code) {
         \DB::transaction(function () use ($productId, $code) {
-            $atomEntityIds = $request->input('atomEntityIds');
-            if(!$atomEntityIds || !is_array($atomEntityIds)) {
-                return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Missing atomEntityIds.');
-            }
-
             $atoms = Atom::allForCurrentProduct()
                     ->where('molecule_code', '=', $code)
                     ->where('product_id', '=', $productId)
@@ -455,17 +448,24 @@ class Molecule extends AppModel {
                     })
                     ->get();
 
-            usort($atoms, function ($a, $b) {
-                return strcmp($a->title, $b->title);
-            });
+            $keyedAtoms = [];
+            foreach($atoms as $atom) {
+                $key = strtolower($atom->alpha_title);
+
+                //ensure key is unique
+                while(isset($keyedAtoms[$key])) {
+                    $key .= '_z';
+                }
+
+                $keyedAtoms[$key] = $atom;
+            }
+            ksort($keyedAtoms);
 
             $i = -1;
-            foreach($atoms as $atom) {
+            foreach($keyedAtoms as $atom) {
                 $atom->sort = ++$i;
                 $atom->simpleSave();
             }
-
-            return $atoms;
         });
     }
 

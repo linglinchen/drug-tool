@@ -98,6 +98,8 @@ class MoleculeSortController extends Controller {
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'Chapter "' . $molecule->title . '" is locked, and cannot be modified at this time.');
         }
 
-        return new ApiPayload(Molecule::autoSort($productId, $code));
+        Molecule::autoSort($productId, $code);
+
+        return new ApiPayload(Molecule::addAtoms($molecule, $productId));
     }
 }
