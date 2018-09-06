@@ -151,20 +151,22 @@ class Atom extends AppModel {
 
 		//prefixing with '0' will fetch statuses based on the naming convention pattern established on product 1
 		$statusCount = true;
-		foreach($statusId as &$statusPattern) {
-			if(substr($statusPattern, 0, 1) == '0') {
-				switch ($statusPattern) {
-					case '0100':
-						$statusPattern = Status::getDevStatusId($currentProductId)->id;
-						break;
-					case '0200':
-						$statusPattern = Status::getReadyForPublicationStatusId($currentProductId)->id;
-						break;
-					case '0300':
-						$statusPattern = Status::getDeactivatedStatusId($currentProductId)->id;
-						break;
-					default:
-						$statusCount = false;
+		if($statusId !== null) {
+			foreach($statusId as &$statusPattern) {
+				if(substr($statusPattern, 0, 1) == '0') {
+					switch ($statusPattern) {
+						case '0100':
+							$statusPattern = Status::getDevStatusId($currentProductId)->id;
+							break;
+						case '0200':
+							$statusPattern = Status::getReadyForPublicationStatusId($currentProductId)->id;
+							break;
+						case '0300':
+							$statusPattern = Status::getDeactivatedStatusId($currentProductId)->id;
+							break;
+						default:
+							$statusCount = false;
+					}
 				}
 			}
 		}
