@@ -181,15 +181,14 @@ class Atom extends AppModel {
 		$query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
 				$q->select(DB::raw('MAX(id)'))
 					->from($table)->where('product_id', '=', $currentProductId);
-
-				if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
-					$q->whereIn('status_id', $statusId);
-				}
-
 				$q->groupBy('entity_id');
 			})
 			->whereNull('deleted_at');
 			//->orderBy('alpha_title', 'ASC');
+
+		if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
+			$query->whereIn('status_id', $statusId);
+		}
 
 		return $query;
 	}
