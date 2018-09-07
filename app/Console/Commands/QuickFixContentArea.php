@@ -65,42 +65,45 @@ class QuickFixContentArea extends Command {
             }
 
             $atomModel = Atom::find($atom['id']);
-            if ($atomModel->entity_id == '5b22b748c4da6194168670'){
-
+             //if ($atomModel->entity_id == '5b22b748c6b0a153399278'){ //1
+                //if ($atomModel->entity_id == '5b22b748d5c5e760402499'){ //35
+                if ($atomModel->entity_id == '5b22b74a24556383434119'){ //746
             //add this header to xml so later processing won't do unwanted encoding, e. g. change '-' to &#x2014
             $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
-            $xmlObject = simplexml_load_string($xml); 
+            $xmlObject = simplexml_load_string($xml);
 
             //get the content area
-            $contentAreas = $xmlObject->xpath('//content_area/text()');
+            $contentAreas = $xmlObject->xpath('//content_area');
             foreach ($contentAreas as $contentArea){
-                switch ($contentArea){
+                switch ($contentArea->entry){
                     case 'Child Health':
-                        $contentArea = 'Pediatrics';
+                        $contentArea->entry = 'Pediatrics';
                         break;
                     case 'Fundamental Skills':
-                        $contentArea = 'Foundations of Care';
+                        $contentArea->entry = 'Foundations of Care';
                         break;
                     case 'Critical Care':
-                        $contentArea = 'Complex Care';
+                        $contentArea->entry = 'Complex Care';
                         break;
                     default:
                 }
             }
 
             //get the integrated Process
-            $integratedProcesses = $xmlObject->xpath('//integrated_process/text()');
+            $integratedProcesses = $xmlObject->xpath('//integrated_process');
             foreach ($integratedProcesses as $integratedProcess){
-                if ($integratedProcess == 'Culture and Spirituality'){
-                        $integratedProcess = 'Culture, Spirituality, Ethnicity';
+                if ($integratedProcess->entry == 'Culture and Spirituality'){
+                        $integratedProcess->entry = 'Culture, Spirituality, Ethnicity';
                 }
             }
 
             //get the priority concept
-            $priorityConcepts = $xmlObject->xpath('//integrated_process/text()');
+            $priorityConcepts = $xmlObject->xpath('//priority_concepts');
             foreach ($priorityConcepts as $priorityConcept){
-                if (preg_match('/Fluid and Electrolyte Balance/i', $priorityConcept, $match)){
-                        $priorityConcept = preg_replace('/Fluid and Electrolyte Balance/i', 'Fluids and Electrolytes', $priorityConcept);
+                for ($i=0; $i<=count($priorityConcept->entry); $i++){
+                    if (preg_match('/Fluid and Electrolyte Balance/i', $priorityConcept->entry[$i], $match)){
+                        $priorityConcept->entry[$i] = preg_replace('/Fluid and Electrolyte Balance/i', 'Fluids and Electrolytes', $priorityConcept->entry[$i]);
+                    }
                 }
             }
 
