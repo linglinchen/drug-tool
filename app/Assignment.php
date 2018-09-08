@@ -12,6 +12,18 @@ class Assignment extends AppModel {
 	protected $table = 'assignments';
 	protected $guarded = ['id'];
 	protected $dates = ['created_at', 'updated_at'];
+	protected static $validFilters = [
+		'task_id',
+		'atoms.molecule_code',
+		'atoms.domain_code',
+		'assignments.user_id',
+		'user_id',
+		'atom_entity_id',
+		'task_ended',
+		'has_discussion',
+		'has_figures'
+	];
+
 
 	/**
 	 * GET a list of all assignments or POST filters to retrieve a filtered list.
@@ -34,6 +46,11 @@ class Assignment extends AppModel {
 
 		self::_addOrder($query, $order);
 
+		//make sure we aren't including old versions of the atoms
+		$query->whereIn('atoms.id', function ($q) {
+			Atom::buildLatestIDQuery(null, $q);
+		});
+
 		$countQuery = clone $query->getQuery();
 		$countQuery->select(DB::raw('COUNT(*)'));
 		$count = sizeof($countQuery->get());
@@ -52,7 +69,7 @@ class Assignment extends AppModel {
 			$atoms = Atom::findNewest($entityIds, $productId)
 					->get();
 			Comment::addSummaries($atoms, $productId);
-			foreach ($atoms as $atom){
+			foreach($atoms as $atom) {
 				$atom->addDomains($productId);
 				$atom->addCommentSuggestions($atom['entity_id']);
 			}
@@ -124,67 +141,71 @@ class Assignment extends AppModel {
 	 * @param mixed[] $filters The filters to add represented as key => value pairs
 	 */
 	protected static function _addListFilters($query, $filters, $productId) {
-		$validFilters = ['task_id', 'atoms.molecule_code', 'atoms.domain_code', 'assignments.user_id', 'user_id', 'atom_entity_id', 'task_ended', 'has_discussion', 'has_figures'];
-		if($filters) {
-			foreach($validFilters as $validFilter) {
-				if(isset($filters[$validFilter])) {
-					$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
-					if($validFilter == 'task_ended') {
-						if($filterValue) {
-							$query->whereNotNull('task_end');
-						}
-						else {
-							$query->whereNull('task_end');
-						}
-					}
-					else if ($validFilter == 'has_discussion'){
-						if ($filterValue == 1){
-							$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
-						}else if ($filterValue == 0){
-							$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
-						}
-						else if($filterValue == 4){
-						//has suggested figures
- 						$query->join(DB::raw("(SELECT
-								     comments.text,
-								     comments.atom_entity_id
-								      FROM comments
-								      GROUP BY comments.atom_entity_id, comments.text
-								      ) as commentstemp"),function($join){
-								        $join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
-								  })
-								  ->where('commentstemp.text', 'LIKE', '%<suggestion>pending%')
-								  ->groupBy("commentstemp.atom_entity_id");
-						}
-					}
-					// has any figures in the atom record
-					else if ($validFilter == 'has_figures'){
-						$query->whereIn('atoms.id', function ($q) use ($productId) {
-							$q->select(DB::raw('MAX(id)'))
-									->from('atoms');
-							$q->where('product_id', '=', $productId);
-							$q->groupBy('entity_id');
-						});
-						if($filterValue > 1){
-						//do nothing
-						return;
-						} else if ($filterValue == 1){
-						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
-						return;
-						} else if($filterValue < 1){
-							$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
-							return;
-						}
-					}
-					else if ($validFilter == 'atom_entity_id'){
-						$query->where('assignments.atom_entity_id', '=', $filterValue);
-					}
-					else if ($validFilter == 'user_id'){
-						$query->where('assignments.user_id', '=', $filterValue);
+		if(!$filters) {
+			return;
+		}
+
+		foreach(self::$validFilters as $validFilter) {
+			if(isset($filters[$validFilter])) {
+				$filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
+				if($validFilter == 'task_ended') {
+					if($filterValue) {
+						$query->whereNotNull('task_end');
 					}
 					else {
-						$query->where($validFilter, '=', $filterValue);
+						$query->whereNull('task_end');
 					}
+				}
+				else if ($validFilter == 'has_discussion'){
+					if ($filterValue == 1){
+						$query->having(DB::raw('COUNT(comments.text)'), '>', 0);
+					}
+					else if ($filterValue == 0){
+						$query->having(DB::raw('COUNT(comments.text)'), '=', 0);
+					}
+					else if($filterValue == 4){
+						//has suggested figures
+						$query->join(DB::raw("(SELECT
+									comments.text,
+									comments.atom_entity_id
+									FROM comments
+									GROUP BY comments.atom_entity_id, comments.text
+									) as commentstemp"),function($join){
+										$join->on("commentstemp.atom_entity_id","=","atoms.entity_id");
+								})
+								->where('commentstemp.text', 'LIKE', '%<suggestion>pending%')
+								->groupBy("commentstemp.atom_entity_id");
+					}
+				}
+				// has any figures in the atom record
+				else if ($validFilter == 'has_figures'){
+					$query->whereIn('atoms.id', function ($q) use ($productId) {
+						$q->select(DB::raw('MAX(id)'))
+								->from('atoms');
+						$q->where('product_id', '=', $productId);
+						$q->groupBy('entity_id');
+					});
+					if($filterValue > 1){
+						//do nothing
+						return;
+					}
+					else if ($filterValue == 1){
+						$query->where('atoms.xml', 'LIKE', '%type="figure"%');
+						return;
+					}
+					else if($filterValue < 1){
+						$query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
+						return;
+					}
+				}
+				else if ($validFilter == 'atom_entity_id'){
+					$query->where('assignments.atom_entity_id', '=', $filterValue);
+				}
+				else if ($validFilter == 'user_id'){
+					$query->where('assignments.user_id', '=', $filterValue);
+				}
+				else {
+					$query->where($validFilter, '=', $filterValue);
 				}
 			}
 		}
