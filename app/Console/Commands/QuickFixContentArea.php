@@ -69,10 +69,7 @@ class QuickFixContentArea extends Command {
             }
 
             $atomModel = Atom::find($atom['id']);
-             //if ($atomModel->entity_id == '5b22b748c6b0a153399278'){ //2 content_area and priorityConcepts
-                //if ($atomModel->entity_id == '5b22b748d5c5e760402499'){ //35
-                //if ($atomModel->entity_id == '5b22b74a24556383434119'){ //746 integratedProcess
-                //if ($atomModel->entity_id == '5b22b74ae3f47955556941'){ //1202 negative control
+
             //add this header to xml so later processing won't do unwanted encoding, e. g. change '-' to &#x2014
             $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
             $xmlObject = simplexml_load_string($xml);
@@ -130,10 +127,9 @@ class QuickFixContentArea extends Command {
                 $newAtom->created_at = $timestamp;
                 $newAtom->updated_at = $timestamp;
                 $changed++;
-                //$newAtom->save();
+                $newAtom->save();
                 echo "$newAtom->entity_id\t$newAtom->alpha_title\n";
             }
-            //}
         }
 
         /* output messages */
