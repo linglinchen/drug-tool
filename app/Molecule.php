@@ -480,7 +480,10 @@ class Molecule extends AppModel {
      * @return string[]
      */
     protected function _getExportSortOrder($productId, $statusId = null) {
-        $moleculecode = $this->code;
+        $values = [
+            'moleculeCode'  => $this->code,
+            'productId'     => (int)$productId
+        ];
 
         //output all status for Sarah Vora
         $sql = "SELECT a.id AS pubid, a.entity_id AS pubentityid, b.id AS currentid, b.entity_id AS currententityid,
@@ -491,17 +494,17 @@ class Molecule extends AppModel {
                         SELECT MAX(id)
                         FROM atoms
                         GROUP BY entity_id
-                    ) AND molecule_code='" . $moleculecode."' AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
                     WHERE id IN (
                         SELECT MAX(id) FROM atoms GROUP BY entity_id
-                    ) AND molecule_code='" . $moleculecode . "' AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
                 ) b ON a.entity_id=b.entity_id
-                WHERE a.product_id=" . $productId . " AND b.product_id=" . $productId . ";";
+                WHERE a.product_id=:productId AND b.product_id=:productId;";
 
-        $atoms = DB::select($sql);
+        $atoms = DB::select(DB::raw($sql), $values);
 
         $atomIds = array_map(
             function ($a) {
