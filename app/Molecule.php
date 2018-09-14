@@ -491,7 +491,7 @@ class Molecule extends AppModel {
                         SELECT MAX(id)
                         FROM atoms
                         GROUP BY entity_id
-                    ) AND molecule_code='" . $moleculecode."' AND deleted_at IS NULL ORDER BY sort ASV
+                    ) AND molecule_code='" . $moleculecode."' AND deleted_at IS NULL ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
