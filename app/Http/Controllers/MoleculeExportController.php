@@ -33,7 +33,6 @@ class MoleculeExportController extends Controller {
      * @return ApiPayload|Response
      */
     public function getAction($productId, $code, Request $request) {
-
         $statusId = $request->input('statusId');
         $statusId = $statusId === '' ? null : $statusId;
         $withFigures = $request->input('withFigures');
@@ -41,24 +40,23 @@ class MoleculeExportController extends Controller {
         $s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
         $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 
-//receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
+        //receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
         if ($productId !== 1){
-                switch ($statusId) {
-                    case 100:
-                    $statusId = Status::getDevStatusId($productId);
-                        break;
-                    case 200:
-                    $statusId = Status::getReadyForPublicationStatusId($productId);
-                        break;
-                    case 300:
-                    $statusId = Status::getDeactivatedStatusId($productId);
-                        break;
-                    default:
-                        break;
-                }
-
+            switch ($statusId) {
+                case 100:
+                $statusId = Status::getDevStatusId($productId);
+                    break;
+                case 200:
+                $statusId = Status::getReadyForPublicationStatusId($productId);
+                    break;
+                case 300:
+                $statusId = Status::getDeactivatedStatusId($productId);
+                    break;
+                default:
+                    break;
+            }
         }
-//method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
+        //method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
         $doctype = 'drug';
 
         $doctypeObj = Product::find($productId)->getDoctype();
@@ -66,14 +64,8 @@ class MoleculeExportController extends Controller {
         // This is a test that shows in network tab of browser what the statusId resolves to sends a Javascript alert to the client
 
         if($doctypeString =='App\DictionaryDoctype'){
-         $doctype='dictionary';
+            $doctype='dictionary';
         }
-
-
-//echo "<script type='text/javascript'>alert('$message');</script>";
-
-//$message = $doctype;
-//echo "<script type='text/javascript'>alert('$message');</script>";
 
         $molecule = Molecule::allForCurrentProduct()
                 ->where('code', '=', $code)
@@ -89,7 +81,7 @@ class MoleculeExportController extends Controller {
         $filename = $code . '_xml_'. $zipDate .'.zip';
         $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
         $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
-//Top Header material for tab delimited illustration log download. static content added to log.
+        //Top Header material for tab delimited illustration log download. static content added to log.
 $metaheader_vet = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
 Author:\tSaunders\t\t\t\t\t\t\t\t\t\t\tISBN:\t9780702074639\t\t\t\t
@@ -110,66 +102,65 @@ METAHEADER;
 
 
 
-//If doctype is dictionary, different xml wrapper is written.
-          if ($doctype === 'dictionary'){
-              $moleculeXml = $molecule->export($statusId);
-                switch ((int)$productId) { //TODO: make the ISBN dynamic
-                    case 3:
-                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="9780702074639">' . "\n"; //vet edition 5           vet 4 is 9780702032318
-                            $xml .= $moleculeXml;
-                            $xml .= '</dictionary>';
-                            $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_vet);
-                            $zip->addFromString($code . '.xml', $xml);
-                            $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
-                            $zip->close();
-                        break;
-                    case 5:
-                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="9780323546355">' . "\n"; //dental edition 4          dental 3 is 9780323100120
-                            $xml .= $moleculeXml;
-                            $xml .= '</dictionary>';
-                            $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
-                            $zip->addFromString($code . '.xml', $xml);
-                            $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
-                            $imageFiles = $molecule->getImageFileName($moleculeXml);
-                            foreach ($imageFiles as $imageFile){
-                                if (substr($imageFile, 0, 9) == 'suggested'){ //suggested image
-                                    $fileName1 = $s3UrlProd."/".$imageFile.".jpg";
-                                    if (@file_get_contents($fileName1)){
-                                        $zip->addFromString($imageFile.'.jpg', file_get_contents($fileName1));
-                                    }
-                                    $fileName2 = $s3UrlProd."/".$imageFile.".JPG";
-                                    if (@file_get_contents($fileName2)){
-                                        $zip->addFromString($imageFile.'.JPG', file_get_contents($fileName2));
-                                    }
-                                }
-                                else{ //legacy image
-                                    $zip->addFromString($imageFile.'.jpg', file_get_contents($s3UrlProd."/9780323100120/".$imageFile.".jpg"));
-                                }
+        //If doctype is dictionary, different xml wrapper is written.
+        if ($doctype === 'dictionary'){
+            $moleculeXml = $molecule->export($statusId);
+            switch ((int)$productId) { //TODO: make the ISBN dynamic
+                case 3:
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                    $xml .= '<dictionary isbn="9780702074639">' . "\n"; //vet edition 5           vet 4 is 9780702032318
+                    $xml .= $moleculeXml;
+                    $xml .= '</dictionary>';
+                    $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_vet);
+                    $zip->addFromString($code . '.xml', $xml);
+                    $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+                    $zip->close();
+                    break;
+                case 5:
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                    $xml .= '<dictionary isbn="9780323546355">' . "\n"; //dental edition 4          dental 3 is 9780323100120
+                    $xml .= $moleculeXml;
+                    $xml .= '</dictionary>';
+                    $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
+                    $zip->addFromString($code . '.xml', $xml);
+                    $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+                    $imageFiles = $molecule->getImageFileName($moleculeXml);
+                    foreach ($imageFiles as $imageFile){
+                        if (substr($imageFile, 0, 9) == 'suggested'){ //suggested image
+                            $fileName1 = $s3UrlProd."/".$imageFile.".jpg";
+                            if (@file_get_contents($fileName1)){
+                                $zip->addFromString($imageFile.'.jpg', file_get_contents($fileName1));
                             }
+                            $fileName2 = $s3UrlProd."/".$imageFile.".JPG";
+                            if (@file_get_contents($fileName2)){
+                                $zip->addFromString($imageFile.'.JPG', file_get_contents($fileName2));
+                            }
+                        }
+                        else { //legacy image
+                            $zip->addFromString($imageFile.'.jpg', file_get_contents($s3UrlProd."/9780323100120/".$imageFile.".jpg"));
+                        }
+                    }
 
-                            //$zip->addFromString('MyImage.jpg', file_get_contents("https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us/9780323100120/on001-007-9780323100120tn.jpg"));
-                            $zip->close();
-                        break;
+                    $zip->close();
+                    break;
 
-                    default:
-                            $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                            $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355 Mosby nursing drug reference
-                            $xml .= $molecule->export($statusId);
-                            $xml .= '</dictionary>';
-                            $zip->addFromString($code . '.xml', $xml);
-                            $zip->close();
-                        break;
-                }
-
-        } else {      //drug doctypes just get orginal code
-        $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "Y:\WWW1\tools\Drugs\3_4_drug.dtd">' . "\n";
-        $xml .= '<drug_guide isbn="">' . "\n";     //TODO: make the ISBN dynamic JUDY used 9780323448260
-        $xml .= $molecule->export($statusId);
-        $xml .= '</drug_guide>';
-        $zip->addFromString($code .'_xml_'. date('Y-m-d_H:i:s') .'.xml', $xml);
-        $zip->close();
+                default:
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                    $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355 Mosby nursing drug reference
+                    $xml .= $molecule->export($statusId);
+                    $xml .= '</dictionary>';
+                    $zip->addFromString($code . '.xml', $xml);
+                    $zip->close();
+                    break;
+            }
+        }
+        else {      //drug doctypes just get orginal code
+            $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "Y:\WWW1\tools\Drugs\3_4_drug.dtd">' . "\n";
+            $xml .= '<drug_guide isbn="">' . "\n";     //TODO: make the ISBN dynamic JUDY used 9780323448260
+            $xml .= $molecule->export($statusId);
+            $xml .= '</drug_guide>';
+            $zip->addFromString($code .'_xml_'. date('Y-m-d_H:i:s') .'.xml', $xml);
+            $zip->close();
         }
 
         header('Content-Type: application/zip');
