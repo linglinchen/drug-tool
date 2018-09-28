@@ -49,6 +49,24 @@ class Atom extends AppModel {
     ];
 
     /**
+     * @var string[] The names of database columns that we don't consider worth automatically changing the status or
+     *     creating a new atom version for
+     */
+    protected static $insignificantColumns = [
+        'id',
+        'molecule_code',
+        'modified_by',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'status_id',
+        'sort',
+        'product_id',
+        'domain_code',
+        'edition'
+    ];
+
+    /**
      * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
      *
      * @param array $options
@@ -70,7 +88,7 @@ class Atom extends AppModel {
                 self::findNewest($this->entity_id, $this->product_id) :
                 null;
 
-        if($autoStatus) {
+        if($autoStatus && $this->_hasSignificantChanges()) {
             $devStatusId = Status::getDevStatusId($this->product_id)->id;
             $this->status_id = $devStatusId; //change status to be development when saving
         }
@@ -221,7 +239,6 @@ class Atom extends AppModel {
                 ->orderBy('alpha_title', 'ASC');
         return $query;
     }
-
 
     /**
      * Get a list of discontinued monographs.
@@ -579,5 +596,29 @@ class Atom extends AppModel {
                 ->count();
 
         return $count > 0;
+    }
+
+    /**
+     * Compare an atom to its previous version to see if it has any important changes.
+     *
+     * @return boolean Does it have significant changes?
+     */
+    protected function _hasSignificantChanges() {
+        $currentVersion = $this->toArray();
+        $previousVersion = ($this->entity_id && $this->product_id) ?
+                self::findNewest($this->entity_id, $this->product_id)->toArray() :
+                null;
+
+        if(!$previousVersion) {
+            return false;
+        }
+
+        foreach($currentVersion as $key => $value) {
+            if(!in_array($key, self::$insignificantColumns) && $previousVersion[$key] != $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
