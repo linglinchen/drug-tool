@@ -34,37 +34,21 @@ class MoleculeExportController extends Controller {
      */
     public function getAction($productId, $code, Request $request) {
         $statusId = $request->input('statusId');
-        $statusId = $statusId === '' ? null : $statusId;
+        $statusId = $statusId === '' ? null : (int)$statusId;
         $withFigures = $request->input('withFigures');
         $withFigures = $withFigures === '' ? null : $withFigures;
         $s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
         $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 
-        //receive statusIds base on product 1, and manipulate to append appropriate leadin for other products
-        if ($productId !== 1){
-            switch ($statusId) {
-                case 100:
-                $statusId = Status::getDevStatusId($productId);
-                    break;
-                case 200:
-                $statusId = Status::getReadyForPublicationStatusId($productId);
-                    break;
-                case 300:
-                $statusId = Status::getDeactivatedStatusId($productId);
-                    break;
-                default:
-                    break;
-            }
-        }
         //method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
         $doctype = 'drug';
 
         $doctypeObj = Product::find($productId)->getDoctype();
-        $doctypeString= get_class($doctypeObj);
+        $doctypeString = get_class($doctypeObj);
         // This is a test that shows in network tab of browser what the statusId resolves to sends a Javascript alert to the client
 
-        if($doctypeString =='App\DictionaryDoctype'){
-            $doctype='dictionary';
+        if($doctypeString =='App\DictionaryDoctype') {
+            $doctype = 'dictionary';
         }
 
         $molecule = Molecule::allForCurrentProduct()
@@ -99,11 +83,8 @@ Phone/Email:\t314 447 8326/sa.vora@elsevier.com\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zi
 Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 
-
-
-
         //If doctype is dictionary, different xml wrapper is written.
-        if ($doctype === 'dictionary'){
+        if($doctype === 'dictionary') {
             $moleculeXml = $molecule->export($statusId);
             switch ((int)$productId) { //TODO: make the ISBN dynamic
                 case 3:
@@ -121,7 +102,7 @@ METAHEADER;
                     $xml .= '<dictionary isbn="9780323546355">' . "\n"; //dental edition 4          dental 3 is 9780323100120
                     $xml .= $moleculeXml;
                     $xml .= '</dictionary>';
-                    $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_dental);
+                    $figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_dental);
                     $zip->addFromString($code . '.xml', $xml);
                     $zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
                     $imageFiles = $molecule->getImageFileName($moleculeXml);

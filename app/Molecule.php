@@ -175,7 +175,7 @@ class Molecule extends AppModel {
     public function export($statusId = null, $withFigures=0) {
         //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
         //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
-        $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
+        $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
