@@ -109,11 +109,11 @@ METAHEADER;
                     foreach ($imageFiles as $imageFile){
                         if (substr($imageFile, 0, 9) == 'suggested'){ //suggested image
                             $fileName1 = $s3UrlProd."/".$imageFile.".jpg";
-                            if (@file_get_contents($fileName1)){
+                            if (@file_get_contents($fileName1)){        //FIXME: Error suppression is a bad practice
                                 $zip->addFromString($imageFile.'.jpg', file_get_contents($fileName1));
                             }
                             $fileName2 = $s3UrlProd."/".$imageFile.".JPG";
-                            if (@file_get_contents($fileName2)){
+                            if (@file_get_contents($fileName2)){        //FIXME: Error suppression is a bad practice
                                 $zip->addFromString($imageFile.'.JPG', file_get_contents($fileName2));
                             }
                         }
@@ -150,5 +150,29 @@ METAHEADER;
         header('Access-Control-Expose-Headers: content-type,content-disposition');
         readfile($filepath);
         exit;
+    }
+
+    /**
+     * Count the exportable atoms in a molecule.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param string $code The molecule code
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function countAction($productId, $code, Request $request) {
+        $statusId = $request->input('statusId');
+        $statusId = $statusId === '' ? null : (int)$statusId;
+
+        $count = Molecule::allForCurrentProduct()
+                ->where('code', '=', $code)
+                ->get()
+                ->first()
+                ->countExportable($statusId);
+
+        return new ApiPayload($count);
     }
 }
