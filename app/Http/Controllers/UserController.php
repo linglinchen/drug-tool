@@ -22,10 +22,12 @@ class UserController extends Controller
 	 *
 	 * @api
      *
+     * @param integer $productId The current product's id
+     *
      * @return ApiPayload|Response
 	 */
-	public function listAction() {
-		return new ApiPayload(User::publicList());
+	public function listAction($productId) {
+		return new ApiPayload(User::publicList($productId));
 	}
 
 	/**

@@ -48,12 +48,18 @@ class User extends Authenticatable {
     /**
      * Returns a list of all users with sensitive fields excluded.
      *
+     * @param integer $productId Only get users from this product
+     *
      * @return array The list of users, indexed by id
      */
-    public static function publicList() {
+    public static function publicList($productId) {
         $output = [];
 
-        $users = self::select()->get();
+        $users = self::join('user_products', 'users.id', '=', 'user_products.user_id')
+                ->where('user_products.product_id', '=', $productId)
+                ->orderBy('users.id', 'DESC')
+                ->get();
+
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $user->userProducts;
@@ -71,7 +77,7 @@ class User extends Authenticatable {
     public function loadACL($productId = null) {
         $ACL = new AccessControl($productId);
         $ACL->loadPermissions($this->toArray());
-        
+
         $this->ACL = $ACL;
     }
 
@@ -102,7 +108,7 @@ class User extends Authenticatable {
                 $query->where($subQueryFunction);
             }
         }
-        
+
         return $query->get();
     }
 
