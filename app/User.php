@@ -28,18 +28,24 @@ class User extends Authenticatable {
     public $ACL;
 
     /**
-     * Get a user.
+     * Get a user that has access to the specified product.
      *
-     * @param integer $productId The current product's id
      * @param integer $id The user's ID
+     * @param integer $productId The current product's id
      *
      * @return {object} The user
      */
-    public static function get($productId, $id) {
-        return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+    public static function get($id, $productId) {
+        $userProductTest = self::join('user_products', 'users.id', '=', 'user_products.user_id')
                 ->where('users.id', '=', $id)
                 ->where('user_products.product_id', '=', $productId)
                 ->first();
+
+        if(!$userProductTest) {
+            return null;
+        }
+
+        return self::find($id);
     }
 
     /**
@@ -70,11 +76,12 @@ class User extends Authenticatable {
     public static function publicList($productId) {
         $output = [];
 
-        $users = self::join('user_products', 'users.id', '=', 'user_products.user_id')
+        $userIds = self::join('user_products', 'users.id', '=', 'user_products.user_id')
                 ->where('user_products.product_id', '=', $productId)
-                ->orderBy('users.id', 'DESC')
-                ->get();
+                ->pluck('user_id')
+                ->toArray();
 
+        $users = self::whereIn('id', $userIds)->get();
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $user->userProducts;

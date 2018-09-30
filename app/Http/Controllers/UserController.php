@@ -41,7 +41,7 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function getAction($productId, $id) {
-        $user = User::get($productId, $id);
+        $user = User::get($id, $productId);
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
