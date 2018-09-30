@@ -175,7 +175,7 @@ class Molecule extends AppModel {
     public function export($statusId = null, $withFigures=0) {
         //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
         //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
-        $orderedIds = $this->_getExportSortOrder($this->product_id, $statusId->id);
+        $orderedIds = $this->_getExportSortOrder($statusId);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
@@ -470,19 +470,29 @@ class Molecule extends AppModel {
     }
 
     /**
+     * Count the atoms that are currently eligible for export.
+     *
+     * @param ?integer $statusId (optional) Only count atoms with this status
+     *
+     * @return integer
+     */
+    public function countExportable($statusId = null) {
+        return sizeof($this->_getExportSortOrder($statusId));
+    }
+
+    /**
      * Get the molecule's ordered atom IDs for use in export. This grabs the current atoms sort order and integrates it
      * with the Id for the publishable version of the atom, producing an array of Ready for Production atom Ids in the
      * current desired sort order.
      *
-     * @param integer $productId Limit to this product
      * @param ?integer $statusId (optional) Only export atoms with this status
      *
      * @return string[]
      */
-    protected function _getExportSortOrder($productId, $statusId = null) {
+    protected function _getExportSortOrder($statusId = null) {
         $values = [
             'moleculeCode'  => $this->code,
-            'productId'     => (int)$productId
+            'productId'     => (int)$this->product_id
         ];
 
         //output all status for Sarah Vora

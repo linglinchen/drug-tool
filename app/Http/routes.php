@@ -57,6 +57,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::get('{productId}/molecule', ['uses' => 'MoleculeController@listAction']);
             Route::get('{productId}/molecule/{code}', ['uses' => 'MoleculeController@getAction']);
             Route::get('{productId}/molecule/{code}/export', ['uses' => 'MoleculeExportController@getAction']);
+            Route::get('{productId}/molecule/{code}/export/count', ['uses' => 'MoleculeExportController@countAction']);
             Route::put('{productId}/molecule/{code}/sort', ['uses' => 'MoleculeSortController@putAction']);
             Route::put('{productId}/molecule/{code}/sort/auto', ['uses' => 'MoleculeSortController@autoAction']);
             Route::get('{productId}/molecule/{code}/lock', ['uses' => 'MoleculeLockController@lockAction']);
