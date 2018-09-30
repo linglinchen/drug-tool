@@ -28,6 +28,21 @@ class User extends Authenticatable {
     public $ACL;
 
     /**
+     * Get a user.
+     *
+     * @param integer $productId The current product's id
+     * @param integer $id The user's ID
+     *
+     * @return {object} The user
+     */
+    public static function get($productId, $id) {
+        return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+                ->where('users.id', '=', $id)
+                ->where('user_products.product_id', '=', $productId)
+                ->first();
+    }
+
+    /**
      * Set up the Product relationship.
      *
      * @returns HasManyThrough
