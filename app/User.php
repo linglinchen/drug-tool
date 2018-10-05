@@ -45,7 +45,10 @@ class User extends Authenticatable {
             return null;
         }
 
-        return self::find($id);
+        $user = self::find($id);
+        $user->userProducts;
+
+        return $user;
     }
 
     /**
