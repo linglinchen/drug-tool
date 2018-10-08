@@ -49,6 +49,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixRemoveQuesReference::class,
         Commands\QuickFixImageAvailability::class,
         Commands\QuickFixContentArea::class,
+        Commands\QuickFixPos::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,

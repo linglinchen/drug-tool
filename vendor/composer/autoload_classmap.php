@@ -53,6 +53,7 @@ return array(
     'App\\Console\\Commands\\QuickFixAssignLaser' => $baseDir . '/app/Console/Commands/QuickFixAssignLaser.php',
     'App\\Console\\Commands\\QuickFixAssignToMargaret' => $baseDir . '/app/Console/Commands/QuickFixAssignToMargaret.php',
     'App\\Console\\Commands\\QuickFixColon' => $baseDir . '/app/Console/Commands/QuickFixColon.php',
+    'App\\Console\\Commands\\QuickFixContentArea' => $baseDir . '/app/Console/Commands/QuickFixContentArea.php',
     'App\\Console\\Commands\\QuickFixDentalMargaret' => $baseDir . '/app/Console/Commands/QuickFixDentalMargaret.php',
     'App\\Console\\Commands\\QuickFixEICtoPHARM' => $baseDir . '/app/Console/Commands/QuickFixEICtoPHARM.php',
     'App\\Console\\Commands\\QuickFixIV' => $baseDir . '/app/Console/Commands/QuickFixIV.php',

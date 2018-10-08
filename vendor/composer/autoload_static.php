@@ -436,6 +436,7 @@ class ComposerStaticInit0a3752477fcb89a07626e67493e97902
         'App\\Console\\Commands\\QuickFixAssignLaser' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixAssignLaser.php',
         'App\\Console\\Commands\\QuickFixAssignToMargaret' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixAssignToMargaret.php',
         'App\\Console\\Commands\\QuickFixColon' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixColon.php',
+        'App\\Console\\Commands\\QuickFixContentArea' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixContentArea.php',
         'App\\Console\\Commands\\QuickFixDentalMargaret' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixDentalMargaret.php',
         'App\\Console\\Commands\\QuickFixEICtoPHARM' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixEICtoPHARM.php',
         'App\\Console\\Commands\\QuickFixIV' => __DIR__ . '/../..' . '/app/Console/Commands/QuickFixIV.php',
