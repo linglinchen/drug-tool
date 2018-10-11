@@ -605,7 +605,7 @@ class Atom extends AppModel {
      */
     protected function _hasSignificantChanges() {
         $currentVersion = $this->toArray();
-        $previousVersion = ($this->entity_id && $this->product_id) ?
+        $previousVersion = ($this->entity_id && $this->product_id && self::findNewest($this->entity_id, $this->product_id)) ?
                 self::findNewest($this->entity_id, $this->product_id)->toArray() :
                 null;
 
