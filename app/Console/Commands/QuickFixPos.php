@@ -35,9 +35,7 @@ class QuickFixPos extends Command {
                     WHERE product_id=5
 	                    AND id IN 
                             (SELECT MAX(id) FROM atoms WHERE product_id=5 GROUP BY entity_id )
-                        AND (xml LIKE '%<emphasis style=\"italic\"><part-of-speech>%' 
-                                OR xml LIKE '%<em><part-of-speech>%'
-                            )";
+                            AND xpath_exists('//emphasis[@style=\"italic\"]/part-of-speech', XML::XML) = true";
         
         $atoms = DB::select($sql);
         $atomsArray = json_decode(json_encode($atoms), true);
@@ -47,12 +45,12 @@ class QuickFixPos extends Command {
             $xml = $atomModel->xml;
             $brandName = '';
 
-            preg_match('/<emphasis style="italic"><part-of-speech>([^<]*)<\/part-of-speech>([^<]*)<\/emphasis>/i', $xml, $match);
+            preg_match('/<emphasis style="italic">([^<]*)<part-of-speech>([^<]*)<\/part-of-speech>([^<]*)<\/emphasis>/i', $xml, $match);
             if ($match){
-                $n = $match[1];    //n  n.pl  n.pr   nnbrand
-                $brandName = $match[2];   //brand name
+                $n = $match[2];    //n  n.pl  n.pr   nnbrand
+                $brandName = $match[3];   //brand name
                 $replaceString = '<part-of-speech>'.$n.'</part-of-speech><emphasis style="italic">'.$brandName.':</emphasis>';
-                $newXml = preg_replace('/<emphasis style="italic"><part-of-speech>([^<]*)<\/part-of-speech>([^<]*)<\/emphasis>/i', $replaceString, $xml);
+                $newXml = preg_replace('/<emphasis style="italic">([^<]*)<part-of-speech>([^<]*)<\/part-of-speech>([^<]*)<\/emphasis>/i', $replaceString, $xml);
                 if ($newXml != $xml){
                     $timestamp = (new Atom())->freshTimestampString();
                     $newAtom = $atomModel->replicate();
@@ -61,7 +59,7 @@ class QuickFixPos extends Command {
                     $newAtom->created_at = $timestamp;
                     $newAtom->updated_at = $timestamp;
                     $changed++;
-                    //$newAtom->save();
+                    $newAtom->save();
                     echo "$newAtom->entity_id\t$newAtom->alpha_title\n";
                 }else{
                     echo "$atomModel->entity_id\t$atomModel->alpha_title\tsame xml\n"; //when preg_replace was not working
