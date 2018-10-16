@@ -87,7 +87,7 @@ METAHEADER;
         //If doctype is dictionary, different xml wrapper is written.
         if($doctype === 'dictionary') {
             $moleculeXml = $molecule->export($statusId);
-            switch ((int)$productId) { //TODO: make the ISBN dynamic
+            switch ((int)$productId) { //TODO: make the ISBNs dynamic
                 case 3:
                     $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">' . "\n";
                     $xml .= '<dictionary isbn="9780702074639">' . "\n"; //vet edition 5           vet 4 is 9780702032318
@@ -123,7 +123,7 @@ METAHEADER;
                             }
                         }
                         else { //legacy image
-                            $zip->addFromString($imageFile.'.jpg', file_get_contents($s3UrlProd."/9780323100120/".$imageFile.".jpg"));
+                            $zip->addFromString($imageFile.'.jpg', file_get_contents($s3UrlProd."/9780323100120/".$imageFile.".jpg"));	//TODO: make the ISBN dynamic
                         }
                     }
 
