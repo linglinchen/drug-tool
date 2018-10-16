@@ -37,6 +37,7 @@ class MoleculeExportController extends Controller {
         $statusId = $statusId === '' ? null : (int)$statusId;
         $withFigures = $request->input('withFigures');
         $withFigures = $withFigures === '' ? null : $withFigures;
+        //TODO: pick these up from configuration
         $s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
         $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 
@@ -88,9 +89,11 @@ METAHEADER;
             $moleculeXml = $molecule->export($statusId);
             switch ((int)$productId) { //TODO: make the ISBN dynamic
                 case 3:
-                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">' . "\n";
                     $xml .= '<dictionary isbn="9780702074639">' . "\n"; //vet edition 5           vet 4 is 9780702032318
+                    $xml .= '<body>' . "\n";
                     $xml .= $moleculeXml;
+                    $xml .= '</body>' . "\n";
                     $xml .= '</dictionary>';
                     $figureLog =  $molecule->addFigureLog($moleculeXml, $metaheader_vet);
                     $zip->addFromString($code . '.xml', $xml);
@@ -98,9 +101,11 @@ METAHEADER;
                     $zip->close();
                     break;
                 case 5:
-                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">' . "\n";
                     $xml .= '<dictionary isbn="9780323546355">' . "\n"; //dental edition 4          dental 3 is 9780323100120
+                    $xml .= '<body>' . "\n";
                     $xml .= $moleculeXml;
+                    $xml .= '</body>' . "\n";
                     $xml .= '</dictionary>';
                     $figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_dental);
                     $zip->addFromString($code . '.xml', $xml);
@@ -126,9 +131,11 @@ METAHEADER;
                     break;
 
                 default:
-                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "Y:\WWW1\METIS\Dictionary_4_3.dtd">' . "\n";
-                    $xml .= '<dictionary isbn="">' . "\n";  //dental edition 4 JUDY used 9780323546355 Mosby nursing drug reference
+                    $xml = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">' . "\n";
+                    $xml .= '<dictionary isbn="0000000000000">' . "\n";	//TODO: make the ISBN dynamic
+                    $xml .= '<body>' . "\n";
                     $xml .= $molecule->export($statusId);
+                    $xml .= '</body>' . "\n";
                     $xml .= '</dictionary>';
                     $zip->addFromString($code . '.xml', $xml);
                     $zip->close();
@@ -136,8 +143,8 @@ METAHEADER;
             }
         }
         else {      //drug doctypes just get orginal code
-            $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "Y:\WWW1\tools\Drugs\3_4_drug.dtd">' . "\n";
-            $xml .= '<drug_guide isbn="">' . "\n";     //TODO: make the ISBN dynamic JUDY used 9780323448260
+            $xml = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/3_8_drug.dtd">' . "\n";
+            $xml .= '<drug_guide isbn="0000000000000">' . "\n";	//TODO: make the ISBN dynamic
             $xml .= $molecule->export($statusId);
             $xml .= '</drug_guide>';
             $zip->addFromString($code .'_xml_'. date('Y-m-d_H:i:s') .'.xml', $xml);
