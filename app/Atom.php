@@ -125,7 +125,7 @@ class Atom extends AppModel {
      */
     public function updateTitle() {
         $doctype = Product::find($this->product_id)->getDoctype();
-        $this->title = $doctype->detectTitle($this->xml);
+        $this->title = $doctype->detectTitle($this);
         $this->alpha_title = self::makeAlphaTitle($this->title);
     }
 

@@ -13,7 +13,7 @@ use App\Comment;
 
 class AtomCommentController extends Controller {
     public function getAction($productId, $atomEntityId) {
-        if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId)) {
+        if(!Atom::findNewestIfNotDeleted($atomEntityId, $productId) && $atomEntityId != 0) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested atom could not be found. It might have been deleted.');
         }
 

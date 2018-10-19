@@ -23,17 +23,17 @@ abstract class AbstractDoctype {
     }
 
     /**
-     * Detect an atom's title from its XML.
+     * Detect an atom's title.
      *
-     * @param string $xml
+     * @param object $atom
      *
      * @return ?string
      */
-    public function detectTitle($xml) {
+    public function detectTitle($atom) {
         $validTitleElements = $this->getConfig()['validTitleElements'];
 
         foreach($validTitleElements as $titleElement) {
-            preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $xml, $match);
+            preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $atom->xml, $match);
 
             if($match) {
                 return trim($match[2]);
