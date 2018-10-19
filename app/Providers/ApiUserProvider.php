@@ -64,6 +64,7 @@ class ApiUserProvider extends EloquentUserProvider {
             $productId = isset($params['productId']) ? (int)$params['productId'] : null;
 
             $user->loadACL($productId);
+            $user->userProducts;
         }
 
         return $user;
