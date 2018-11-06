@@ -10,6 +10,7 @@ use App\ApiError;
 use App\ApiPayload;
 use App\User;
 use App\AccessControl;
+use App\LoginHistory;
 
 /**
  * This controller handles users.
@@ -38,6 +39,16 @@ class UserController extends Controller
 	 */
 	public function loginAction() {
 		$user = \Auth::user();
+		
+		$userId = $user->id;
+
+		$timestamp = (new LoginHistory())->freshTimestampString();
+
+		$newLoginHistory = new LoginHistory();
+		$newLoginHistory->user_id = $user->id;
+		$newLoginHistory->login_time = $timestamp;
+		$newLoginHistory->success = 'yes';
+		$newLoginHistory->save();
 
 		return new ApiPayload([
 			'user'			=> $user,
