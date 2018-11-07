@@ -13,8 +13,12 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'firstname', 'lastname', 'email', 'password',
     ];
+
+    public static $editableFields = ['firstname', 'lastname', 'email', 'password'];
+    public static $adminEditableFields = ['firstname', 'lastname'];
+
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -179,11 +183,11 @@ class User extends Authenticatable {
      *
      * @param string $password The password we are checking
      *
-     * @return boolean Is it valid?
+     * @return void
      *
      * @throws Exception If the password is invalid
      */
-    public static function isValidPassword($password) {
+    public static function validatePassword($password) {
         if(strlen($password) < 8) {
             throw new Exception('Password must be at least 8 characters.');
         }
@@ -196,7 +200,30 @@ class User extends Authenticatable {
         if(!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password)) {
             throw new Exception('Password must contain as least 1 capital and 1 lowercase letter.');
         }
+    }
 
-        return true;
+    /**
+     * Check if this user is in a valid state for saving.
+     *
+     * @return void
+     *
+     * @throws Exception If the user is invalid
+     */
+    public function validate() {
+        if(!trim($this->firstname)) {
+            throw new Exception('First name is required.');
+        }
+
+        if(!trim($this->lastname)) {
+            throw new Exception('First name is required.');
+        }
+
+        if(!preg_match('/^[^@]+@[^@]+\.[^@]+$/', $this->lastname)) {
+            throw new Exception('A valid email address is required.');
+        }
+
+        if(property_exists($this, 'password')) {
+            self::validatePassword($this->password);
+        }
     }
 }

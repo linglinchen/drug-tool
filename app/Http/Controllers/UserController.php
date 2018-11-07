@@ -62,6 +62,12 @@ class UserController extends Controller
      */
     public function putAction($productId, $id) {
         $user = User::get($id, $productId);
+
+        if(!$user) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        $input = $request->all();
         $authUser = \Auth::user();
         $acl = $authUser->ACL;
         $editingSelf = $user->id == $authUser;
@@ -70,11 +76,42 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
-        if(!$user) {
-            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        try {
+            foreach(User::editableFields as $field) {
+                if(!isset($input[$field]) || !($editingSelf || in_array($field, User::adminEditableFields))) {
+                    continue;
+                }
+
+                $user->$field = $input[$field];
+            }
+            $user->validate();
+
+            if(!$editingSelf && isset($input['groupId'])) {
+                $groupId = $input['groupId'];
+                foreach($user->userProducts as $userProduct) {
+                    if($userProduct->id == $groupId && $userProduct->productId == $productId) {
+                        if(!$groupId) {
+                            $userProduct->delete();
+                        }
+                        else {
+                            $userProduct->groupId = $groupId;
+                            $userProduct->save();
+                        }
+                        break;
+                    }
+                }
+            }
+
+            $user->save();
+
+            $refreshedUser = User::get($id, $productId);
+            $refreshedUser->userProducts;
+        }
+        catch(\Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
-        return new ApiPayload($user);
+        return new ApiPayload($refreshedUser);
     }
 
     /**
