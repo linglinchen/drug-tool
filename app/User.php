@@ -88,6 +88,7 @@ class User extends Authenticatable {
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $user->userProducts;
+            $user->domain;
             $output[$user['id']] = $user;
         }
 
