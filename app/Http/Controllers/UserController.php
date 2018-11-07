@@ -51,6 +51,33 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param integer $id The user's ID
+     *
+     * @return ApiPayload|Response
+     */
+    public function putAction($productId, $id) {
+        $user = User::get($id, $productId);
+        $authUser = \Auth::user();
+        $acl = $authUser->ACL;
+        $editingSelf = $user->id == $authUser;
+
+        if(!$editingSelf && !($acl->can('manage_users') && $user->level < $authUser->level)) {
+            return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
+        }
+
+        if(!$user) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        return new ApiPayload($user);
+    }
+
+    /**
      * This endpoint's name is misleading. All it does is provide the user's information after they have already
      * passed through the authentication layer.
      *
@@ -62,8 +89,8 @@ class UserController extends Controller
         $user = \Auth::user();
 
         return new ApiPayload([
-            'user'            => $user,
-            'permissions'    => $user->ACL->permissions
+            'user'          => $user,
+            'permissions'   => $user->ACL->permissions
         ]);
     }
 
