@@ -173,4 +173,30 @@ class User extends Authenticatable {
         return self::join('user_products', 'users.id', '=', 'user_products.user_id')
                 ->where('user_products.product_id', '=', (int)$productId);
     }
+
+    /**
+     * Check if a password meets our minimum requirements.
+     *
+     * @param string $password The password we are checking
+     *
+     * @return boolean Is it valid?
+     *
+     * @throws Exception If the password is invalid
+     */
+    public static function isValidPassword($password) {
+        if(strlen($password) < 8) {
+            throw new Exception('Password must be at least 8 characters.');
+        }
+        if(!preg_match('/\d/', $password)) {
+            throw new Exception('Password must contain as least 1 number.');
+        }
+        if(!preg_match('/[a-z]/i', $password)) {
+            throw new Exception('Password must contain as least 1 letter.');
+        }
+        if(!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password)) {
+            throw new Exception('Password must contain as least 1 capital and 1 lowercase letter.');
+        }
+
+        return true;
+    }
 }
