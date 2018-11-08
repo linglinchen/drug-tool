@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 use App\AccessControl;
 
@@ -16,7 +17,7 @@ class User extends Authenticatable {
         'firstname', 'lastname', 'email', 'password',
     ];
 
-    public static $editableFields = ['firstname', 'lastname', 'email', 'password'];
+    public static $editableFields = ['firstname', 'lastname', 'email', 'new_password'];
     public static $adminEditableFields = ['firstname', 'lastname'];
 
 
@@ -222,8 +223,8 @@ class User extends Authenticatable {
             throw new \Exception('A valid email address is required.');
         }
 
-        if(property_exists($this, 'password')) {
-            self::validatePassword($this->password);
+        if(isset($this->new_password)) {
+            self::validatePassword($this->new_password);
         }
     }
 
@@ -242,5 +243,19 @@ class User extends Authenticatable {
         }
 
         return null;
+    }
+
+    /**
+     * Check the user's validity, and save.
+     */
+    public function save(array $options = []) {
+        $this->validate();
+
+        if(isset($this->new_password)) {
+            $this->password = Hash::make($this->new_password);
+            unset($this->new_password);
+        }
+
+        parent::save($options);
     }
 }
