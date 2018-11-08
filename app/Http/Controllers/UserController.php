@@ -57,10 +57,11 @@ class UserController extends Controller
      *
      * @param integer $productId The current product's id
      * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function putAction($productId, $id) {
+    public function putAction($productId, $id, Request $request) {
         $user = User::get($id, $productId);
 
         if(!$user) {
@@ -70,15 +71,19 @@ class UserController extends Controller
         $input = $request->all();
         $authUser = \Auth::user();
         $acl = $authUser->ACL;
-        $editingSelf = $user->id == $authUser;
+        $editingSelf = $user->id == $authUser->id;
 
-        if(!$editingSelf && !($acl->can('manage_users') && $user->level < $authUser->level)) {
+        $userGroup = $user->getGroup($productId);
+        $userLevel = $userGroup ? $userGroup->level : -1;
+        $authUserGroup = $authUser->getGroup($productId);
+        $authUserLevel = $authUserGroup ? $authUserGroup->level : -1;
+        if(!$editingSelf && !($acl->can('manage_users') && $userLevel < $authUserLevel)) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
         try {
-            foreach(User::editableFields as $field) {
-                if(!isset($input[$field]) || !($editingSelf || in_array($field, User::adminEditableFields))) {
+            foreach(User::$editableFields as $field) {
+                if(!isset($input[$field]) || !($editingSelf || in_array($field, User::$adminEditableFields))) {
                     continue;
                 }
 
