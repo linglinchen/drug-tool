@@ -18,7 +18,7 @@ class User extends Authenticatable {
     ];
 
     public static $editableFields = ['firstname', 'lastname', 'email', 'new_password'];
-    public static $adminEditableFields = ['firstname', 'lastname'];
+    public static $adminModifiableFields = ['firstname', 'lastname'];
 
 
     /**
@@ -38,7 +38,7 @@ class User extends Authenticatable {
      * @param integer $id The user's ID
      * @param integer $productId The current product's id
      *
-     * @return {object} The user
+     * @return object|null The user
      */
     public static function get($id, $productId) {
         $userProductTest = self::join('user_products', 'users.id', '=', 'user_products.user_id')
