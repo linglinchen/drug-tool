@@ -185,6 +185,33 @@ class UserController extends Controller
     }
 
     /**
+     * Delete / deactivate a user.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function deleteAction($id, Request $request) {
+        $user = User::find($id);
+
+        if(!$user) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        $user->firstname = 'Deactivated';
+        $user->lastname = 'User ' . $user->id;
+        $user->email = 'deactivated_' . $user->id . '@metis.com';
+        $user->password = '';       //killing the password prevents logins
+        $user->save();
+
+        return new ApiPayload();
+    }
+
+    /**
      * This endpoint's name is misleading. All it does is provide the user's information after they have already
      * passed through the authentication layer.
      *
