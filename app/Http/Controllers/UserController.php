@@ -130,6 +130,10 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
+        if(!$user->active) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That user is deactivated.');
+        }
+
         if(!User::canModify(\Auth::user(), $user)) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
