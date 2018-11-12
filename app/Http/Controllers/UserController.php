@@ -206,6 +206,7 @@ class UserController extends Controller
         $user->lastname = 'User ' . $user->id;
         $user->email = 'deactivated_' . $user->id . '@metis.com';
         $user->password = '';       //killing the password prevents logins
+        $user->active = false;
         $user->save();
 
         return new ApiPayload();
