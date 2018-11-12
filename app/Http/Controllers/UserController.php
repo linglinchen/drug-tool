@@ -130,16 +130,7 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
-        $input = $request->all();
-        $authUser = \Auth::user();
-        $acl = $authUser->ACL;
-        $editingSelf = $user->id == $authUser->id;
-
-        $userGroup = $user->getGroup($productId);
-        $userLevel = $userGroup ? $userGroup->level : -1;
-        $authUserGroup = $authUser->getGroup($productId);
-        $authUserLevel = $authUserGroup ? $authUserGroup->level : -1;
-        if(!$editingSelf && !($acl->can('manage_users') && $userLevel < $authUserLevel)) {
+        if(!User::canModify(\Auth::user(), $user)) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
@@ -200,6 +191,10 @@ class UserController extends Controller
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        if(!User::canModify(\Auth::user(), $user)) {
+            return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
         $user->firstname = 'Deactivated';

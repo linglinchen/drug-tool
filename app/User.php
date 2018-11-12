@@ -258,4 +258,24 @@ class User extends Authenticatable {
 
         parent::save($options);
     }
+
+    /**
+     * Can the specified admin user modify the target user?
+     *
+     * @param object $adminUser The user requesting permission
+     * @param object $targetUser The user being modified
+     *
+     * @return boolean
+     */
+    public static function canModify($adminUser, $targetUser) {
+        $acl = $adminUser->ACL;
+        $editingSelf = $targetUser->id == $adminUser->id;
+
+        $targetUserGroup = $targetUser->getGroup($productId);
+        $targetUserLevel = $targetUserGroup ? $targetUserGroup->level : -1;
+        $adminUserGroup = $adminUser->getGroup($productId);
+        $adminUserLevel = $adminUserGroup ? $adminUserGroup->level : -1;
+
+        return !$editingSelf && !($acl->can('manage_users') && $targetUserLevel < $adminUserLevel);
+    }
 }
