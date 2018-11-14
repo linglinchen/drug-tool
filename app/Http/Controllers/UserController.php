@@ -30,6 +30,8 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction($productId) {
+        AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
+
         return new ApiPayload(User::publicList($productId));
     }
 
@@ -49,6 +51,8 @@ class UserController extends Controller
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
+
+        AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
 
         return new ApiPayload($user);
     }
