@@ -50,41 +50,36 @@ class AssignReviewerTasksNursing extends Command {
                         ->get();
 			$atom = $atoms->last();
 			preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $atom->xml, $matches);
-			$uniques = array_unique($matches[1]);
-			foreach ($uniques as $unique){
-				if ($unique !== ' ' && $domainIds[$unique]){
-					$domainId = $domainIds[$unique];
-					$userIds = UserDomain::getUserIds($domainId,803);
+            $uniqueDomains = array_unique($matches[1]);
+            $userIds = [];
+			foreach ($uniqueDomains as $uniqueDomain){
+				if ($uniqueDomain !== ' ' && $domainIds[$uniqueDomain]){
+					$domainId = $domainIds[$uniqueDomain];
+					$userIds = UserDomain::getUserIds($domainId, 803); //803 is reviewer group id
 				}
-			}
-
-
-            if ($atom->domain_code){   //if the atom has a domain
-                $domain = Domain::where('code', '=', $atom->domain_code)->get()->last();
-                $reviewer_id = $domain->reviewer_id;
-                if (!empty($reviewer_id)){  //if this domain has an reviewer assigned
-                    $assignment = [
-                        'atom_entity_id' => $entityId,
-                        'user_id' => $domain->reviewer_id,
-                        'task_id' => 25,
-                        'task_end' => null
-                    ];
-
-                    //check if the atom has been assigned
-                    $existing_assignments = Assignment::where('atom_entity_id', '=', $entityId)
-                                            ->where('task_id', '=', 25)->get()->last();
-                    if (is_null($existing_assignments)){
-                        Assignment::query()->insert($assignment);
-                    }
-                }
-            }else{
-                echo $atom->title."\n";
             }
+
+            foreach ($userIds as $userId) {
+                $assignment = [
+                    'atom_entity_id' => $entityId,
+                    'user_id' => $userId,
+                    'task_id' => 802,   //reviewer performs initial review
+                    'task_end' => null
+                ];
+
+                //check if the atom has been assigned
+                $existing_assignments = Assignment::where('atom_entity_id', '=', $entityId)
+                ->where('task_id', '=', 802)->where('user_id', '=', $userId)->get()->last();
+                if (is_null($existing_assignments)){
+                Assignment::query()->insert($assignment);
+                }
+            }
+            echo 'assigned for ' .$entityId. ' ' .$atom->alpha_title. "\n";
         }
     }
 
     protected static function _getAtomList() {
-        return Atom::select(['id', 'entity_id'])->where('product_id', '=', 8)->get();
+        return Atom::select(['id', 'entity_id'])->where('product_id', '=', 8)->orderBy('id')->get();
     }
 
     protected static function _organizeAtoms($list) {
