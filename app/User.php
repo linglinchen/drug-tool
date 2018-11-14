@@ -262,21 +262,43 @@ class User extends Authenticatable {
     /**
      * Can the specified admin user modify the target user?
      *
-     * @param object $adminUser The user requesting permission
      * @param object $targetUser The user being modified
-     * @param integer $productId Limit to this product
+     * @param integer [$productId] Limit to this product
      *
      * @return boolean
      */
-    public static function canModify($adminUser, $targetUser, $productId) {
-        $acl = $adminUser->ACL;
-        $editingSelf = $targetUser->id == $adminUser->id;
+    public function canModify($targetUser, $productId = null) {
+        $acl = $this->ACL;
+        $editingSelf = $targetUser->id == $this->id;
 
-        $targetUserGroup = $targetUser->getGroup($productId);
-        $targetUserLevel = $targetUserGroup ? $targetUserGroup->level : -1;
-        $adminUserGroup = $adminUser->getGroup($productId);
-        $adminUserLevel = $adminUserGroup ? $adminUserGroup->level : -1;
+        if($productId === null) {
+            $targetUserLevel = $targetUser->getHighestAdminLevel();
+            $userLevel = $this->getHighestAdminLevel();
+        }
+        else {
+            $targetUserGroup = $targetUser->getGroup($productId);
+            $targetUserLevel = $targetUserGroup ? $targetUserGroup->level : -1;
+            $userGroup = $this->getGroup($productId);
+            $userLevel = $userGroup ? $userGroup->level : -1;
+        }
 
-        return $editingSelf || ($acl->can('manage_users') && $targetUserLevel < $adminUserLevel);
+        return $editingSelf || ($acl->can('manage_users') && $targetUserLevel < $userLevel);
+    }
+
+    /**
+     * Get this user's highest admin level across all products.
+     *
+     * @return integer
+     */
+    public function getHighestAdminLevel() {
+        $level = -1;
+        foreach($this->userProducts as $userProduct) {
+            $group = Group::find($userProduct->group_id);
+            if($group) {
+                $level = max($level, $group->level);
+            }
+        }
+
+        return $level;
     }
 }

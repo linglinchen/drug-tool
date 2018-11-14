@@ -12,6 +12,7 @@ use App\User;
 use App\Group;
 use App\UserProduct;
 use App\AccessControl;
+use App\AdminLog;
 
 /**
  * This controller handles users.
@@ -109,6 +110,8 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
+        AdminLog::write('Admin ' . $authUser->id . ' created user ' . $newUser->id);
+
         return new ApiPayload($newUser);
     }
 
@@ -124,7 +127,14 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function putAction($productId, $id, Request $request) {
+        $input = $request->all();
+
+        $authUser = \Auth::user();
+        $authUserGroup = $authUser->getGroup($productId);
+        $authUserLevel = $authUserGroup ? $authUserGroup->level : -1;
+
         $user = User::get($id, $productId);
+        $editingSelf = $user->id == $authUser->id;
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
@@ -134,7 +144,7 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, 'That user is deactivated.');
         }
 
-        if(!User::canModify(\Auth::user(), $user)) {
+        if(!$authUser->canModify($user, $productId)) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
@@ -176,6 +186,8 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
+        AdminLog::write('Admin ' . $authUser->id . ' modified user ' . $user->id);
+
         return new ApiPayload($user);
     }
 
@@ -190,14 +202,15 @@ class UserController extends Controller
      *
      * @return ApiPayload|Response
      */
-    public function deleteAction($id, Request $request) {
+    public function deleteAction($productId, $id, Request $request) {
+        $authUser = \Auth::user();
         $user = User::find($id);
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
-        if(!User::canModify(\Auth::user(), $user)) {
+        if(!$authUser->canModify($user)) {
             return ApiError::buildResponse(Response::HTTP_FORBIDDEN, 'You do not have permission to modify this user.');
         }
 
@@ -205,8 +218,10 @@ class UserController extends Controller
         $user->lastname = 'User ' . $user->id;
         $user->email = 'deactivated_' . $user->id . '@metis.com';
         $user->password = '';       //killing the password prevents logins
-        $user->active = false;
+        $user->active = false;      //just to be sure... and to show a deactivation indicator in the ui
         $user->save();
+
+        AdminLog::write('Admin ' . $authUser->id . ' deactivated user ' . $user->id);
 
         return new ApiPayload();
     }

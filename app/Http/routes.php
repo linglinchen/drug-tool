@@ -78,7 +78,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
             Route::post('{productId}/user', ['uses' => 'UserController@postAction']);
             Route::get('{productId}/user/{id}', ['uses' => 'UserController@getAction']);
             Route::put('{productId}/user/{id}', ['uses' => 'UserController@putAction']);
-            Route::delete('user/{id}', ['uses' => 'UserController@deleteAction']);
+            Route::delete('{productId}/user/{id}', ['uses' => 'UserController@deleteAction']);
             Route::post('user/login', ['uses' => 'UserController@loginAction']);
             Route::post('user/logout', ['uses' => 'UserController@logoutAction']);
 
