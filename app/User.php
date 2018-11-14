@@ -264,10 +264,11 @@ class User extends Authenticatable {
      *
      * @param object $adminUser The user requesting permission
      * @param object $targetUser The user being modified
+     * @param integer $productId Limit to this product
      *
      * @return boolean
      */
-    public static function canModify($adminUser, $targetUser) {
+    public static function canModify($adminUser, $targetUser, $productId) {
         $acl = $adminUser->ACL;
         $editingSelf = $targetUser->id == $adminUser->id;
 
@@ -276,6 +277,6 @@ class User extends Authenticatable {
         $adminUserGroup = $adminUser->getGroup($productId);
         $adminUserLevel = $adminUserGroup ? $adminUserGroup->level : -1;
 
-        return !$editingSelf && !($acl->can('manage_users') && $targetUserLevel < $adminUserLevel);
+        return $editingSelf || ($acl->can('manage_users') && $targetUserLevel < $adminUserLevel);
     }
 }
