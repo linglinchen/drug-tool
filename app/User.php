@@ -46,6 +46,15 @@ class User extends Authenticatable {
     }
 
     /**
+     * Set up the UserDomain relationship.
+     *
+     * @returns HasManyThrough
+     */
+    public function userDomains() {
+        return $this->hasMany('App\UserDomain');
+    }
+
+    /**
      * Returns a list of all users with sensitive fields excluded.
      *
      * @return array The list of users, indexed by id
@@ -57,6 +66,7 @@ class User extends Authenticatable {
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $user->userProducts;
+            $user->userDomains;
             $output[$user['id']] = $user;
         }
 
@@ -71,7 +81,7 @@ class User extends Authenticatable {
     public function loadACL($productId = null) {
         $ACL = new AccessControl($productId);
         $ACL->loadPermissions($this->toArray());
-        
+
         $this->ACL = $ACL;
     }
 
@@ -102,7 +112,7 @@ class User extends Authenticatable {
                 $query->where($subQueryFunction);
             }
         }
-        
+
         return $query->get();
     }
 
@@ -139,6 +149,7 @@ class User extends Authenticatable {
 	 */
 	public static function allForProduct($productId) {
 		return self::join('user_products', 'users.id', '=', 'user_products.user_id')
-				->where('user_products.product_id', '=', (int)$productId);
+                ->where('user_products.product_id', '=', (int)$productId)
+                ->join('users_domains', 'users.id', '=', 'users_domains.user_id');
 	}
 }
