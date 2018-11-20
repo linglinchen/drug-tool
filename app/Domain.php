@@ -31,8 +31,8 @@ class Domain extends AppModel {
     	$domains = self::allForProduct($productId);
     	foreach($domains as $domain) {
     		$output[$domain['code']] = $domain['title'];
-    	}
-        print_r($output); exit;
+        }
+
     	return $output;
     }
 
