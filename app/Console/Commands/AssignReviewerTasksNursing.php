@@ -48,16 +48,22 @@ class AssignReviewerTasksNursing extends Command {
             //find out the domain of atom
             $atoms = Atom::where('entity_id', '=', $entityId)
                         ->get();
-			$atom = $atoms->last();
+            $atom = $atoms->last();
 			preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $atom->xml, $matches);
             $uniqueDomains = array_unique($matches[1]);
             $userIds = [];
 			foreach ($uniqueDomains as $uniqueDomain){
 				if ($uniqueDomain !== ' ' && $domainIds[$uniqueDomain]){
-					$domainId = $domainIds[$uniqueDomain];
-					$userIds = UserDomain::getUserIds($domainId, 803); //803 is reviewer group id
+                    $domainId = $domainIds[$uniqueDomain];
+                    $userIdsByDomain = UserDomain::getUserIds($domainId, 803); //803 is reviewer group id
+                    foreach ($userIdsByDomain as $userIdByDomain){
+                        $userIds[] = $userIdByDomain;
+                    }
 				}
             }
+            sort($userIds);
+            $userIds = array_unique($userIds);
+
 
             foreach ($userIds as $userId) {
                 $assignment = [
@@ -68,10 +74,15 @@ class AssignReviewerTasksNursing extends Command {
                 ];
 
                 //check if the atom has been assigned
-                $existing_assignments = Assignment::where('atom_entity_id', '=', $entityId)
-                ->where('task_id', '=', 802)->where('user_id', '=', $userId)->get()->last();
+                $existing_assignments =
+                    Assignment::where('atom_entity_id', '=', $entityId)
+                        ->where('task_id', '=', 802)
+                        ->where('user_id', '=', $userId)
+                        ->get()
+                        ->last();
+
                 if (is_null($existing_assignments)){
-                Assignment::query()->insert($assignment);
+                    Assignment::query()->insert($assignment);
                 }
             }
             echo 'assigned for ' .$entityId. ' ' .$atom->alpha_title. "\n";

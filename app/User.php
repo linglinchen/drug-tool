@@ -148,8 +148,8 @@ class User extends Authenticatable {
 	 * @return object The query object
 	 */
 	public static function allForProduct($productId) {
-		return self::join('user_products', 'users.id', '=', 'user_products.user_id')
-                ->where('user_products.product_id', '=', (int)$productId)
-                ->join('users_domains', 'users.id', '=', 'users_domains.user_id');
+        return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+                ->join('users_domains', 'users.id', '=', 'users_domains.user_id')
+                ->where('user_products.product_id', '=', (int)$productId);
 	}
 }
