@@ -31,7 +31,8 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction($productId) {
-        if(isset($authUser)) {
+        $authUser = \Auth::user();
+        if($authUser->isAdminAnywhere()) {
             AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
         }
 
@@ -49,15 +50,18 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function getAction($productId, $id) {
+        $authUser = \Auth::user();
         $user = User::get($id, $productId);
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
-        if(isset($authUser)) {
+        if($authUser->isAdminAnywhere()) {
             AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
         }
+
+        $user->assignments;
 
         return new ApiPayload($user);
     }

@@ -301,4 +301,13 @@ class User extends Authenticatable {
 
         return $level;
     }
+
+    /**
+     * Check if this user is an admin in any product.
+     *
+     * @return {boolean} Is it an admin?
+     */
+    public function isAdminAnywhere() {
+        return $this->getHighestAdminLevel() > 0;
+    }
 }
