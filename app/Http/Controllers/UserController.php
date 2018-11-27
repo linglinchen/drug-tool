@@ -31,9 +31,10 @@ class UserController extends Controller
      * @return ApiPayload|Response
      */
     public function listAction($productId) {
-		if(isset($authUser)){
-			AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
-		}
+        if(isset($authUser)) {
+            AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
+        }
+
         return new ApiPayload(User::publicList($productId));
     }
 
@@ -54,9 +55,9 @@ class UserController extends Controller
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
-		if(isset($authUser)){
-			AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
-		}
+        if(isset($authUser)) {
+            AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
+        }
 
         return new ApiPayload($user);
     }
@@ -133,32 +134,32 @@ class UserController extends Controller
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
-	 */
-	public function loginAction() {
-		$user = \Auth::user();
+     */
+    public function loginAction() {
+        $user = \Auth::user();
 
-		$userId = $user->id;
+        $userId = $user->id;
 
-		$timestamp = (new LoginHistory())->freshTimestampString();
+        $timestamp = (new LoginHistory())->freshTimestampString();
 
-		$newLoginHistory = new LoginHistory();
-		$newLoginHistory->user_id = $user->id;
-		$newLoginHistory->login_time = $timestamp;
-		$newLoginHistory->success = 'yes';
-		$newLoginHistory->save();
+        $newLoginHistory = new LoginHistory();
+        $newLoginHistory->user_id = $user->id;
+        $newLoginHistory->login_time = $timestamp;
+        $newLoginHistory->success = 'yes';
+        $newLoginHistory->save();
 
-		return new ApiPayload([
-			'user'			=> $user,
-			'permissions'	=> $user->ACL->permissions
-		]);
-	}
+        return new ApiPayload([
+            'user'            => $user,
+            'permissions'    => $user->ACL->permissions
+        ]);
+    }
 
-	/**
-	 * This is just an unused stub.
-	 */
-	public function logoutAction() {
-		//
-	}
+    /**
+     * This is just an unused stub.
+     */
+    public function logoutAction() {
+        //
+    }
 
     public function putAction($productId, $id, Request $request) {
         $input = $request->all();
