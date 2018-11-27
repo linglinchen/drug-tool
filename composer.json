@@ -33,8 +33,7 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/TestCase.php",
-            "database/seeds/UserTableSeeder.php"
+            "tests/TestCase.php"
         ]
     },
     "scripts": {
