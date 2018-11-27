@@ -31,6 +31,7 @@ return array(
     'CreateCommentsTable' => $baseDir . '/database/migrations/2016_02_19_223704_create_comments_table.php',
     'CreateDomainsTable' => $baseDir . '/database/migrations/2017_01_30_214841_create_domains_table.php',
     'CreateGroupsTable' => $baseDir . '/database/migrations/2016_07_06_161600_create_groups_table.php',
+    'CreateLoginHistoryTable' => $baseDir . '/database/migrations/2018_11_05_175456_create_login_history_table.php',
     'CreateMoleculesTable' => $baseDir . '/database/migrations/2016_07_21_133600_create_molecules_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_password_resets_table.php',
     'CreateProductsTable' => $baseDir . '/database/migrations/2016_10_10_125100_create_products_table.php',

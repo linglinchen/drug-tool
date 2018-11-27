@@ -27,13 +27,13 @@ class Domain extends AppModel {
      * @return string[]
      */
     public static function getLookups($productId) {
-    	$output = [];
-    	$domains = self::allForProduct($productId);
-    	foreach($domains as $domain) {
-    		$output[$domain['code']] = $domain['title'];
+        $output = [];
+        $domains = self::allForProduct($productId);
+        foreach($domains as $domain) {
+            $output[$domain['code']] = $domain['title'];
         }
 
-    	return $output;
+        return $output;
     }
 
     /**
@@ -53,7 +53,7 @@ class Domain extends AppModel {
                 ->get();
         Comment::addSummaries($atoms, $productId);
         foreach ($atoms as $atom){
-                $atom->addCommentSuggestions($atom['entity_id']);
+            $atom->addCommentSuggestions($atom['entity_id']);
         }
         foreach($atoms as $key => $atom) {
             $atom->addAssignments($productId);
@@ -61,7 +61,6 @@ class Domain extends AppModel {
             unset($atom['xml']);
             $atoms[$key] = $atom;
         }
-
 
         $domain['atoms'] = $atoms;
 
