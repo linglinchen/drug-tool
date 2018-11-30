@@ -40,12 +40,9 @@ class UserController extends Controller
             AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
         }
 
-        $includeOrphans = isset($input['include_orphans']) && (
-            strtolower($input['include_orphans']) === 'true' ||
-            $input['include_orphans'] == 1
-        );
+        $includeOrphaned = self::_includeOrphaned($request);
 
-        return new ApiPayload(User::publicList($productId, $includeOrphans));
+        return new ApiPayload(User::publicList($productId, $includeOrphaned));
     }
 
     /**
@@ -55,12 +52,14 @@ class UserController extends Controller
      *
      * @param integer $productId The current product's id
      * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function getAction($productId, $id) {
+    public function getAction($productId, $id, Request $request) {
         $authUser = \Auth::user();
-        $user = User::get($id, $productId);
+        $includeOrphaned = self::_includeOrphaned($request);
+        $user = User::get($id, $productId, $includeOrphaned);
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
@@ -291,5 +290,21 @@ class UserController extends Controller
         }
 
         return new ApiPayload(Product::withOpenAssignments($id));
+    }
+
+    /**
+     * Should we allow orphaned users to be returned?
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return boolean Include orphaned users?
+     */
+    protected static function _includeOrphaned($request) {
+        $input = $request->all();
+
+        return isset($input['include_orphaned']) && (
+            strtolower($input['include_orphaned']) === 'true' ||
+            $input['include_orphaned'] == 1
+        );
     }
 }
