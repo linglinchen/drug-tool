@@ -10,6 +10,7 @@ use App\ApiError;
 use App\ApiPayload;
 use App\User;
 use App\Group;
+use App\Product;
 use App\UserProduct;
 use App\AccessControl;
 use App\LoginHistory;
@@ -59,9 +60,9 @@ class UserController extends Controller
 
         if($authUser->isAdminAnywhere()) {
             AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
-        }
 
-        $user->assignments;
+            $user->assignments;
+        }
 
         return new ApiPayload($user);
     }
@@ -263,5 +264,24 @@ class UserController extends Controller
         AdminLog::write('Admin ' . $authUser->id . ' deactivated user ' . $user->id);
 
         return new ApiPayload();
+    }
+
+    /**
+     * GET a list of all products that the specified user has open assignments in.
+     *
+     * @api
+     *
+     * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function getProductswithOpenAssignmentsAction($id, Request $request) {
+        $user = User::find($id);
+        if(!$user) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        return new ApiPayload(Product::withOpenAssignments($id));
     }
 }
