@@ -77,17 +77,26 @@ class User extends Authenticatable {
     /**
      * Returns a list of all users with sensitive fields excluded.
      *
-     * @param integer $productId Only get users from this product
+     * @param integer $productId Get users from this product
+     * @param boolean $includeOrphans=false (optional) Include users who don't belong to a product?
      *
      * @return array The list of users, indexed by id
      */
-    public static function publicList($productId) {
+    public static function publicList($productId, $includeOrphans = false) {
         $output = [];
 
         $userIds = self::join('user_products', 'users.id', '=', 'user_products.user_id')
                 ->where('user_products.product_id', '=', $productId)
-                ->pluck('user_id')
+                ->pluck('users.id')
                 ->toArray();
+
+        if($includeOrphans) {
+            $orphanedUserIds = self::join('user_products', 'users.id', '=', 'user_products.user_id', 'left outer')
+                    ->whereNull('user_products')
+                    ->pluck('users.id')
+                    ->toArray();
+            $userIds = array_merge($userIds, $orphanedUserIds);
+        }
 
         $users = self::whereIn('id', $userIds)->get();
         foreach($users as $user) {

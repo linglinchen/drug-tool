@@ -28,16 +28,24 @@ class UserController extends Controller
      * @api
      *
      * @param integer $productId The current product's id
+     * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function listAction($productId) {
+    public function listAction($productId, Request $request) {
+        $input = $request->all();
+
         $authUser = \Auth::user();
         if($authUser->isAdminAnywhere()) {
             AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
         }
 
-        return new ApiPayload(User::publicList($productId));
+        $includeOrphans = isset($input['include_orphans']) && (
+            strtolower($input['include_orphans']) === 'true' ||
+            $input['include_orphans'] == 1
+        );
+
+        return new ApiPayload(User::publicList($productId, $includeOrphans));
     }
 
     /**
