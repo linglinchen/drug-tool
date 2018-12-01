@@ -87,6 +87,15 @@ class User extends Authenticatable {
     }
 
     /**
+     * Set up the UserDomain relationship.
+     *
+     * @returns HasManyThrough
+     */
+    public function userDomains() {
+        return $this->hasMany('App\UserDomain');
+    }
+
+    /**
      * Returns a list of all users with sensitive fields excluded.
      *
      * @param integer $productId Get users from this product
@@ -114,6 +123,7 @@ class User extends Authenticatable {
         foreach($users as $user) {
             unset($user['password'], $user['remember_token']);
             $user->userProducts;
+            $user->userDomains;
             $user->domain;
             $output[$user['id']] = $user;
         }
@@ -177,28 +187,29 @@ class User extends Authenticatable {
         return in_array($productId, $productIds);
     }
 
-    /**
-     * Select all that belong to the current product.
-     *
-     * @return {object} The query object
-     */
-    public static function allForCurrentProduct() {
-        $productId = \Auth::user()->ACL->productId;
+	/**
+	 * Select all that belong to the current product.
+	 *
+	 * @return {object} The query object
+	 */
+	public static function allForCurrentProduct() {
+		$productId = \Auth::user()->ACL->productId;
 
-        return self::allForProduct($productId);
-    }
+		return self::allForProduct($productId);
+	}
 
-    /**
-     * Select all that belong to the specified product.
-     *
-     * @param integer $productId Limit to this product
-     *
-     * @return object The query object
-     */
-    public static function allForProduct($productId) {
+	/**
+	 * Select all that belong to the specified product.
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return object The query object
+	 */
+	public static function allForProduct($productId) {
         return self::join('user_products', 'users.id', '=', 'user_products.user_id')
+                ->join('users_domains', 'users.id', '=', 'users_domains.user_id')
                 ->where('user_products.product_id', '=', (int)$productId);
-    }
+	}
 
     /**
      * Check if a password meets our minimum requirements.

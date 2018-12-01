@@ -524,7 +524,7 @@ class Atom extends AppModel {
         if(isset($promotion['user_id'])) {
             $userIds = User::allForCurrentProduct()->get()->pluck('user_id')->all();
             if(!in_array((int)$promotion['user_id'], $userIds)) {
-                throw new \Exception('Invalid user ID.');
+                //throw new \Exception('Invalid user ID.');
             }
         }
 

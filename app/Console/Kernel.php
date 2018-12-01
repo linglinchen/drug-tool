@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportStatuses::class,
         Commands\ImportUserProducts::class,
         Commands\ImportBoilerplates::class,
+        Commands\ImportUserDomains::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,
@@ -53,6 +54,7 @@ class Kernel extends ConsoleKernel
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
+        Commands\AssignReviewerTasksNursing::class,
         Commands\CreateAtomDomainsList::class,
         Commands\ListVetPotentialDeactivated::class
         ];

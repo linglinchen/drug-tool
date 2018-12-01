@@ -272,6 +272,7 @@ class Assignment extends AppModel {
                         if(!$currentAssignment->task_end && !array_key_exists('assignment_ids', $promotion)) { //it's not from mass assignment
                             $currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
                             $currentAssignment->save();
+                            exit;
                         }
                     }
                     else if ($promotion['task_id']){ //no parallel assignment, and it's not the terminal promotion
