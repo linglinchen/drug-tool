@@ -52,6 +52,8 @@ class User extends Authenticatable {
 
         $user = self::find($id);
         $user->userProducts;
+        $user->userDomains;
+        $user->domain;
 
         return $user;
     }
