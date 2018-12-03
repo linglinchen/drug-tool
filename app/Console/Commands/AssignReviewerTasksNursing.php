@@ -51,41 +51,25 @@ class AssignReviewerTasksNursing extends Command {
             $atom = $atoms->last();
 			preg_match_all('/<category[^>]*>(.*)<\/category>/Si', $atom->xml, $matches);
             $uniqueDomains = array_unique($matches[1]);
-            $userIds = [];
-			foreach ($uniqueDomains as $uniqueDomain){
-				if ($uniqueDomain !== ' ' && $domainIds[$uniqueDomain]){
-                    $domainId = $domainIds[$uniqueDomain];
-                    $userIdsByDomain = UserDomain::getUserIds($domainId, 803); //803 is reviewer group id
-                    foreach ($userIdsByDomain as $userIdByDomain){
-                        $userIds[] = $userIdByDomain;
-                    }
-				}
+            $userIds = self::_getUserIds($uniqueDomains, $domainIds, 803);//803 is reviewer group id
+            if (!empty($userIds)){
+                foreach ($userIds as $userId){
+                    //self::_makeAssignment($entityId, $userId, 802); //802 : reviewer performs initial review
+                }
+                //echo 'assigned to reviewer ' .$entityId. ' ' .$atom->alpha_title. "\n";
             }
-            sort($userIds);
-            $userIds = array_unique($userIds);
-
-
-            foreach ($userIds as $userId) {
-                $assignment = [
-                    'atom_entity_id' => $entityId,
-                    'user_id' => $userId,
-                    'task_id' => 802,   //reviewer performs initial review
-                    'task_end' => null
-                ];
-
-                //check if the atom has been assigned
-                $existing_assignments =
-                    Assignment::where('atom_entity_id', '=', $entityId)
-                        ->where('task_id', '=', 802)
-                        ->where('user_id', '=', $userId)
-                        ->get()
-                        ->last();
-
-                if (is_null($existing_assignments)){
-                    Assignment::query()->insert($assignment);
+            else{ // if no reviewer, check if it can go to editorial board
+                $userIds = self::_getUserIds($uniqueDomains, $domainIds, 802);//802 is editorial board group id
+                if (!empty($userIds)){ print_r($entityId);
+                    foreach ($userIds as $userId){
+                        self::_makeAssignment($entityId, $userId, 804); //804 : editorial board review
+                        echo 'assigned to editorial board ' .$entityId. ' ' .$atom->alpha_title. "\n";
+                    }
+                }else{ //no reviewer, no editorial board
+                    self::_makeAssignment($entityId, 820, 805); //820: author userID  ; 805 : assign to author
+                    echo 'assigned to author ' .$entityId. ' ' .$atom->alpha_title. "\n";
                 }
             }
-            echo 'assigned for ' .$entityId. ' ' .$atom->alpha_title. "\n";
         }
     }
 
@@ -103,5 +87,42 @@ class AssignReviewerTasksNursing extends Command {
             $output[$row['entity_id']][] = $row['id'];
         }
         return $output;
+    }
+
+    protected static function _makeAssignment($entityId, $userId, $taskId){
+        $assignment = [
+            'atom_entity_id' => $entityId,
+            'user_id' => $userId,
+            'task_id' => $taskId,   //reviewer performs initial review
+            'task_end' => null
+        ];
+
+        //check if the atom has been assigned
+        $existing_assignments =
+            Assignment::where('atom_entity_id', '=', $entityId)
+                ->where('task_id', '=', $taskId)
+                ->where('user_id', '=', $userId)
+                ->get()
+                ->last();
+
+        if (is_null($existing_assignments)){
+            Assignment::query()->insert($assignment);
+        }
+    }
+
+    protected static function _getUserIds($uniqueDomains, $domainIds, $groupId){
+        $userIds = [];
+        foreach ($uniqueDomains as $uniqueDomain){
+            if ($uniqueDomain !== ' ' && $domainIds[$uniqueDomain]){
+                $domainId = $domainIds[$uniqueDomain];
+                $userIdsByDomain = UserDomain::getUserIds($domainId, $groupId);
+                foreach ($userIdsByDomain as $userIdByDomain){
+                    $userIds[] = $userIdByDomain;
+                }
+            }
+        }
+        sort($userIds);
+        $userIds = array_unique($userIds);
+        return $userIds;
     }
 }
