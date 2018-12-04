@@ -10,6 +10,7 @@ use App\ApiError;
 use App\ApiPayload;
 use App\User;
 use App\Group;
+use App\Product;
 use App\UserProduct;
 use App\AccessControl;
 use App\LoginHistory;
@@ -27,14 +28,21 @@ class UserController extends Controller
      * @api
      *
      * @param integer $productId The current product's id
+     * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function listAction($productId) {
-		if(isset($authUser)){
-			AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
-		}
-        return new ApiPayload(User::publicList($productId));
+    public function listAction($productId, Request $request) {
+        $input = $request->all();
+
+        $authUser = \Auth::user();
+        if($authUser->isAdminAnywhere()) {
+            AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
+        }
+
+        $includeOrphaned = self::_includeOrphaned($request);
+
+        return new ApiPayload(User::publicList($productId, $includeOrphaned));
     }
 
     /**
@@ -44,19 +52,24 @@ class UserController extends Controller
      *
      * @param integer $productId The current product's id
      * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
      */
-    public function getAction($productId, $id) {
-        $user = User::get($id, $productId);
+    public function getAction($productId, $id, Request $request) {
+        $authUser = \Auth::user();
+        $includeOrphaned = self::_includeOrphaned($request);
+        $user = User::get($id, $productId, $includeOrphaned);
 
         if(!$user) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
         }
 
-		if(isset($authUser)){
-			AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
-		}
+        if($authUser->isAdminAnywhere()) {
+            AdminLog::write('Admin ' . $authUser->id . ' viewed user ' . $user->id);
+
+            $user->assignments;
+        }
 
         return new ApiPayload($user);
     }
@@ -133,32 +146,32 @@ class UserController extends Controller
      * @param Request $request The Laravel Request object
      *
      * @return ApiPayload|Response
-	 */
-	public function loginAction() {
-		$user = \Auth::user();
+     */
+    public function loginAction() {
+        $user = \Auth::user();
 
-		$userId = $user->id;
+        $userId = $user->id;
 
-		$timestamp = (new LoginHistory())->freshTimestampString();
+        $timestamp = (new LoginHistory())->freshTimestampString();
 
-		$newLoginHistory = new LoginHistory();
-		$newLoginHistory->user_id = $user->id;
-		$newLoginHistory->login_time = $timestamp;
-		$newLoginHistory->success = 'yes';
-		$newLoginHistory->save();
+        $newLoginHistory = new LoginHistory();
+        $newLoginHistory->user_id = $user->id;
+        $newLoginHistory->login_time = $timestamp;
+        $newLoginHistory->success = 'yes';
+        $newLoginHistory->save();
 
-		return new ApiPayload([
-			'user'			=> $user,
-			'permissions'	=> $user->ACL->permissions
-		]);
-	}
+        return new ApiPayload([
+            'user'            => $user,
+            'permissions'    => $user->ACL->permissions
+        ]);
+    }
 
-	/**
-	 * This is just an unused stub.
-	 */
-	public function logoutAction() {
-		//
-	}
+    /**
+     * This is just an unused stub.
+     */
+    public function logoutAction() {
+        //
+    }
 
     public function putAction($productId, $id, Request $request) {
         $input = $request->all();
@@ -258,5 +271,40 @@ class UserController extends Controller
         AdminLog::write('Admin ' . $authUser->id . ' deactivated user ' . $user->id);
 
         return new ApiPayload();
+    }
+
+    /**
+     * GET a list of all products that the specified user has open assignments in.
+     *
+     * @api
+     *
+     * @param integer $id The user's ID
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function getProductswithOpenAssignmentsAction($id, Request $request) {
+        $user = User::find($id);
+        if(!$user) {
+            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested user could not be found.');
+        }
+
+        return new ApiPayload(Product::withOpenAssignments($id));
+    }
+
+    /**
+     * Should we allow orphaned users to be returned?
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return boolean Include orphaned users?
+     */
+    protected static function _includeOrphaned($request) {
+        $input = $request->all();
+
+        return isset($input['include_orphaned']) && (
+            strtolower($input['include_orphaned']) === 'true' ||
+            $input['include_orphaned'] == 1
+        );
     }
 }

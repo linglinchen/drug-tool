@@ -8,6 +8,7 @@ use App\DrugDoctype;
 use App\DictionaryDoctype;
 use App\BookDoctype;
 use App\QuestionDoctype;
+use App\Assignment;
 
 class Product extends AppModel {
     protected $table = 'products';
@@ -51,5 +52,23 @@ class Product extends AppModel {
      */
     public function getCategorytype() {
         return $this->categorytype;
+    }
+
+    /**
+     * Get a list of all products that the user has open assignments in.
+     *
+     * @param integer $userId The user to check
+     *
+     * @return object[] Products with open assignments
+     */
+    public static function withOpenAssignments($userId) {
+        return Product::select('products.*')
+                ->where('assignments.user_id', '=', $userId)
+                ->join('atoms', 'atoms.product_id', '=', 'products.id')
+                ->join('assignments', 'atoms.entity_id', '=', 'assignments.atom_entity_id')
+                ->whereNotNull('assignments.task_end')
+                ->groupBy('products.id')
+                ->orderBy('products.title', 'ASC')
+                ->get();
     }
 }
