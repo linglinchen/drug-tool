@@ -306,10 +306,11 @@ METAHEADER;
 	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function addIllustrationLog($moleculeXml, $zip, $productInfo) {
+	public function addIllustrationLog($moleculeXml, $zip, $productInfo, $code) {
 		//Top Header material for tab delimited illustration log download. static content added to log.
 		$metaheader_default = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
