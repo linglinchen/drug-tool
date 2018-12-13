@@ -172,22 +172,35 @@ class Molecule extends AppModel {
      *
      * @return string
      */
-    public function export($statusId = null, $withFigures=0) {
+    public function export($statusId = null, $withFigures=0, $doctype='drug') {
         //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
         //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
         $orderedIds = $this->_getExportSortOrder($statusId);
 
         $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
-        $atoms = $orderedAtoms;
+		$atoms = $orderedAtoms;
+		
+		$xmlMolecule = [
+			'dictionary' => [
+				'root' => 'alpha',
+			],
+			'drug' => [
+				'root' => 'alpha',
+			],
+			'question' => [
+				'root' => 'chapter',
+			],
 
-        $xml = "\t" . '<alpha letter="' . $this->code . '">' . "\n";
+		];
+
+        $xml = "\t" . '<' . $xmlMolecule[$doctype]['root'] . ' letter="' . $this->code . '">' . "\n";
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
             $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
             $xml .= $atomXml . "\n";
         }
-        $xml .= "\t" . '</alpha>' . "\n";
+        $xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
 
         return $xml;
     }

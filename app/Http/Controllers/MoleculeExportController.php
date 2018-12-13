@@ -21,18 +21,18 @@ use App\ApiPayload;
  * All endpoint methods should return an ApiPayload or Response.
  */
 class MoleculeExportController extends Controller {
-    /**
-     * Export a molecule.
-     *
-     * @api
-     *
-     * @param integer $productId The current product's id
-     * @param string $code The molecule code
-     * @param Request $request The Laravel Request object
-     *
-     * @return ApiPayload|Response
-     */
-    public function getAction($productId, $code, Request $request) {
+	/**
+	 * Export a molecule.
+	 *
+	 * @api
+	 *
+	 * @param integer $productId The current product's id
+	 * @param string $code The molecule code
+	 * @param Request $request The Laravel Request object
+	 *
+	 * @return ApiPayload|Response
+	 */
+	public function getAction($productId, $code, Request $request) {
 		//TODO: build method to fetch product info from db
 		$productInfo = [
 			'isbn' => '0000000000000',
@@ -47,35 +47,27 @@ class MoleculeExportController extends Controller {
 			],
 		];
 		$statusId = $request->input('statusId');
-        $statusId = $statusId === '' ? null : (int)$statusId;
-        $withFigures = $request->input('withFigures');
-        $withFigures = $withFigures === '' ? null : $withFigures;
+		$statusId = $statusId === '' ? null : (int)$statusId;
+		$withFigures = $request->input('withFigures');
+		$withFigures = $withFigures === '' ? null : $withFigures;
 
-        //method in Product model to find doctype returns a whole object, so this is extra code to deduce the doctype from the name of the class of the object returned.
-        $doctype = 'drug';
+		//getDoctype() method in Product model returns a whole object containing className, but this is simpler to get directly from model
+		$doctype = Product::find($productId)->doctype;
 
-        $doctypeObj = Product::find($productId)->getDoctype();
-        $doctypeString = get_class($doctypeObj);
-        // This is a test that shows in network tab of browser what the statusId resolves to sends a Javascript alert to the client
+		$molecule = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first();
 
-        if($doctypeString =='App\DictionaryDoctype') {
-            $doctype = 'dictionary';
-        }
+		if(!$molecule) {
+			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+		}
 
-        $molecule = Molecule::allForCurrentProduct()
-                ->where('code', '=', $code)
-                ->get()
-                ->first();
-
-        if(!$molecule) {
-            return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-        }
-
-        $zip = new \ZipArchive();
-        $zipDate = date('Y-m-d_H:i:s');
-        $filename = $code . '_xml_'. $zipDate .'.zip';
-        $filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
-        $result = $zip->open($filepath, \ZipArchive::OVERWRITE);
+		$zip = new \ZipArchive();
+		$zipDate = date('Y-m-d_H:i:s');
+		$filename = $code . '_xml_'. $zipDate .'.zip';
+		$filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
+		$result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
 		$moleculeXml = $molecule->export($statusId);
 
@@ -128,23 +120,12 @@ class MoleculeExportController extends Controller {
 			$xml .= '</'. $xmlRoot . '>';
 			$zip->addFromString($code . '.xml', $xml);
 
-			//Top Header material for tab delimited illustration log download. static content added to log.
-			$metaheader_default = <<<METAHEADER
-Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
-Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isbn']}\t\t\t\t
-Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
-Processor:\t{$productInfo['cds']['firstname']} {$productInfo['cds']['lastname']}\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
-Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
-Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
-METAHEADER;
-
-			$figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_default);
-			$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+			$this->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
-			$this->addIllustrations($moleculeXml, $zip, $productInfo);
+			$this->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 		//If doctype is questions, different xml wrapper is written.
-		} elseif($doctype === 'questions') {
+		} elseif($doctype === 'question') {
 			$xmlDoctype = '<!DOCTYPE questions PUBLIC "-//ES//DTD questions DTD version 1.1//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/questions_1_1.dtd">';
 			$xmlRoot = 'questions';
 			
@@ -174,19 +155,12 @@ METAHEADER;
 			$xml .= '</'. $xmlRoot . '>';
 			$zip->addFromString($code . '.xml', $xml);
 
-			//TODO: generate metaheader
-			//TODO: get figureLog
-			//TODO: consider whether addIllustrationLog should modify zip or not
-			//TODO: modify the next few lines
-			//TODO: copy this to dictionary doctype above
-			$figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_default);
-			$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
-			$this->addIllustrationLog($moleculeXml, $zip, $productInfo);
+			$this->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
-			$this->addIllustrations($moleculeXml, $zip, $productInfo);
+			$this->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 
-		//urecognized and drug doctypes just get orginal code; also skip illustrations for now
+		//both urecognized and drug doctypes get original code; also skip illustrations for now
 		} else {
 			$xmlDoctype = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/3_8_drug.dtd">';
 			$xmlRoot = 'drug_guide';
@@ -202,56 +176,66 @@ METAHEADER;
 
 		$zip->close();
 
-        header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Content-Length: ' . filesize($filepath));
-        header('Access-Control-Expose-Headers: content-type,content-disposition');
-        readfile($filepath);
-        exit;
-    }
+		header('Content-Type: application/zip');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Length: ' . filesize($filepath));
+		header('Access-Control-Expose-Headers: content-type,content-disposition');
+		readfile($filepath);
+		exit;
+	}
 
-    /**
-     * Count the exportable atoms in a molecule.
-     *
-     * @api
-     *
-     * @param integer $productId The current product's id
-     * @param string $code The molecule code
-     * @param Request $request The Laravel Request object
-     *
-     * @return ApiPayload|Response
-     */
-    public function countAction($productId, $code, Request $request) {
-        $statusId = $request->input('statusId');
-        $statusId = $statusId === '' ? null : (int)$statusId;
+	/**
+	 * Count the exportable atoms in a molecule.
+	 *
+	 * @api
+	 *
+	 * @param integer $productId The current product's id
+	 * @param string $code The molecule code
+	 * @param Request $request The Laravel Request object
+	 *
+	 * @return ApiPayload|Response
+	 */
+	public function countAction($productId, $code, Request $request) {
+		$statusId = $request->input('statusId');
+		$statusId = $statusId === '' ? null : (int)$statusId;
 
-        $count = Molecule::allForCurrentProduct()
-                ->where('code', '=', $code)
-                ->get()
-                ->first()
-                ->countExportable($statusId);
+		$count = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first()
+				->countExportable($statusId);
 
-        return new ApiPayload($count);
+		return new ApiPayload($count);
 	}
 	
 
 	/**
-	 * Add illustration files to the export
+	 * Get illustration files and add to the export zip
 	 *
-	 * @api
+	 * @api TODO: move elsewhere because this doesn't return an API payload; build payload to replace
 	 *
 	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function addIllustrations($moleculeXml, $zip, $productInfo) {
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
 		//TODO: pick these up from configuration
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
 		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 		//these must be in order of preference
 		$imageExtensions = ['eps', 'tif', 'jpg',];
+
+		$molecule = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first();
+
+		if(!$molecule) {
+			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+		}
 
 		$imageFiles = $molecule->getImageFileName($moleculeXml);
 		foreach($imageFiles as $imageFile) {
@@ -299,18 +283,49 @@ METAHEADER;
 
 
 	/**
-	 * Add illustration log to the export
+	 * Get illustration log and add to the export zip
 	 *
-	 * @api
+	 * @api TODO: move elsewhere because this doesn't return an API payload; build payload to replace
 	 *
 	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
+	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function addIllustrationLog($moleculeXml, $zip, $productInfo, $code) {
+	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate) {
+		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
+
+		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+
+		return true;
+	}
+
+
+	/**
+	 * Create header and fetch content for illustration log
+	 *
+	 * @api	TODO: move elsewhere because this doesn't return an API payload
+	 *
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
+	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+	 *
+	 * @return string Content constituting the illustration log's constituents
+	 */
+	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate) {
+		$molecule = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first();
+
+		if(!$molecule) {
+			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+		}
+
 		//Top Header material for tab delimited illustration log download. static content added to log.
 		$metaheader_default = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
@@ -322,9 +337,8 @@ Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t B
 METAHEADER;
 
 		$figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_default);
-		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
 
-		return true;
+		return $figureLog;
 	}
 
 
