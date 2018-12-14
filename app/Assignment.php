@@ -269,7 +269,9 @@ class Assignment extends AppModel {
                 }
                 else{
                     if (self::_parallelAssignment($currentAssignment, $productId)){ //there's parallel assignment, only end the current Assignment
-                        if(!$currentAssignment->task_end && !array_key_exists('assignment_ids', $promotion)) { //it's not from mass assignment
+                        if(!$currentAssignment->task_end &&
+                        !array_key_exists('assignment_ids', $promotion) &&
+                        $currentAssignment->user_id == $user->id) { //it's not from mass assignment
                             $currentAssignment->task_end = DB::raw('CURRENT_TIMESTAMP');
                             $currentAssignment->save();
                             exit;
@@ -286,7 +288,7 @@ class Assignment extends AppModel {
                     }
                 }
             }else{
-                if($promotion['task_id']){
+                if($promotion['task_id'] && $currentAssignment){
                     self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
                 }
             }
