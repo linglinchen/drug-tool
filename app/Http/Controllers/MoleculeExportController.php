@@ -69,7 +69,7 @@ class MoleculeExportController extends Controller {
 		$filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
 		$result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
-		$moleculeXml = $molecule->export($statusId);
+		$moleculeXml = $molecule->export($statusId, $doctype);
 
 		//If doctype is dictionary, different xml wrapper is written.
 		if($doctype === 'dictionary') {
@@ -120,9 +120,9 @@ class MoleculeExportController extends Controller {
 			$xml .= '</'. $xmlRoot . '>';
 			$zip->addFromString($code . '.xml', $xml);
 
-			$this->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
-			$this->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 		//If doctype is questions, different xml wrapper is written.
 		} elseif($doctype === 'question') {
@@ -149,15 +149,13 @@ class MoleculeExportController extends Controller {
 
 			$xml = $xmlDoctype . "\n";
 			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= '<chapter id="c' . $code . '" number="' . $code . '">' . "\n";
 			$xml .= $moleculeXml;
-			$xml .= '</chapter>' . "\n";
 			$xml .= '</'. $xmlRoot . '>';
 			$zip->addFromString($code . '.xml', $xml);
 
-			$this->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
-			$this->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 
 		//both urecognized and drug doctypes get original code; also skip illustrations for now
@@ -207,139 +205,5 @@ class MoleculeExportController extends Controller {
 
 		return new ApiPayload($count);
 	}
-	
-
-	/**
-	 * Get illustration files and add to the export zip
-	 *
-	 * @api TODO: move elsewhere because this doesn't return an API payload; build payload to replace
-	 *
-	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
-	 * @param object $zip The zip object into which to add the illustrations
-	 * @param array $productInfo Information about the current product
-	 * @param array $code The molecule code being written
-	 *
-	 * @return boolean Also modifies provided $zip
-	 */
-	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
-		//TODO: pick these up from configuration
-		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
-		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
-		//these must be in order of preference
-		$imageExtensions = ['eps', 'tif', 'jpg',];
-
-		$molecule = Molecule::allForCurrentProduct()
-				->where('code', '=', $code)
-				->get()
-				->first();
-
-		if(!$molecule) {
-			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-		}
-
-		$imageFiles = $molecule->getImageFileName($moleculeXml);
-		foreach($imageFiles as $imageFile) {
-			$imageFound = false;
-			
-			//suggested image
-			if(substr($imageFile, 0, 9) == 'suggested') {
-				$imageDir = '';
-
-			//legacy image
-			} else {
-				$imageDir = $productInfo['isbn'] . "/";
-			}
-
-			foreach($imageExtensions as $imageExtension) {
-				$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile . "." . $imageExtension;
-				
-				//NOTE: we're ignoring errors because we _expect_ failures and want to quickly skip to next attempt
-				if(!$image = @file_get_contents($imagePath . $imageExtension)) {
-					if(!$image = @file_get_contents($imagePath . strtoupper($imageExtension))) {
-						//not found, check next extension
-						continue;
-					}
-					//found CAPITAL EXTENSION
-					$imageFound = true;
-					break;
-				}
-				//found default extension
-				$imageFound = true;
-				break;
-
-			}
-
-			if($imageFound === true && $image) {
-				$zip->addFromString(pathinfo(parse_url($imagePath, PHP_URL_PATH), PATHINFO_BASENAME), $image);
-
-			} else {
-				//TODO: log an error message because this was not found
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * Get illustration log and add to the export zip
-	 *
-	 * @api TODO: move elsewhere because this doesn't return an API payload; build payload to replace
-	 *
-	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
-	 * @param object $zip The zip object into which to add the illustrations
-	 * @param array $productInfo Information about the current product
-	 * @param array $code The molecule code being written
-	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
-	 *
-	 * @return boolean Also modifies provided $zip
-	 */
-	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate) {
-		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
-
-		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
-
-		return true;
-	}
-
-
-	/**
-	 * Create header and fetch content for illustration log
-	 *
-	 * @api	TODO: move elsewhere because this doesn't return an API payload
-	 *
-	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
-	 * @param array $productInfo Information about the current product
-	 * @param array $code The molecule code being written
-	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
-	 *
-	 * @return string Content constituting the illustration log's constituents
-	 */
-	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate) {
-		$molecule = Molecule::allForCurrentProduct()
-				->where('code', '=', $code)
-				->get()
-				->first();
-
-		if(!$molecule) {
-			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-		}
-
-		//Top Header material for tab delimited illustration log download. static content added to log.
-		$metaheader_default = <<<METAHEADER
-Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
-Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isbn']}\t\t\t\t
-Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
-Processor:\t{$productInfo['cds']['firstname']} {$productInfo['cds']['lastname']}\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
-Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
-Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
-METAHEADER;
-
-		$figureLog = $molecule->addFigureLog($moleculeXml, $metaheader_default);
-
-		return $figureLog;
-	}
-
 
 }

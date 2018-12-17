@@ -166,44 +166,66 @@ class Molecule extends AppModel {
         return $molecule;
     }
 
-    /**
-     * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId
-     * (if passed).
-     *
-     * @return string
-     */
-    public function export($statusId = null, $withFigures=0, $doctype='drug') {
-        //Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
-        //'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
-        $orderedIds = $this->_getExportSortOrder($statusId);
+	
+	/**
+	 * Export the molecule to XML. Takes the LATEST "Ready to Publish" VERSION of each atom that matches the statusId
+	 * (if passed).
+	 *
+	 * @param integer $statusId The atom (?!) statuses to include
+	 * @param string $doctype The molecule's doctype
+	 * @param integer $withFigures Whether to include figures or not (unused)
+	 *
+	 * @return string
+	 */
+	public function export($statusId = null, $doctype='drug', $withFigures=0) {
+		//Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
+		//'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
+		$orderedIds = $this->_getExportSortOrder($statusId);
 
-        $orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
+		$orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
 		$atoms = $orderedAtoms;
 		
+		//the root element and @attribute(s) of a single molecule
 		$xmlMolecule = [
 			'dictionary' => [
 				'root' => 'alpha',
+				'attributes' => [
+					'letter' => $this->code,
+				],
 			],
 			'drug' => [
 				'root' => 'alpha',
+				'attributes' => [
+					'letter' => $this->code,
+				],
 			],
 			'question' => [
 				'root' => 'chapter',
+				'attributes' => [
+					'id' => 'c' . $this->code,
+					'number' => $this->code,
+				],
 			],
 
 		];
 
-        $xml = "\t" . '<' . $xmlMolecule[$doctype]['root'] . ' letter="' . $this->code . '">' . "\n";
+		$xml = "\t" . '<' . $xmlMolecule[$doctype]['root'];
+		foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
+			$xml .= ' ' . $attName . '="' . $attValue .'"';
+		}
+		$xml .=  '>' . "\n";
+
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
             $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
             $xml .= $atomXml . "\n";
-        }
-        $xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
+		}
+		
+		$xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
 
-        return $xml;
-    }
+		return $xml;
+	}
 
     /**
      * Take the xml from above and reduce it to a log of figures.
@@ -356,6 +378,135 @@ class Molecule extends AppModel {
 
         return $imageFiles;
     }
+
+
+	/**
+	 * Get illustration files and add to the export zip
+	 *
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param object $zip The zip object into which to add the illustrations
+	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
+	 *
+	 * @return boolean Also modifies provided $zip
+	 */
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
+		//TODO: pick these up from configuration
+		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
+		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
+		//these must be in order of preference
+		$imageExtensions = ['eps', 'tif', 'jpg',];
+
+		$molecule = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first();
+
+		if(!$molecule) {
+			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+		}
+
+		$imageFiles = $this->getImageFileName($moleculeXml);
+		foreach($imageFiles as $imageFile) {
+			$imageFound = false;
+			
+			//suggested image
+			if(substr($imageFile, 0, 9) == 'suggested') {
+				$imageDir = '';
+
+			//legacy image
+			} else {
+				$imageDir = $productInfo['isbn'] . "/";
+			}
+
+			foreach($imageExtensions as $imageExtension) {
+				$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile . "." . $imageExtension;
+				
+				//NOTE: we're ignoring errors because we _expect_ failures and want to quickly skip to next attempt
+				if(!$image = @file_get_contents($imagePath . $imageExtension)) {
+					if(!$image = @file_get_contents($imagePath . strtoupper($imageExtension))) {
+						//not found, check next extension
+						continue;
+					}
+					//found CAPITAL EXTENSION
+					$imageFound = true;
+					break;
+				}
+				//found default extension
+				$imageFound = true;
+				break;
+
+			}
+
+			if($imageFound === true && $image) {
+				$zip->addFromString(pathinfo(parse_url($imagePath, PHP_URL_PATH), PATHINFO_BASENAME), $image);
+
+			} else {
+				//TODO: log an error message because this was not found
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Get illustration log and add to the export zip
+	 *
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param object $zip The zip object into which to add the illustrations
+	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
+	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+	 *
+	 * @return boolean Also modifies provided $zip
+	 */
+	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate) {
+		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
+
+		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+
+		return true;
+	}
+
+
+	/**
+	 * Create header and fetch content for illustration log
+	 *
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param array $productInfo Information about the current product
+	 * @param array $code The molecule code being written
+	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+	 *
+	 * @return string Content constituting the illustration log's constituents
+	 */
+	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate) {
+		$molecule = Molecule::allForCurrentProduct()
+				->where('code', '=', $code)
+				->get()
+				->first();
+
+		if(!$molecule) {
+			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
+		}
+
+		//Top Header material for tab delimited illustration log download. static content added to log.
+		$metaheader_default = <<<METAHEADER
+Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
+Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isbn']}\t\t\t\t
+Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
+Processor:\t{$productInfo['cds']['firstname']} {$productInfo['cds']['lastname']}\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
+Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
+Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
+METAHEADER;
+
+		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
+
+		return $figureLog;
+	}
+
+
 
     /**
      * Gets a list of properly sorted atoms that are ready for publication.
