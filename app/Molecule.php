@@ -445,7 +445,6 @@ class Molecule extends AppModel {
 			} else {
 				//TODO: log an error message because this was not found
 				//$zip->addFromString('FAILED_'.pathinfo(parse_url($imagePath . "." . $imageExtension, PHP_URL_PATH) . '.txt', PATHINFO_BASENAME), $imagePath . "." . $imageExtension);
-				return false;
 			}
 		}
 
