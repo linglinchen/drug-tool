@@ -36,6 +36,7 @@ class MoleculeExportController extends Controller {
 		//TODO: build method to fetch product info from db
 		$productInfo = [
 			'isbn' => '0000000000000',
+			'isbn_legacy' => '0000000000000',
 			'author' => '',
 			'title' => '',
 			'edition' => 0,
@@ -80,6 +81,7 @@ class MoleculeExportController extends Controller {
 				case 3:
 					$productInfo = [
 						'isbn' => '9780702074639',
+						'isbn_legacy' => '9780702032318',
 						'author' => 'Saunders',
 						'title' => 'Veterinary Dictionary',
 						'edition' => 5,
@@ -95,6 +97,7 @@ class MoleculeExportController extends Controller {
 				case 5:
 					$productInfo = [
 						'isbn' => '9780323546355',
+						'isbn_legacy' => '9780323100120',
 						'author' => 'Mosby',
 						'title' => 'Dental Dictionary',
 						'edition' => 4,
@@ -133,6 +136,7 @@ class MoleculeExportController extends Controller {
 				case 7:
 					$productInfo = [
 						'isbn' => '9780702074639',
+						'isbn_legacy' => '9780323479608',
 						'author' => 'Silvestri',
 						'title' => 'Saunders 2019-2020 Strategies for Test Success',
 						'edition' => 6,

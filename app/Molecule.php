@@ -416,19 +416,19 @@ class Molecule extends AppModel {
 
 			//legacy image
 			} else {
-				$imageDir = $productInfo['isbn'] . "/";
+				$imageDir = $productInfo['isbn_legacy'] . "/";
 			}
 
+			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
+
 			foreach($imageExtensions as $imageExtension) {
-				$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile . "." . $imageExtension;
-				
-				//NOTE: we're ignoring errors because we _expect_ failures and want to quickly skip to next attempt
-				if(!$image = @file_get_contents($imagePath . $imageExtension)) {
-					if(!$image = @file_get_contents($imagePath . strtoupper($imageExtension))) {
+				//NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
+				if(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
+					if(!$image = @file_get_contents($imagePath . "." . strtoupper($imageExtension))) {
 						//not found, check next extension
 						continue;
 					}
-					//found CAPITAL EXTENSION
+					//found CAPITAL EXTENSION (ick)
 					$imageFound = true;
 					break;
 				}
@@ -438,11 +438,13 @@ class Molecule extends AppModel {
 
 			}
 
+			//incidentally this will rename everything to use a lowercase extension
 			if($imageFound === true && $image) {
-				$zip->addFromString(pathinfo(parse_url($imagePath, PHP_URL_PATH), PATHINFO_BASENAME), $image);
+				$zip->addFromString($imageFile . "." . $imageExtension, $image);
 
 			} else {
 				//TODO: log an error message because this was not found
+				//$zip->addFromString('FAILED_'.pathinfo(parse_url($imagePath . "." . $imageExtension, PHP_URL_PATH) . '.txt', PATHINFO_BASENAME), $imagePath . "." . $imageExtension);
 				return false;
 			}
 		}
