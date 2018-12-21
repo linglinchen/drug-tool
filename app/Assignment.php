@@ -14,14 +14,13 @@ class Assignment extends AppModel {
     protected $dates = ['created_at', 'updated_at'];
     protected static $validFilters = [
         'task_id',
-        'atoms.molecule_code',
-        'atoms.domain_code',
         'assignments.user_id',
         'user_id',
         'atom_entity_id',
         'task_ended',
         'has_discussion',
-        'has_figures'
+        'has_figures',
+        'atoms'
     ];
 
 
@@ -145,6 +144,7 @@ class Assignment extends AppModel {
             return;
         }
 
+        $filters['atoms'] = self::_getAtomFilters($filters);
         foreach(self::$validFilters as $validFilter) {
             if(isset($filters[$validFilter])) {
                 $filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
@@ -204,11 +204,37 @@ class Assignment extends AppModel {
                 else if ($validFilter == 'user_id'){
                     $query->where('assignments.user_id', '=', $filterValue);
                 }
+                else if($validFilter == 'atoms' && $filters['atoms']) {
+                    $candidates = Atom::getSearchCandidates('', $productId, $filters['atoms']);
+                    $query->whereIn('atoms.id', array_keys($candidates));
+                }
                 else {
                     $query->where($validFilter, '=', $filterValue);
                 }
             }
         }
+    }
+
+    /**
+     * Process atom filters into an array.
+     *
+     * @param mixed[] $filters The filters to add represented as key => value pairs
+     *
+     * @return mixed[] The atom filters
+     */
+    protected static function _getAtomFilters($filters) {
+        $atomFilters = [];
+
+        foreach($filters as $key => $value) {
+            if(!preg_match('/^atoms\./', $key)) {
+                continue;
+            }
+
+            $atomKey = preg_replace('/^atoms\./', '', $key);
+            $atomFilters[$atomKey] = $value;
+        }
+
+        return $atomFilters;
     }
 
     /**
