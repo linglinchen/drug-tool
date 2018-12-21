@@ -19,8 +19,7 @@ class Assignment extends AppModel {
         'atom_entity_id',
         'task_ended',
         'has_discussion',
-        'has_figures',
-        'atoms'
+        'has_figures'
     ];
 
 
@@ -44,11 +43,6 @@ class Assignment extends AppModel {
         self::_addListFilters($query, $filters, $productId);
 
         self::_addOrder($query, $order);
-
-        //make sure we aren't including old versions of the atoms
-        $query->whereIn('atoms.id', function ($q) {
-            Atom::buildLatestIDQuery(null, $q);
-        });
 
         $countQuery = clone $query->getQuery();
         $countQuery->select(DB::raw('COUNT(*)'));
@@ -144,7 +138,19 @@ class Assignment extends AppModel {
             return;
         }
 
-        $filters['atoms'] = self::_getAtomFilters($filters);
+        $atomFilters = self::_getAtomFilters($filters);
+
+        if($atomFilters) {
+            $candidates = Atom::getSearchCandidates('', $productId, $atomFilters);
+            $query->whereIn('atoms.id', array_keys($candidates));
+        }
+        else {
+            //make sure we aren't including old versions of the atoms
+            $query->whereIn('atoms.id', function ($q) {
+                Atom::buildLatestIDQuery(null, $q);
+            });
+        }
+
         foreach(self::$validFilters as $validFilter) {
             if(isset($filters[$validFilter])) {
                 $filterValue = $filters[$validFilter] === '' ? null : $filters[$validFilter];
@@ -203,10 +209,6 @@ class Assignment extends AppModel {
                 }
                 else if ($validFilter == 'user_id'){
                     $query->where('assignments.user_id', '=', $filterValue);
-                }
-                else if($validFilter == 'atoms' && $filters['atoms']) {
-                    $candidates = Atom::getSearchCandidates('', $productId, $filters['atoms']);
-                    $query->whereIn('atoms.id', array_keys($candidates));
                 }
                 else {
                     $query->where($validFilter, '=', $filterValue);
