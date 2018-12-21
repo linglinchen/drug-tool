@@ -309,7 +309,7 @@ class Atom extends AppModel {
      * @param integer $productId Limit to this product
      * @param mixed[] $filters (optional) Filter the search with these key => value pairs
      *
-     * @return string[] The list of alpha titles and IDs
+     * @return string[] The list of IDs
      */
     public static function getSearchCandidates($query, $productId, $filters = []) {
         $sanitizer = '/[^a-z0-9_.]/Si';
@@ -331,7 +331,6 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-
                 });
 
         self::_addFilters($candidates, $filters);
@@ -339,7 +338,7 @@ class Atom extends AppModel {
         return $candidates
                 ->lists('alpha_title', 'id')
                 ->all();
-        }
+    }
 
     /**
      * Add filters to the query.
