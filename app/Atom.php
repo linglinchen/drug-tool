@@ -288,7 +288,7 @@ class Atom extends AppModel {
      * @return string[] The IDs of all current atoms
      */
     public static function search($query, $productId, $filters = [], $limit = 10, $page = 1) {
-        $unsortedCandidates = self::_getSearchCandidates($query, $productId, $filters);
+        $unsortedCandidates = self::getSearchCandidates($query, $productId, $filters);
         $candidates = FuzzyRank::rank($unsortedCandidates, $query);
         $count = sizeof($candidates);
         $candidates = array_keys($candidates);
@@ -311,7 +311,7 @@ class Atom extends AppModel {
      *
      * @return string[] The list of alpha titles and IDs
      */
-    protected static function _getSearchCandidates($query, $productId, $filters = []) {
+    public static function getSearchCandidates($query, $productId, $filters = []) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
