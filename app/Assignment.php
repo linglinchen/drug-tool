@@ -29,6 +29,7 @@ class Assignment extends AppModel {
      *
      * @param integer $productId Limit query to this product
      * @param ?array $filters The filters as key => value pairs
+     * @param string $queryString The user's search query
      * @param ?array $order (optional) The order column and direction
      * @param ?int $limit (optional) Max number of results per page
      * @param int $page (optional) The results page to retrieve
@@ -36,11 +37,11 @@ class Assignment extends AppModel {
      *
      * @return array The list of assignments
      */
-    public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+    public function getList($productId, $filters, $queryString, $order = [], $limit = null, $page = 1, $addAtoms = false) {
         $columns = $this->getMyColumns();
         array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
         $query = self::allForProduct($productId)->select($columns);
-        self::_addListFilters($query, $filters, $productId);
+        self::_addListFilters($query, $queryString, $filters, $productId);
 
         self::_addOrder($query, $order);
 
@@ -133,15 +134,15 @@ class Assignment extends AppModel {
      * @param object $query The query object to modify
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
-    protected static function _addListFilters($query, $filters, $productId) {
+    protected static function _addListFilters($query, $queryString, $filters, $productId) {
         if(!$filters) {
             return;
         }
 
         $atomFilters = self::_getAtomFilters($filters);
 
-        if($atomFilters) {
-            $candidates = Atom::getSearchCandidates('', $productId, $atomFilters);
+        if($atomFilters || $queryString) {
+            $candidates = Atom::getSearchCandidates($queryString, $productId, $atomFilters);
             $query->whereIn('atoms.id', array_keys($candidates));
         }
         else {

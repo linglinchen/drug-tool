@@ -32,12 +32,14 @@ class AssignmentController extends Controller {
      * @return ApiPayload|Response
      */
     public function listAction($productId, Request $request) {
+        $q = strtolower($request->input('q', ''));
         $limit = $request->input('limit') ? max((int)$request->input('limit', 10), 1) : null;
         $page = $request->input('page') ? max((int)$request->input('page', 1), 1) : null;
 
         $payload = (new Assignment)->getList(
             $productId,
             $request->input('filters'),
+            $q,
             $request->input('order'),
             $limit,
             $page,
