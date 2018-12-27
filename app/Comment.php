@@ -86,8 +86,6 @@ class Comment extends AppModel {
     public static function addSummaries($atoms, $productId) {
         $groupedComments = [];
         $commentSummaries = [];
-        //$entityIds = array_unique($atoms->pluck('entity_id')->toArray());
-        //$comments = self::getByAtomEntityId($entityIds, $productId);
         $comments = self::getByProductId($productId);
 
         foreach($comments as $comment) {
@@ -113,7 +111,8 @@ class Comment extends AppModel {
         }
     }
 
-/*get a list of max atoms ids so it is just a list of current atoms
+    /**
+     * get a list of max atoms ids so it is just a list of current atoms
      *
      * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
      * @param ?object $q (optional) Subquery object
@@ -121,9 +120,7 @@ class Comment extends AppModel {
      * @return object The constructed query object
      */
     public static function getSuggestionIds($entityId) {
-
-/*       select the Comment id and the figure src info for records that have figure queries with uploaded images.
-*/
+        //select the Comment id and the figure src info for records that have figure queries with uploaded images.
         $sql = 'select id, text,
             unnest(xpath(\'//query[@type="figure"]/suggestion/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as reviewstatus,
             unnest(xpath(\'//query[@type="figure"]/availability/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as availability,
@@ -136,7 +133,6 @@ class Comment extends AppModel {
         $idArray = json_decode(json_encode($idArray), true);
 
         return $idArray;
-
     }
 
 }

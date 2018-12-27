@@ -277,7 +277,7 @@ class Atom extends AppModel {
     }
 
     /**
-     * Get a list of the latest version of every atom that hasn't been deleted.
+     * Get a paginated list of the latest version of every atom that hasn't been deleted.
      *
      * @param string $query The user's search query
      * @param integer $productId Limit to this product
@@ -288,6 +288,30 @@ class Atom extends AppModel {
      * @return string[] The IDs of all current atoms
      */
     public static function search($query, $productId, $filters = [], $limit = 10, $page = 1) {
+        $unsortedCandidates = self::getSearchCandidates($query, $productId, $filters);
+        $candidates = FuzzyRank::rank($unsortedCandidates, $query);
+        $count = sizeof($candidates);
+        $candidates = array_keys($candidates);
+        $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
+
+        $query = self::whereIn('id', $candidates);
+
+        return [
+            'count' => $count,
+            'atoms' => $query->get()
+        ];
+    }
+
+    /**
+     * Get a list of alpha titles and IDs of the latest version of every atom that hasn't been deleted.
+     *
+     * @param string $query The user's search query
+     * @param integer $productId Limit to this product
+     * @param mixed[] $filters (optional) Filter the search with these key => value pairs
+     *
+     * @return string[] The list of IDs
+     */
+    public static function getSearchCandidates($query, $productId, $filters = []) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
@@ -307,25 +331,13 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-
                 });
 
         self::_addFilters($candidates, $filters);
-        $candidates = $candidates
+
+        return $candidates
                 ->lists('alpha_title', 'id')
                 ->all();
-
-        $candidates = FuzzyRank::rank($candidates, $query);
-        $count = sizeof($candidates);
-        $candidates = array_keys($candidates);
-        $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
-
-        $query = self::whereIn('id', $candidates);
-
-        return [
-            'count' => $count,
-            'atoms' => $query->get()
-        ];
     }
 
     /**
