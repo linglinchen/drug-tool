@@ -14,8 +14,6 @@ class Assignment extends AppModel {
     protected $dates = ['created_at', 'updated_at'];
     protected static $validFilters = [
         'task_id',
-        'atoms.molecule_code',
-        'atoms.domain_code',
         'assignments.user_id',
         'user_id',
         'atom_entity_id',
@@ -31,6 +29,7 @@ class Assignment extends AppModel {
      *
      * @param integer $productId Limit query to this product
      * @param ?array $filters The filters as key => value pairs
+     * @param string $queryString The user's search query
      * @param ?array $order (optional) The order column and direction
      * @param ?int $limit (optional) Max number of results per page
      * @param int $page (optional) The results page to retrieve
@@ -38,18 +37,13 @@ class Assignment extends AppModel {
      *
      * @return array The list of assignments
      */
-    public function getList($productId, $filters, $order = [], $limit = null, $page = 1, $addAtoms = false) {
+    public function getList($productId, $filters, $queryString, $order = [], $limit = null, $page = 1, $addAtoms = false) {
         $columns = $this->getMyColumns();
         array_unshift($columns, DB::raw('COUNT(comments.text) AS count'));
         $query = self::allForProduct($productId)->select($columns);
-        self::_addListFilters($query, $filters, $productId);
+        self::_addListFilters($query, $queryString, $filters, $productId);
 
         self::_addOrder($query, $order);
-
-        //make sure we aren't including old versions of the atoms
-        $query->whereIn('atoms.id', function ($q) {
-            Atom::buildLatestIDQuery(null, $q);
-        });
 
         $countQuery = clone $query->getQuery();
         $countQuery->select(DB::raw('COUNT(*)'));
@@ -140,9 +134,22 @@ class Assignment extends AppModel {
      * @param object $query The query object to modify
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
-    protected static function _addListFilters($query, $filters, $productId) {
+    protected static function _addListFilters($query, $queryString, $filters, $productId) {
         if(!$filters) {
             return;
+        }
+
+        $atomFilters = self::_getAtomFilters($filters);
+
+        if($atomFilters || $queryString) {
+            $candidates = Atom::getSearchCandidates($queryString, $productId, $atomFilters);
+            $query->whereIn('atoms.id', array_keys($candidates));
+        }
+        else {
+            //make sure we aren't including old versions of the atoms
+            $query->whereIn('atoms.id', function ($q) {
+                Atom::buildLatestIDQuery(null, $q);
+            });
         }
 
         foreach(self::$validFilters as $validFilter) {
@@ -209,6 +216,28 @@ class Assignment extends AppModel {
                 }
             }
         }
+    }
+
+    /**
+     * Process atom filters into an array.
+     *
+     * @param mixed[] $filters The filters to add represented as key => value pairs
+     *
+     * @return mixed[] The atom filters
+     */
+    protected static function _getAtomFilters($filters) {
+        $atomFilters = [];
+
+        foreach($filters as $key => $value) {
+            if(!preg_match('/^atoms\./', $key)) {
+                continue;
+            }
+
+            $atomKey = preg_replace('/^atoms\./', '', $key);
+            $atomFilters[$atomKey] = $value;
+        }
+
+        return $atomFilters;
     }
 
     /**
