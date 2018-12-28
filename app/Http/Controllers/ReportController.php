@@ -117,7 +117,8 @@ class ReportController extends Controller {
 
     public function suggestedImageStatsAction($productId, Request $request) {
         try {
-            $stats = Report::suggestedImageStats($productId);
+            $filters = $request->input('filters');
+            $stats = Report::suggestedImageStats($productId, $filters);
         }
         catch(Exception $e) {
             return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'No suggested image statistics were found.');
