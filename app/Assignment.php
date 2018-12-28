@@ -29,7 +29,7 @@ class Assignment extends AppModel {
      *
      * @param integer $productId Limit query to this product
      * @param ?array $filters The filters as key => value pairs
-     * @param string $queryString The user's search query
+     * @param ?string $queryString The user's search query
      * @param ?array $order (optional) The order column and direction
      * @param ?int $limit (optional) Max number of results per page
      * @param int $page (optional) The results page to retrieve
@@ -132,6 +132,8 @@ class Assignment extends AppModel {
      * Add filters to the list query.
      *
      * @param object $query The query object to modify
+     * @param string ?$queryString The user's search query
+     * @param ?array $filters The filters as key => value pairs
      * @param mixed[] $filters The filters to add represented as key => value pairs
      */
     protected static function _addListFilters($query, $queryString, $filters, $productId) {
