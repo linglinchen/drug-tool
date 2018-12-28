@@ -492,6 +492,7 @@ class Atom extends AppModel {
             [
                 'atom_entity_id' => $entityId
             ],
+            null,
             [
                 'column' => 'assignments.id',
                 'direction' => 'asc'
