@@ -173,6 +173,26 @@ class UserController extends Controller
         //
     }
 
+    /**
+     * Request a password reset.
+     *
+     * @api
+     *
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function requestResetAction(Request $request) {
+        $email = $request->input('email');
+        $user = User::getByEmail($email);
+
+        if($user) {     //fail silently, so attackers don't get extra info
+            $user->setResetToken()->sendResetEmail();
+        }
+
+        return new ApiPayload([]);
+    }
+
     public function putAction($productId, $id, Request $request) {
         $input = $request->all();
 

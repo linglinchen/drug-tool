@@ -33,11 +33,12 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['domain' => env('API_DOMAIN')], function () {
     Route::group(['prefix' => 'v1'], function () {
-        Route::group([], function () {		//unsecured endpoints
-            Route::get('logout', ['uses' => 'UserController@logoutAction']);
+        Route::group([], function () {      //unsecured endpoints
+            Route::get('user/logout', ['uses' => 'UserController@logoutAction']);
+            Route::post('user/requestReset', ['uses' => 'UserController@requestResetAction']);
         });
 
-        Route::group(['middleware' => 'auth.api'], function () {		//secured endpoints
+        Route::group(['middleware' => 'auth.api'], function () {        //secured endpoints
             Route::get('{productId}/atom', ['uses' => 'AtomController@listAction']);
             Route::post('{productId}/atom', ['uses' => 'AtomController@postAction']);
             Route::get('{productId}/atom/search', ['uses' => 'AtomController@searchAction']);

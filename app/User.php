@@ -17,9 +17,10 @@ class User extends Authenticatable {
         'firstname', 'lastname', 'email', 'password',
     ];
 
+    const TOKEN_EXPIRATION_TIME = 86400;        //1 day
+
     public static $editableFields = ['firstname', 'lastname', 'email', 'new_password'];
     public static $adminModifiableFields = ['firstname', 'lastname'];
-
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -27,7 +28,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'ACL'
+        'password', 'remember_token', 'ACL', 'reset_token', 'reset_token_expiration'
     ];
 
     public $ACL;
@@ -66,6 +67,17 @@ class User extends Authenticatable {
         $user->userProducts;
 
         return $user;
+    }
+
+    /**
+     * Get a user by their email address.
+     *
+     * @param string $email The user's email
+     *
+     * @return object|null The user
+     */
+    public static function getByEmail($email) {
+        return self::where('email', '=', $email)->first();
     }
 
     /**
@@ -341,5 +353,70 @@ class User extends Authenticatable {
      */
     public function isAdminAnywhere() {
         return $this->getHighestAdminLevel() > 0;
+    }
+
+    /**
+     * Set the user's reset token and its expiration time.
+     *
+     * @return object The user
+     */
+    public function setResetToken() {
+        $this->reset_token = self::_makeToken();
+        $this->reset_token_expiration = date(\DateTime::ISO8601, time() + self::TOKEN_EXPIRATION_TIME);
+        $this->save();
+
+        return $this;
+    }
+
+    /**
+     * Destroy the user's reset token and its expiration time.
+     *
+     * @return object The user
+     */
+    public function destroyResetToken() {
+        $this->reset_token = null;
+        $this->reset_token_expiration = null;
+        $this->save();
+
+        return $this;
+    }
+
+    /**
+     * Set the user's reset token and its expiration time.
+     *
+     * @param string $token The user-provided reset token
+     *
+     * @return boolean Is it valid?
+     */
+    public function validateResetToken($token) {
+        if(!$this->reset_token == $token) {
+            return false;
+        }
+
+        if(time() > mktime($this->reset_token_expiration)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Send a password reset email to the user.
+     *
+     * @return object The user
+     */
+    public function sendResetEmail() {
+        //TODO: make this do something
+
+        return $this;
+    }
+
+    /**
+     * Generate a UID for use as an entityId.
+     *
+     * @return string The UID
+     */
+    protected static function _makeToken() {
+        return str_replace('.', '', uniqid('', true));
     }
 }
