@@ -18,7 +18,7 @@ class ApiUserProvider extends EloquentUserProvider {
     public function retrieveById($identifier) {
         $user = parent::retrieveById($identifier);
 
-        if(!$user->active) {
+        if(!$user || !$user->active) {
             return null;
         }
 
@@ -38,7 +38,7 @@ class ApiUserProvider extends EloquentUserProvider {
     public function retrieveByToken($identifier, $token) {
         $user = parent::retrieveByToken($identifier, $token);
 
-        if(!$user->active) {
+        if(!$user || !$user->active) {
             return null;
         }
 
@@ -56,7 +56,7 @@ class ApiUserProvider extends EloquentUserProvider {
     public function retrieveByCredentials(array $credentials) {
         $user = parent::retrieveByCredentials($credentials);
 
-        if(!$user->active) {
+        if(!$user || !$user->active) {
             return null;
         }
 
