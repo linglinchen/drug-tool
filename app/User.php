@@ -406,13 +406,17 @@ class User extends Authenticatable {
             'token' => $this->reset_token
         ];
 
-        Mail::send('mail.reset', $data, function ($message) use ($request) {
+        $sent = Mail::send('mail.reset', $data, function ($message) {
             $message->to(
                 $this->email,
                 $this->firstname . ' ' . $this->lastname
             );
             $message->subject('METIS password reset');
         });
+
+        if(!$sent) {
+            throw new \Exception('Something went wrong while trying to send password reset email.');
+        }
 
         return $this;
     }
