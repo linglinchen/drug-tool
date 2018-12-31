@@ -218,7 +218,7 @@ class UserController extends Controller
 
         try {
             User::validatePassword($password);
-            $user->password = $password;
+            $user->new_password = $password;
             $user->save();
             $user->destroyResetToken();
         }
