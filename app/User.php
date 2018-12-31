@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Mail;
 
 use App\AccessControl;
 
@@ -400,8 +401,18 @@ class User extends Authenticatable {
      * @return object The user
      */
     public function sendResetEmail() {
-        //TODO: make this do something
-        //The URL in the email should be something like: https://metis-dev.elsevier.com/#!/reset/{token}
+        $data = [
+            'baseUrl' => preg_replace('/\/$/', '', env('APP_URL')),
+            'token' => $this->reset_token
+        ];
+
+        Mail::send('mail.reset', $data, function ($message) use ($request) {
+            $message->to(
+                $this->email,
+                $this->firstname . ' ' . $this->lastname
+            );
+            $message->subject('METIS password reset');
+        });
 
         return $this;
     }
