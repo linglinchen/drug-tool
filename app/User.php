@@ -401,6 +401,7 @@ class User extends Authenticatable {
      */
     public function sendResetEmail() {
         //TODO: make this do something
+        //The URL in the email should be something like: https://metis-dev.elsevier.com/#!/reset/{token}
 
         return $this;
     }
@@ -411,6 +412,6 @@ class User extends Authenticatable {
      * @return string The UID
      */
     protected static function _makeToken() {
-        return str_replace('.', '', uniqid('', true));
+        return hash('sha256', openssl_random_pseudo_bytes(64) . ':' . str_replace('.', '', uniqid('', true)));
     }
 }
