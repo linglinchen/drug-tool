@@ -382,22 +382,16 @@ class User extends Authenticatable {
     }
 
     /**
-     * Set the user's reset token and its expiration time.
+     * Get the user with the specified reset token if it has not expired.
      *
-     * @param string $token The user-provided reset token
+     * @param string $token The user's reset token
      *
-     * @return boolean Is it valid?
+     * @return ?object The user
      */
-    public function validateResetToken($token) {
-        if(!$this->reset_token == $token) {
-            return false;
-        }
-
-        if(time() > mktime($this->reset_token_expiration)) {
-            return false;
-        }
-
-        return true;
+    public static function getByToken($token) {
+        return self::where('reset_token', '=', $token)
+                ->where('reset_token_expiration', '>', date(\DateTime::ISO8601))
+                ->first();
     }
 
     /**

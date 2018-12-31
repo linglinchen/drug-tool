@@ -190,7 +190,45 @@ class UserController extends Controller
             $user->setResetToken()->sendResetEmail();
         }
 
-        return new ApiPayload([]);
+        return new ApiPayload([
+            'success' => true
+        ]);
+    }
+
+    /**
+     * Reset a user's password.
+     *
+     * @api
+     *
+     * @param string $token The user's reset token
+     * @param Request $request The Laravel Request object
+     *
+     * @return ApiPayload|Response
+     */
+    public function resetAction($token, Request $request) {
+        $password = $request->input('password');
+        $user = User::getByToken($token);
+
+        if(!$user) {
+            return ApiError::buildResponse(
+                Response::HTTP_NOT_FOUND,
+                'Your token expired. Please request another password reset, and try again.'
+            );
+        }
+
+        try {
+            User::validatePassword($password);
+            $user->password = $password;
+            $user->save();
+            $user->destroyResetToken();
+        }
+        catch(\Exception $e) {
+            return ApiError::buildResponse(Response::HTTP_BAD_REQUEST, $e->getMessage());
+        }
+
+        return new ApiPayload([
+            'success' => true
+        ]);
     }
 
     public function putAction($productId, $id, Request $request) {

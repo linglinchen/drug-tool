@@ -36,6 +36,7 @@ Route::group(['domain' => env('API_DOMAIN')], function () {
         Route::group([], function () {      //unsecured endpoints
             Route::get('user/logout', ['uses' => 'UserController@logoutAction']);
             Route::post('user/requestReset', ['uses' => 'UserController@requestResetAction']);
+            Route::post('user/reset/{token}', ['uses' => 'UserController@resetAction']);
         });
 
         Route::group(['middleware' => 'auth.api'], function () {        //secured endpoints
