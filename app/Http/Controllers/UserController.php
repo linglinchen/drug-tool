@@ -46,6 +46,35 @@ class UserController extends Controller
     }
 
     /**
+     * Get a list of users as a CSV file.
+     *
+     * @api
+     *
+     * @param integer $productId The current product's id
+     * @param Request $request The Laravel Request object
+     */
+    public function listExportAction($productId, Request $request) {
+        $input = $request->all();
+
+        $authUser = \Auth::user();
+        if($authUser->isAdminAnywhere()) {
+            AdminLog::write('Admin ' . $authUser->id . ' retrieved the user listing for product ' . $productId);
+        }
+
+        $includeOrphaned = self::_includeOrphaned($request);
+        $users = User::publicListAsCSV($productId, $includeOrphaned);
+
+        header('Content-type: text/csv');
+        header('Content-Disposition: attachment; filename="metis_users.csv"');
+        header('Access-Control-Expose-Headers: content-type,content-disposition');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo $users;
+        exit;
+    }
+
+    /**
      * GET a user by ID.
      *
      * @api

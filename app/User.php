@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
 use App\AccessControl;
+use App\Helpers\CSV;
 
 class User extends Authenticatable {
     /**
@@ -121,7 +122,6 @@ class User extends Authenticatable {
 
         $users = self::whereIn('id', $userIds)->get();
         foreach($users as $user) {
-            unset($user['password'], $user['remember_token']);
             $user->userProducts;
             $user->userDomains;
             $user->domain;
@@ -129,6 +129,43 @@ class User extends Authenticatable {
         }
 
         return $output;
+    }
+
+    /**
+     * Returns a list of all users with sensitive fields excluded.
+     *
+     * @param integer $productId Get users from this product
+     * @param boolean $includeOrphaned=false (optional) Include users who don't belong to a product?
+     *
+     * @return array The list of users, indexed by id
+     */
+    public static function publicListAsCSV($productId, $includeOrphaned = false) {
+        $users = self::publicList($productId, $includeOrphaned);
+
+        $groupCache = [];
+        $groups = Group::all();
+        foreach($groups as $group) {
+            $groupCache[$group->id] = $group;
+        }
+
+        $usersForExport = [];
+        foreach($users as $user) {
+            $group = null;
+            foreach($user->userProducts as $userProduct) {
+                if($userProduct->product_id == $productId) {
+                    $group = $groupCache[$userProduct->group_id]->title;
+                }
+            }
+
+            $usersForExport[] = [
+                'ID' => $user->id,
+                'Name' => $user->firstname . ' ' . $user->lastname,
+                'Email' => $user->email,
+                'Group' => $group
+            ];
+        }
+
+        return CSV::generateCSV($usersForExport);
     }
 
     /**
