@@ -161,7 +161,8 @@ class User extends Authenticatable {
                 'ID' => $user->id,
                 'Name' => $user->firstname . ' ' . $user->lastname,
                 'Email' => $user->email,
-                'Group' => $group
+                'Group' => $group,
+                'Active' => $user->active == 1 ? 'Yes' : 'No'
             ];
         }
 
