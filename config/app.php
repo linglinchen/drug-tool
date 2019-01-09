@@ -123,7 +123,7 @@ return [
 
     'providers' => [
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
-        Aws\Laravel\AwsServiceProvider::class,
+        //Aws\Laravel\AwsServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */
