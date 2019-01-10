@@ -28,6 +28,7 @@ class ReportController extends Controller {
     }
 
     public function editsAction($productId, Request $request) {
+        ini_set('memory_limit', '1280M');
         $validStepSizes = ['day', 'week'];
         $timezoneOffset = $request->input('timezoneOffset');
         $stepSize = $request->input('stepSize');
@@ -38,6 +39,7 @@ class ReportController extends Controller {
     }
 
     public function openAssignmentsAction($productId, Request $request) {
+        ini_set('memory_limit', '1280M');
         $validStepSizes = ['day', 'week'];
         $timezoneOffset = $request->input('timezoneOffset');
         $stepSize = $request->input('stepSize');
@@ -116,6 +118,7 @@ class ReportController extends Controller {
     }
 
     public function suggestedImageStatsAction($productId, Request $request) {
+        ini_set('memory_limit', '1280M');
         try {
             $filters = $request->input('filters');
             $stats = Report::suggestedImageStats($productId, $filters);
@@ -128,6 +131,7 @@ class ReportController extends Controller {
     }
 
     public function legacyImageStatsAction($productId, Request $request) {
+        ini_set('memory_limit', '1280M');
         try {
             $stats = Report::legacyImageStats($productId);
         }
