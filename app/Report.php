@@ -964,6 +964,7 @@ class Report extends AppModel {
      */
     protected static function _applyAssignmentToSeries(&$series, $timezoneOffset, $stepSizeSeconds, $start, $end) {
         ini_set('memory_limit', '1280M');
+        ini_set('max_execution_time', 300);
         reset($series);
         $seriesStart = key($series);
         $start = $seriesStart > $start ? $seriesStart : self::_snapTime($start, $timezoneOffset, $stepSizeSeconds, false);
