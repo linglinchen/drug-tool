@@ -207,6 +207,7 @@ class Report extends AppModel {
      */
     public static function openAssignments($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
         ini_set('memory_limit', '1280M');
+        //ini_set('max_execution_time', 300);
         $stepSize = strtolower($stepSize);
         $stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';        //sanitize, and default to 1 day
         $stepSizeSeconds = self::$_stepSizeSeconds[$stepSize];
@@ -691,8 +692,9 @@ class Report extends AppModel {
             $entityId = $comment['entity_id'];
             $alphaTitle = $comment['alpha_title'];
             if ($comment['text'] && !empty($comment['text'] && substr($comment['text'], 0, 11) === '<query type')){
-                $ob = simplexml_load_string($comment['text']);
-                $queryNodes = $ob->$comment['text']->xpath('//query[@type="figure"]');
+                $text = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $comment['text']);
+                $ob = simplexml_load_string($text);
+                $queryNodes = $ob->$text->xpath('//query[@type="figure"]');
             }
             if(!$queryNodes) {
                 continue;

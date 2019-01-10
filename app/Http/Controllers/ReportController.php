@@ -40,6 +40,7 @@ class ReportController extends Controller {
 
     public function openAssignmentsAction($productId, Request $request) {
         ini_set('memory_limit', '1280M');
+        //ini_set('max_execution_time', 300);
         $validStepSizes = ['day', 'week'];
         $timezoneOffset = $request->input('timezoneOffset');
         $stepSize = $request->input('stepSize');
