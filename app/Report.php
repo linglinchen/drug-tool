@@ -206,7 +206,7 @@ class Report extends AppModel {
      * @return array
      */
     public static function openAssignments($productId, $stepSize, $timezoneOffset = 0, $startTime = null, $endTime = null) {
-        ini_set('memory_limit', '1280M');
+        ini_set('memory_limit', '2560M');
         //ini_set('max_execution_time', 300);
         $stepSize = strtolower($stepSize);
         $stepSize = isset(self::$_stepSizeSeconds[$stepSize]) ? $stepSize : 'day';        //sanitize, and default to 1 day
