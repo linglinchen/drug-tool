@@ -118,7 +118,7 @@ class ReportController extends Controller {
     }
 
     public function suggestedImageStatsAction($productId, Request $request) {
-        ini_set('memory_limit', '1280M');
+        ini_set('memory_limit', '2560M');
         try {
             $filters = $request->input('filters');
             $stats = Report::suggestedImageStats($productId, $filters);
