@@ -690,7 +690,7 @@ class Report extends AppModel {
         foreach($commentsArray as $comment) {
             $entityId = $comment['entity_id'];
             $alphaTitle = $comment['alpha_title'];
-            if ($comment['text'] && !empty($comment['text'])){
+            if ($comment['text'] && !empty($comment['text'] && substr($comment['text'], 0, 11) === '<query type')){
                 $ob = simplexml_load_string($comment['text']);
                 $queryNodes = $ob->$comment['text']->xpath('//query[@type="figure"]');
             }
