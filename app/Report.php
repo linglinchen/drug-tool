@@ -636,36 +636,38 @@ class Report extends AppModel {
         }
 
         $implementedArray = $implementedQuery->get()->toArray();
-        foreach($implementedArray as $implemented) {
-            $ob = simplexml_load_string($implemented['xml']);
-            $figureNodes = $ob->$implemented['xml']->xpath('//component[@type="figure"]');
-            if($figureNodes){
-                $figureNodes = json_encode($figureNodes);
-                $figureNodes = (array)json_decode($figureNodes, true);
+        if (!empty($implementedArray)){
+            foreach($implementedArray as $implemented) {
+                $ob = simplexml_load_string($implemented['xml']);
+                $figureNodes = $ob->$implemented['xml']->xpath('//component[@type="figure"]');
+                if($figureNodes){
+                    $figureNodes = json_encode($figureNodes);
+                    $figureNodes = (array)json_decode($figureNodes, true);
 
-                foreach ($figureNodes as $figureNode){
-                    $file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
-                    if (substr($file, 0, 9) == 'suggested'){ //if it's suggested image
-                        $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
-                        $caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
-                        $credit = isset($figureNode['credit']) ? $figureNode['credit'] : '';
-                        $title = isset($figureNode['comp_title']) ? $figureNode['comp_title'] : '';
-                        $label = isset($figureNode['label']) ? $figureNode['label'] : '';
+                    foreach ($figureNodes as $figureNode){
+                        $file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
+                        if (substr($file, 0, 9) == 'suggested'){ //if it's suggested image
+                            $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
+                            $caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
+                            $credit = isset($figureNode['credit']) ? $figureNode['credit'] : '';
+                            $title = isset($figureNode['comp_title']) ? $figureNode['comp_title'] : '';
+                            $label = isset($figureNode['label']) ? $figureNode['label'] : '';
 
-                        $stats[] = [
-                            'entity_id' => $implemented['entity_id'],
-                            'alpha_title' => $implemented['alpha_title'],
-                            'domain_code' => $implemented['domain_code'],
-                            'availability' => $availability,
-                            'file' => $file,
-                            'caption' => $caption,
-                            'credit' => $credit,
-                            'title' => $title,
-                            'label' => $label,
-                            'imageStatus' => 'implemented'
-                        ];
+                            $stats[] = [
+                                'entity_id' => $implemented['entity_id'],
+                                'alpha_title' => $implemented['alpha_title'],
+                                'domain_code' => $implemented['domain_code'],
+                                'availability' => $availability,
+                                'file' => $file,
+                                'caption' => $caption,
+                                'credit' => $credit,
+                                'title' => $title,
+                                'label' => $label,
+                                'imageStatus' => 'implemented'
+                            ];
 
-                        $counts['implemented'] += 1;
+                            $counts['implemented'] += 1;
+                        }
                     }
                 }
             }
