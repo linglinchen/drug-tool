@@ -55,12 +55,12 @@ class ApiUserProvider extends EloquentUserProvider {
      */
     public function retrieveByCredentials(array $credentials) {
         $user = parent::retrieveByCredentials($credentials);
-
-        if(!$user->active) {
-            return null;
+        if ($user){
+            if(!$user->active) {
+                return null;
+            }
+            self::_loadACL($user);
         }
-
-        self::_loadACL($user);
 
         return $user;
     }
