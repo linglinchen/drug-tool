@@ -356,7 +356,17 @@ class Assignment extends AppModel {
         $assignment->user_id = $promotion['user_id'];
         $assignment->atom_entity_id = $atomEntityId;
 
-        $assignment->save();
+        //check if there's already an existing open assignment
+        $existing_assignment = Assignment::where('atom_entity_id', '=', $atomEntityId)
+            ->where('task_id', '=', $promotion['task_id'])
+            ->where('user_id', '=', $promotion['user_id'])
+            ->whereNull('task_end')
+            ->get()
+            ->last();
+
+        if (is_null($existing_assignment)){
+             $assignment->save();
+        }
     }
 
     /**
@@ -425,7 +435,17 @@ class Assignment extends AppModel {
                 $assignment = $assignment->replicate();
                 $assignment->created_by = $user->id;
                 $assignment->user_id = $promotion['user_id'];
-                $assignment->save();
+
+                //check if this assignment is existing
+                $existing_assignment = Assignment::where('atom_entity_id', '=', $atomEntityId)
+                    ->where('task_id', '=', $assignment->task_id)
+                    ->where('user_id', '=', $promotion['user_id'])
+                    ->whereNull('task_end')
+                    ->get()
+                    ->last();
+                if (is_null($existing_assignment)){
+                    $assignment->save();
+                }
             }
         }
      }
