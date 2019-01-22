@@ -32,7 +32,10 @@ class AssignmentController extends Controller {
      * @return ApiPayload|Response
      */
     public function listAction($productId, Request $request) {
-        $q = strtolower($request->input('q', ''));
+        $q = $request->input('q', '');
+        if (is_string($q)){   //$q could be an array of url parameters
+            $q = strtolower($q);
+        }
         $limit = $request->input('limit') ? max((int)$request->input('limit', 10), 1) : null;
         $page = $request->input('page') ? max((int)$request->input('page', 1), 1) : null;
 
