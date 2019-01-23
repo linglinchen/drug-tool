@@ -319,7 +319,7 @@ class Assignment extends AppModel {
                     }
                 }
             }else{
-                if($promotion['task_id'] && $currentAssignment){
+                if($promotion['task_id']){
                     self::_makeNewAssignment($currentAssignment, $allowedProperties, $promotion, $atomEntityId, $user);
                 }
             }
