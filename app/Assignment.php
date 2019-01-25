@@ -19,7 +19,8 @@ class Assignment extends AppModel {
         'atom_entity_id',
         'task_ended',
         'has_discussion',
-        'has_figures'
+        'has_figures',
+        'atoms.domain_code'
     ];
 
 
