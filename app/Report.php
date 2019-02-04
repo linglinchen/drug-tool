@@ -648,6 +648,22 @@ class Report extends AppModel {
 
                     foreach ($figureNodes as $figureNode){
                         $file = isset($figureNode['file']['@attributes']['src']) ? $figureNode['file']['@attributes']['src'] : '';
+                        $fileNameOnly = preg_replace('/suggested\/\d+\//', '', $file);
+                        $commentsQuery = Comment::rightJoin('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
+                            ->where('atoms.entity_id', '=', $implemented['entity_id'])
+                            ->where('comments.text', 'like', '%'.$fileNameOnly.'%');
+
+                        $commentsArray = $commentsQuery->get()->toArray();
+                            if ($commentsArray){
+                            $text = $commentsArray[0]['text'];
+                            $filenameWithExt = '';
+                        }
+                        $filenameWithExtArr = preg_match('/'.$fileNameOnly.'\.\w+/', $text, $match);
+                        if ($match){
+                            $filenameWithExt = $match[0];
+                        }
+
+
                         if (substr($file, 0, 9) == 'suggested'){ //if it's suggested image
                             $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
                             $caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
@@ -660,7 +676,7 @@ class Report extends AppModel {
                                 'alpha_title' => $implemented['alpha_title'],
                                 'domain_code' => $implemented['domain_code'],
                                 'availability' => $availability,
-                                'file' => $file,
+                                'file' => $filenameWithExt,
                                 'caption' => $caption,
                                 'credit' => $credit,
                                 'title' => $title,
