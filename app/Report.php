@@ -652,7 +652,7 @@ class Report extends AppModel {
                         $commentsQuery = Comment::rightJoin('atoms', 'comments.atom_entity_id', '=', 'atoms.entity_id')
                             ->where('atoms.entity_id', '=', $implemented['entity_id'])
                             ->where('comments.text', 'like', '%'.$fileNameOnly.'%');
-
+                        $text = '';
                         $commentsArray = $commentsQuery->get()->toArray();
                             if ($commentsArray){
                             $text = $commentsArray[0]['text'];
