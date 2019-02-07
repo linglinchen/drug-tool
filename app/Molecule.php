@@ -180,7 +180,9 @@ class Molecule extends AppModel {
 	public function export($statusId = null, $doctype='drug', $withFigures=0) {
 		//Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
 		//'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
-		$orderedIds = $this->_getExportSortOrder($statusId);
+        ini_set('memory_limit', '1280M');
+        ini_set('max_execution_time', 300);
+        $orderedIds = $this->_getExportSortOrder($statusId);
 
 		$orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
@@ -268,6 +270,9 @@ class Molecule extends AppModel {
                 $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
                 $sourceItem = htmlentities($sourceItem);
 
+                $sourceItemFull = isset($figureNode['fullcredit'])? $figureNode['fullcredit']: '';
+                $sourceItemFull = htmlentities($sourceItemFull);
+
                 $availability = isset($figureNode['@attributes']['availability']) ?
                         $figureNode['@attributes']['availability'] :
                         '';
@@ -290,12 +295,12 @@ class Molecule extends AppModel {
                             foreach($figureNode['file'] as $file) {
                                 if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
                                     $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $sourceItem . "\t" . $file['@attributes']['src'] .
+                                            "\t" . $sourceItem . "\t" . $sourceItemFull. "\t". $file['@attributes']['src'] .
                                             "\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                                 }
                                 else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
                                     $figureRows .= "\n" . $term."\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $sourceItem."\t" . $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
+                                            "\t" . $sourceItem."\t" . $sourceItemFull. "\t". $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
                                             $availability.' ';
                                 }
 
@@ -306,7 +311,7 @@ class Molecule extends AppModel {
                             isset($figureNode['file']['@attributes']['src'])
                         ) {
                             $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
-                                    $sourceItem . "\t" . $figureNode['file']['@attributes']['src'] .
+                                    $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['file']['@attributes']['src'] .
                                     "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                         }
                     }
@@ -316,7 +321,7 @@ class Molecule extends AppModel {
                     ) {
                         //img situation: [p]->[src_stub] is equal to [file][src]
                         $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
-                                $sourceItem . "\t" . $figureNode['p']['@attributes']['src_stub'] .
+                                $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['p']['@attributes']['src_stub'] .
                                 "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                     }
                 }
@@ -499,7 +504,7 @@ Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isb
 Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
 Processor:\t{$productInfo['cds']['firstname']} {$productInfo['cds']['lastname']}\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
 Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
-Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
+Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tLong credit line\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 
 		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);

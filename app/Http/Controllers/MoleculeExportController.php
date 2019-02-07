@@ -34,6 +34,9 @@ class MoleculeExportController extends Controller {
 	 */
 	public function getAction($productId, $code, Request $request) {
 		//TODO: build method to fetch product info from db
+		ini_set('max_execution_time', 300);
+		ini_set('memory_limit', '2560M');
+
 		$productInfo = [
 			'isbn' => '0000000000000',
 			'isbn_legacy' => '0000000000000',
