@@ -54,22 +54,26 @@ class AssignReviewerTasksNursing extends Command {
             $userIds = self::_getUserIds($uniqueDomains, $domainIds, 803);//803 is reviewer group id
             if (!empty($userIds)){
                 foreach ($userIds as $userId){
-                    //self::_makeAssignment($entityId, $userId, 802); //802 : reviewer performs initial review
+                    self::_makeAssignment($entityId, $userId, 802); //802 : reviewer performs initial review
                 }
-                //echo 'assigned to reviewer ' .$entityId. ' ' .$atom->alpha_title. "\n";
+                echo 'assigned to reviewer ' .$entityId. ' ' .$atom->alpha_title. "\n";
             }
-            else{ // if no reviewer, check if it can go to editorial board
-                $userIds = self::_getUserIds($uniqueDomains, $domainIds, 802);//802 is editorial board group id
-                if (!empty($userIds)){ print_r($entityId);
-                    foreach ($userIds as $userId){
-                        self::_makeAssignment($entityId, $userId, 804); //804 : editorial board review
-                        echo 'assigned to editorial board ' .$entityId. ' ' .$atom->alpha_title. "\n";
-                    }
-                }else{ //no reviewer, no editorial board
-                    self::_makeAssignment($entityId, 820, 805); //820: author userID  ; 805 : assign to author
-                    echo 'assigned to author ' .$entityId. ' ' .$atom->alpha_title. "\n";
-                }
+            else{ //assign to Sarah
+                self::_makeAssignment($entityId, 13, 801); //801: Editorial initial review   13:Sara userId
+                echo 'assigned to reviewer ' .$entityId. ' ' .$atom->alpha_title. "\n";
             }
+            // else{ // if no reviewer, check if it can go to editorial board
+            //     $userIds = self::_getUserIds($uniqueDomains, $domainIds, 802);//802 is editorial board group id
+            //     if (!empty($userIds)){ print_r($entityId);
+            //         foreach ($userIds as $userId){
+            //             self::_makeAssignment($entityId, $userId, 804); //804 : editorial board review
+            //             echo 'assigned to editorial board ' .$entityId. ' ' .$atom->alpha_title. "\n";
+            //         }
+            //     }else{ //no reviewer, no editorial board
+            //         self::_makeAssignment($entityId, 820, 805); //820: author userID  ; 805 : assign to author
+            //         echo 'assigned to author ' .$entityId. ' ' .$atom->alpha_title. "\n";
+            //     }
+            // }
         }
     }
 
@@ -98,10 +102,16 @@ class AssignReviewerTasksNursing extends Command {
         ];
 
         //check if the atom has been assigned
+        // $existing_assignments =
+        //     Assignment::where('atom_entity_id', '=', $entityId)
+        //         ->where('task_id', '=', $taskId)
+        //         ->where('user_id', '=', $userId)
+        //         ->get()
+        //         ->last();
+
+        //check if the atom has exsiting assignments, some new terms have been generated
         $existing_assignments =
             Assignment::where('atom_entity_id', '=', $entityId)
-                ->where('task_id', '=', $taskId)
-                ->where('user_id', '=', $userId)
                 ->get()
                 ->last();
 
