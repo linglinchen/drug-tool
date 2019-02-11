@@ -112,6 +112,7 @@ class AssignReviewerTasksNursing extends Command {
         //check if the atom has exsiting assignments, some new terms have been generated
         $existing_assignments =
             Assignment::where('atom_entity_id', '=', $entityId)
+                ->where('task_id', '!=', $taskId)
                 ->get()
                 ->last();
 
