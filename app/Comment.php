@@ -112,27 +112,26 @@ class Comment extends AppModel {
     }
 
     /**
-     * get a list of max atoms ids so it is just a list of current atoms
+     * get a list of comments arrays
      *
-     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
-     * @param ?object $q (optional) Subquery object
+     * @param integer
      *
      * @return object The constructed query object
      */
     public static function getSuggestionIds($entityId) {
         //select the Comment id and the figure src info for records that have figure queries with uploaded images.
+        //full credit could be empty, so cannot use unnest
         $sql = 'select id, text,
             unnest(xpath(\'//query[@type="figure"]/suggestion/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as reviewstatus,
             unnest(xpath(\'//query[@type="figure"]/availability/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as availability,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/ce_caption/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as caption,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/credit/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as credit,
-            unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/fullcredit/text()\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as fullcredit,
+            array_to_string(xpath(\'//query[@type="figure"]/component[@type="figure"]/fullcredit/text()\', text::xml), \'\') as fullcredit,
             unnest(xpath(\'//query[@type="figure"]/component[@type="figure"]/file/@src\', XMLPARSE(DOCUMENT CONCAT(\'<root>\', text, \'</root>\'))::xml)) as figurefile from comments
             where atom_entity_id=\''. $entityId .'\'';
 
         $idArray= DB::select($sql);
         $idArray = json_decode(json_encode($idArray), true);
-
         return $idArray;
     }
 
