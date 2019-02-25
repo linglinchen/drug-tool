@@ -17,6 +17,11 @@ class ApiUserProvider extends EloquentUserProvider {
      */
     public function retrieveById($identifier) {
         $user = parent::retrieveById($identifier);
+
+        if(!$user->active) {
+            return null;
+        }
+
         $user->joinAll();
         self::_loadACL($user);
 
@@ -32,6 +37,11 @@ class ApiUserProvider extends EloquentUserProvider {
      */
     public function retrieveByToken($identifier, $token) {
         $user = parent::retrieveByToken($identifier, $token);
+
+        if(!$user->active) {
+            return null;
+        }
+
         self::_loadACL($user);
 
         return $user;
@@ -45,7 +55,12 @@ class ApiUserProvider extends EloquentUserProvider {
      */
     public function retrieveByCredentials(array $credentials) {
         $user = parent::retrieveByCredentials($credentials);
-        self::_loadACL($user);
+        if ($user){
+            if(!$user->active) {
+                return null;
+            }
+            self::_loadACL($user);
+        }
 
         return $user;
     }
@@ -64,6 +79,7 @@ class ApiUserProvider extends EloquentUserProvider {
             $productId = isset($params['productId']) ? (int)$params['productId'] : null;
 
             $user->loadACL($productId);
+            $user->userProducts;
         }
 
         return $user;

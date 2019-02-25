@@ -123,6 +123,7 @@ return [
 
     'providers' => [
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
+        //Aws\Laravel\AwsServiceProvider::class,
         /*
          * Laravel Framework Service Providers...
          */
@@ -169,7 +170,7 @@ return [
     */
 
     'aliases' => [
-
+        'AWS'       => Aws\Laravel\AwsFacade::class,
         'App'       => Illuminate\Support\Facades\App::class,
         'Artisan'   => Illuminate\Support\Facades\Artisan::class,
         'Auth'      => Illuminate\Support\Facades\Auth::class,

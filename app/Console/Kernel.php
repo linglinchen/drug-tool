@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         Commands\ImportStatuses::class,
         Commands\ImportUserProducts::class,
         Commands\ImportBoilerplates::class,
+        Commands\ImportUserDomains::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,
@@ -46,9 +47,14 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixAssignToMargaret::class,
         Commands\QuickFixRecoverDentalPharm::class,
         Commands\QuickFixDentalMargaret::class,
+        Commands\QuickFixRemoveQuesReference::class,
+        Commands\QuickFixImageAvailability::class,
+        Commands\QuickFixContentArea::class,
+        Commands\QuickFixPos::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
+        Commands\AssignReviewerTasksNursing::class,
         Commands\CreateAtomDomainsList::class,
         Commands\ListVetPotentialDeactivated::class
         ];

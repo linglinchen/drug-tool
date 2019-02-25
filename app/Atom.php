@@ -49,6 +49,24 @@ class Atom extends AppModel {
     ];
 
     /**
+     * @var string[] The names of database columns that we don't consider worth automatically changing the status or
+     *     creating a new atom version for
+     */
+    protected static $insignificantColumns = [
+        'id',
+        'molecule_code',
+        'modified_by',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'status_id',
+        'sort',
+        'product_id',
+        'domain_code',
+        'edition'
+    ];
+
+    /**
      * Save this atom. Automatically updates meta data, and assigns IDs to XML elements when appropriate.
      *
      * @param array $options
@@ -60,38 +78,37 @@ class Atom extends AppModel {
         $doctype = Product::find($this->product_id)->getDoctype();
         $this->xml = $doctype->assignXMLIds($this->xml);
         $this->modified_by = \Auth::user()['id'];
+        $autoStatus = array_get($options, 'autoStatus', true);
 
-        // if ($this->modified_by == NULL){
-        //     $this->modified_by = 200;
-        // }
-
-        $pubStatusId = Status::getReadyForPublicationStatusId($this->product_id)->id;
-        $devStatusId = Status::getDevStatusId($this->product_id)->id;
-        if (array_key_exists('massupdate', $this->attributes)){
-            array_pop($this->attributes); //remove 'massupdate' element
-        }
-        else {
-            if ($this->status_id == $pubStatusId || $this->status_id == NULL) //if its' ready for publication or null
-            {
-                $this->status_id = $devStatusId; //change status to be 'development when saving'
-            } //if status is deactivated or development, no need to change
-        }
         if(!$this->alpha_title) {
             throw new \Exception('Missing title.');
         }
 
-        if($this->_isTitleInUse()) {
-            $usedtitle = $this->alpha_title;
-            $usedid = $this->entity_id;
-            throw new \Exception('That title  '. $usedtitle .' with entityid ' .$usedid. ' is already used by another atom within this product.');
+        $previousVersion = ($this->entity_id && $this->product_id) ?
+                self::findNewest($this->entity_id, $this->product_id) :
+                null;
+
+        if($autoStatus && $this->_hasSignificantChanges()) {
+            $devStatusId = Status::getDevStatusId($this->product_id)->id;
+            $this->status_id = $devStatusId; //change status to be development when saving
+        }
+
+        if(!$previousVersion && $this->_isTitleInUse()) {
+            $usedTitle = $this->alpha_title;
+            $usedId = $this->entity_id;
+            throw new \Exception(
+                'That title  ' . $usedTitle . ' with entityId ' . $usedId . ' is already used by another atom within ' .
+                'this product.'
+            );
         }
 
         $doctype->beforeSave($this);
         parent::save($options);
     }
 
-/**
-     * Save this atom in simply way, e.g. when only sort order of atom changes
+    /**
+     * Save this atom in simple way, e.g. when only sort order of atom changes. Does not generate a new version of the
+     * atom.
      *
      * @param array $options
      *
@@ -108,7 +125,7 @@ class Atom extends AppModel {
      */
     public function updateTitle() {
         $doctype = Product::find($this->product_id)->getDoctype();
-        $this->title = $doctype->detectTitle($this->xml);
+        $this->title = $doctype->detectTitle($this);
         $this->alpha_title = self::makeAlphaTitle($this->title);
     }
 
@@ -135,39 +152,64 @@ class Atom extends AppModel {
         return str_replace('.', '', uniqid('', true));
     }
 
-    /**
-     * Build a query to find the latest version of every atom that hasn't been deleted.
-     *
-     * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es)
-     * @param ?object $q (optional) Subquery object
-     *
-     * @return object The constructed query object
-     */
-    public static function buildLatestIDQuery($statusId = null, $q = null) {
-        $table = (new self)->getTable();
-        $statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
+	/**
+	 * Build a query to find the latest version of every atom that hasn't been *deleted* (not same as "deactivated" status)
+	 *
+	 * @param ?integer|integer[] $statusId (optional) Only return atoms with the specified status(es) (accepts 0-prefixed patterns)
+	 * @param ?object $q (optional) Subquery object
+	 *
+	 * @return object The constructed query object
+	*/
+	public static function buildLatestIDQuery($statusId = null, $q = null) {
+		$table = (new self)->getTable();
+		$statusId = is_array($statusId) ? $statusId : ($statusId === null ? null : [$statusId]);
 
-        //limit the search to current product to cut down on database effort
-        $currentProductId = (int)self::getCurrentProductId();
+		//limit the search to current product to cut down on database effort
+		$currentProductId = (int)self::getCurrentProductId();
 
+		//prefixing with '0' will fetch statuses based on the naming convention pattern established on product 1
+		$statusCount = true;
+		if($statusId !== null) {
+			foreach($statusId as &$statusPattern) {
+				if(substr($statusPattern, 0, 1) == '0') {
+					switch ($statusPattern) {
+						case '0100':
+							$statusPattern = Status::getDevStatusId($currentProductId)->id;
+							break;
+						case '0200':
+							$statusPattern = Status::getReadyForPublicationStatusId($currentProductId)->id;
+							break;
+						case '0300':
+							$statusPattern = Status::getDeactivatedStatusId($currentProductId)->id;
+							break;
+						default:
+							$statusCount = false;
+					}
+				}
+			}
+		}
 
-        $query = $q ? $q->select('id') : self::select('id');
-        $query->from($table);
+		if(!$statusCount) {
+			throw new \Exception('Invalid status ID.');
+		}
 
-        $query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
-                    $q->select(DB::raw('MAX(id)'))
-                        ->from($table)->where('product_id', '=', $currentProductId);
+		$query = $q ? $q->select('id') : self::select('id');
+		$query->from($table);
 
-                    if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
-                        $q->whereIn('status_id', $statusId);
-                    }
+		$query->whereIn('id', function ($q) use ($table, $statusId, $currentProductId) {
+				$q->select(DB::raw('MAX(id)'))
+					->from($table)->where('product_id', '=', $currentProductId);
+				$q->groupBy('entity_id');
+			})
+			->whereNull('deleted_at');
+			//->orderBy('alpha_title', 'ASC');
 
-                    $q->groupBy('entity_id');
-                })
-                ->whereNull('deleted_at');
-                //->orderBy('alpha_title', 'ASC');
-        return $query;
-    }
+		if($statusId !== null && (!is_array($statusId) || sizeof($statusId))) {
+			$query->whereIn('status_id', $statusId);
+		}
+
+		return $query;
+	}
     /**
      * Legacy version of build a query to find the latest version of every atom that hasn't been deleted.
      *  Used by reports and potentially other functions that pass different variables
@@ -197,7 +239,6 @@ class Atom extends AppModel {
                 ->orderBy('alpha_title', 'ASC');
         return $query;
     }
-
 
     /**
      * Get a list of discontinued monographs.
@@ -236,7 +277,7 @@ class Atom extends AppModel {
     }
 
     /**
-     * Get a list of the latest version of every atom that hasn't been deleted.
+     * Get a paginated list of the latest version of every atom that hasn't been deleted.
      *
      * @param string $query The user's search query
      * @param integer $productId Limit to this product
@@ -247,6 +288,30 @@ class Atom extends AppModel {
      * @return string[] The IDs of all current atoms
      */
     public static function search($query, $productId, $filters = [], $limit = 10, $page = 1) {
+        $unsortedCandidates = self::getSearchCandidates($query, $productId, $filters);
+        $candidates = FuzzyRank::rank($unsortedCandidates, $query);
+        $count = sizeof($candidates);
+        $candidates = array_keys($candidates);
+        $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
+
+        $query = self::whereIn('id', $candidates);
+
+        return [
+            'count' => $count,
+            'atoms' => $query->get()
+        ];
+    }
+
+    /**
+     * Get a list of alpha titles and IDs of the latest version of every atom that hasn't been deleted.
+     *
+     * @param string $query The user's search query
+     * @param integer $productId Limit to this product
+     * @param mixed[] $filters (optional) Filter the search with these key => value pairs
+     *
+     * @return string[] The list of IDs
+     */
+    public static function getSearchCandidates($query, $productId, $filters = []) {
         $sanitizer = '/[^a-z0-9_.]/Si';
         $queryTitleConditions = [];
         $queryalphaTitleConditions = [];
@@ -266,25 +331,13 @@ class Atom extends AppModel {
                 ->where(function ($query) use ($queryTitleConditions, $queryalphaTitleConditions) {
                     $query->where($queryTitleConditions)
                             ->orWhere($queryalphaTitleConditions);
-
                 });
 
         self::_addFilters($candidates, $filters);
-        $candidates = $candidates
+
+        return $candidates
                 ->lists('alpha_title', 'id')
                 ->all();
-
-        $candidates = FuzzyRank::rank($candidates, $query);
-        $count = sizeof($candidates);
-        $candidates = array_keys($candidates);
-        $candidates = array_slice($candidates, ($page - 1) * $limit, $limit);       //handling paging outside of sql for better performance
-
-        $query = self::whereIn('id', $candidates);
-
-        return [
-            'count' => $count,
-            'atoms' => $query->get()
-        ];
     }
 
     /**
@@ -439,6 +492,7 @@ class Atom extends AppModel {
             [
                 'atom_entity_id' => $entityId
             ],
+            null,
             [
                 'column' => 'assignments.id',
                 'direction' => 'asc'
@@ -483,7 +537,7 @@ class Atom extends AppModel {
         if(isset($promotion['user_id'])) {
             $userIds = User::allForCurrentProduct()->get()->pluck('user_id')->all();
             if(!in_array((int)$promotion['user_id'], $userIds)) {
-                throw new \Exception('Invalid user ID.');
+                //throw new \Exception('Invalid user ID.');
             }
         }
 
@@ -499,7 +553,9 @@ class Atom extends AppModel {
             //we might need to update the atom
             if(isset($promotion['status_id'])) {
                 $atom->status_id = $promotion['status_id'];
-                $atom->save();
+                $atom->save([
+                    'autoStatus'    => false
+                ]);
             }
 
             $atom = $atom->addAssignments($productId)->toArray();
@@ -553,5 +609,29 @@ class Atom extends AppModel {
                 ->count();
 
         return $count > 0;
+    }
+
+    /**
+     * Compare an atom to its previous version to see if it has any important changes.
+     *
+     * @return boolean Does it have significant changes?
+     */
+    protected function _hasSignificantChanges() {
+        $currentVersion = $this->toArray();
+        $previousVersion = ($this->entity_id && $this->product_id && self::findNewest($this->entity_id, $this->product_id)) ?
+                self::findNewest($this->entity_id, $this->product_id)->toArray() :
+                null;
+
+        if(!$previousVersion) {
+            return false;
+        }
+
+        foreach($currentVersion as $key => $value) {
+            if(!in_array($key, self::$insignificantColumns) && $previousVersion[$key] != $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

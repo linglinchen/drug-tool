@@ -37,4 +37,40 @@ class QuestionDoctype extends AbstractDoctype {
         } //if it's new atom, just return true
         return true;
     }
+
+    /**
+     * Detect an atom's title.
+     *
+     * @param object $atom
+     *
+     * @return ?string
+     */
+    public function detectTitle($atom) {
+        return $atom->title ? $atom->title : $this->_getNewQuestionTitle($atom->product_id);
+    }
+
+    /**
+     * Decide what the new question's title will be (find the max of the existing question title)
+     *
+     * @param integer $productId Limit to this product
+     *
+     * @return string
+     */
+    protected function _getNewQuestionTitle($productId) {
+        $titles = array_map(
+            function ($title) {
+                return (int)$title;
+            },
+            Atom::select('alpha_title')
+                ->where('product_id', '=', $productId)
+                ->whereIn('id', function ($q) {
+                    Atom::buildLatestIDQuery(null, $q);
+                })
+                ->get()
+                ->pluck('alpha_title')
+                ->toArray()
+        );
+
+        return (string)(max($titles) + 1);
+    }
 }
