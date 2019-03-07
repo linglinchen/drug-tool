@@ -20,6 +20,24 @@ class BookDoctype extends AbstractDoctype {
         ]
     ];
 
+    /**
+     * Detect an atom's title.
+     *
+     * @param object $atom
+     *
+     * @return ?string
+     */
+    public function detectTitle($atom) {
+        $titleElement = 'ce:title';
+
+        preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $atom->xml, $match);
+
+        if($match) {
+            return trim($match[2]);
+        }
+        return $atom->title ? $atom->title : null;
+    }
+
     public function beforeSave($atom) {
          $originalAtom = Atom::findNewestIfNotDeleted($atom->entity_id, $atom->product_id);
          if ($originalAtom){ // for existing atom
