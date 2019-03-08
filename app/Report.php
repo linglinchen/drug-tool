@@ -540,7 +540,13 @@ class Report extends AppModel {
                 'wordsMean' => 0,
                 'wordsStdErr' => 0,
             ],
-
+            //Saunders Vet Dictionary
+            3 => [
+                'charsMean' => 7164,
+                'charsStdErr' => 1106,
+                'wordsMean' => 1176,
+                'wordsStdErr' => 146,
+            ],
             //Dental Dictionary
             5 => [
                 'charsMean' => 3357,
