@@ -30,6 +30,9 @@ abstract class AbstractDoctype {
      * @return ?string
      */
     public function detectTitle($xml) {
+        if (is_object($xml)){
+            $xml = $xml->xml;
+        }
         $validTitleElements = $this->getConfig()['validTitleElements'];
 
         foreach($validTitleElements as $titleElement) {
