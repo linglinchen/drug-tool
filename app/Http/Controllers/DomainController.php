@@ -28,7 +28,7 @@ class DomainController extends Controller
      */
     public function listAction($productId) {
         $domains = Domain::where('product_id', '=', $productId)
-                ->orderBy('sort', 'ASC')
+                ->orderBy('title', 'ASC') //sort
                 ->get();
 
         return new ApiPayload($domains);
