@@ -35,7 +35,7 @@ class LookupController extends Controller
             'boilerplates' => Boilerplate::allForCurrentProduct()->get(),
             'tasks' => Task::allForCurrentProduct()->orderBy('sort')->orderBy('id')->get(),
             'statuses' => Status::allForCurrentProduct()->orderBy('id')->get(),
-            'domains' => Domain::allForCurrentProduct()->orderBy('title', 'ASC')->get() //id
+            'domains' => Domain::allForCurrentProduct()->orderBy('title', 'ASC')->get() 
         ]);
     }
 }
