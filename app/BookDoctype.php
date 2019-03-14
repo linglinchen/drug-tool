@@ -9,8 +9,8 @@ use App\Atom;
 class BookDoctype extends AbstractDoctype {
     protected $_config = [
         'validAtomRootElements' => ['chapter'],
-        'ignoreAtomRootElements' => ['bk__info', 'ce__label', 'ce__title'],
-        'validTitleElements' => ['ce__section-title'],
+        //'ignoreAtomRootElements' => ['info', 'ce:label'],
+        'validTitleElements' => ['ce:title'],
         'idPrefixes' => [
             'chapter' => 'c'
         ],
@@ -19,6 +19,24 @@ class BookDoctype extends AbstractDoctype {
             'keyAttributeName' => 'code',
         ]
     ];
+
+    /**
+     * Detect an atom's title.
+     *
+     * @param object $atom
+     *
+     * @return ?string
+     */
+    public function detectTitle($atom) {
+        $titleElement = 'ce:title';
+
+        preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $atom->xml, $match);
+
+        if($match) {
+            return trim($match[2]);
+        }
+        return $atom->title ? $atom->title : null;
+    }
 
     public function beforeSave($atom) {
          $originalAtom = Atom::findNewestIfNotDeleted($atom->entity_id, $atom->product_id);
