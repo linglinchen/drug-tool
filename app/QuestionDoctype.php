@@ -45,9 +45,9 @@ class QuestionDoctype extends AbstractDoctype {
      *
      * @return ?string
      */
-    public function detectTitle($atom) {
-        return $atom->title ? $atom->title : $this->_getNewQuestionTitle($atom->product_id);
-    }
+    // public function detectTitle($atom) {
+    //     return $atom->title ? $atom->title : $this->_getNewQuestionTitle($atom->product_id);
+    // }
 
     /**
      * Decide what the new question's title will be (find the max of the existing question title)

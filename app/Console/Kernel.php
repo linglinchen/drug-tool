@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
         Commands\ImportUserProducts::class,
         Commands\ImportBoilerplates::class,
         Commands\ImportUserDomains::class,
+        Commands\ImportContentArea::class,
+        Commands\ImportHealthCodes::class,
         Commands\CreateAssignments::class,
         Commands\QuickFix::class,
         Commands\QuickFixML::class,

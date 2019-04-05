@@ -1,0 +1,298 @@
+<!--  Content Area  -->
+<category name="Content Area" node="content_area">
+<sub name="Adult Health" weight="14">
+<subsub name="Cardiovascular" num="1"/>
+<subsub name="Ear" num="2"/>
+<subsub name="Endocrine" num="3"/>
+<subsub name="Eye" num="4"/>
+<subsub name="Gastrointestinal" num="5"/>
+<subsub name="Hematological" num="6"/>
+<subsub name="Immune" num="7"/>
+<subsub name="Integumentary" num="8"/>
+<subsub name="Musculoskeletal" num="9"/>
+<subsub name="Neurological" num="10"/>
+<subsub name="Oncology" num="11"/>
+<subsub name="Renal and Urinary" num="12"/>
+<subsub name="Reproductive" num="13"/>
+<subsub name="Respiratory" num="14"/>
+</sub>
+<sub name="Critical Care" weight="6">
+<subsub name="Acute Respiratory Failure" num="15"/>
+<subsub name="Basic Life Support/CPR/Cardiac Arrest" num="16"/>
+<subsub name="Blood Administration" num="17"/>
+<subsub name="Emergency Situations/Management" num="18"/>
+<subsub name="Invasive Devices/Intravenous Therapy" num="19"/>
+<subsub name="Poisoning" num="20"/>
+<subsub name="Sepsis" num="21"/>
+<subsub name="Shock" num="22"/>
+<subsub name="Trauma" num="23"/>
+</sub>
+<sub name="Developmental Stages" weight="2">
+<subsub name="Adolescent" num="24"/>
+<subsub name="Early Adulthood to Later Adulthood" num="25"/>
+<subsub name="End-of-Life Care" num="26"/>
+<subsub name="Infant" num="27"/>
+<subsub name="Preschool and School Age" num="28"/>
+<subsub name="Toddler" num="29"/>
+</sub>
+<sub name="Foundations of Care" weight="5">
+<subsub name="Acid-Base" num="30"/>
+<subsub name="Communication" num="31"/>
+<subsub name="Community Health" num="32"/>
+<subsub name="Cultural Awareness" num="33"/>
+<subsub name="Evaluation" num="34"/>
+<subsub name="Fluid and Electrolytes" num="35"/>
+<subsub name="Infection Control" num="36"/>
+<subsub name="Diagnostic Tests" num="37"/>
+<subsub name="Nutrition" num="38"/>
+<subsub name="Perioperative Care" num="39"/>
+<subsub name="Safety" num="40"/>
+<subsub name="Sleep and Rest" num="41"/>
+<subsub name="Spirituality, Culture, and Ethnicity" num="42"/>
+<subsub name="Therapeutic Diets" num="43"/>
+</sub>
+<sub name="Health Assessment/Physical Exam" weight="3">
+<subsub name="Abdomen" num="44"/>
+<subsub name="Assessment Techniques" num="45"/>
+<subsub name="Breasts" num="46"/>
+<subsub name="Client Teaching" num="47"/>
+<subsub name="Ear/Nose/Throat" num="48"/>
+<subsub name="Eye" num="49"/>
+<subsub name="Female and Male Reproductive" num="50"/>
+<subsub name="Genitourinary" num="51"/>
+<subsub name="Head/Face/Neck/Regional Lymph Nodes" num="52"/>
+<subsub name="Health History" num="53"/>
+<subsub name="Heart and Peripheral Vascular" num="54"/>
+<subsub name="Integumentary" num="55"/>
+<subsub name="Mental Status Exam" num="56"/>
+<subsub name="Musculoskeletal" num="57"/>
+<subsub name="Neurological" num="58"/>
+<subsub name="Respiratory" num="59"/>
+<subsub name="Testicles" num="60"/>
+<subsub name="Thorax and Lungs" num="61"/>
+</sub>
+<sub name="Leadership/Management" weight="3">
+<subsub name="Delegating/Supervising" num="62"/>
+<subsub name="Ethical/Legal" num="63"/>
+<subsub name="Informatics" num="64"/>
+<subsub name="Interprofessional Collaboration" num="65"/>
+<subsub name="Management of Care" num="66"/>
+<subsub name="Mass Casualty Preparedness and Response" num="67"/>
+<subsub name="Prioritizing" num="68"/>
+<subsub name="Quality Improvement" num="69"/>
+</sub>
+<sub name="Maternity" weight="8">
+<subsub name="Antepartum" num="70"/>
+<subsub name="Intrapartum" num="71"/>
+<subsub name="Newborn" num="72"/>
+<subsub name="Postpartum" num="73"/>
+</sub>
+<sub name="Mental Health" weight="9" num="74"/>
+<sub name="Pediatrics" weight="10">
+<subsub name="Cardiovascular" num="75"/>
+<subsub name="Eye/Ear" num="76"/>
+<subsub name="Gastrointestinal" num="77"/>
+<subsub name="Hematological" num="78"/>
+<subsub name="Immune" num="79"/>
+<subsub name="Infectious and Communicable Diseases" num="80"/>
+<subsub name="Integumentary" num="81"/>
+<subsub name="Metabolic/Endocrine" num="82"/>
+<subsub name="Musculoskeletal" num="83"/>
+<subsub name="Neurological" num="84"/>
+<subsub name="Oncological" num="85"/>
+<subsub name="Renal and Urinary" num="86"/>
+<subsub name="Throat/Respiratory" num="87"/>
+</sub>
+<sub name="Pharmacology" weight="10">
+<subsub name="Cardiovascular">
+<subsubsub name="Angiotensin-Converting Enzyme (ACE) Inhibitors" num="88"/>
+<subsubsub name="Angiotension II Receptor Blockers (ARBs)" num="89"/>
+<subsubsub name="Anticoagulants" num="90"/>
+<subsubsub name="Antidysrhythmics" num="91"/>
+<subsubsub name="Antihypertensives" num="92"/>
+<subsubsub name="Antilipemics" num="93"/>
+<subsubsub name="Antiplatelets" num="94"/>
+<subsubsub name="Beta Blockers" num="95"/>
+<subsubsub name="Calcium Channel Blockers" num="96"/>
+<subsubsub name="Cardiac Glycosides" num="97"/>
+<subsubsub name="Diuretics" num="98"/>
+<subsubsub name="Positive Inotropic and Cardiotonic" num="99"/>
+<subsubsub name="Thrombolytics" num="100"/>
+<subsubsub name="Vasodilators" num="101"/>
+</subsub>
+<subsub name="Endocrine">
+<subsubsub name="Androgens/Estrogens/Progestins" num="102"/>
+<subsubsub name="Antidiuretics" num="103"/>
+<subsubsub name="Antithyroids" num="104"/>
+<subsubsub name="Biphosphonates and Calcium Regulators" num="105"/>
+<subsubsub name="Corticosteroids" num="106"/>
+<subsubsub name="Growth Hormones" num="107"/>
+<subsubsub name="Insulin" num="108"/>
+<subsubsub name="Oral Hypoglycemics" num="109"/>
+<subsubsub name="Parathyroids" num="110"/>
+<subsubsub name="Thyroid Hormones" num="111"/>
+</subsub>
+<subsub name="Eye and Ear">
+<subsubsub name="Antiinfective and Anti-inflammatory" num="112"/>
+<subsubsub name="Glaucoma Medications" num="113"/>
+<subsubsub name="Local/Topical Anesthetics" num="114"/>
+<subsubsub name="Macular Degeneration Medications" num="115"/>
+<subsubsub name="Mydriatic/Cycloplegic/Anticholinergics" num="116"/>
+</subsub>
+<subsub name="Fluid and Electrolyte Medications">
+<subsubsub name="Diuretics" num="117"/>
+<subsubsub name="Electrolytes" num="118"/>
+<subsubsub name="Intravenous Fluids" num="119"/>
+</subsub>
+<subsub name="Gastrointestinal">
+<subsubsub name="Antacids" num="120"/>
+<subsubsub name="Anticholinergics" num="121"/>
+<subsubsub name="Antidiarrheals" num="122"/>
+<subsubsub name="Antiflatulants" num="123"/>
+<subsubsub name="Antihistamines" num="124"/>
+<subsubsub name="Antiemetics" num="125"/>
+<subsubsub name="Bile Acid Sequestrants" num="126"/>
+<subsubsub name="Gastric Protectants" num="127"/>
+<subsubsub name="Helicobacter Pylori Infection Medications" num="128"/>
+<subsubsub name="Histamine (H2) Receptor Antagonists"/>
+<subsubsub name="Laxatives" num="129"/>
+<subsubsub name="Pancreatic enzymes" num="130"/>
+<subsubsub name="Phosphorothioates" num="131"/>
+<subsubsub name="Prokinetics" num="132"/>
+<subsubsub name="Proton Pump Inhibitors" num="133"/>
+<subsubsub name="Vitamins/Weight Loss" num="134"/>
+</subsub>
+<subsub name="Hematological">
+<subsubsub name="Anemia Medications" num="135"/>
+<subsubsub name="Anticoagulants" num="136"/>
+<subsubsub name="Hematopoietic Agents" num="137"/>
+</subsub>
+<subsub name="Herbal Products"> </subsub>
+<subsub name="Immune">
+<subsubsub name="Aminoglycosides" num="138"/>
+<subsubsub name="Antifungals" num="139"/>
+<subsubsub name="Antihistamines" num="140"/>
+<subsubsub name="Antimycobacterials" num="141"/>
+<subsubsub name="Antiparasitics" num="142"/>
+<subsubsub name="Antivirals" num="143"/>
+<subsubsub name="Cephalosporins" num="144"/>
+<subsubsub name="Fluoroquinolones" num="145"/>
+<subsubsub name="Immunosuppressants" num="146"/>
+<subsubsub name="Lincosamides" num="147"/>
+<subsubsub name="Macrolides" num="148"/>
+<subsubsub name="Monobactams" num="149"/>
+<subsubsub name="Penicillinase-resistant penicillins" num="150"/>
+<subsubsub name="Penicillins" num="151"/>
+<subsubsub name="Sulfonamides" num="152"/>
+<subsubsub name="Tetracyclines" num="153"/>
+<subsubsub name="Vaccines" num="154"/>
+</subsub>
+<subsub name="Integumentary">
+<subsubsub name="Acne Products" num="155"/>
+<subsubsub name="Antiinflammatory/Antiinfective" num="156"/>
+<subsubsub name="Burn Products" num="157"/>
+<subsubsub name="Sunscreens" num="158"/>
+<subsubsub name="Antifungals" num="159"/>
+<subsubsub name="Topical Antiparasitics" num="160"/>
+</subsub>
+<subsub name="Maternity/Newborn">
+<subsubsub name="Corticosteroids" num="161"/>
+<subsubsub name="Ergot Alkaloids" num="162"/>
+<subsubsub name="Eye Prophylaxis for the Newborn" num="163"/>
+<subsubsub name="Lung Surfactant" num="164"/>
+<subsubsub name="Magnesium Sulfate" num="165"/>
+<subsubsub name="Opioid Analgesics" num="166"/>
+<subsubsub name="Prostaglandins" num="167"/>
+<subsubsub name="Rho (D) Immune Globulin" num="168"/>
+<subsubsub name="Tocolytics" num="169"/>
+<subsubsub name="Uterine Stimulants" num="170"/>
+<subsubsub name="Vitamin K" num="171"/>
+</subsub>
+<subsub name="Musculoskeletal">
+<subsubsub name="Antiarthritic Medications" num="172"/>
+<subsubsub name="Antigout" num="173"/>
+<subsubsub name="Osteoporosis Medications" num="174"/>
+<subsubsub name="Muscle Relaxants" num="175"/>
+</subsub>
+<subsub name="Neurological">
+<subsubsub name="Anticholinergics" num="176"/>
+<subsubsub name="Anticonvulsants" num="177"/>
+<subsubsub name="Antimyasthenics" num="178"/>
+<subsubsub name="Antiparkinsonians" num="179"/>
+<subsubsub name="Central Nervous System Depressants" num="180"/>
+<subsubsub name="Central Nervous System Stimulants" num="181"/>
+<subsubsub name="Neuromuscular Blocking Agents" num="182"/>
+<subsubsub name="Osmotic Diuretics" num="183"/>
+</subsub>
+<subsub name="Oncology">
+<subsubsub name="Alkylating" num="184"/>
+<subsubsub name="Antimetabolites" num="185"/>
+<subsubsub name="Antitumor Antibiotics" num="186"/>
+<subsubsub name="Colony-Stimulating Factors" num="187"/>
+<subsubsub name="Hormonal and Enzymes" num="188"/>
+<subsubsub name="Immunomodulators" num="189"/>
+<subsubsub name="Miotic Inhibitors" num="190"/>
+<subsubsub name="Selective Estrogen Receptor Modulators" num="191"/>
+<subsubsub name="Topoisomerase Inhibitors" num="192"/>
+</subsub>
+<subsub name="Pain Medications">
+<subsubsub name="Nonopioid Analgesics" num="193"/>
+<subsubsub name="Opioid Analgesics" num="194"/>
+<subsubsub name="Opioid Antagonists" num="195"/>
+</subsub>
+<subsub name="Psychotherapeutics">
+<subsubsub name="Alcohol Deterrents" num="196"/>
+<subsubsub name="Antianxiety/Anxiolytics" num="197"/>
+<subsubsub name="Antipsychotics" num="198"/>
+<subsubsub name="Atypical Antipsychotics" num="199"/>
+<subsubsub name="Barbiturates and Sedative-Hypnotics" num="200"/>
+<subsubsub name="Benzodiazepines" num="201"/>
+<subsubsub name="Medications for Alzheimer's Disease" num="202"/>
+<subsubsub name="Medications for Attention Deficit Hyperactivity Disorder" num="203"/>
+<subsubsub name="Monoamine Oxidase Inhibitors (MAOIs)" num="204"/>
+<subsubsub name="Mood Stabilizers" num="205"/>
+<subsubsub name="Selective Serotonin Reuptake Inhibitors (SSRIs)" num="206"/>
+<subsubsub name="Tricyclic Antidepressants" num="207"/>
+<subsubsub name="Typical Antipsychotics" num="208"/>
+</subsub>
+<subsub name="Renal and Urinary">
+<subsubsub name="Anticholinergics/Antispasmodics" num="209"/>
+<subsubsub name="Cholinergics" num="210"/>
+<subsubsub name="Fluoroquinolones" num="211"/>
+<subsubsub name="Medications" num="212"/>
+<subsubsub name="Organ Rejection Prevention" num="213"/>
+<subsubsub name="Sulfonamides" num="214"/>
+<subsubsub name="Urinary Tract Antiseptics" num="215"/>
+<subsubsub name="Urinary Tract Analgesics" num="216"/>
+</subsub>
+<subsub name="Reproductive">
+<subsubsub name="Contraceptives" num="217"/>
+<subsubsub name="Fertility Medications" num="218"/>
+</subsub>
+<subsub name="Respiratory">
+<subsubsub name="Antihistamines" num="219"/>
+<subsubsub name="Antitussives" num="220"/>
+<subsubsub name="Expectorants and Mucolytic Agents" num="221"/>
+<subsubsub name="Nasal Decongestants" num="222"/>
+<subsubsub name="Opioid Antagonists" num="223"/>
+<subsubsub name="Restrictive Airway Disease Agents" num="224"/>
+<subsubsub name="Tuberculosis Medications" num="225"/>
+</subsub>
+</sub>
+<sub name="Skills" weight="5">
+<subsub name="Activity/Mobility" num="226"/>
+<subsub name="Client Teaching" num="227"/>
+<subsub name="Dosage Calculations" num="228"/>
+<subsub name="Elimination" num="229"/>
+<subsub name="Hygiene" num="230"/>
+<subsub name="Infection Control" num="231"/>
+<subsub name="Irrigation" num="232"/>
+<subsub name="Medication Administration" num="233"/>
+<subsub name="Nutrition" num="234"/>
+<subsub name="Oxygenation" num="235"/>
+<subsub name="Specimen Collection" num="236"/>
+<subsub name="Tube Care" num="237"/>
+<subsub name="Vital Signs" num="238"/>
+<subsub name="Wound Care" num="239"/>
+</sub>
+</category>

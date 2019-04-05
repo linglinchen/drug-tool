@@ -168,7 +168,7 @@ class ImportAtoms extends Command
 		$sort = 0;
 		foreach($atoms as $atomString) {
 			$category = null;
-			if ($productId == 7){
+			if ($productId == 7 || $productId == 11){
 				preg_match('/<content_area>\s*(\r\n|\n|\r)\s*<entry>(.*)<\/entry>\s*(\r\n|\n|\r)\s*<\/content_area>/Si', $atomString, $matches);
 				if ($matches){
 					$category = $matches[2];
