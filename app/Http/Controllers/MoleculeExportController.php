@@ -70,7 +70,7 @@ class MoleculeExportController extends Controller {
 		$zip = new \ZipArchive();
 		$zipDate = date('Y-m-d_H:i:s');
 		$filename = $code . '_xml_'. $zipDate .'.zip';
-		$filepath = tempnam('tmp', $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
+		$filepath = tempnam(sys_get_temp_dir(), $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
 		$result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
 		$moleculeXml = $molecule->export($statusId, $doctype);
