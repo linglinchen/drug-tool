@@ -27,7 +27,7 @@ class ImportContentArea extends Command
      *
      * @var string
      */
-    protected $description = 'Import contentArea from data/import/content_area.txt into domains table';
+    protected $description = 'Import contentArea from data/import/content_area_updated.txt into domains table';
 
     /**
      * Execute the console command.
@@ -35,7 +35,7 @@ class ImportContentArea extends Command
      * @return mixed
      */
     public function handle() {
-        $filename = base_path() . '/data/import/content_area.txt';
+        $filename = base_path() . '/data/import/content_area_updated.txt';
         if(!file_exists($filename)) {
             return;
         }
@@ -93,7 +93,7 @@ class ImportContentArea extends Command
         $domain['id'] = $domain['sort'] + 1000;
         $domain['created_at'] = $timestamp;
         $domain['updated_at'] = $timestamp;
-        $domain['product_id'] = 11; print_r($domain);
+        $domain['product_id'] = 11;
         DB::table('domains')->insert($domain);
     }
 }
