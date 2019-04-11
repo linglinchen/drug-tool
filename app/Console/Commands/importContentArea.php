@@ -94,6 +94,7 @@ class ImportContentArea extends Command
         $domain['created_at'] = $timestamp;
         $domain['updated_at'] = $timestamp;
         $domain['contributor_id'] = '0';
+        $domain['editor_id'] = 0;
         $domain['product_id'] = 11;
         DB::table('domains')->insert($domain);
     }
