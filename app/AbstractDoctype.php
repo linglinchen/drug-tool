@@ -180,7 +180,8 @@ abstract class AbstractDoctype {
     public function extractAtomXML($xmlDump) {
         $chapters = [];
         $chapterElementConfig = $this->getConfig()['chapterElement'];
-        $validAtomRootElements = $this->getConfig()['validAtomRootElements'];
+		$validAtomRootElements = $this->getConfig()['validAtomRootElements'];
+		$ignoreAtomRootElements = $this->getConfig()['ignoreAtomRootElements'];
 
         $doc = new \DOMDocument();
         $doc->loadXML($xmlDump);
@@ -199,7 +200,10 @@ abstract class AbstractDoctype {
                     continue;
                 }
 
-                if(!in_array(strtolower($atomNode->tagName), $validAtomRootElements)) {
+				if(in_array(strtolower($atomNode->tagName), $ignoreAtomRootElements)) {
+					continue;
+
+				} elseif(!in_array(strtolower($atomNode->tagName), $validAtomRootElements)) {
                     throw new \Exception('Invalid atom root element: ' . $atomNode->tagName);
                 }
 

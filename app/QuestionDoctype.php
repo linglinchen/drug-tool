@@ -8,7 +8,8 @@ use App\Atom;
 
 class QuestionDoctype extends AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => ['question', 'label', 'title'],
+		'validAtomRootElements' => ['question'],
+		'ignoreAtomRootElements' => ['label', 'title'],
         'validTitleElements' => ['qnum'],
         'idPrefixes' => [
             'question' => 'q',
@@ -37,17 +38,6 @@ class QuestionDoctype extends AbstractDoctype {
         } //if it's new atom, just return true
         return true;
     }
-
-    /**
-     * Detect an atom's title.
-     *
-     * @param object $atom
-     *
-     * @return ?string
-     */
-     public function detectTitle($atom) { //need to comment this function when importing atoms
-         return $atom->title ? $atom->title : $this->_getNewQuestionTitle($atom->product_id);
-     }
 
     /**
      * Decide what the new question's title will be (find the max of the existing question title)
