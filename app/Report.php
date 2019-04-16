@@ -647,7 +647,7 @@ class Report extends AppModel {
         if (!empty($implementedArray)){
             foreach($implementedArray as $implemented) {
                 $ob = simplexml_load_string($implemented['xml']);
-                $figureNodes = $ob->$implemented['xml']->xpath('//component[@type="figure"]');
+                $figureNodes = $ob->{$implemented['xml']}->xpath('//component[@type="figure"]');
                 if($figureNodes){
                     $figureNodes = json_encode($figureNodes);
                     $figureNodes = (array)json_decode($figureNodes, true);
@@ -1386,7 +1386,7 @@ class Report extends AppModel {
         foreach ($arr as $atom){
             $atom['molecule_code'] = $atom['molecule_code'] == null ? 'None' : $atom['molecule_code'];
             $ob = simplexml_load_string($atom['xml']);
-            $figureNodes = $ob->$atom['xml']->xpath('//component[@type="figure"]');
+            $figureNodes = $ob->{$atom['xml']}->xpath('//component[@type="figure"]');
             if($figureNodes){
                 $figureNodes = json_encode($figureNodes);
                 $figureNodes = (array)json_decode($figureNodes, true);
