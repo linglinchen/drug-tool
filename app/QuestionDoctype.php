@@ -39,28 +39,33 @@ class QuestionDoctype extends AbstractDoctype {
         return true;
     }
 
-    /**
-     * Decide what the new question's title will be (find the max of the existing question title)
-     *
-     * @param integer $productId Limit to this product
-     *
-     * @return string
-     */
-    protected function _getNewQuestionTitle($productId) {
-        $titles = array_map(
-            function ($title) {
-                return (int)$title;
-            },
-            Atom::select('alpha_title')
-                ->where('product_id', '=', $productId)
-                ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
-                })
-                ->get()
-                ->pluck('alpha_title')
-                ->toArray()
-        );
+	/**
+	 * Decide what the new question's title will be (find the max of the existing question title)
+	 *
+	 * @param integer $productId Limit to this product; defaults to Route parameter
+	 *
+	 * @return string iterated qnum ID
+	 */
+	protected function _getNewTitle($productId = false) {
+		//TODO: this cannot be the right way to do this
+		if($productId === false) {
+			$productId = \Route::current()->parameter('productId');
+		}
+		
+		$titles = array_map(
+			function ($title) {
+				return (int)$title;
+			},
+			Atom::select('alpha_title')
+				->where('product_id', '=', $productId)
+				->whereIn('id', function ($q) {
+					Atom::buildLatestIDQuery(null, $q);
+				})
+				->get()
+				->pluck('alpha_title')
+				->toArray()
+		);
 
-        return (string)(max($titles) + 1);
-    }
+		return (string)(max($titles) + 1);
+	}
 }

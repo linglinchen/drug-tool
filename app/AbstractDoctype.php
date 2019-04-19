@@ -22,29 +22,41 @@ abstract class AbstractDoctype {
         return $this->_config;
     }
 
-    /**
-     * Detect an atom's title from its XML.
-     *
-     * @param string $xml
-     *
-     * @return ?string
-     */
-    public function detectTitle($xml) {
-        if (is_object($xml)){
-            $xml = $xml->xml;
-        }
-        $validTitleElements = $this->getConfig()['validTitleElements'];
+	/**
+	 * Detect an atom's title from its XML.
+	 *
+	 * @param string $xml
+	 *
+	 * @return ?string
+	 */
+	public function detectTitle($xml) {
+		if (is_object($xml)){
+			$xml = $xml->xml;
+		}
+		$validTitleElements = $this->getConfig()['validTitleElements'];
 
-        foreach($validTitleElements as $titleElement) {
-            preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $xml, $match);
+		foreach($validTitleElements as $titleElement) {
+			preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $xml, $match);
 
-            if($match) {
-                return trim($match[2]);
-            }
-        }
+			if($match) {
+				return trim($match[2]);
+			}
+		}
+		
+		//some doctypes have rules regarding new atom titles
+		return $this->_getNewTitle();
+	}
 
-        return null;
-    }
+	/**
+	 * Decide what the new atom's title will be
+	 *
+	 * @param integer $productId Limit to this product
+	 *
+	 * @return string	null in this nigh-abstraction, forcing "Missing title" error
+	 */
+	protected function _getNewTitle($productId=false) {
+		return null;
+	}
 
     /**
      * Assign IDs to XML elements where appropriate. Optionally adds specified entityId to first element.
