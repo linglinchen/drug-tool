@@ -9,7 +9,7 @@ use App\Atom;
 class BookDoctype extends AbstractDoctype {
     protected $_config = [
         'validAtomRootElements' => ['chapter'],
-        //'ignoreAtomRootElements' => ['info', 'ce:label'],
+        'ignoreAtomRootElements' => ['info', 'ce:label'],
         'validTitleElements' => ['ce:title'],
         'idPrefixes' => [
             'chapter' => 'c'
