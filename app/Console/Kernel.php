@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixImageAvailability::class,
         Commands\QuickFixContentArea::class,
         Commands\QuickFixPos::class,
+        Commands\QuickFixCloseNursingReviewerAssignments::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
