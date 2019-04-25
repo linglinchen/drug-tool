@@ -572,6 +572,8 @@ class Atom extends AppModel {
      */
     public function export() {
         $doctype = Product::find($this->product_id)->getDoctype();
+        //remove fullcredit line
+        $xmlNoFullcredit = preg_replace('/<fullcredit>[^<]*<\/fullcredit>/', '', $this->xml);
         $xml = $doctype->assignXMLIds($this->xml, $this->entity_id);
 
         return $xml;
