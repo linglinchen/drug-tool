@@ -4,22 +4,25 @@ namespace App;
 
 use App\AppModel;
 
-use App\DrugDoctype;
-use App\DictionaryDoctype;
 use App\BookDoctype;
+use App\DictionaryDoctype;
+use App\DrugDoctype;
 use App\QuestionDoctype;
+use App\XHTMLDoctype;
+
 use App\Assignment;
 
 class Product extends AppModel {
-    protected $table = 'products';
-    protected $guarded = ['id'];
+	protected $table = 'products';
+	protected $guarded = ['id'];
 
-    protected $doctypes = [
-        'drug' => DrugDoctype::class,
-        'dictionary' => DictionaryDoctype::class,
-        'book' => BookDoctype::class,
-        'question' => QuestionDoctype::class,
-    ];
+	protected $doctypes = [
+		'book' => BookDoctype::class,
+		'dictionary' => DictionaryDoctype::class,
+		'drug' => DrugDoctype::class,
+		'question' => QuestionDoctype::class,
+		'xhtml' => XHTMLDoctype::class,
+	];
 
     /**
      * Gets this product's doctype.

@@ -6,7 +6,8 @@ use App\AbstractDoctype;
 
 class DrugDoctype extends AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => ['group', 'monograph'],
+		'validAtomRootElements' => ['group', 'monograph'],
+		'ignoreAtomRootElements' => [],
         'validTitleElements' => ['group_title', 'mono_name'],
         'idPrefixes' => [
             'group' => 'g',

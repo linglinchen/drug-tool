@@ -4,7 +4,8 @@ namespace App;
 
 abstract class AbstractDoctype {
     protected $_config = [
-        'validAtomRootElements' => [],       //in order of descending priority
+		'validAtomRootElements' => [],       //in order of descending priority
+		'ignoreAtomRootElements' => [],	//siblings of atom that are not required in db
         'validTitleElements' => [],       //in order of descending priority
         'idPrefixes' => [],     //structure is tagName => prefix
         'chapterElement' => [      //tells how to find chapters in the xml
