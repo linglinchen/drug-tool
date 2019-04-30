@@ -716,7 +716,7 @@ METAHEADER;
         return $atoms->pluck('id')->all();
     }
 
-    protected function _removeFullCredit($xml){
+    public function removeFullCredit($xml){
         $xmlNoFullcredit = preg_replace('/<fullcredit>[^<]*<\/fullcredit>/', '', $xml);
         $xmlNoFullcredit = preg_replace('/<fullcredit\/>/', '', $xml);
         return $xmlNoFullcredit;

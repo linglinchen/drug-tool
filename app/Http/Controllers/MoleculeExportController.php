@@ -124,7 +124,7 @@ class MoleculeExportController extends Controller {
 			$xml .= $moleculeXml;
 			$xml .= '</body>' . "\n";
 			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
 			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 
 			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
@@ -159,7 +159,7 @@ class MoleculeExportController extends Controller {
 			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
 			$xml .= $moleculeXml;
 			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
 			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 
 			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
@@ -178,7 +178,7 @@ class MoleculeExportController extends Controller {
 			$xml .= $moleculeXml;
 			$xml .= '</body>' . "\n";
 			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
 			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 		}
 
