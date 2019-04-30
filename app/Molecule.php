@@ -220,8 +220,8 @@ class Molecule extends AppModel {
 
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
-            $xml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
-            $xml .= $xml . "\n";
+            $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
+            $xml .= $atomXml . "\n";
 		}
 		
 		$xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
