@@ -220,10 +220,8 @@ class Molecule extends AppModel {
 
         foreach($atoms as $atom) {
             $atomXml = $atom->export();
-            $xmlNoFullcredit = preg_replace('/<fullcredit>[^<]*<\/fullcredit>/', '', $atomXml);
-            $xmlNoFullcredit = preg_replace('/<fullcredit\/>/', '', $xmlNoFullcredit);
-            $xmlNoFullcredit = "\t\t" . str_replace("\n", "\n\t\t", $xmlNoFullcredit);      //indent the atom
-            $xml .= $xmlNoFullcredit . "\n";
+            $xml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
+            $xml .= $xml . "\n";
 		}
 		
 		$xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
@@ -716,5 +714,11 @@ METAHEADER;
                 ->get();
 
         return $atoms->pluck('id')->all();
+    }
+
+    protected function _removeFullCredit($xml){
+        $xmlNoFullcredit = preg_replace('/<fullcredit>[^<]*<\/fullcredit>/', '', $xml);
+        $xmlNoFullcredit = preg_replace('/<fullcredit\/>/', '', $xml);
+        return $xmlNoFullcredit;
     }
 }

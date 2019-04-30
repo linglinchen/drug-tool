@@ -124,7 +124,8 @@ class MoleculeExportController extends Controller {
 			$xml .= $moleculeXml;
 			$xml .= '</body>' . "\n";
 			$xml .= '</'. $xmlRoot . '>';
-			$zip->addFromString($code . '.xml', $xml);
+			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 
 			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
@@ -158,7 +159,8 @@ class MoleculeExportController extends Controller {
 			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
 			$xml .= $moleculeXml;
 			$xml .= '</'. $xmlRoot . '>';
-			$zip->addFromString($code . '.xml', $xml);
+			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 
 			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 			
@@ -176,7 +178,8 @@ class MoleculeExportController extends Controller {
 			$xml .= $moleculeXml;
 			$xml .= '</body>' . "\n";
 			$xml .= '</'. $xmlRoot . '>';
-			$zip->addFromString($code . '.xml', $xml);
+			$xmlNoFullCredit = $molecule->_removeFullCredit($xml);
+			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 		}
 
 		$zip->close();
@@ -213,4 +216,5 @@ class MoleculeExportController extends Controller {
 		return new ApiPayload($count);
 	}
 
+	public function removeFullCredit
 }
