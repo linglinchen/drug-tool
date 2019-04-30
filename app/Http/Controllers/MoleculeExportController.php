@@ -215,6 +215,4 @@ class MoleculeExportController extends Controller {
 
 		return new ApiPayload($count);
 	}
-
-	public function removeFullCredit
 }
