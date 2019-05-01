@@ -278,7 +278,7 @@ class Report extends AppModel {
      * @return array
      */
     public static function links($productId) {
-
+        ini_set('memory_limit', '1280M');
         $brokenLinks = [];
         $total = 0;
         $atoms = self::_getKeyedAtoms($productId);
@@ -307,12 +307,12 @@ class Report extends AppModel {
                     $valid = false;
                     if($type == 'a') {        //atom
                         $valid = isset($atoms[$strippedParsedid]);
-                        if($valid) {
-                            $atom = $atoms[$strippedParsedid];
-                            if(isset($parsedRefid[2])) {        //deep link
-                                $valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
-                            }
-                        }
+                        // if($valid) {
+                        //     $atom = $atoms[$strippedParsedid];
+                        //     if(isset($parsedRefid[2])) {        //deep link
+                        //         $valid = !!sizeof($atom->xml->xpath('//[id = "' . $parsedRefid[2] . '"]'));
+                        //     }
+                        // }
                     }
                     else if($type == 'm') {     //molecule
                         $valid = isset($molecules[$parsedRefid[1]]);
@@ -336,7 +336,6 @@ class Report extends AppModel {
                 }
             }
         }
-
         return [
             'brokenLinks' => $brokenLinks,
             'total' => $total
