@@ -266,7 +266,7 @@ class Molecule extends AppModel {
 
                 $figureNode = json_encode($figureNode);
                 $figureNode = json_decode($figureNode, true);
-
+print_r($term);
                 $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
                 $sourceItem = htmlentities($sourceItem);
 
