@@ -273,6 +273,9 @@ class Molecule extends AppModel {
                 $sourceItemFull = isset($figureNode['fullcredit'])? $figureNode['fullcredit']: '';
                 $sourceItemFull = htmlentities($sourceItemFull);
 
+                $caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
+                $caption = htmlentities($caption);
+
                 $availability = isset($figureNode['@attributes']['availability']) ?
                         $figureNode['@attributes']['availability'] :
                         '';
@@ -295,12 +298,12 @@ class Molecule extends AppModel {
                             foreach($figureNode['file'] as $file) {
                                 if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
                                     $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $sourceItem . "\t" . $sourceItemFull. "\t". $file['@attributes']['src'] .
+                                            "\t" . $caption ."\t". $sourceItem . "\t" . $sourceItemFull. "\t". $file['@attributes']['src'] .
                                             "\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                                 }
                                 else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
                                     $figureRows .= "\n" . $term."\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $sourceItem."\t" . $sourceItemFull. "\t". $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
+                                            "\t" . $caption ."\t". $sourceItem."\t" . $sourceItemFull. "\t". $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
                                             $availability.' ';
                                 }
 
@@ -310,7 +313,7 @@ class Molecule extends AppModel {
                             isset($figureNode['file']['@attributes']) &&
                             isset($figureNode['file']['@attributes']['src'])
                         ) {
-                            $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
+                            $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" . $caption ."\t".
                                     $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['file']['@attributes']['src'] .
                                     "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                         }
@@ -320,7 +323,7 @@ class Molecule extends AppModel {
                         isset($figureNode['p']['@attributes']['src_stub'])
                     ) {
                         //img situation: [p]->[src_stub] is equal to [file][src]
-                        $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" .
+                        $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" . $caption ."\t".
                                 $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['p']['@attributes']['src_stub'] .
                                 "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                     }
@@ -504,7 +507,7 @@ Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isb
 Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
 Processor:\t{$productInfo['cds']['firstname']} {$productInfo['cds']['lastname']}\t\t\t\t\t\t\t\t\t\t\tChapter:\t{$code}\t\t\t\t
 Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\t\t\t\t\t\t\t\t\tDate:\t{$zipDate}\t\t\t\t
-Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tLong credit line\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
+Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\tLegend\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tLong credit line\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 
 		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
