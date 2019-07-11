@@ -267,13 +267,13 @@ class Molecule extends AppModel {
                 $figureNode = json_encode($figureNode);
                 $figureNode = json_decode($figureNode, true);
 
-                $sourceItem = isset($figureNode['credit'])? $figureNode['credit']: '';
+                $sourceItem = isset($figureNode['credit'])? implode(' ', (array)$figureNode['credit']) : '';
                 $sourceItem = htmlentities($sourceItem);
 
-                $sourceItemFull = isset($figureNode['fullcredit'])? $figureNode['fullcredit']: '';
+                $sourceItemFull = isset($figureNode['fullcredit'])? implode(' ', (array)$figureNode['fullcredit']) : '';
                 $sourceItemFull = htmlentities($sourceItemFull);
 
-                $caption = isset($figureNode['caption']) ? $figureNode['caption'] : '';
+                $caption = isset($figureNode['caption']) ? implode(' ', (array)$figureNode['caption']) : '';
                 $caption = htmlentities($caption);
 
                 $availability = isset($figureNode['@attributes']['availability']) ?
