@@ -67,7 +67,26 @@ class Report extends AppModel {
             $reportTypes['suggestedImageStats'] = 'Suggested Image Report';
             $reportTypes['legacyImageStats'] = 'Legacy Image Report';
         }
-
+/*added Procedure Video - 06-11-2019 - TC*/
+        $procedureProds = array(12);
+        if ($productId == 12){
+            $reportTypes['reviewerStats'] = 'Reviewer Process Stats';
+        }
+        if (in_array($productId, $dicProds)){
+            $reportTypes['newFigures'] = 'New Figures (Implemented new this edition)';
+            $reportTypes['suggestedImageStats'] = 'Suggested Image Report';
+            $reportTypes['legacyImageStats'] = 'Legacy Image Report';
+        }
+        /**/
+        $reportTypes = [
+            'statuses' => 'Status Breakdown',
+            'edits' => 'Edits',
+            'openAssignments' => 'Open Assignments',
+            'brokenLinks' => 'Broken Links',
+            'comments' => 'Comments',
+            'moleculeStats' => 'Specialty Stats'
+        ];
+/*end added Procedure Video - 06-11-2019 - TC*/
         return $reportTypes;
     }
 
