@@ -59,7 +59,8 @@ class Kernel extends ConsoleKernel
         Commands\AssignReviewerTasks::class,
         Commands\AssignReviewerTasksNursing::class,
         Commands\CreateAtomDomainsList::class,
-        Commands\ListVetPotentialDeactivated::class
+        Commands\ListVetPotentialDeactivated::class,
+        Commands\GetModifiedTermsVet::class,
         ];
 
     /**
