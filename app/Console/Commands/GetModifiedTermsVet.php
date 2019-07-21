@@ -47,6 +47,7 @@ class GetModifiedTermsVet extends Command {
             FROM atoms
             WHERE 
 		        product_id = $productId
+                and molecule_code = 'P'
                 and id in 
                 (
                     SELECT MIN(id)
