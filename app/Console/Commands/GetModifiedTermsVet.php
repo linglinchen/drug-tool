@@ -70,7 +70,9 @@ class GetModifiedTermsVet extends Command {
                         and entity_id = '$atomModel->entity_id'
                     ORDER by molecule_code, sort";
             $atomVersions = DB::select($sql1);
-            $atomVersionsArray = json_decode(json_encode($atomVersions), true);  //convert object to array
+            if ($atomVersions){
+                $atomVersionsArray = json_decode(json_encode($atomVersions), true);
+              }  //convert object to array
             if (sizeof($atomVersionsArray) > 1) {
                 $count ++;
                 fwrite($file, "$atomModel->alpha_title, $atomModel->entity_id, $atomModel->molecule_code\n");
