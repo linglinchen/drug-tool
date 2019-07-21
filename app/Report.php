@@ -47,7 +47,7 @@ class Report extends AppModel {
         $drugProds = array(1,2,4);
         if (in_array($productId, $drugProds)) {
               $reportTypes['discontinued'] = 'Discontinued Monographs';
-            }
+        }
         $reportTypes = [
             'statuses' => 'Status Breakdown',
             'edits' => 'Edits',
@@ -67,7 +67,12 @@ class Report extends AppModel {
             $reportTypes['suggestedImageStats'] = 'Suggested Image Report';
             $reportTypes['legacyImageStats'] = 'Legacy Image Report';
         }
-
+        /*Procedure Video = 12*/
+        $procedureProds = array(12);
+        if ($productId == 12){
+            $reportTypes['moleculeStats'] = 'Specialty Stats';
+            unset($reportTypes['domainStats']);
+        }
         return $reportTypes;
     }
 
