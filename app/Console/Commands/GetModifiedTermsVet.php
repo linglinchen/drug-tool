@@ -65,12 +65,14 @@ class GetModifiedTermsVet extends Command {
         foreach($atomsArray as $atom) {
             $atomModel = Atom::find($atom['id']);
             //get all versions
-            $sql1 = "SELECT * 
-                    FROM atoms 
-                    WHERE product_id = $productId
-                        and entity_id = '$atomModel->entity_id'
-                    ORDER by molecule_code, sort";
-            $atomVersions = DB::select($sql1);
+            if ($atomModel){
+                $sql1 = "SELECT * 
+                        FROM atoms 
+                        WHERE product_id = $productId
+                            and entity_id = '$atomModel->entity_id'
+                        ORDER by molecule_code, sort";
+                $atomVersions = DB::select($sql1);
+            }
             if ($atomVersions){
                 $atomVersionsArray = json_decode(json_encode($atomVersions), true);
               }  //convert object to array
