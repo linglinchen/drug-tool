@@ -264,17 +264,22 @@ class Molecule extends AppModel {
 
                 $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry . '/' . $closestEntry;
 
-                $figureNode = json_encode($figureNode);
-                $figureNode = json_decode($figureNode, true);
-
-                $sourceItem = isset($figureNode['credit'])? implode(' ', (array)$figureNode['credit']) : '';
+                $sourceItem = $figureNode->xpath('descendant-or-self::credit/descendant-or-self::text()');
+                $sourceItem = isset($sourceItem)? implode(' ', (array)$sourceItem) : '';
                 $sourceItem = htmlentities($sourceItem);
 
-                $sourceItemFull = isset($figureNode['fullcredit'])? implode(' ', (array)$figureNode['fullcredit']) : '';
+                $sourceItemFull = $figureNode->xpath('descendant-or-self::fullcredit/descendant-or-self::text()');
+                $sourceItemFull = isset($sourceItemFull)? implode(' ', (array)$sourceItemFull) : '';
                 $sourceItemFull = htmlentities($sourceItemFull);
 
-                $caption = isset($figureNode['caption']) ? implode(' ', (array)$figureNode['caption']) : '';
+                //$caption = $figureNode->xpath('descendant-or-self::caption/descendant-or-self::text()');
+                $caption = $figureNode->xpath('(descendant-or-self::caption|//br/following-sibling::node()[position=1])/descendant-or-self::text()');
+                            //   print_r($caption);
+                $caption = isset($caption) ? implode(' ', (array)$caption) : '';
                 $caption = htmlentities($caption);
+
+                $figureNode = json_encode($figureNode);
+                $figureNode = json_decode($figureNode, true);
 
                 $availability = isset($figureNode['@attributes']['availability']) ?
                         $figureNode['@attributes']['availability'] :
@@ -331,6 +336,7 @@ class Molecule extends AppModel {
             }
 
             $figureLogRows = $metaheader . $figureRows;
+
         }
         else {
             $figureLogRows = $metaheader . 'No figures in this Chapter';
