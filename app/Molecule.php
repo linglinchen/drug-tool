@@ -232,7 +232,7 @@ class Molecule extends AppModel {
     /**
      * Take the xml from above and reduce it to a log of figures.
      *
-     * @return string A CSV string
+     * @return string A TSV string
      */
     public function addFigureLog($moleculeXml, $metaheader) {
         $ob = simplexml_load_string($moleculeXml);
@@ -242,48 +242,60 @@ class Molecule extends AppModel {
             $figureRows =" \t";
 
             foreach($figureNodes as $figureNode) {
-                $closestEntryNodes = $figureNode->xpath('ancestor::entry[1]/headw//text()');
-                $closestEntryNodes = json_encode($closestEntryNodes);
-                $closestEntryNodes = (array)json_decode($closestEntryNodes, true);
-                $closestEntry = '';
-                foreach($closestEntryNodes as $closestEntryNode) {
-                    if(isset($closestEntryNode[0])) {
-                        $closestEntry = $closestEntryNode[0];
-                    }
+
+                //get parent headword/s that this figure is under
+                $temp = $figureNode->xpath('.//ancestor::entry/headw');
+
+                if(isset($temp[1])){
+                    $Dom = dom_import_simplexml($temp[1]);
+                    $closestEntryNode1 = $Dom->textContent;
+                }
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $closestEntryNode0 = $Dom->textContent;
+                }
+                if(isset($closestEntryNode1)){
+                    $term = $closestEntryNode0 . '/' . $closestEntryNode1;
+                    unset($closestEntryNode1);
+                }else{
+                    $term = $closestEntryNode0;
+                }
+                unset($temp);
+
+                $temp = $figureNode->xpath('.//credit');
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $credit = $Dom->textContent;
+                }else{
+                    $credit = "";
                 }
 
-                $mainEntryNodes = $figureNode->xpath('ancestor::entry[parent::alpha]/headw//text()');
-                $mainEntryNodes = json_encode($mainEntryNodes);
-                $mainEntryNodes = (array)json_decode($mainEntryNodes, true);
-                $mainEntry = '';
-                foreach($mainEntryNodes as $mainEntryNode) {
-                    if(isset($mainEntryNode[0])) {
-                        $mainEntry = $mainEntryNode[0];
-                    }
+                $temp = $figureNode->xpath('.//fullcredit');
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $creditFull = $Dom->textContent;
+                }else{
+                    $creditFull = "";
                 }
 
-                $term = $closestEntry == $mainEntry ? $mainEntry : $mainEntry . '/' . $closestEntry;
+                $temp = $figureNode->xpath('.//caption');
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $caption = $Dom->textContent;
+                }else{
+                    $caption = "";
+                }
 
-                $sourceItem = $figureNode->xpath('descendant-or-self::credit/descendant-or-self::text()');
-                $sourceItem = isset($sourceItem)? implode(' ', (array)$sourceItem) : '';
-                $sourceItem = htmlentities($sourceItem);
-
-                $sourceItemFull = $figureNode->xpath('descendant-or-self::fullcredit/descendant-or-self::text()');
-                $sourceItemFull = isset($sourceItemFull)? implode(' ', (array)$sourceItemFull) : '';
-                $sourceItemFull = htmlentities($sourceItemFull);
-
-                //$caption = $figureNode->xpath('descendant-or-self::caption/descendant-or-self::text()');
-                $caption = $figureNode->xpath('(descendant-or-self::caption|//br/following-sibling::node()[position=1])/descendant-or-self::text()');
-                            //   print_r($caption);
-                $caption = isset($caption) ? implode(' ', (array)$caption) : '';
-                $caption = htmlentities($caption);
+                //Normalize/remove tab/LF/CR from data
+                $term = preg_replace('/[\r\n\t]+/', '', $term);
+                $credit = preg_replace('/[\r\n\t]+/', '', $credit);
+                $creditFull = preg_replace('/[\r\n\t]+/', '', $creditFull);
+                $caption = preg_replace('/[\r\n\t]+/', '', $caption);
 
                 $figureNode = json_encode($figureNode);
                 $figureNode = json_decode($figureNode, true);
 
-                $availability = isset($figureNode['@attributes']['availability']) ?
-                        $figureNode['@attributes']['availability'] :
-                        '';
+                $availability = isset($figureNode['@attributes']['availability']) ? $figureNode['@attributes']['availability'] : '';
                 if($availability == 'electronic') {
                     $availability = 'online only';
                 }
@@ -291,45 +303,40 @@ class Molecule extends AppModel {
                     $availability = 'print only';
                 }
                 else if($availability == 'both') {
-                    $availablity = 'print and online';
+                    $availability = 'print and online';
                 }
                 else {
-                    $availablity = '';
+                    $availability = '';
                 }
 
+                //Format data elements into tsv format
                 if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])) {
                     if(isset($figureNode['file'])) {
                         if(count($figureNode['file']) > 1) {
                             foreach($figureNode['file'] as $file) {
                                 if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
                                     $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $caption ."\t". $sourceItem . "\t" . $sourceItemFull. "\t". $file['@attributes']['src'] .
+                                            "\t" . $caption ."\t". $credit . "\t" . $creditFull. "\t". $file['@attributes']['src'] .
                                             "\t\t\t\t\t\t\t\t\t". "Comp\t".$availability.' ';
                                 }
                                 else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
                                     $figureRows .= "\n" . $term."\t\tYes\t\t" . $figureNode['@attributes']['id'] .
-                                            "\t" . $caption ."\t". $sourceItem."\t" . $sourceItemFull. "\t". $file['src'] . "\t\t\t\t\t\t\t\t\t" . "Comp\t" .
-                                            $availability.' ';
+                                            "\t" . $caption ."\t". $credit."\t" . $creditFull. "\t". $file['src'] .
+                                        "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability.' ';
                                 }
 
                             }
                         }
-                        else if(
-                            isset($figureNode['file']['@attributes']) &&
-                            isset($figureNode['file']['@attributes']['src'])
-                        ) {
+                        else if(isset($figureNode['file']['@attributes']) && isset($figureNode['file']['@attributes']['src'])) {
                             $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" . $caption ."\t".
-                                    $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['file']['@attributes']['src'] .
+                                    $credit . "\t" . $creditFull. "\t". $figureNode['file']['@attributes']['src'] .
                                     "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                         }
                     }
-                    else if(
-                        isset($figureNode['p']) && isset($figureNode['p']['@attributes']) &&
-                        isset($figureNode['p']['@attributes']['src_stub'])
-                    ) {
-                        //img situation: [p]->[src_stub] is equal to [file][src]
+                    else if(isset($figureNode['p']) && isset($figureNode['p']['@attributes']) && isset($figureNode['p']['@attributes']['src_stub'])) {
+                        //img situation: [p]->[src_stub] is equal to [file][src]  ?
                         $figureRows .= "\n" . $term . "\t\tYes\t\t" . $figureNode['@attributes']['id'] . "\t" . $caption ."\t".
-                                $sourceItem . "\t" . $sourceItemFull. "\t". $figureNode['p']['@attributes']['src_stub'] .
+                                $credit . "\t" . $creditFull. "\t". $figureNode['p']['@attributes']['src_stub'] .
                                 "\t\t\t\t\t\t\t\t\t" . "Comp\t" . $availability . ' ';
                     }
                 }
@@ -405,6 +412,7 @@ class Molecule extends AppModel {
 	 * @return boolean Also modifies provided $zip
 	 */
 	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
+        return true;
 		//TODO: pick these up from configuration
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
 		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
@@ -517,6 +525,9 @@ Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\tLe
 METAHEADER;
 
 		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
+
+        //change encoding so that Microsoft Excel displays UTF* properly
+        $figureLog = mb_convert_encoding($figureLog, 'UTF-16LE', 'UTF-8');
 
 		return $figureLog;
 	}
