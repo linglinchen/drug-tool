@@ -412,7 +412,7 @@ class Molecule extends AppModel {
 	 * @return boolean Also modifies provided $zip
 	 */
 	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
-        return true;
+   
 		//TODO: pick these up from configuration
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
 		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
