@@ -61,6 +61,7 @@ class Kernel extends ConsoleKernel
         Commands\CreateAtomDomainsList::class,
         Commands\ListVetPotentialDeactivated::class,
         Commands\GetModifiedTermsVet::class,
+        Commands\GetModifiedHeadwVet::class,
         ];
 
     /**
