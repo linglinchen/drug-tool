@@ -7,6 +7,7 @@ use DB;
 use App\AppModel;
 use App\Atom;
 use App\Comment;
+use App\Status;
 
 class Assignment extends AppModel {
     protected $table = 'assignments';
@@ -20,7 +21,8 @@ class Assignment extends AppModel {
         'task_ended',
         'has_discussion',
         'has_figures',
-        'atoms.domain_code'
+        'atoms.domain_code',
+        'status_id', /*JIRA 1036 TC*/ 
     ];
 
 
@@ -67,6 +69,7 @@ class Assignment extends AppModel {
             foreach($atoms as $atom) {
                 $atom->addDomains($productId);
                 $atom->addCommentSuggestions($atom['entity_id']);
+                //$atom->addStatus($productId); /*JIRA 1036 TC*/
             }
             $atoms = $atoms->toArray();
 
@@ -128,6 +131,10 @@ class Assignment extends AppModel {
 
         return ($assignment && $assignment->task_end) ? null : $assignment;
     }
+
+/*Start JIRA 1036 TC - from lines 96 to 113*/
+
+/*End JIRA 1036 TC*/
 
     /**
      * Add filters to the list query.
