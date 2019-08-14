@@ -22,7 +22,7 @@ class Assignment extends AppModel {
         'has_discussion',
         'has_figures',
         'atoms.domain_code',
-        'status_id', /*JIRA 1036 TC*/
+        'status_id', /*JIRA 1036 TC*/ 
     ];
 
 
