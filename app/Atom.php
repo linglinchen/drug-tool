@@ -93,13 +93,16 @@ class Atom extends AppModel {
             $this->status_id = $devStatusId; //change status to be development when saving
         }
 
-        if(!$previousVersion && $this->_isTitleInUse()) {
-            $usedTitle = $this->alpha_title;
-            $usedId = $this->entity_id;
-            throw new \Exception(
-                'That title  ' . $usedTitle . ' with entityId ' . $usedId . ' is already used by another atom within ' .
-                'this product.'
-            );
+        if (!$previousVersion){ //new atom
+            $this->xml = preg_replace('/<qnum>NEW<\/qnum>/i', '<qnum>'.$this->alpha_title.'</qnum>', $this->xml);
+            if ($this->_isTitleInUse()) {
+                $usedTitle = $this->alpha_title;
+                $usedId = $this->entity_id;
+                throw new \Exception(
+                    'That title  ' . $usedTitle . ' with entityId ' . $usedId . ' is already used by another atom within ' .
+                    'this product.'
+                );
+            }
         }
 
         $doctype->beforeSave($this);

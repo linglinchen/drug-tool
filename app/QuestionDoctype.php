@@ -22,7 +22,7 @@ class QuestionDoctype extends AbstractDoctype {
     ];
 
     public function beforeSave($atom) {
-         $originalAtom = Atom::findNewestIfNotDeleted($atom->entity_id, $atom->product_id);
+		 $originalAtom = Atom::findNewestIfNotDeleted($atom->entity_id, $atom->product_id);
          if ($originalAtom){ // for existing atom
             $originalDomainCode = $originalAtom->domain_code;
             if($originalDomainCode != $atom->domain_code) {
