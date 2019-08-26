@@ -38,9 +38,14 @@ abstract class AbstractDoctype {
 
 		foreach($validTitleElements as $titleElement) {
 			preg_match('#<' . $titleElement . '(\s+[^>]*)?>(.*?)</' . $titleElement . '>#Ssi', $xml, $match);
-
 			if($match) {
-				return trim($match[2]);
+                $newTitle = trim($match[2]);
+                if ($newTitle == 'NEW'){
+                    return $this->_getNewTitle();
+                }
+				else {
+                    return trim($match[2]);
+                }
 			}
 		}
 		
