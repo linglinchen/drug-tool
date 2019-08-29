@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use DB;
 
 use App\Domain;
+use App\Product;
 
 
 /**
@@ -20,21 +21,25 @@ class ImportContentArea extends Command
      *
      * @var string
      */
-    protected $signature = 'import:contentArea';
+    protected $signature = 'import:contentArea {productId}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import contentArea from data/import/content_area_updated.txt into domains table';
-
+    protected $description = 'Import contentArea from data/import/content_area_updated.txt into domains table, e.g. import:contentArea 13';
     /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle() {
+        $productId = (int)$this->argument('productId');
+        if(!$productId || !Product::find($productId)) {
+            throw new \Exception('Invalid product ID.');
+        }
+
         $filename = base_path() . '/data/import/content_area_updated.txt';
         if(!file_exists($filename)) {
             return;
@@ -59,7 +64,7 @@ class ImportContentArea extends Command
                             $domain['code'] = $fullName;
                             $domain['title'] = $fullName;
                             $domain['sort'] = ++$sort;
-                            $this->importDomain($domain);
+                            $this->importDomain($domain, $productId);
                         }
                     }
                     else{
@@ -67,7 +72,7 @@ class ImportContentArea extends Command
                         $domain['code'] = $fullName;
                         $domain['title'] = $fullName;
                         $domain['sort'] = ++$sort;
-                        $this->importDomain($domain);
+                        $this->importDomain($domain, $productId);
                     }
                 }
             }
@@ -76,7 +81,7 @@ class ImportContentArea extends Command
                 $domain['code'] = $fullName;
                 $domain['title'] = $fullName;
                 $domain['sort'] = ++$sort;
-                $this->importDomain($domain);
+                $this->importDomain($domain, $productId);
             }
         }
 
@@ -88,14 +93,14 @@ class ImportContentArea extends Command
      *
      * @param array $domain The domain as an associative array; currently: code,title,locked,sort,product_id,contributor_id,editor_id
      */
-    public function importDomain($domain){
+    public function importDomain($domain, $productId){
         $timestamp = (new Domain())->freshTimestampString();
-        $domain['id'] = $domain['sort'] + 1000;
+        $domain['id'] = $domain['sort'] + $productId * 100;
         $domain['created_at'] = $timestamp;
         $domain['updated_at'] = $timestamp;
         $domain['contributor_id'] = '0';
         $domain['editor_id'] = 0;
-        $domain['product_id'] = 11;
+        $domain['product_id'] = $productId;
         DB::table('domains')->insert($domain);
     }
 }
