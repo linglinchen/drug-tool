@@ -41,7 +41,7 @@ class QuickFixAddDomain extends Command {
     public static function _addDomain($productId) {
         ini_set('memory_limit', '1280M');
         $atoms = Atom::whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
+                    Atom::legacyBuildLatestIDQuery(null, $q);
                 })->where('product_id','=', $productId)->get();
       
         $count = 0;
