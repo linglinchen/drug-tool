@@ -46,7 +46,7 @@ class DomainController extends Controller
      */
     public function getAction($productId, $code) {
         $code = $code == '__none__' ? null : $code;
-        $code = str_replace("-", "/", $code); //change Delegating-Prioritizing back to Delegating/Prioritizing
+        $code = str_replace("--", "/", $code); //change Delegating-Prioritizing back to Delegating/Prioritizing
 
         if($code === null) {
             $domain = ['code' => null];
