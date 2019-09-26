@@ -209,6 +209,13 @@ class Molecule extends AppModel {
 					'number' => $this->code,
 				],
 			],
+			'xhtml' => [
+				'root' => 'specialty',
+				'attributes' => [
+					'id' => 'spec.' . $this->code,
+					'number' => $this->code,
+				],
+			],
 
 		];
 
