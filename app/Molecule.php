@@ -11,6 +11,7 @@ use App\Atom;
 use App\Assignment;
 use App\Comment;
 use App\Status;
+use App\BookDoctype;
 
 class Molecule extends AppModel {
     use SoftDeletes;
@@ -209,7 +210,13 @@ class Molecule extends AppModel {
 					'number' => $this->code,
 				],
 			],
-
+            'book' => [
+				'root' => 'chapter',
+				'attributes' => [
+					'id' => 'c' . $this->code,
+					'code' => $this->code,
+				],
+			],
 		];
 
 		$xml = "\t" . '<' . $xmlMolecule[$doctype]['root'];
@@ -236,7 +243,7 @@ class Molecule extends AppModel {
      */
     public function addFigureLog($moleculeXml, $metaheader) {
         $ob = simplexml_load_string($moleculeXml);
-        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
+        /*$figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
         if($figureNodes) {
             $figureRows =" \t";
@@ -347,8 +354,87 @@ class Molecule extends AppModel {
         }
         else {
             $figureLogRows = $metaheader . 'No figures in this Chapter';
-        }
+        }*/
 
+        //start table info
+        $tableNodes = $ob->$moleculeXml->xpath("//*[name()='ce:table']");
+
+        if($tableNodes) {
+            $tableRows =" \t";
+            $figureLogRows = '';
+            $tableLogRows = '';
+            foreach($tableNodes as $tableNode) {
+
+                //get parent headword/s that this figure is under
+                // $temp = $tableNode->xpath('.//ancestor::entry/headw');
+
+                // if(isset($temp[1])){
+                //     $Dom = dom_import_simplexml($temp[1]);
+                //     $closestEntryNode1 = $Dom->textContent;
+                // }
+                // if(isset($temp[0])){
+                //     $Dom = dom_import_simplexml($temp[0]);
+                //     $closestEntryNode0 = $Dom->textContent;
+                // }
+                // if(isset($closestEntryNode1)){
+                //     $term = $closestEntryNode0 . '/' . $closestEntryNode1;
+                //     unset($closestEntryNode1);
+                // }else{
+                //     $term = $closestEntryNode0;
+                // }
+                // unset($temp);
+                $term = "";
+                $productId = (int)self::getCurrentProductId();
+                $doctype = Product::find($productId)->getDoctype();
+                $term = $doctype->detectTitle($moleculeXml);
+
+                $temp = $tableNode->xpath(".//*[name()='ce:source']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $creditFull = $Dom->textContent;
+                }else{
+                    $creditFull = "";
+                }
+
+                $temp = $tableNode->xpath(".//*[name()='ce:caption']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]); print_r($temp[1]); exit;
+                    $caption = $Dom->textContent;
+                }else{
+                    $caption = "";
+                }
+
+               // $temp = $tableNode->xpath(".//*[name()='ce:legend']/*[name()='ce:simple-para']");
+               $temp = $tableNode->xpath(".//*[name()='ce:legend']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $legend = $Dom->textContent;
+                }else{
+                    $legend = "";
+                }
+
+                //Normalize/remove tab/LF/CR from data
+                $term = preg_replace('/[\r\n\t]+/', '', $term);
+
+                $creditFull = preg_replace('/[\r\n\t]+/', '', $creditFull);
+                $caption = preg_replace('/[\r\n\t]+/', '', $caption);
+                $legend = preg_replace('/[\r\n\t]+/', '', $legend);
+
+                $tableNode = json_encode($tableNode);
+                $tableNode = json_decode($tableNode, true);
+
+
+                //Format data elements into tsv format
+                $tableRows .= "\n" . $term . "\t\t\t\t\t" . "\t" . $caption ."\t".
+                                 "\t\t" . $creditFull. "\t". "file" .
+                                "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
+            }
+            $tableLogRows = $metaheader . $tableRows;
+        }
+        else {
+            $tableLogRows = $metaheader . 'No tables in this Chapter';
+        }
+        $figureLogRows .= $tableLogRows;
         return $figureLogRows;
     }
 

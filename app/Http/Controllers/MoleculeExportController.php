@@ -166,6 +166,40 @@ class MoleculeExportController extends Controller {
 			
 			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
+		} elseif($doctype === 'book') {
+			$xmlDoctype = '<!DOCTYPE chapter PUBLIC "-//ES//DTD book DTD version 1.1//EN//XML" "https://major-tool-development.s3-us-west-2.amazonaws.com/DTDs/book540.dtd">';
+			$xmlRoot = 'chapter';
+
+			switch ((int)$productId) { //TODO: make the ISBNs dynamic
+				case 10:
+					$productInfo = [
+						'isbn' => '9780323709934',
+						'isbn_legacy' => '9780323448154',
+						'author' => 'Silvestri',
+						'title' => 'Evolve Resources for Saunders Q & A Review for the NCLEX-RN® Examination',
+						'edition' => 8,
+						'cds' => [
+							'firstname' => 'Laura',
+							'lastname' => 'Goodrich',
+							'phone' => '1 314 447 8538',
+							'email' => 'l.goodrich@elsevier.com',
+						],
+					];
+
+					break;
+			}
+
+			$xml = $xmlDoctype . "\n";
+			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+			$xml .= $moleculeXml;
+			$xml .= '</'. $xmlRoot . '>';
+			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
+			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
+
+			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+
+			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+
 
 		//both urecognized and drug doctypes get original code; also skip illustrations for now
 		} else {
