@@ -396,16 +396,15 @@ class Molecule extends AppModel {
                     $creditFull = "";
                 }
 
-                $temp = $tableNode->xpath(".//*[name()='ce:caption']");
+                $temp = $tableNode->xpath(".//*[name()='ce:caption']//*[name()='ce:simple-para']");
                 if(isset($temp[0])){
-                    $Dom = dom_import_simplexml($temp[0]); print_r($temp[1]); exit;
+                    $Dom = dom_import_simplexml($temp[0]);
                     $caption = $Dom->textContent;
                 }else{
                     $caption = "";
                 }
 
-               // $temp = $tableNode->xpath(".//*[name()='ce:legend']/*[name()='ce:simple-para']");
-               $temp = $tableNode->xpath(".//*[name()='ce:legend']");
+               $temp = $tableNode->xpath(".//*[name()='ce:legend']//*[name()='ce:simple-para']");
                 if(isset($temp[0])){
                     $Dom = dom_import_simplexml($temp[0]);
                     $legend = $Dom->textContent;
@@ -413,6 +412,14 @@ class Molecule extends AppModel {
                     $legend = "";
                 }
 
+                $temp = $tableNode->xpath(".//*[name()='ce:label']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $label = $Dom->textContent;
+                }else{
+                    $label = "";
+                }
+                unset($temp);
                 //Normalize/remove tab/LF/CR from data
                 $term = preg_replace('/[\r\n\t]+/', '', $term);
 
@@ -425,8 +432,8 @@ class Molecule extends AppModel {
 
 
                 //Format data elements into tsv format
-                $tableRows .= "\n" . $term . "\t\t\t\t\t" . "\t" . $caption ."\t".
-                                 "\t\t" . $creditFull. "\t". "file" .
+                $tableRows .= "\n" . $term . "\t". $label. "\t\t". $caption . "\t\t" . $legend ."\t\t".
+                                $creditFull. "\t".
                                 "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
             }
             $tableLogRows = $metaheader . $tableRows;
