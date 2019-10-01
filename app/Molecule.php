@@ -243,7 +243,8 @@ class Molecule extends AppModel {
      */
     public function addFigureLog($moleculeXml, $metaheader) {
         $ob = simplexml_load_string($moleculeXml);
-        /*$figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
+        $figureLogRows = $metaheader;
+        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
         if($figureNodes) {
             $figureRows =" \t";
@@ -349,40 +350,20 @@ class Molecule extends AppModel {
                 }
             }
 
-            $figureLogRows = $metaheader . $figureRows;
+            $figureLogRows .= $figureRows;
 
         }
         else {
-            $figureLogRows = $metaheader . 'No figures in this Chapter';
-        }*/
+            $figureLogRows .= 'No figures in this Chapter';
+        }
 
         //start table info
         $tableNodes = $ob->$moleculeXml->xpath("//*[name()='ce:table']");
 
         if($tableNodes) {
             $tableRows =" \t";
-            $figureLogRows = '';
             $tableLogRows = '';
             foreach($tableNodes as $tableNode) {
-
-                //get parent headword/s that this figure is under
-                // $temp = $tableNode->xpath('.//ancestor::entry/headw');
-
-                // if(isset($temp[1])){
-                //     $Dom = dom_import_simplexml($temp[1]);
-                //     $closestEntryNode1 = $Dom->textContent;
-                // }
-                // if(isset($temp[0])){
-                //     $Dom = dom_import_simplexml($temp[0]);
-                //     $closestEntryNode0 = $Dom->textContent;
-                // }
-                // if(isset($closestEntryNode1)){
-                //     $term = $closestEntryNode0 . '/' . $closestEntryNode1;
-                //     unset($closestEntryNode1);
-                // }else{
-                //     $term = $closestEntryNode0;
-                // }
-                // unset($temp);
                 $term = "";
                 $productId = (int)self::getCurrentProductId();
                 $doctype = Product::find($productId)->getDoctype();
@@ -436,12 +417,87 @@ class Molecule extends AppModel {
                                 $creditFull. "\t".
                                 "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
             }
-            $tableLogRows = $metaheader . $tableRows;
+            $figureLogRows .= $tableRows;
         }
         else {
-            $tableLogRows = $metaheader . 'No tables in this Chapter';
+            $figureLogRows .= 'No tables in this Chapter';
         }
-        $figureLogRows .= $tableLogRows;
+
+        //start ce:figure info
+        $ceFigureNodes = $ob->$moleculeXml->xpath("//*[name()='ce:figure']");
+
+        if($ceFigureNodes) {
+            $ceFigureRows =" \t";
+            $ceFigureLogRows = '';
+
+            foreach($ceFigureNodes as $ceFigureNode) {
+                $term = "";
+                $productId = (int)self::getCurrentProductId();
+                $doctype = Product::find($productId)->getDoctype();
+                $term = $doctype->detectTitle($moleculeXml);
+
+                $temp = $ceFigureNode->xpath(".//*[name()='ce:source']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $creditFull = $Dom->textContent;
+                }else{
+                    $creditFull = "";
+                }
+
+                $temp = $ceFigureNode->xpath(".//*[name()='ce:caption']//*[name()='ce:simple-para']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $caption = $Dom->textContent;
+                }else{
+                    $caption = "";
+                }
+
+               $temp = $ceFigureNode->xpath(".//*[name()='ce:legend']//*[name()='ce:simple-para']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $legend = $Dom->textContent;
+                }else{
+                    $legend = "";
+                }
+
+                $temp = $ceFigureNode->xpath(".//*[name()='ce:link']");
+                if (isset($temp[0])){
+                    //$label = json_encode($temp[0]['locator'][0]);
+                   //$label = json_decode($label, true);
+                    //print_r($label);exit;
+                }
+                if(isset($temp[0]) && isset($temp[0]['locator']) && isset($temp[0]['locator'][0])){
+                    $label = $temp[0]['locator'][0];
+                }else{
+                    $label = "";
+                }
+
+                $temp = $ceFigureNode->xpath(".//*[name()='ce:label']");
+                if(isset($temp[0])){
+                    $Dom = dom_import_simplexml($temp[0]);
+                    $label = $Dom->textContent;
+                }
+
+                unset($temp);
+
+                //Normalize/remove tab/LF/CR from data
+                $term = preg_replace('/[\r\n\t]+/', '', $term);
+
+                $creditFull = preg_replace('/[\r\n\t]+/', '', $creditFull);
+                $caption = preg_replace('/[\r\n\t]+/', '', $caption);
+                $legend = preg_replace('/[\r\n\t]+/', '', $legend);
+
+                //Format data elements into tsv format
+                $ceFigureRows .= "\n" . $term . "\t". $label. "\t\t". $caption . "\t\t" . $legend ."\t\t".
+                                $creditFull. "\t".
+                                "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
+            }
+            $figureLogRows .= $ceFigureRows;
+        }
+        else {
+            $figureLogRows .= 'No tables in this Chapter';
+        }
+
         return $figureLogRows;
     }
 
