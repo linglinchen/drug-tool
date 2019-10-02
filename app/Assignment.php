@@ -207,11 +207,15 @@ class Assignment extends AppModel {
                         return;
                     }
                     else if ($filterValue == 1){
-                        $query->where('atoms.xml', 'LIKE', '%type="figure"%');
+                        $query->where(function($q){
+                            $q->where('atoms.xml', 'LIKE', '%type="figure"%')
+                                ->orWhere('atoms.xml', 'LIKE', '%<img src%');
+                        });
                         return;
                     }
                     else if($filterValue < 1){
-                        $query->where('atoms.xml', 'NOT LIKE', '%type="figure"%');
+                        $query->where('atoms.xml', 'NOT LIKE', '%type="figure"%')
+                            ->Where('atoms.xml', 'NOT LIKE', '%<img src%');
                         return;
                     }
                 }
