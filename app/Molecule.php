@@ -362,7 +362,7 @@ class Molecule extends AppModel {
 
         }
         else {
-            $figureLogRows .= 'No figures in this Chapter';
+            $figureLogRows .= 'No figures in this Chapter' . "\n";
         }
 
         //start table info
@@ -428,7 +428,7 @@ class Molecule extends AppModel {
             $figureLogRows .= $tableRows;
         }
         else {
-            $figureLogRows .= 'No tables in this Chapter';
+            $figureLogRows .= 'No tables in this Chapter' . "\n";
         }
 
         //start ce:figure info
@@ -498,7 +498,7 @@ class Molecule extends AppModel {
             $figureLogRows .= $ceFigureRows;
         }
         else {
-            $figureLogRows .= 'No tables in this Chapter';
+            $figureLogRows .= '';
         }
 
         return $figureLogRows;
