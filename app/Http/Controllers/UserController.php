@@ -189,9 +189,16 @@ class UserController extends Controller
         $newLoginHistory->success = 'yes';
         $newLoginHistory->save();
 
+        $imageBucket = [];
+        $imageBucket['awss3key'] = env('AWS_s3_KEY');
+        $imageBucket['awss3secret'] = env('AWS_s3_SECRET');
+        $imageBucket['awss3region'] = env('AWS_s3_REGION');
+        //$imageBucket['awss3prod'] = env('AWS_s3_PROD');
+
         return new ApiPayload([
             'user'            => $user,
-            'permissions'    => $user->ACL->permissions
+            'permissions'    => $user->ACL->permissions,
+            'imageBucket'    => $imageBucket
         ]);
     }
 

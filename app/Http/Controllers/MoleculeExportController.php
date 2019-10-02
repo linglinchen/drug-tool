@@ -200,6 +200,19 @@ class MoleculeExportController extends Controller {
 
 			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
+		//If doctype is XHTML, different xml wrapper is written.
+		} elseif($doctype === 'xhtml') {
+			$xmlDoctype = '<!DOCTYPE root PUBLIC "-//ES//DTD procedures DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/procedure_0_1.dtd">';
+			$xmlRoot = 'root';
+
+			$xml = $xmlDoctype . "\n";
+			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+			$xml .= $moleculeXml;
+			$xml .= '</'. $xmlRoot . '>';
+
+			$zip->addFromString($code . '.xml', $xml);
+
+			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 		//both urecognized and drug doctypes get original code; also skip illustrations for now
 		} else {

@@ -217,6 +217,14 @@ class Molecule extends AppModel {
 					'code' => $this->code,
 				],
 			],
+			'xhtml' => [
+				'root' => 'specialty',
+				'attributes' => [
+					'id' => 'spec.' . $this->code,
+					'number' => $this->code,
+				],
+			],
+
 		];
 
 		$xml = "\t" . '<' . $xmlMolecule[$doctype]['root'];
@@ -461,11 +469,6 @@ class Molecule extends AppModel {
                 }
 
                 $temp = $ceFigureNode->xpath(".//*[name()='ce:link']");
-                if (isset($temp[0])){
-                    //$label = json_encode($temp[0]['locator'][0]);
-                   //$label = json_decode($label, true);
-                    //print_r($label);exit;
-                }
                 if(isset($temp[0]) && isset($temp[0]['locator']) && isset($temp[0]['locator'][0])){
                     $label = $temp[0]['locator'][0];
                 }else{
