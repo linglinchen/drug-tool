@@ -209,13 +209,13 @@ class Assignment extends AppModel {
                     else if ($filterValue == 1){
                         $query->where(function($q){
                             $q->where('atoms.xml', 'LIKE', '%type="figure"%')
-                                ->orWhere('atoms.xml', 'LIKE', '%<img src%');
+                                ->orWhere('atoms.xml', 'LIKE', '%<img %');
                         });
                         return;
                     }
                     else if($filterValue < 1){
                         $query->where('atoms.xml', 'NOT LIKE', '%type="figure"%')
-                            ->Where('atoms.xml', 'NOT LIKE', '%<img src%');
+                            ->Where('atoms.xml', 'NOT LIKE', '%<img %');
                         return;
                     }
                 }
