@@ -48,7 +48,8 @@ class QuickFixCleanUpUsage extends Command {
                   ->where(function($q){
                     $q->where('xml', 'LIKE', '%(Obsolete)%')
                         ->orwhere('xml', 'LIKE', '%(Slang)%')
-                        ->orwhere('xml', 'LIKE', '%(Informal)%');
+                        ->orwhere('xml', 'LIKE', '%(Informal)%')
+                        ->orwhere('xml', 'LIKE', '%(Nontechnical)%');
                   })->get();
 
         foreach($atoms as $atom) {
