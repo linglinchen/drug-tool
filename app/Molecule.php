@@ -409,6 +409,7 @@ class Molecule extends AppModel {
                     $label = "";
                 }
                 unset($temp);
+
                 //Normalize/remove tab/LF/CR from data
                 $term = preg_replace('/[\r\n\t]+/', '', $term);
 
@@ -419,11 +420,14 @@ class Molecule extends AppModel {
                 $tableNode = json_encode($tableNode);
                 $tableNode = json_decode($tableNode, true);
 
-
+                $id = '';
+                if (isset($tableNode['@attributes']) && isset($tableNode['@attributes']['id'])){
+                    $id = $tableNode['@attributes']['id'];
+                }
                 //Format data elements into tsv format
-                $tableRows .= "\n" . $term . "\t". $label. "\t\t". $caption . "\t\t" . $legend ."\t\t".
-                                $creditFull. "\t".
-                                "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
+                $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
+                                $creditFull. "\t\t\t" .
+                                "\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
             }
             $figureLogRows .= $tableRows;
         }
@@ -470,9 +474,9 @@ class Molecule extends AppModel {
 
                 $temp = $ceFigureNode->xpath(".//*[name()='ce:link']");
                 if(isset($temp[0]) && isset($temp[0]['locator']) && isset($temp[0]['locator'][0])){
-                    $label = $temp[0]['locator'][0];
+                    $link = $temp[0]['locator'][0];
                 }else{
-                    $label = "";
+                    $link = "";
                 }
 
                 $temp = $ceFigureNode->xpath(".//*[name()='ce:label']");
@@ -490,10 +494,18 @@ class Molecule extends AppModel {
                 $caption = preg_replace('/[\r\n\t]+/', '', $caption);
                 $legend = preg_replace('/[\r\n\t]+/', '', $legend);
 
+                $ceFigureNode = json_encode($ceFigureNode);
+                $ceFigureNode = json_decode($ceFigureNode, true);
+
+                $id = '';
+                if (isset($ceFigureNode['@attributes']) && isset($ceFigureNode['@attributes']['id'])){
+                    $id = $ceFigureNode['@attributes']['id'];
+                }
+
                 //Format data elements into tsv format
-                $ceFigureRows .= "\n" . $term . "\t". $label. "\t\t". $caption . "\t\t" . $legend ."\t\t".
-                                $creditFull. "\t".
-                                "\t\t\t\t\t\t\t\t\t" . "\t\t" . ' ';
+                $ceFigureRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
+                                $creditFull. "\t\t\t" .
+                                "\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
             }
             $figureLogRows .= $ceFigureRows;
         }
