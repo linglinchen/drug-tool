@@ -427,7 +427,7 @@ class Molecule extends AppModel {
                 //Format data elements into tsv format
                 $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
                                 $creditFull. "\t\t\t" .
-                                "\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                                "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
             }
             $figureLogRows .= $tableRows;
         }
@@ -503,9 +503,9 @@ class Molecule extends AppModel {
                 }
 
                 //Format data elements into tsv format
-                $ceFigureRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
-                                $creditFull. "\t\t\t" .
-                                "\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                $ceFigureRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $caption ."\t".
+                                $creditFull. "\t\t". $link . "\t" .
+                                "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
             }
             $figureLogRows .= $ceFigureRows;
         }
