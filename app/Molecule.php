@@ -521,41 +521,55 @@ class Molecule extends AppModel {
      *
      * @return array
      */
-    public function getImageFileName($moleculeXml) {
+    public function getImageFileName($moleculeXml, $doctype) {
         $ob = simplexml_load_string($moleculeXml);
-        $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
         $imageFiles = [];
+        if ($doctype == 'book')
+        {
+            $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:link"]');
+            if($figureNodes) {
+                $figureNodes = json_encode($figureNodes);
+                $figureNodes = (array)json_decode($figureNodes, true);
 
-        if($figureNodes) {
-            $figureNodes = json_encode($figureNodes);
-            $figureNodes = (array)json_decode($figureNodes, true);
+                foreach($figureNodes as $figureNode) {
+                    if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['locator'])) {
+                        $imageFiles[] = $figureNode['@attributes']['locator'];
+                    }
+                }
+            }
+        }else{
+            $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
+            if($figureNodes) {
+                $figureNodes = json_encode($figureNodes);
+                $figureNodes = (array)json_decode($figureNodes, true);
 
-            foreach($figureNodes as $figureNode) {
-                if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])) {
-                    if(isset($figureNode['file'])) {
-                        if(count($figureNode['file']) > 1) {
-                            foreach($figureNode['file'] as $file) {
-                                if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
-                                    $imageFiles[] = $file['@attributes']['src'];
+                foreach($figureNodes as $figureNode) {
+                    if(isset($figureNode['@attributes']) && isset($figureNode['@attributes']['id'])) {
+                        if(isset($figureNode['file'])) {
+                            if(count($figureNode['file']) > 1) {
+                                foreach($figureNode['file'] as $file) {
+                                    if(isset($file['@attributes']) && isset($file['@attributes']['src'])) {
+                                        $imageFiles[] = $file['@attributes']['src'];
+                                    }
+                                    else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
+                                        $imageFiles[] = $file['src'];
+                                    }
                                 }
-                                else if(isset($file['src'])) {  //for situation when abdomen: [0]=>
-                                    $imageFiles[] = $file['src'];
-                                }
+                            }
+                            else if(
+                                isset($figureNode['file']['@attributes']) &&
+                                isset($figureNode['file']['@attributes']['src'])
+                            ) {
+                                $imageFiles[] = $figureNode['file']['@attributes']['src'];
                             }
                         }
                         else if(
-                            isset($figureNode['file']['@attributes']) &&
-                            isset($figureNode['file']['@attributes']['src'])
+                            isset($figureNode['p']) && isset($figureNode['p']['@attributes']) &&
+                            isset($figureNode['p']['@attributes']['src_stub'])
                         ) {
-                            $imageFiles[] = $figureNode['file']['@attributes']['src'];
+                            //img situation: [p]->[src_stub] is equal to [file][src]
+                            $imageFiles[] = $figureNode['p']['@attributes']['src_stub'];
                         }
-                    }
-                    else if(
-                        isset($figureNode['p']) && isset($figureNode['p']['@attributes']) &&
-                        isset($figureNode['p']['@attributes']['src_stub'])
-                    ) {
-                        //img situation: [p]->[src_stub] is equal to [file][src]
-                        $imageFiles[] = $figureNode['p']['@attributes']['src_stub'];
                     }
                 }
             }
@@ -575,7 +589,7 @@ class Molecule extends AppModel {
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrations($moleculeXml, $zip, $productInfo, $code) {
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype='null') {
    
 		//TODO: pick these up from configuration
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
@@ -592,7 +606,7 @@ class Molecule extends AppModel {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
 		}
 
-		$imageFiles = $this->getImageFileName($moleculeXml);
+		$imageFiles = $this->getImageFileName($moleculeXml, $doctype);
 		foreach($imageFiles as $imageFile) {
 			$imageFound = false;
 			
@@ -602,7 +616,7 @@ class Molecule extends AppModel {
 
 			//legacy image
 			} else {
-				$imageDir = $productInfo['isbn_legacy'] . "/";
+				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
 			}
 
 			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
