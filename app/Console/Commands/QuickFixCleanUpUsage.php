@@ -18,7 +18,7 @@ class QuickFixCleanUpUsage extends Command {
      *
      * @var string
      */
-    protected $signature = 'quickfix:cleanupusage {productId}';
+    protected $signature = 'quickfix:cleanupusage {productId}'; //php artisan quickfix:cleanupusage 8
 
     /**
      * The console command description.
@@ -63,10 +63,11 @@ class QuickFixCleanUpUsage extends Command {
             preg_match('/(<usage[^>]*>)\s*(\r\n|\n|\r)\s*<emphasis style="italic">(\((\w)+\))\s*<\/emphasis>\s*(\r\n|\n|\r)\s*<\/usage>/',
                 $xml, $match);
             if (isset($match) && isset($match[0]) && isset($match[3])){
-                //$match[0] is <usage id="3">
+                //$match[0] is the whole string
+                //$match[1] is <usage id="3">
                 //$match[3] is (Obsolete)
                 $newXml = preg_replace('/(<usage[^>]*>)\s*(\r\n|\n|\r)\s*<emphasis style="italic">(\((\w)+\))\s*<\/emphasis>\s*(\r\n|\n|\r)\s*<\/usage>/',
-                    $match[0].$match[3].'</usage> ', $xml);
+                    $match[1].$match[3].'</usage> ', $xml);
             }
 
             if($newXml !== $atom->xml) {
