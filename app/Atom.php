@@ -76,7 +76,11 @@ class Atom extends AppModel {
     public function save(array $options = []) {
         $this->updateTitle();
         $doctype = Product::find($this->product_id)->getDoctype();
-        $this->xml = $doctype->assignXMLIds($this->xml);
+        if ($this->entity_id){
+            $this->xml = $doctype->assignXMLIds($this->xml, $this->entity_id);
+        }else{
+            $this->xml = $doctype->assignXMLIds($this->xml);
+        }
         $this->modified_by = \Auth::user()['id'];
         $autoStatus = array_get($options, 'autoStatus', true);
 

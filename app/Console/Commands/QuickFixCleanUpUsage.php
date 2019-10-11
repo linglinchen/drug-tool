@@ -74,7 +74,7 @@ class QuickFixCleanUpUsage extends Command {
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
               
-                //$newAtom->save();
+                $newAtom->save();
             }
         }
     }
