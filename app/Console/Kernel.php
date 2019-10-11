@@ -54,6 +54,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixContentArea::class,
         Commands\QuickFixPos::class,
         Commands\QuickFixCloseNursingReviewerAssignments::class,
+        Commands\QuickFixCleanUpUsage::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
         Commands\AssignReviewerTasks::class,
