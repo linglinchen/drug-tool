@@ -198,7 +198,7 @@ class MoleculeExportController extends Controller {
 
 			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 
-			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype);
 
 		//If doctype is XHTML, different xml wrapper is written.
 		} elseif($doctype === 'xhtml') {
