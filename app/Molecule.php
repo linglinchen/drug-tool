@@ -619,7 +619,7 @@ class Molecule extends AppModel {
 				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
 			}
 
-			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
+			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile; print_r($imagePath); exit;
 
 			foreach($imageExtensions as $imageExtension) {
 				//NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
