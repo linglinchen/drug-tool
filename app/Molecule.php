@@ -526,7 +526,7 @@ class Molecule extends AppModel {
         $imageFiles = [];
         if ($doctype == 'book')
         {
-            $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:link"]');
+            $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
                 $figureNodes = (array)json_decode($figureNodes, true);
