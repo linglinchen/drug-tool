@@ -425,9 +425,11 @@ class Molecule extends AppModel {
                     $id = $tableNode['@attributes']['id'];
                 }
                 //Format data elements into tsv format
-                $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
-                                $creditFull. "\t\t\t" .
-                                "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                if (strlen($creditFull) > 0){
+                    $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
+                                    $creditFull. "\t\t\t" .
+                                    "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                }
             }
             $figureLogRows .= $tableRows;
         }
@@ -483,6 +485,9 @@ class Molecule extends AppModel {
                 if(isset($temp[0])){
                     $Dom = dom_import_simplexml($temp[0]);
                     $label = $Dom->textContent;
+                }
+                else{
+                    $label = '';
                 }
 
                 unset($temp);
@@ -619,7 +624,7 @@ class Molecule extends AppModel {
 				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
 			}
 
-			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile; print_r($imagePath); exit;
+			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
 
 			foreach($imageExtensions as $imageExtension) {
 				//NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
