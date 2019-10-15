@@ -425,9 +425,11 @@ class Molecule extends AppModel {
                     $id = $tableNode['@attributes']['id'];
                 }
                 //Format data elements into tsv format
-                $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
-                                $creditFull. "\t\t\t" .
-                                "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                if (strlen($creditFull) > 0){
+                    $tableRows .= "\n" . $label . "\t\t". "Yes". "\t\t". $id . "\t" . $legend ."\t".
+                                    $creditFull. "\t\t\t" .
+                                    "\t\t\t\t\t\t\t\tComp" . "\tprint and online" . ' ';
+                }
             }
             $figureLogRows .= $tableRows;
         }
@@ -484,6 +486,9 @@ class Molecule extends AppModel {
                     $Dom = dom_import_simplexml($temp[0]);
                     $label = $Dom->textContent;
                 }
+                else{
+                    $label = '';
+                }
 
                 unset($temp);
 
@@ -526,7 +531,7 @@ class Molecule extends AppModel {
         $imageFiles = [];
         if ($doctype == 'book')
         {
-            $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:link"]');
+            $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
                 $figureNodes = (array)json_decode($figureNodes, true);
