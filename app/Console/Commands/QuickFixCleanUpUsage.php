@@ -62,7 +62,7 @@ class QuickFixCleanUpUsage extends Command {
             */
             preg_match('/(<usage[^>]*>)\s*(\r\n|\n|\r)\s*<emphasis style="italic">(\((\w)+\))\s*<\/emphasis>\s*(\r\n|\n|\r)\s*<\/usage>/',
                 $xml, $match);
-            if (isset($match) && isset($match[0]) && isset($match[3])){
+            if (isset($match) && isset($match[1]) && isset($match[3])){
                 //$match[0] is the whole string
                 //$match[1] is <usage id="3">
                 //$match[3] is (Obsolete)
