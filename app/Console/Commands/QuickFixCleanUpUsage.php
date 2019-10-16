@@ -70,7 +70,7 @@ class QuickFixCleanUpUsage extends Command {
                     $match[1].$match[3].'</usage> ', $xml);
             }
 
-            if($newXml && ($newXml !== $atom->xml)) {
+            if(isset($newXml) && ($newXml !== $atom->xml)) {
                 $newAtom = $atom->replicate();
                 $newAtom->xml = $newXml;
                 $newAtom->modified_by = null;
