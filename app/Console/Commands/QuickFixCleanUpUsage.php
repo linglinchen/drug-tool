@@ -53,7 +53,6 @@ class QuickFixCleanUpUsage extends Command {
                   })->get();
 
         foreach($atoms as $atom) {
-            $alphaTitle = $atom->alpha_title;
 
             $xml = $atom->xml;
             /* <usage id="3">
@@ -68,14 +67,13 @@ class QuickFixCleanUpUsage extends Command {
                 //$match[3] is (Obsolete)
                 $newXml = preg_replace('/(<usage[^>]*>)\s*(\r\n|\n|\r)\s*<emphasis style="italic">(\((\w)+\))\s*<\/emphasis>\s*(\r\n|\n|\r)\s*<\/usage>/',
                     $match[1].$match[3].'</usage> ', $xml);
-            }
 
-            if(isset($newXml) && ($newXml !== $atom->xml)) {
-                $newAtom = $atom->replicate();
-                $newAtom->xml = $newXml;
-                $newAtom->modified_by = null;
-              
-                $newAtom->save();
+                if(isset($newXml) && ($newXml !== $atom->xml)) {
+                    $newAtom = $atom->replicate();
+                    $newAtom->xml = $newXml;
+                    $newAtom->modified_by = null;
+                    $newAtom->save();
+                }
             }
         }
     }
