@@ -176,7 +176,7 @@ class Molecule extends AppModel {
 	 * @param string $doctype The molecule's doctype
 	 * @param integer $withFigures Whether to include figures or not (unused)
 	 *
-	 * @return string
+	 * @return string/array
 	 */
 	public function export($statusId = null, $doctype='drug', $withFigures=0) {
 		//Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
@@ -187,7 +187,9 @@ class Molecule extends AppModel {
 
 		$orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
-		$atoms = $orderedAtoms;
+        $atoms = $orderedAtoms;
+        
+        $xmlMolecule[$doctype]['xmlDeclaration'] = false;
 		
 		//the root element and @attribute(s) of a single molecule
 		$xmlMolecule = [
@@ -218,28 +220,54 @@ class Molecule extends AppModel {
 				],
 			],
 			'xhtml' => [
-				'root' => 'specialty',
+				'root' => false,
 				'attributes' => [
-					'id' => 'spec.' . $this->code,
-					'number' => $this->code,
-				],
+					'id' => 'html.' . $this->code,
+                ],
+                'xmlDeclaration' => true,
 			],
 
 		];
 
-		$xml = "\t" . '<' . $xmlMolecule[$doctype]['root'];
-		foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
-			$xml .= ' ' . $attName . '="' . $attValue .'"';
-		}
-		$xml .=  '>' . "\n";
+        //each atom is packaged separately and not into a molecule
+        if($xmlMolecule[$doctype]['root'] === false) {
+            $xml = array();
+            foreach($atoms as $atom) {
+                $atomXml = $atom->export();
+                $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
 
-        foreach($atoms as $atom) {
-            $atomXml = $atom->export();
-            $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
-            $xml .= $atomXml . "\n";
-		}
-		
-		$xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
+                if($xmlMolecule[$doctype]['xmlDeclaration']) {
+                    $atomXml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $atomXml;
+                }
+
+                foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
+                    //$atomXml .= ' ' . $attName . '="' . $attValue .'"';
+                }
+
+                $xml[] = $atomXml;
+            }
+
+        
+        //combine into molecule
+        } elseif($xmlMolecule[$doctype]['root'] !== false) {
+            if($xmlMolecule[$doctype]['xmlDeclaration']) {
+                $xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+            }
+
+            $xml .= "\t" . '<' . $xmlMolecule[$doctype]['root'];
+            foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
+                $xml .= ' ' . $attName . '="' . $attValue .'"';
+            }
+            $xml .=  '>' . "\n";
+
+            foreach($atoms as $atom) {
+                $atomXml = $atom->export();
+                $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
+                $xml .= $atomXml . "\n";
+            }
+            
+            $xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
+        }
 
 		return $xml;
 	}
