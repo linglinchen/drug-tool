@@ -108,7 +108,7 @@ class QuickFixFinishMoveNursingReviewerAssi extends Command {
         //         ->last();
 
         if (is_null($existing_assignments)){
-            //Assignment::query()->insert($assignment);
+            Assignment::query()->insert($assignment);
         }
     }
 
