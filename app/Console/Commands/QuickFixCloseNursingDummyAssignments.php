@@ -10,7 +10,7 @@ use App\UserDomain;
 use App\Assignment;
 ini_set('memory_limit', '1280M');
 
-class QuickFixCloseNursingDummyAssi extends Command {
+class QuickFixCloseNursingDummyAssignments extends Command {
     /**
      * The name and signature of the console command.
      *
