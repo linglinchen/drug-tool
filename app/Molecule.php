@@ -551,14 +551,17 @@ class Molecule extends AppModel {
 
     /**
      * Take the xml from above and return an array of image file names
+     * 
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param string $doctype The current doctype
+	 * @param string $basepath (optional) The repeated URL path for every image
      *
      * @return array
      */
-    public function getImageFileName($moleculeXml, $doctype) {
+    public function getImageFileName($moleculeXml, $doctype, $basepath=false) {
         $ob = simplexml_load_string($moleculeXml);
         $imageFiles = [];
-        if ($doctype == 'book')
-        {
+        if ($doctype == 'book') {
             $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
@@ -570,7 +573,30 @@ class Molecule extends AppModel {
                     }
                 }
             }
-        }else{
+
+        } elseif($doctype == 'xhtml') {
+            $doc = new \DOMDocument();
+            $xsl = new \XSLTProcessor();
+
+            $doc->loadXML($moleculeXml);
+
+            $xsldoc = new \DOMDocument();
+
+            $xsldoc->load('../app/Http/Controllers/doctype/' . $doctype .'/export_multimedia.xslt');
+
+            $xsl->importStyleSheet($xsldoc);
+
+            $parameters = array(
+                'output_format' => 'text',
+            );
+
+            $xsl->setParameter('', $parameters);
+
+            $imageFiles = explode("\n", $xsl->transformToXML($doc));
+
+            error_log('imageFiles:' . implode('', $imageFiles) . "\n", 3, "/var/www/logs/drug-tool.log");
+
+        } else {
             $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
@@ -619,12 +645,15 @@ class Molecule extends AppModel {
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
+     * @param string $doctype (optional) The doctype of the current product
+     * @param string $zipDir (optional) A location in zip to store images if not root
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype='null') {
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype='null', $zipDir='') {
    
-		//TODO: pick these up from configuration
+        //TODO: pick these up from configuration
+        //NOTE: ** Disable zscaler to get this working on Local **
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
 		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 		//these must be in order of preference
@@ -652,28 +681,32 @@ class Molecule extends AppModel {
 				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
 			}
 
-			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
-
+            $imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
+            
 			foreach($imageExtensions as $imageExtension) {
-				//NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
-				if(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
-					if(!$image = @file_get_contents($imagePath . "." . strtoupper($imageExtension))) {
-						//not found, check next extension
-						continue;
-					}
-					//found CAPITAL EXTENSION (ick)
-					$imageFound = true;
-					break;
-				}
-				//found default extension
-				$imageFound = true;
-				break;
+                if(substr($imagePath, -(strlen('.jpg'))) === '.jpg' && $image = @file_get_contents($imagePath)) {
+                    //not a filestub, no need to look by extension
+                    $imageExtension = 'jpg';
+
+                //NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
+                } elseif(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
+                    if(!$image = @file_get_contents($imagePath . "." . strtoupper($imageExtension))) {
+                        //not found, check next extension
+                        continue;
+                    }
+                    //found CAPITAL EXTENSION (ick)
+                    $imageFound = true;
+                    break;
+                }
+                //found default extension
+                $imageFound = true;
+                break;
 
 			}
 
 			//incidentally this will rename everything to use a lowercase extension
 			if($imageFound === true && $image) {
-				$zip->addFromString($imageFile . "." . $imageExtension, $image);
+				$zip->addFromString($zipDir . $imageFile . "." . $imageExtension, $image);
 
 			} else {
 				//TODO: log an error message because this was not found

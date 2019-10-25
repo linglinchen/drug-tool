@@ -204,6 +204,35 @@ class MoleculeExportController extends Controller {
 
 			//If doctype is XHTML, each atom is separately packaged
 			} elseif($doctype === 'xhtml') {
+				switch ((int)$productId) { //TODO: make the ISBNs dynamic
+					case 12:
+						$productInfo = [
+							'isbn' => '0000000000000',
+							'isbn_legacy' => 'procedure_videos',
+							'author' => 'Elsevier',
+							'title' => 'Procedure Videos',
+							'edition' => 2019,
+							'cds' => [
+								'firstname' => 'Paul',
+								'lastname' => 'Dever',
+								'phone' => '1 314 447 8949',
+								'email' => 'p.dever@elsevier.com',
+							],
+						];
+
+						break;
+				}
+
+
+//TODO: set doctype in productInfo and stop passing it
+//	stop trying every extension
+//	pass basepath to XSLT
+//	get the XML files
+//	don't try to fetch empty array item
+//	output dataset.xml
+
+
+
 				$xml = $moleculeXml;
 
 				$simpleXml = new \SimpleXMLElement($xml);
@@ -220,7 +249,7 @@ class MoleculeExportController extends Controller {
 				$atomZip->addFromString($ckid . '/' . $ckid . '/' . $ckid . '.html', $xml);
 
 
-				//$molecule->getIllustrations($moleculeXml, $atomZip, $productInfo, $code);
+				$molecule->getIllustrations($moleculeXml, $atomZip, $productInfo, $code, $doctype, $ckid . '/' . $ckid . '/');
 
 				$atomZip->close();
 
@@ -240,6 +269,8 @@ class MoleculeExportController extends Controller {
 				$xmlNoFullCredit = $molecule->removeFullCredit($xml);
 				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 			}
+
+			break;
 		}
 
 		$zip->close();
