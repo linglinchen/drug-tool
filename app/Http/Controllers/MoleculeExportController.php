@@ -49,6 +49,7 @@ class MoleculeExportController extends Controller {
 				'phone' => '1-000-000-0000',
 				'email' => '',
 			],
+			'doctype' => 'null',
 		];
 		$statusId = $request->input('statusId');
 		$statusId = $statusId === '' ? null : (int)$statusId;
@@ -77,6 +78,7 @@ class MoleculeExportController extends Controller {
 
 		//usually of length 1, but xhtml is expected to be more
 		foreach($moleculeXmlExport as $moleculeXml) {
+
 			//If doctype is dictionary, different xml wrapper is written.
 			if($doctype === 'dictionary') {
 				$xmlDoctype = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">';
@@ -96,6 +98,7 @@ class MoleculeExportController extends Controller {
 								'phone' => '1 314 447 8326',
 								'email' => 'sa.vora@elsevier.com',
 							],
+							'doctype' => $doctype,
 						];
 
 						break;
@@ -112,6 +115,7 @@ class MoleculeExportController extends Controller {
 								'phone' => '1 314 447 8326',
 								'email' => 'sa.vora@elsevier.com',
 							],
+							'doctype' => $doctype,
 						];
 
 						break;
@@ -152,6 +156,7 @@ class MoleculeExportController extends Controller {
 								'phone' => '1 314 447 8538',
 								'email' => 'l.goodrich@elsevier.com',
 							],
+							'doctype' => $doctype,
 						];
 
 						break;
@@ -186,6 +191,7 @@ class MoleculeExportController extends Controller {
 								'phone' => '1 314 447 8538',
 								'email' => 'l.goodrich@elsevier.com',
 							],
+							'doctype' => $doctype,
 						];
 
 						break;
@@ -200,7 +206,7 @@ class MoleculeExportController extends Controller {
 
 				$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
 
-				$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype);
+				$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
 
 			//If doctype is XHTML, each atom is separately packaged
 			} elseif($doctype === 'xhtml') {
@@ -218,18 +224,20 @@ class MoleculeExportController extends Controller {
 								'phone' => '1 314 447 8949',
 								'email' => 'p.dever@elsevier.com',
 							],
+							'doctype' => $doctype,
 						];
 
 						break;
 				}
 
 
-//TODO: set doctype in productInfo and stop passing it
-//	stop trying every extension
-//	pass basepath to XSLT
-//	get the XML files
-//	don't try to fetch empty array item
-//	output dataset.xml
+//TODO:
+//	set doctype in productInfo and stop passing it
+//stop trying every extension
+//pass basepath to XSLT
+//get the XML files
+//don't try to fetch empty array item
+//output dataset.xml
 
 
 

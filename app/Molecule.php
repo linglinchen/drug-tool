@@ -553,15 +553,15 @@ class Molecule extends AppModel {
      * Take the xml from above and return an array of image file names
      * 
 	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
-	 * @param string $doctype The current doctype
+	 * @param array $productInfo Information about the current product
 	 * @param string $basepath (optional) The repeated URL path for every image
      *
      * @return array
      */
-    public function getImageFileName($moleculeXml, $doctype, $basepath=false) {
+    public function getImageFileName($moleculeXml, $productInfo, $basepath=false) {
         $ob = simplexml_load_string($moleculeXml);
         $imageFiles = [];
-        if ($doctype == 'book') {
+        if ($productInfo['doctype'] == 'book') {
             $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
@@ -574,7 +574,7 @@ class Molecule extends AppModel {
                 }
             }
 
-        } elseif($doctype == 'xhtml') {
+        } elseif($productInfo['doctype'] == 'xhtml') {
             $doc = new \DOMDocument();
             $xsl = new \XSLTProcessor();
 
@@ -582,7 +582,7 @@ class Molecule extends AppModel {
 
             $xsldoc = new \DOMDocument();
 
-            $xsldoc->load('../app/Http/Controllers/doctype/' . $doctype .'/export_multimedia.xslt');
+            $xsldoc->load('../app/Http/Controllers/doctype/' . $productInfo['doctype'] .'/export_multimedia.xslt');
 
             $xsl->importStyleSheet($xsldoc);
 
@@ -645,15 +645,14 @@ class Molecule extends AppModel {
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
-     * @param string $doctype (optional) The doctype of the current product
      * @param string $zipDir (optional) A location in zip to store images if not root
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype='null', $zipDir='') {
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $zipDir='') {
    
         //TODO: pick these up from configuration
-        //NOTE: ** Disable zscaler to get this working on Local **
+        //NOTE: ** Disable Zscaler to get this working on Local **
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
 		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
 		//these must be in order of preference
@@ -668,7 +667,7 @@ class Molecule extends AppModel {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
 		}
 
-		$imageFiles = $this->getImageFileName($moleculeXml, $doctype);
+		$imageFiles = $this->getImageFileName($moleculeXml, $productInfo);
 		foreach($imageFiles as $imageFile) {
 			$imageFound = false;
 			
@@ -678,7 +677,7 @@ class Molecule extends AppModel {
 
 			//legacy image
 			} else {
-				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
+				$imageDir = $productInfo['doctype'] == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
 			}
 
             $imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
