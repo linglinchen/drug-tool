@@ -238,6 +238,7 @@ class MoleculeExportController extends Controller {
 //get the XML files
 //don't try to fetch empty array item
 //output dataset.xml
+//delete devmode to fetch more than one procedure!!
 
 
 

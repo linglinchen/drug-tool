@@ -592,7 +592,7 @@ class Molecule extends AppModel {
 
             $xsl->setParameter('', $parameters);
 
-            $imageFiles = explode("\n", $xsl->transformToXML($doc));
+            $imageFiles = array_filter(explode("\n", $xsl->transformToXML($doc)));
 
             error_log('imageFiles:' . implode('', $imageFiles) . "\n", 3, "/var/www/logs/drug-tool.log");
 
@@ -667,7 +667,8 @@ class Molecule extends AppModel {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
 		}
 
-		$imageFiles = $this->getImageFileName($moleculeXml, $productInfo);
+        $imageFiles = $this->getImageFileName($moleculeXml, $productInfo);
+        $imageFiles[] = 'cover';
 		foreach($imageFiles as $imageFile) {
 			$imageFound = false;
 			
@@ -683,6 +684,8 @@ class Molecule extends AppModel {
             $imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
             
 			foreach($imageExtensions as $imageExtension) {
+                error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
+
                 if(substr($imagePath, -(strlen('.jpg'))) === '.jpg' && $image = @file_get_contents($imagePath)) {
                     //not a filestub, no need to look by extension
                     $imageExtension = 'jpg';
@@ -697,7 +700,7 @@ class Molecule extends AppModel {
                     $imageFound = true;
                     break;
                 }
-                //found default extension
+                //found default or forced extension
                 $imageFound = true;
                 break;
 
