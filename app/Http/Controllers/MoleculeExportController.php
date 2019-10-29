@@ -257,8 +257,9 @@ class MoleculeExportController extends Controller {
 				
 				$atomZip->addFromString($ckid . '/' . $ckid . '/' . $ckid . '.html', $xml);
 
-
 				$molecule->getIllustrations($moleculeXml, $atomZip, $productInfo, $code, $ckid . '/' . $ckid . '/');
+
+				$molecule->getIllustrationLog($moleculeXml, $atomZip, $productInfo, $code, $zipDate, $ckid . '/');
 
 				$atomZip->close();
 

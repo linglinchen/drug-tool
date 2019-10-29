@@ -222,7 +222,7 @@
 		<xsl:value-of select="$basehref"/>
 		<xsl:text>.html</xsl:text>
 	</pathname>
-	<md5>__REPLACE_ME__</md5>
+	<md5>__CALCULATE_MD5__</md5>
 	<item-id>
 		<xsl:value-of select="$basehref"/>
 	</item-id>
@@ -237,7 +237,7 @@
 				<xsl:with-param name="output" select="'closedcaptions'"/>
 			</xsl:call-template>		
 		</pathname>
-		<md5>__REPLACE_ME__</md5>
+		<md5>__CALCULATE_MD5__</md5>
 	</asset>
 	
 	<asset>
@@ -248,14 +248,14 @@
 				<xsl:with-param name="output" select="'transcript'"/>
 			</xsl:call-template>
 		</pathname>
-		<md5>__REPLACE_ME__</md5>
+		<md5>__CALCULATE_MD5__</md5>
 	</asset>
 </xsl:template>
 
 <xsl:template match="xhtml:img | img" mode="dataset">
 	<asset>
 		<pathname><xsl:value-of select="$basehref"/><xsl:text>/</xsl:text><xsl:value-of select="@src"/></pathname>
-		<md5>__REPLACE_ME__</md5>
+		<md5>__CALCULATE_MD5__</md5>
 	</asset>
 </xsl:template>
 

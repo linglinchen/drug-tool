@@ -554,7 +554,7 @@ class Molecule extends AppModel {
      * 
 	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
 	 * @param array $productInfo Information about the current product
-	 * @param string $basepath (optional) The repeated URL path for every image
+	 * @param array $basepath (optional) Array of components used for a repeated URL path
      *
      * @return array
      */
@@ -587,14 +587,14 @@ class Molecule extends AppModel {
             $xsl->importStyleSheet($xsldoc);
 
             $parameters = array(
-                'output_format' => 'text',
+                'output_format' => 'fullpath',
             );
+
+            $parameters = array_merge($parameters, $basepath);
 
             $xsl->setParameter('', $parameters);
 
             $imageFiles = array_filter(explode("\n", $xsl->transformToXML($doc)));
-
-            error_log('imageFiles:' . implode('', $imageFiles) . "\n", 3, "/var/www/logs/drug-tool.log");
 
         } else {
             $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
@@ -654,7 +654,15 @@ class Molecule extends AppModel {
         //TODO: pick these up from configuration
         //NOTE: ** Disable Zscaler to get this working on Local **
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
-		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
+        $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
+        
+        //array of URL constructors
+        $basepath = array(
+            'imageserver' => $s3UrlProd . "/",
+            'legacy' => ($productInfo['doctype'] == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/"),
+            'suggested' => '',
+        );
+
 		//these must be in order of preference
 		$imageExtensions = ['eps', 'tif', 'jpg',];
 
@@ -667,28 +675,28 @@ class Molecule extends AppModel {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
 		}
 
-        $imageFiles = $this->getImageFileName($moleculeXml, $productInfo);
-        $imageFiles[] = 'cover';
+        $imageFiles = $this->getImageFileName($moleculeXml, $productInfo, $basepath);
+
 		foreach($imageFiles as $imageFile) {
 			$imageFound = false;
 			
 			//suggested image
 			if(substr($imageFile, 0, 9) == 'suggested') {
-				$imageDir = '';
+				$imageDir = $basepath['suggested'];
 
 			//legacy image
 			} else {
-				$imageDir = $productInfo['doctype'] == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
+				$imageDir = $basepath['legacy'];
 			}
 
-            $imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
+            $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
             
 			foreach($imageExtensions as $imageExtension) {
-                error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
-
-                if(substr($imagePath, -(strlen('.jpg'))) === '.jpg' && $image = @file_get_contents($imagePath)) {
-                    //not a filestub, no need to look by extension
-                    $imageExtension = 'jpg';
+                //not a filestub, no need to look by extension
+                if($imagePath == $imageFile
+                    && $image = @file_get_contents($imagePath)) {
+                    //set false so it is not appended to file placed in zip
+                    $imageExtension = false;
 
                 //NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
                 } elseif(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
@@ -706,9 +714,16 @@ class Molecule extends AppModel {
 
 			}
 
-			//incidentally this will rename everything to use a lowercase extension
+			//incidentally this will rename everything to use a lowercase extension; adds extension to filename if needed
 			if($imageFound === true && $image) {
-				$zip->addFromString($zipDir . $imageFile . "." . $imageExtension, $image);
+                $imageZipFilename = pathinfo($imageFile, PATHINFO_FILENAME);
+                if($imageExtension) {
+                    $imageZipExtension = '.' . $imageExtension;
+                } else {
+                    $imageZipExtension = '.' . pathinfo($imageFile, PATHINFO_EXTENSION);
+                }
+
+				$zip->addFromString($zipDir . $imageZipFilename . $imageZipExtension, $image);
 
 			} else {
 				//TODO: log an error message because this was not found
@@ -728,13 +743,18 @@ class Molecule extends AppModel {
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
 	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+     * @param string $zipDir (optional) A location in zip to store images if not root
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate) {
+	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate, $zipDir='') {
 		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
 
-		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+        if($productInfo['doctype'] == 'xhtml') {
+            $zip->addFromString($zipDir . 'dataset.xml' ,  $figureLog);
+        } else {
+            $zip->addFromString($zipDir . 'IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+        }
 
 		return true;
 	}
@@ -758,10 +778,34 @@ class Molecule extends AppModel {
 
 		if(!$molecule) {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-		}
+        }
+        
+        if($productInfo['doctype'] == 'xhtml') {
+            $doc = new \DOMDocument();
+            $xsl = new \XSLTProcessor();
 
-		//Top Header material for tab delimited illustration log download. static content added to log.
-		$metaheader_default = <<<METAHEADER
+            $doc->loadXML($moleculeXml);
+
+            $xsldoc = new \DOMDocument();
+
+            $xsldoc->load('../app/Http/Controllers/doctype/' . $productInfo['doctype'] .'/export_multimedia.xslt');
+
+            $xsl->importStyleSheet($xsldoc);
+
+            $parameters = array(
+                'output_format' => 'dataset',
+            );
+
+            //$parameters = array_merge($parameters, $basepath);
+
+            $xsl->setParameter('', $parameters);
+
+            $figureLog = $xsl->transformToXML($doc);
+            //error_log('imageExt:' . $figureLog . "}\n", 3, "/var/www/logs/drug-tool.log");
+        } else {
+
+            //Top Header material for tab delimited illustration log download. static content added to log.
+            $metaheader_default = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
 Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isbn']}\t\t\t\t
 Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
@@ -770,10 +814,11 @@ Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\
 Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\tLegend\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tLong credit line\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 
-		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
+            $figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
 
-        //change encoding so that Microsoft Excel displays UTF* properly
-        $figureLog = mb_convert_encoding($figureLog, 'UTF-16LE', 'UTF-8');
+            //change encoding so that Microsoft Excel displays UTF* properly
+            $figureLog = mb_convert_encoding($figureLog, 'UTF-16LE', 'UTF-8');
+        }
 
 		return $figureLog;
 	}
