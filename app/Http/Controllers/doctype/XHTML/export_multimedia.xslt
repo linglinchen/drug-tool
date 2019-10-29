@@ -36,7 +36,9 @@
 
  
 <xsl:param name="output_format" select="'text'"/>	<!-- text=list of filepaths only; array_php=PHP-consumable array of filepaths; dataset=Elsevier's XML dataset format -->
-<xsl:param name="basepath" select="false()"/>	<!-- base path where exportable files are located -->
+<xsl:param name="imageserver" select="false()"/>	<!-- base path where exportable files are located -->
+<xsl:param name="legacy" select="false()"/>	<!-- directory of legacy images -->
+<xsl:param name="suggested" select="false()"/>	<!-- directory of suggested images -->
 <xsl:param name="exportstart" select="110000"/>	<!-- arbitrary starting point for this export's dataset id -->
 <xsl:param name="exportsequence" select="0"/>	<!-- sequence of atom within current export -->
 
@@ -94,8 +96,11 @@
 <!-- PHP ARRAY, useful for fetching remote files during export -->
 <xsl:template match="ecm:targetResource | dct:title" mode="array_php">
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$basepath">
-		<xsl:value-of select="$basepath"/>
+	<xsl:if test="$imageserver">
+		<xsl:value-of select="$imageserver"/>
+	</xsl:if>
+	<xsl:if test="$legacy">
+		<xsl:value-of select="$legacy"/>
 	</xsl:if>
 	<xsl:call-template name="video_captions">
 		<xsl:with-param name="output" select="'closedcaptions'"/>
@@ -103,8 +108,11 @@
 	<xsl:text>';</xsl:text><xsl:value-of select="$newline"/>
 	
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$basepath">
-		<xsl:value-of select="$basepath"/>
+	<xsl:if test="$imageserver">
+		<xsl:value-of select="$imageserver"/>
+	</xsl:if>
+	<xsl:if test="$legacy">
+		<xsl:value-of select="$legacy"/>
 	</xsl:if>
 	<xsl:call-template name="video_captions">
 		<xsl:with-param name="output" select="'transcript'"/>
@@ -114,9 +122,12 @@
 
 <xsl:template match="xhtml:img | img" mode="array_php">
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$basepath">
-		<xsl:value-of select="$basepath"/>
-	</xsl:if>	
+	<xsl:if test="$imageserver">
+		<xsl:value-of select="$imageserver"/>
+	</xsl:if>
+	<xsl:if test="$legacy">
+		<xsl:value-of select="$legacy"/>
+	</xsl:if>
 	<xsl:value-of select="@src"/>
 	<xsl:text>';</xsl:text><xsl:value-of select="$newline"/>
 </xsl:template>
@@ -246,6 +257,13 @@
 <xsl:template name="video_captions">
 	<xsl:param name="output"/>
 	<xsl:value-of select="substring-before(substring-after(@rdf:resource, '/'), '-V-')"/>
+	
+	<xsl:if test="$imageserver">
+		<xsl:value-of select="$imageserver"/>
+	</xsl:if>
+	<xsl:if test="$legacy">
+		<xsl:value-of select="$legacy"/>
+	</xsl:if>
 	
 	<xsl:choose>
 		<xsl:when test="$output = 'closedcaptions'">

@@ -233,10 +233,10 @@ class MoleculeExportController extends Controller {
 
 //TODO:
 //	set doctype in productInfo and stop passing it
-//stop trying every extension
+//	stop trying every extension
 //pass basepath to XSLT
 //get the XML files
-//don't try to fetch empty array item
+//	don't try to fetch empty array item
 //output dataset.xml
 //delete devmode to fetch more than one procedure!!
 
