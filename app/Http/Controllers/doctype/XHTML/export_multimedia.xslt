@@ -35,10 +35,10 @@
  
 
  
-<xsl:param name="output_format" select="'text'"/>	<!-- text=list of filepaths only; array_php=PHP-consumable array of filepaths; dataset=Elsevier's XML dataset format -->
+<xsl:param name="output_format" select="'text'"/>	<!-- text=list of filepaths only; fullpath=list of files as URLs if provided; array_php=PHP-consumable array of filepaths; dataset=Elsevier's XML dataset format -->
 <xsl:param name="imageserver" select="false()"/>	<!-- base path where exportable files are located -->
 <xsl:param name="legacy" select="false()"/>	<!-- directory of legacy images -->
-<xsl:param name="suggested" select="false()"/>	<!-- directory of suggested images -->
+<xsl:param name="suggested" select="false()"/>	<!-- TODO: directory of suggested images -->
 <xsl:param name="exportstart" select="110000"/>	<!-- arbitrary starting point for this export's dataset id -->
 <xsl:param name="exportsequence" select="0"/>	<!-- sequence of atom within current export -->
 
@@ -55,6 +55,9 @@
 	<xsl:choose>
 		<xsl:when test="$output_format = 'text'">
 			<xsl:apply-templates select="descendant::ecm:hasRelationship/ecm:Relationship[dct:title[.='Described Multimedia Resource']]/ecm:targetResource | descendant::xhtml:img | descendant::img" mode="text"/>
+		</xsl:when>
+		<xsl:when test="$output_format = 'fullpath'">
+			<xsl:apply-templates select="descendant::ecm:hasRelationship/ecm:Relationship[dct:title[.='Described Multimedia Resource']]/ecm:targetResource | descendant::xhtml:img | descendant::img" mode="fullpath"/>
 		</xsl:when>
 		<xsl:when test="$output_format = 'array_php'">
 			<xsl:text>var $files_to_fetch = new Array();</xsl:text><xsl:value-of select="$newline"/>
@@ -93,27 +96,38 @@
 
 
 
+<!-- FULLPATH OUTPUT, useful for export when the file format is identified in XML -->
+<xsl:template match="ecm:targetResource | dct:title" mode="fullpath">
+	<xsl:call-template name="basepath"/>
+	<xsl:call-template name="video_captions">
+		<xsl:with-param name="output" select="'closedcaptions'"/>
+	</xsl:call-template>
+	<xsl:value-of select="$newline"/>
+
+	<xsl:call-template name="basepath"/>
+	<xsl:call-template name="video_captions">
+		<xsl:with-param name="output" select="'transcript'"/>
+	</xsl:call-template>
+	<xsl:value-of select="$newline"/>
+</xsl:template>
+
+<xsl:template match="xhtml:img | img" mode="fullpath">
+	<xsl:call-template name="basepath"/><xsl:value-of select="@src"/><xsl:value-of select="$newline"/>
+</xsl:template>
+
+
+
 <!-- PHP ARRAY, useful for fetching remote files during export -->
 <xsl:template match="ecm:targetResource | dct:title" mode="array_php">
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$imageserver">
-		<xsl:value-of select="$imageserver"/>
-	</xsl:if>
-	<xsl:if test="$legacy">
-		<xsl:value-of select="$legacy"/>
-	</xsl:if>
+	<xsl:call-template name="basepath"/>
 	<xsl:call-template name="video_captions">
 		<xsl:with-param name="output" select="'closedcaptions'"/>
 	</xsl:call-template>
 	<xsl:text>';</xsl:text><xsl:value-of select="$newline"/>
 	
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$imageserver">
-		<xsl:value-of select="$imageserver"/>
-	</xsl:if>
-	<xsl:if test="$legacy">
-		<xsl:value-of select="$legacy"/>
-	</xsl:if>
+	<xsl:call-template name="basepath"/>
 	<xsl:call-template name="video_captions">
 		<xsl:with-param name="output" select="'transcript'"/>
 	</xsl:call-template>
@@ -122,12 +136,7 @@
 
 <xsl:template match="xhtml:img | img" mode="array_php">
 	<xsl:text>$files_to_fetch[] = '</xsl:text>
-	<xsl:if test="$imageserver">
-		<xsl:value-of select="$imageserver"/>
-	</xsl:if>
-	<xsl:if test="$legacy">
-		<xsl:value-of select="$legacy"/>
-	</xsl:if>
+	<xsl:call-template name="basepath"/>
 	<xsl:value-of select="@src"/>
 	<xsl:text>';</xsl:text><xsl:value-of select="$newline"/>
 </xsl:template>
@@ -258,13 +267,6 @@
 	<xsl:param name="output"/>
 	<xsl:value-of select="substring-before(substring-after(@rdf:resource, '/'), '-V-')"/>
 	
-	<xsl:if test="$imageserver">
-		<xsl:value-of select="$imageserver"/>
-	</xsl:if>
-	<xsl:if test="$legacy">
-		<xsl:value-of select="$legacy"/>
-	</xsl:if>
-	
 	<xsl:choose>
 		<xsl:when test="$output = 'closedcaptions'">
 			<xsl:text>-Y-CC.xml</xsl:text>
@@ -273,6 +275,18 @@
 			<xsl:text>-Y-CT.xml</xsl:text>
 		</xsl:when>
 	</xsl:choose>
+</xsl:template>
+
+
+<!-- expands provided params into URL paths -->
+<xsl:template name="basepath">
+	<xsl:if test="$imageserver">
+		<xsl:value-of select="$imageserver"/>
+	</xsl:if>
+	<xsl:if test="$legacy">
+		<xsl:value-of select="$legacy"/>
+	</xsl:if>
+
 </xsl:template>
 
 
