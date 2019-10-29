@@ -76,6 +76,8 @@ class MoleculeExportController extends Controller {
 
 		$moleculeXmlExport = (array)$molecule->export($statusId, $doctype);
 
+		$moleculeIndex = 0;
+
 		//usually of length 1, but xhtml is expected to be more
 		foreach($moleculeXmlExport as $moleculeXml) {
 
@@ -237,8 +239,10 @@ class MoleculeExportController extends Controller {
 //	pass basepath to XSLT
 //	get the XML files
 //	don't try to fetch empty array item
-//output dataset.xml
-//delete devmode to fetch more than one procedure!!
+//	output dataset.xml
+//	upload remaining media files to S3 (EM done)
+//test MD5 calculation
+//delete $moleculeIndex throttle to fetch more than three procedures!!
 
 
 
@@ -259,7 +263,7 @@ class MoleculeExportController extends Controller {
 
 				$molecule->getIllustrations($moleculeXml, $atomZip, $productInfo, $code, $ckid . '/' . $ckid . '/');
 
-				$molecule->getIllustrationLog($moleculeXml, $atomZip, $productInfo, $code, $zipDate, $ckid . '/');
+				$molecule->getIllustrationLog($moleculeXml, $atomZip, $productInfo, $code, $zipDate, $ckid . '/', $moleculeIndex);
 
 				$atomZip->close();
 
@@ -280,7 +284,8 @@ class MoleculeExportController extends Controller {
 				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 			}
 
-			break;
+			$moleculeIndex++;
+			if($moleculeIndex > 2) { break; }
 		}
 
 		$zip->close();

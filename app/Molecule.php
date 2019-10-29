@@ -692,6 +692,7 @@ class Molecule extends AppModel {
             $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
             
 			foreach($imageExtensions as $imageExtension) {
+                error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
                 //not a filestub, no need to look by extension
                 if($imagePath == $imageFile
                     && $image = @file_get_contents($imagePath)) {
@@ -744,11 +745,12 @@ class Molecule extends AppModel {
 	 * @param array $code The molecule code being written
 	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
      * @param string $zipDir (optional) A location in zip to store images if not root
+     * @param string $moleculeIndex (optional) A counter iterating the molecule XML files
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate, $zipDir='') {
-		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
+	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate, $zipDir='', $moleculeIndex=0) {
+		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate, $moleculeIndex);
 
         if($productInfo['doctype'] == 'xhtml') {
             $zip->addFromString($zipDir . 'dataset.xml' ,  $figureLog);
@@ -767,10 +769,11 @@ class Molecule extends AppModel {
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
 	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+     * @param string $moleculeIndex (optional) A counter iterating the molecule XML files
 	 *
 	 * @return string Content constituting the illustration log's constituents
 	 */
-	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate) {
+	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate, $moleculeIndex=0) {
 		$molecule = Molecule::allForCurrentProduct()
 				->where('code', '=', $code)
 				->get()
@@ -794,6 +797,7 @@ class Molecule extends AppModel {
 
             $parameters = array(
                 'output_format' => 'dataset',
+                'exportsequence' => $moleculeIndex,
             );
 
             //$parameters = array_merge($parameters, $basepath);
@@ -801,7 +805,7 @@ class Molecule extends AppModel {
             $xsl->setParameter('', $parameters);
 
             $figureLog = $xsl->transformToXML($doc);
-            //error_log('imageExt:' . $figureLog . "}\n", 3, "/var/www/logs/drug-tool.log");
+
         } else {
 
             //Top Header material for tab delimited illustration log download. static content added to log.
