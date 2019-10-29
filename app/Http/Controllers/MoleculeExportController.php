@@ -243,6 +243,7 @@ class MoleculeExportController extends Controller {
 //	upload remaining media files to S3 (EM done)
 //test MD5 calculation
 //delete $moleculeIndex throttle to fetch more than three procedures!!
+//remove error logging
 
 
 
