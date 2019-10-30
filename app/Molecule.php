@@ -176,7 +176,7 @@ class Molecule extends AppModel {
 	 * @param string $doctype The molecule's doctype
 	 * @param integer $withFigures Whether to include figures or not (unused)
 	 *
-	 * @return string
+	 * @return string/array
 	 */
 	public function export($statusId = null, $doctype='drug', $withFigures=0) {
 		//Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
@@ -187,7 +187,7 @@ class Molecule extends AppModel {
 
 		$orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
-		$atoms = $orderedAtoms;
+        $atoms = $orderedAtoms;
 		
 		//the root element and @attribute(s) of a single molecule
 		$xmlMolecule = [
@@ -196,12 +196,14 @@ class Molecule extends AppModel {
 				'attributes' => [
 					'letter' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'drug' => [
 				'root' => 'alpha',
 				'attributes' => [
 					'letter' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'question' => [
 				'root' => 'chapter',
@@ -209,6 +211,7 @@ class Molecule extends AppModel {
 					'id' => 'c' . $this->code,
 					'number' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
             'book' => [
 				'root' => 'chapter',
@@ -216,30 +219,57 @@ class Molecule extends AppModel {
 					'id' => 'c' . $this->code,
 					'code' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'xhtml' => [
-				'root' => 'specialty',
+				'root' => false,
 				'attributes' => [
-					'id' => 'spec.' . $this->code,
-					'number' => $this->code,
-				],
+					'id' => 'html.' . $this->code,
+                ],
+                'xmlDeclaration' => true,
 			],
 
 		];
 
-		$xml = "\t" . '<' . $xmlMolecule[$doctype]['root'];
-		foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
-			$xml .= ' ' . $attName . '="' . $attValue .'"';
-		}
-		$xml .=  '>' . "\n";
+        //each atom is packaged separately and not into a molecule
+        if($xmlMolecule[$doctype]['root'] === false) {
+            $xml = array();
+            foreach($atoms as $atom) {
+                $atomXml = $atom->export();
+                $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
 
-        foreach($atoms as $atom) {
-            $atomXml = $atom->export();
-            $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
-            $xml .= $atomXml . "\n";
-		}
-		
-		$xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
+                if($xmlMolecule[$doctype]['xmlDeclaration']) {
+                    $atomXml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $atomXml;
+                }
+
+                foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
+                    //$atomXml .= ' ' . $attName . '="' . $attValue .'"';
+                }
+
+                $xml[] = $atomXml;
+            }
+
+        
+        //combine into molecule
+        } elseif($xmlMolecule[$doctype]['root'] !== false) {
+            if($xmlMolecule[$doctype]['xmlDeclaration']) {
+                $xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+            }
+
+            $xml .= "\t" . '<' . $xmlMolecule[$doctype]['root'];
+            foreach($xmlMolecule[$doctype]['attributes'] as $attName => $attValue) {
+                $xml .= ' ' . $attName . '="' . $attValue .'"';
+            }
+            $xml .=  '>' . "\n";
+
+            foreach($atoms as $atom) {
+                $atomXml = $atom->export();
+                $atomXml = "\t\t" . str_replace("\n", "\n\t\t", $atomXml);      //indent the atom
+                $xml .= $atomXml . "\n";
+            }
+            
+            $xml .= "\t" . '</' . $xmlMolecule[$doctype]['root'] . '>' . "\n";
+        }
 
 		return $xml;
 	}
@@ -523,14 +553,17 @@ class Molecule extends AppModel {
 
     /**
      * Take the xml from above and return an array of image file names
+     * 
+	 * @param string $moleculeXml The current molecule's XML in which the illustrations are to be found
+	 * @param array $productInfo Information about the current product
+	 * @param array $basepath (optional) Array of components used for a repeated URL path
      *
      * @return array
      */
-    public function getImageFileName($moleculeXml, $doctype) {
+    public function getImageFileName($moleculeXml, $productInfo, $basepath=false) {
         $ob = simplexml_load_string($moleculeXml);
         $imageFiles = [];
-        if ($doctype == 'book')
-        {
+        if ($productInfo['doctype'] == 'book') {
             $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
@@ -542,7 +575,30 @@ class Molecule extends AppModel {
                     }
                 }
             }
-        }else{
+
+        } elseif($productInfo['doctype'] == 'xhtml') {
+            $doc = new \DOMDocument();
+            $xsl = new \XSLTProcessor();
+
+            $doc->loadXML($moleculeXml);
+
+            $xsldoc = new \DOMDocument();
+
+            $xsldoc->load('../app/Http/Controllers/doctype/' . $productInfo['doctype'] .'/export_multimedia.xslt');
+
+            $xsl->importStyleSheet($xsldoc);
+
+            $parameters = array(
+                'output_format' => 'fullpath',
+            );
+
+            $parameters = array_merge($parameters, $basepath);
+
+            $xsl->setParameter('', $parameters);
+
+            $imageFiles = array_filter(explode("\n", $xsl->transformToXML($doc)));
+
+        } else {
             $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
             if($figureNodes) {
                 $figureNodes = json_encode($figureNodes);
@@ -591,14 +647,24 @@ class Molecule extends AppModel {
 	 * @param object $zip The zip object into which to add the illustrations
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
+     * @param string $zipDir (optional) A location in zip to store images if not root
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype='null') {
+	public function getIllustrations($moleculeXml, $zip, $productInfo, $code, $zipDir='') {
    
-		//TODO: pick these up from configuration
+        //TODO: pick these up from configuration
+        //NOTE: ** Disable Zscaler to get this working on Local **
 		$s3UrlDev = 'https://s3.amazonaws.com/metis-imageserver-dev.elseviermultimedia.us';
-		$s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
+        $s3UrlProd = 'https://s3.amazonaws.com/metis-imageserver.elseviermultimedia.us';
+        
+        //array of URL constructors
+        $basepath = array(
+            'imageserver' => $s3UrlProd . "/",
+            'legacy' => ($productInfo['doctype'] == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/"),
+            'suggested' => '',
+        );
+
 		//these must be in order of preference
 		$imageExtensions = ['eps', 'tif', 'jpg',];
 
@@ -611,41 +677,56 @@ class Molecule extends AppModel {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
 		}
 
-		$imageFiles = $this->getImageFileName($moleculeXml, $doctype);
+        $imageFiles = $this->getImageFileName($moleculeXml, $productInfo, $basepath);
+
 		foreach($imageFiles as $imageFile) {
 			$imageFound = false;
 			
 			//suggested image
 			if(substr($imageFile, 0, 9) == 'suggested') {
-				$imageDir = '';
+				$imageDir = $basepath['suggested'];
 
 			//legacy image
 			} else {
-				$imageDir = $doctype == 'book' ? $productInfo['isbn'] . "/" : $productInfo['isbn_legacy'] . "/";
+				$imageDir = $basepath['legacy'];
 			}
 
-			$imagePath = $s3UrlProd . "/" . $imageDir . $imageFile;
-
+            $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
+            
 			foreach($imageExtensions as $imageExtension) {
-				//NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
-				if(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
-					if(!$image = @file_get_contents($imagePath . "." . strtoupper($imageExtension))) {
-						//not found, check next extension
-						continue;
-					}
-					//found CAPITAL EXTENSION (ick)
-					$imageFound = true;
-					break;
-				}
-				//found default extension
-				$imageFound = true;
-				break;
+                error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
+                //not a filestub, no need to look by extension
+                if($imagePath == $imageFile
+                    && $image = @file_get_contents($imagePath)) {
+                    //set false so it is not appended to file placed in zip
+                    $imageExtension = false;
+
+                //NOTE: we're ignoring what should be 404 errors because we _expect_ failures and want to quickly skip to next attempt
+                } elseif(!$image = @file_get_contents($imagePath . "." . $imageExtension)) {
+                    if(!$image = @file_get_contents($imagePath . "." . strtoupper($imageExtension))) {
+                        //not found, check next extension
+                        continue;
+                    }
+                    //found CAPITAL EXTENSION (ick)
+                    $imageFound = true;
+                    break;
+                }
+                //found default or forced extension
+                $imageFound = true;
+                break;
 
 			}
 
-			//incidentally this will rename everything to use a lowercase extension
+			//incidentally this will rename everything to use a lowercase extension; adds extension to filename if needed
 			if($imageFound === true && $image) {
-				$zip->addFromString($imageFile . "." . $imageExtension, $image);
+                $imageZipFilename = pathinfo($imageFile, PATHINFO_FILENAME);
+                if($imageExtension) {
+                    $imageZipExtension = '.' . $imageExtension;
+                } else {
+                    $imageZipExtension = '.' . pathinfo($imageFile, PATHINFO_EXTENSION);
+                }
+
+				$zip->addFromString($zipDir . $imageZipFilename . $imageZipExtension, $image);
 
 			} else {
 				//TODO: log an error message because this was not found
@@ -665,13 +746,19 @@ class Molecule extends AppModel {
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
 	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+     * @param string $zipDir (optional) A location in zip to store images if not root
+     * @param string $moleculeIndex (optional) A counter iterating the molecule XML files
 	 *
 	 * @return boolean Also modifies provided $zip
 	 */
-	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate) {
-		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate);
+	public function getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate, $zipDir='', $moleculeIndex=0) {
+		$figureLog = $this->createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate, $moleculeIndex);
 
-		$zip->addFromString('IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+        if($productInfo['doctype'] == 'xhtml') {
+            $zip->addFromString($zipDir . 'dataset.xml' ,  $figureLog);
+        } else {
+            $zip->addFromString($zipDir . 'IllustrationLog_' . $code . '.tsv' ,  $figureLog);
+        }
 
 		return true;
 	}
@@ -684,10 +771,11 @@ class Molecule extends AppModel {
 	 * @param array $productInfo Information about the current product
 	 * @param array $code The molecule code being written
 	 * @param array $zipDate The date on which this zip is being created and at which time the illustration log was generated
+     * @param string $moleculeIndex (optional) A counter iterating the molecule XML files
 	 *
 	 * @return string Content constituting the illustration log's constituents
 	 */
-	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate) {
+	public function createIllustrationLog($moleculeXml, $productInfo, $code, $zipDate, $moleculeIndex=0) {
 		$molecule = Molecule::allForCurrentProduct()
 				->where('code', '=', $code)
 				->get()
@@ -695,10 +783,35 @@ class Molecule extends AppModel {
 
 		if(!$molecule) {
 			return ApiError::buildResponse(Response::HTTP_NOT_FOUND, 'The requested molecule could not be found.');
-		}
+        }
+        
+        if($productInfo['doctype'] == 'xhtml') {
+            $doc = new \DOMDocument();
+            $xsl = new \XSLTProcessor();
 
-		//Top Header material for tab delimited illustration log download. static content added to log.
-		$metaheader_default = <<<METAHEADER
+            $doc->loadXML($moleculeXml);
+
+            $xsldoc = new \DOMDocument();
+
+            $xsldoc->load('../app/Http/Controllers/doctype/' . $productInfo['doctype'] .'/export_multimedia.xslt');
+
+            $xsl->importStyleSheet($xsldoc);
+
+            $parameters = array(
+                'output_format' => 'dataset',
+                'exportsequence' => $moleculeIndex,
+            );
+
+            //$parameters = array_merge($parameters, $basepath);
+
+            $xsl->setParameter('', $parameters);
+
+            $figureLog = $xsl->transformToXML($doc);
+
+        } else {
+
+            //Top Header material for tab delimited illustration log download. static content added to log.
+            $metaheader_default = <<<METAHEADER
 Illustration Processing Control Sheet\t\t\t\t\t\t\t\t\t\t\t
 Author:\t{$productInfo['author']}\t\t\t\t\t\t\t\t\t\t\tISBN:\t{$productInfo['isbn']}\t\t\t\t
 Title:\t{$productInfo['title']}\t\t\t\t\t\t\t\t\t\t\tEdition:\t{$productInfo['edition']}\t\t\t\t
@@ -707,10 +820,11 @@ Phone/Email:\t{$productInfo['cds']['phone']}/{$productInfo['cds']['email']}\t\t\
 Figure Number\tPieces (No.)\tDigital (Y/N)\tTo Come\t Previous edition fig #\tLegend\t Borrowed from other Elsevier sources (author(s), title, ed, fig #)\tLong credit line\tDigital file name (include disc number if multiple discs)\tFINAL FIG FILE NAME\t 1/C HT\t 2/C HT\t 4/C HT\t 1/C LD\t 2/C LD\t 4/C LD\tArt category\tArt point of contact\t Comments\n
 METAHEADER;
 
-		$figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
+            $figureLog = $this->addFigureLog($moleculeXml, $metaheader_default);
 
-        //change encoding so that Microsoft Excel displays UTF* properly
-        $figureLog = mb_convert_encoding($figureLog, 'UTF-16LE', 'UTF-8');
+            //change encoding so that Microsoft Excel displays UTF* properly
+            $figureLog = mb_convert_encoding($figureLog, 'UTF-16LE', 'UTF-8');
+        }
 
 		return $figureLog;
 	}

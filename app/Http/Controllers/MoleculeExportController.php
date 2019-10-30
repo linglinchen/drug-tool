@@ -49,6 +49,7 @@ class MoleculeExportController extends Controller {
 				'phone' => '1-000-000-0000',
 				'email' => '',
 			],
+			'doctype' => 'null',
 		];
 		$statusId = $request->input('statusId');
 		$statusId = $statusId === '' ? null : (int)$statusId;
@@ -73,160 +74,219 @@ class MoleculeExportController extends Controller {
 		$filepath = tempnam(sys_get_temp_dir(), $code . '_xml_zip');     //generate the zip in the tmp dir, so it doesn't hang around
 		$result = $zip->open($filepath, \ZipArchive::OVERWRITE);
 
-		$moleculeXml = $molecule->export($statusId, $doctype);
+		$moleculeXmlExport = (array)$molecule->export($statusId, $doctype);
 
-		//If doctype is dictionary, different xml wrapper is written.
-		if($doctype === 'dictionary') {
-			$xmlDoctype = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">';
-			$xmlRoot = 'dictionary';
+		$moleculeIndex = 0;
 
-			switch ((int)$productId) { //TODO: make the ISBNs dynamic
-				case 3:
-					$productInfo = [
-						'isbn' => '9780702074639',
-						'isbn_legacy' => '9780702032318',
-						'author' => 'Saunders',
-						'title' => 'Veterinary Dictionary',
-						'edition' => 5,
-						'cds' => [
-							'firstname' => 'Sarah',
-							'lastname' => 'Vora',
-							'phone' => '1 314 447 8326',
-							'email' => 'sa.vora@elsevier.com',
-						],
-					];
+		//usually of length 1, but xhtml is expected to be more
+		foreach($moleculeXmlExport as $moleculeXml) {
 
-					break;
-				case 5:
-					$productInfo = [
-						'isbn' => '9780323546355',
-						'isbn_legacy' => '9780323100120',
-						'author' => 'Mosby',
-						'title' => 'Dental Dictionary',
-						'edition' => 4,
-						'cds' => [
-							'firstname' => 'Sarah',
-							'lastname' => 'Vora',
-							'phone' => '1 314 447 8326',
-							'email' => 'sa.vora@elsevier.com',
-						],
-					];
+			//If doctype is dictionary, different xml wrapper is written.
+			if($doctype === 'dictionary') {
+				$xmlDoctype = '<!DOCTYPE dictionary PUBLIC "-//ES//DTD dictionary DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_5.dtd">';
+				$xmlRoot = 'dictionary';
 
-					break;
-				default:
-					//nothing special to do here
-					break;
+				switch ((int)$productId) { //TODO: make the ISBNs dynamic
+					case 3:
+						$productInfo = [
+							'isbn' => '9780702074639',
+							'isbn_legacy' => '9780702032318',
+							'author' => 'Saunders',
+							'title' => 'Veterinary Dictionary',
+							'edition' => 5,
+							'cds' => [
+								'firstname' => 'Sarah',
+								'lastname' => 'Vora',
+								'phone' => '1 314 447 8326',
+								'email' => 'sa.vora@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+					case 5:
+						$productInfo = [
+							'isbn' => '9780323546355',
+							'isbn_legacy' => '9780323100120',
+							'author' => 'Mosby',
+							'title' => 'Dental Dictionary',
+							'edition' => 4,
+							'cds' => [
+								'firstname' => 'Sarah',
+								'lastname' => 'Vora',
+								'phone' => '1 314 447 8326',
+								'email' => 'sa.vora@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+					default:
+						//nothing special to do here
+						break;
+				}
+
+				$xml = $xmlDoctype . "\n";
+				$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+				$xml .= '<body>' . "\n";
+				$xml .= $moleculeXml;
+				$xml .= '</body>' . "\n";
+				$xml .= '</'. $xmlRoot . '>';
+				$xmlNoFullCredit = $molecule->removeFullCredit($xml);
+				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
+
+				$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+				
+				$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+
+			//If doctype is questions, different xml wrapper is written.
+			} elseif($doctype === 'question') {
+				$xmlDoctype = '<!DOCTYPE questions PUBLIC "-//ES//DTD questions DTD version 1.1//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/questions_1_1.dtd">';
+				$xmlRoot = 'questions';
+				
+				switch ((int)$productId) { //TODO: make the ISBNs dynamic
+					case 7:
+						$productInfo = [
+							'isbn' => '9780702074639',
+							'isbn_legacy' => '9780323479608',
+							'author' => 'Silvestri',
+							'title' => 'Saunders 2019-2020 Strategies for Test Success',
+							'edition' => 6,
+							'cds' => [
+								'firstname' => 'Laura',
+								'lastname' => 'Goodrich',
+								'phone' => '1 314 447 8538',
+								'email' => 'l.goodrich@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+				}
+
+				$xml = $xmlDoctype . "\n";
+				$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+				$xml .= $moleculeXml;
+				$xml .= '</'. $xmlRoot . '>';
+				$xmlNoFullCredit = $molecule->removeFullCredit($xml);
+				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
+
+				$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+				
+				$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+
+			} elseif($doctype === 'book') {
+				$xmlDoctype = '<!DOCTYPE chapter PUBLIC "-//ES//DTD book DTD version 1.1//EN//XML" "https://major-tool-development.s3-us-west-2.amazonaws.com/DTDs/book540.dtd">';
+				$xmlRoot = 'chapter';
+
+				switch ((int)$productId) { //TODO: make the ISBNs dynamic
+					case 10:
+						$productInfo = [
+							'isbn' => '9780323709934',
+							'isbn_legacy' => '9780323448154',
+							'author' => 'Silvestri',
+							'title' => 'Evolve Resources for Saunders Q & A Review for the NCLEX-RN® Examination',
+							'edition' => 8,
+							'cds' => [
+								'firstname' => 'Laura',
+								'lastname' => 'Goodrich',
+								'phone' => '1 314 447 8538',
+								'email' => 'l.goodrich@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+				}
+
+				$xml = $xmlDoctype . "\n";
+				$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+				$xml .= $moleculeXml;
+				$xml .= '</'. $xmlRoot . '>';
+				$xmlNoFullCredit = $molecule->removeFullCredit($xml);
+				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
+
+				$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
+
+				$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
+
+			//If doctype is XHTML, each atom is separately packaged
+			} elseif($doctype === 'xhtml') {
+				switch ((int)$productId) { //TODO: make the ISBNs dynamic
+					case 12:
+						$productInfo = [
+							'isbn' => '0000000000000',
+							'isbn_legacy' => 'procedure_videos',
+							'author' => 'Elsevier',
+							'title' => 'Procedure Videos',
+							'edition' => 2019,
+							'cds' => [
+								'firstname' => 'Paul',
+								'lastname' => 'Dever',
+								'phone' => '1 314 447 8949',
+								'email' => 'p.dever@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+				}
+
+
+//TODO:
+//	set doctype in productInfo and stop passing it
+//	stop trying every extension
+//	pass basepath to XSLT
+//	get the XML files
+//	don't try to fetch empty array item
+//	output dataset.xml
+//	upload remaining media files to S3 (EM done)
+//test MD5 calculation
+//delete $moleculeIndex throttle to fetch more than three procedures!!
+//remove error logging
+
+
+
+				$xml = $moleculeXml;
+
+				$simpleXml = new \SimpleXMLElement($xml);
+				$simpleXml->registerXPathNamespace('xhtml', 'http://www.w3.org/1999/xhtml'); //XPATH 1 needs help with default namespace
+
+				$ckid = str_replace(':', '_', $simpleXml->xpath('/xhtml:html/xhtml:head/xhtml:base[1]/@href')[0]); //make safe for filenames
+				
+				//create zip of this atom
+				$atomZip = new \ZipArchive();
+				$atomFilename = $ckid . '.zip';
+				$atomFilepath = tempnam(sys_get_temp_dir(), $ckid . '_xml_zip');
+				$atomResult = $atomZip->open($atomFilepath, \ZipArchive::OVERWRITE);
+				
+				$atomZip->addFromString($ckid . '/' . $ckid . '/' . $ckid . '.html', $xml);
+
+				$molecule->getIllustrations($moleculeXml, $atomZip, $productInfo, $code, $ckid . '/' . $ckid . '/');
+
+				$molecule->getIllustrationLog($moleculeXml, $atomZip, $productInfo, $code, $zipDate, $ckid . '/', $moleculeIndex);
+
+				$atomZip->close();
+
+				$zip->addFile($atomFilepath, $atomFilename);
+
+			//both urecognized and drug doctypes get original code; also skip illustrations for now
+			} else {
+				$xmlDoctype = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/3_8_drug.dtd">';
+				$xmlRoot = 'drug_guide';
+
+				$xml = $xmlDoctype . "\n";
+				$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
+				$xml .= '<body>' . "\n";
+				$xml .= $moleculeXml;
+				$xml .= '</body>' . "\n";
+				$xml .= '</'. $xmlRoot . '>';
+				$xmlNoFullCredit = $molecule->removeFullCredit($xml);
+				$zip->addFromString($code . '.xml', $xmlNoFullCredit);
 			}
 
-			$xml = $xmlDoctype . "\n";
-			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= '<body>' . "\n";
-			$xml .= $moleculeXml;
-			$xml .= '</body>' . "\n";
-			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
-			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
-
-			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
-			
-			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
-
-		//If doctype is questions, different xml wrapper is written.
-		} elseif($doctype === 'question') {
-			$xmlDoctype = '<!DOCTYPE questions PUBLIC "-//ES//DTD questions DTD version 1.1//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/questions_1_1.dtd">';
-			$xmlRoot = 'questions';
-			
-			switch ((int)$productId) { //TODO: make the ISBNs dynamic
-				case 7:
-					$productInfo = [
-						'isbn' => '9780702074639',
-						'isbn_legacy' => '9780323479608',
-						'author' => 'Silvestri',
-						'title' => 'Saunders 2019-2020 Strategies for Test Success',
-						'edition' => 6,
-						'cds' => [
-							'firstname' => 'Laura',
-							'lastname' => 'Goodrich',
-							'phone' => '1 314 447 8538',
-							'email' => 'l.goodrich@elsevier.com',
-						],
-					];
-
-					break;
-			}
-
-			$xml = $xmlDoctype . "\n";
-			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= $moleculeXml;
-			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
-			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
-
-			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
-			
-			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
-
-		} elseif($doctype === 'book') {
-			$xmlDoctype = '<!DOCTYPE chapter PUBLIC "-//ES//DTD book DTD version 1.1//EN//XML" "https://major-tool-development.s3-us-west-2.amazonaws.com/DTDs/book540.dtd">';
-			$xmlRoot = 'chapter';
-
-			switch ((int)$productId) { //TODO: make the ISBNs dynamic
-				case 10:
-					$productInfo = [
-						'isbn' => '9780323709934',
-						'isbn_legacy' => '9780323448154',
-						'author' => 'Silvestri',
-						'title' => 'Evolve Resources for Saunders Q & A Review for the NCLEX-RN® Examination',
-						'edition' => 8,
-						'cds' => [
-							'firstname' => 'Laura',
-							'lastname' => 'Goodrich',
-							'phone' => '1 314 447 8538',
-							'email' => 'l.goodrich@elsevier.com',
-						],
-					];
-
-					break;
-			}
-
-			$xml = $xmlDoctype . "\n";
-			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= $moleculeXml;
-			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
-			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
-
-			$molecule->getIllustrationLog($moleculeXml, $zip, $productInfo, $code, $zipDate);
-
-			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code, $doctype);
-
-		//If doctype is XHTML, different xml wrapper is written.
-		} elseif($doctype === 'xhtml') {
-			$xmlDoctype = '<!DOCTYPE root PUBLIC "-//ES//DTD procedures DTD version 1.0//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/procedure_0_1.dtd">';
-			$xmlRoot = 'root';
-
-			$xml = $xmlDoctype . "\n";
-			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= $moleculeXml;
-			$xml .= '</'. $xmlRoot . '>';
-
-			$zip->addFromString($code . '.xml', $xml);
-
-			$molecule->getIllustrations($moleculeXml, $zip, $productInfo, $code);
-
-		//both urecognized and drug doctypes get original code; also skip illustrations for now
-		} else {
-			$xmlDoctype = '<!DOCTYPE drug_guide PUBLIC "-//ES//DTD drug_guide DTD version 3.4//EN//XML" "https://major-tool-development.s3.amazonaws.com/DTDs/3_8_drug.dtd">';
-			$xmlRoot = 'drug_guide';
-
-			$xml = $xmlDoctype . "\n";
-			$xml .= '<' . $xmlRoot . ' isbn="' . $productInfo['isbn'] . '">' . "\n";
-			$xml .= '<body>' . "\n";
-			$xml .= $moleculeXml;
-			$xml .= '</body>' . "\n";
-			$xml .= '</'. $xmlRoot . '>';
-			$xmlNoFullCredit = $molecule->removeFullCredit($xml);
-			$zip->addFromString($code . '.xml', $xmlNoFullCredit);
+			$moleculeIndex++;
+			if($moleculeIndex > 2) { break; }
 		}
 
 		$zip->close();
