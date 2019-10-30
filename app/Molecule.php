@@ -188,8 +188,6 @@ class Molecule extends AppModel {
 		$orderedAtoms = $this->_getMysortedPublishedAtoms($orderedIds);
 
         $atoms = $orderedAtoms;
-        
-        $xmlMolecule[$doctype]['xmlDeclaration'] = false;
 		
 		//the root element and @attribute(s) of a single molecule
 		$xmlMolecule = [
@@ -198,12 +196,14 @@ class Molecule extends AppModel {
 				'attributes' => [
 					'letter' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'drug' => [
 				'root' => 'alpha',
 				'attributes' => [
 					'letter' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'question' => [
 				'root' => 'chapter',
@@ -211,6 +211,7 @@ class Molecule extends AppModel {
 					'id' => 'c' . $this->code,
 					'number' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
             'book' => [
 				'root' => 'chapter',
@@ -218,6 +219,7 @@ class Molecule extends AppModel {
 					'id' => 'c' . $this->code,
 					'code' => $this->code,
 				],
+                'xmlDeclaration' => false,
 			],
 			'xhtml' => [
 				'root' => false,
