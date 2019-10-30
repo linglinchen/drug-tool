@@ -252,6 +252,7 @@ class Molecule extends AppModel {
         
         //combine into molecule
         } elseif($xmlMolecule[$doctype]['root'] !== false) {
+            $xml = '';
             if($xmlMolecule[$doctype]['xmlDeclaration']) {
                 $xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
             }
