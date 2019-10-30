@@ -286,7 +286,7 @@ class MoleculeExportController extends Controller {
 			}
 
 			$moleculeIndex++;
-			if($moleculeIndex > 2) { break; }
+			//if($moleculeIndex > 2) { break; }
 		}
 
 		$zip->close();
