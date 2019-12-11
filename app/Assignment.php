@@ -486,7 +486,7 @@ class Assignment extends AppModel {
      * @return ?object
      */
     public static function next($userId, $atomEntityId, $productId) {
-        $query = Assignment::allForProduct($productId)
+        /*$query = Assignment::allForProduct($productId)
                 ->where('assignments.user_id' , '=', $userId)
                 ->groupBy('assignments.id')
                 ->orderBy('assignments.id', 'ASC');
@@ -508,7 +508,41 @@ class Assignment extends AppModel {
             }
         }
 
-        return null;
+        return null;*/
+
+        //find current assignment
+        $query = Assignment::where('user_id' , '=', $userId)
+                ->where('atom_entity_id', '=', $atomEntityId)
+                ->whereNull('task_end');
+        $assignment = $query->get()->last();
+        $currentAssignmentId = $assignment['id'];
+
+        //find the next open assignment
+        $nextQuery = Assignment::allForProduct($productId)
+                ->where('assignments.user_id' , '=', $userId)
+                ->whereNull('task_end')
+                ->where('assignments.id', '>', $currentAssignmentId)
+                ->groupBy('assignments.id')
+                ->orderBy('assignments.id', 'ASC')
+                ->take(1);
+        $nextAssignment = $nextQuery->get()->last();
+
+        if ($nextAssignment){
+            return new ApiPayload($nextAssignment);
+        }else{ //if nextAssignment is the last one, then start with the first one again
+            $firstQuery = Assignment::allForProduct($productId)
+                ->where('assignments.user_id' , '=', $userId)
+                ->whereNull('assignments.task_end')
+                ->where('assignments.id', '!=',$currentAssignmentId)
+                ->groupBy('assignments.id')
+                ->orderby('assignments.id')
+                ->take(1);
+            $firstAssignment = $firstQuery->get()->last();
+            if ($firstAssignment){
+                return new ApiPayload($firstAssignment);
+            }
+            return null;
+        }
     }
 
     /**
