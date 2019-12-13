@@ -515,7 +515,18 @@ class Assignment extends AppModel {
                 ->where('atom_entity_id', '=', $atomEntityId)
                 ->whereNull('task_end');
         $assignment = $query->get()->last();
-        $currentAssignmentId = $assignment['id'];
+
+        if ($assignment){
+            $currentAssignmentId = $assignment['id'];
+        }
+        else{
+            $query = Assignment::where('user_id' , '=', $userId)
+                ->where('atom_entity_id', '=', $atomEntityId)
+                ->orderBy('assignments.id', 'DESC')
+                ->take(1);
+            $assignment = $query->get()->last();
+            $currentAssignmentId = $assignment['id'];
+        }
 
         //find the next open assignment
         $nextQuery = Assignment::allForProduct($productId)
