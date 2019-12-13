@@ -47,7 +47,8 @@ class QuickFixAddDomain extends Command {
         $count = 0;
         foreach($atoms as $atom) {
             $xml = $atom->xml;
-            preg_match('/<category.*>(.*)<\/category>/Si', $xml, $matches);
+            //preg_match('/<category.*>(.*)<\/category>/Si', $xml, $matches);
+            preg_match('/<content_area><entry>(.*)<\/entry><\/content_area>/Si', $xml, $matches);
             if ($matches){
                 $count++;
                 $category = $matches[1];
