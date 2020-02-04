@@ -281,7 +281,7 @@ class Molecule extends AppModel {
      * @return string A TSV string
      */
     public function addFigureLog($moleculeXml, $metaheader) {
-        $ob = simplexml_load_string($moleculeXml, 'SimpleXMLElement', LIBXML_ERR_NONE);
+        $ob = simplexml_load_string($moleculeXml, 'SimpleXMLElement', LIBXML_NOERROR);
         $figureLogRows = $metaheader;
         $figureNodes = $ob->$moleculeXml->xpath('//component[@type="figure"]');
 
