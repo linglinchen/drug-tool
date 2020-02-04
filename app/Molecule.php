@@ -100,7 +100,7 @@ class Molecule extends AppModel {
             if(strpos($comment['text'], 'type="figure"') !== false) {
                 $commentsInfo = [];
                 $commentXml = '<?xml version="1.0" encoding="UTF-8"?><documents>'.$comment['text'].'</documents>';
-                $xmlObject = simplexml_load_string($commentXml);
+                $xmlObject = simplexml_load_string($commentXml, 'SimpleXMLElement', LIBXML_NOERROR);
                 $reviewPart = $xmlObject->xpath('//query[@type="figure"]/suggestion/text()');
                 $reviewStatusObj = $reviewPart ? $reviewPart[0] : '';
                 $reviewStatus = $reviewStatusObj ? json_decode(json_encode($reviewStatusObj), true)[0] : '';
@@ -567,7 +567,7 @@ class Molecule extends AppModel {
      * @return array
      */
     public function getImageFileName($moleculeXml, $productInfo, $basepath=false) {
-        $ob = simplexml_load_string($moleculeXml);
+        $ob = simplexml_load_string($moleculeXml, 'SimpleXMLElement', LIBXML_NOERROR);
         $imageFiles = [];
         if ($productInfo['doctype'] == 'book') {
             $figureNodes = $ob->$moleculeXml->xpath('//*[name()="ce:figure"]//*[name()="ce:link"]');
