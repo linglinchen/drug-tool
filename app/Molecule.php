@@ -301,11 +301,16 @@ class Molecule extends AppModel {
                     $Dom = dom_import_simplexml($temp[0]);
                     $closestEntryNode0 = $Dom->textContent;
                 }
-                if(isset($closestEntryNode1)){
+                if(isset($closestEntryNode0) && isset($closestEntryNode1)){
                     $term = $closestEntryNode0 . '/' . $closestEntryNode1;
                     unset($closestEntryNode1);
                 }else{
-                    $term = $closestEntryNode0;
+                    if (isset($closestEntryNode0)){
+                        $term = $closestEntryNode0;
+                    }
+                    else{
+                        $term = '';
+                    }
                 }
                 unset($temp);
 
