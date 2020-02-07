@@ -996,13 +996,17 @@ METAHEADER;
                     WHERE id IN (
                         SELECT MAX(id)
                         FROM atoms
+                        WHERE product_id=:productId
                         GROUP BY entity_id
                     ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
                     WHERE id IN (
-                        SELECT MAX(id) FROM atoms GROUP BY entity_id
+                        SELECT MAX(id)
+                        FROM atoms
+                        WHERE product_id=:productId
+                        GROUP BY entity_id
                     ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
                 ) b ON a.entity_id=b.entity_id
                 WHERE a.product_id=:productId AND b.product_id=:productId;";
