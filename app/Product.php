@@ -40,6 +40,15 @@ class Product extends AppModel {
     }
 
     /**
+     * Gets this product's current edition.
+     *
+     * @return object
+     */
+    public function getEdition() {
+        return $this->edition;
+    }
+
+    /**
      * Gets this product's termtype.
      *
      * @return object

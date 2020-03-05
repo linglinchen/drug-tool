@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Atom;
 use App\Molecule;
+use App\Product;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -74,6 +75,7 @@ class AtomController extends Controller
                 $atom->$allowed = $input[$allowed];
             }
         }
+        $atom->edition = Product::find($productId)->getEdition();
         $atom->save();
         $atom->is_current = true;
 
