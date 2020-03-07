@@ -45,7 +45,7 @@ class Product extends AppModel {
      * @return object
      */
     public function getEdition() {
-        return $this->edition;
+        return $this->current_edition;
     }
 
     /**

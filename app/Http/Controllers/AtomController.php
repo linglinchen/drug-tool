@@ -75,7 +75,7 @@ class AtomController extends Controller
                 $atom->$allowed = $input[$allowed];
             }
         }
-        $atom->edition = Product::find($productId)->getEdition();
+        $atom->current_edition = Product::find($productId)->getEdition();
         $atom->save();
         $atom->is_current = true;
 
