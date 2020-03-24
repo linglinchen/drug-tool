@@ -233,7 +233,12 @@ class Report extends AppModel {
                 )
                 ->join('atoms', 'assignments.atom_entity_id', '=', 'atoms.entity_id')
                 ->where('product_id', '=', $productId)
-                ->whereNotNull('assignments.created_at');     //filter out missing timestamps
+                ->whereNotNull('assignments.created_at')        //filter out missing timestamps
+                ->whereNull('assignments.task_end')
+                ->whereIn('atoms.id', function ($q)
+                    {
+                        Atom::buildLatestIDQuery(null, $q);
+                    });
 
         if($endTime) {
             $query->where('assignments.created_at', '<', DB::raw('TO_TIMESTAMP(' . $endTime . ')'));
