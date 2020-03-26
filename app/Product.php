@@ -49,6 +49,15 @@ class Product extends AppModel {
     }
 
     /**
+     * Gets this product's type.
+     *
+     * @return object
+     */
+    public function getProductType() {
+        return $this->doctype;
+    }
+
+    /**
      * Gets this product's termtype.
      *
      * @return object

@@ -53,6 +53,7 @@ class Molecule extends AppModel {
                     Atom::buildLatestIDQuery(null, $q);
                 })
                 ->orderBy('sort', 'ASC')
+                ->orderBy('created_at', 'DESC')
                 ->get();
 
         //get assignments for each atom
