@@ -77,7 +77,7 @@ class AtomController extends Controller
         }
         $atom->edition = Product::find($productId)->getEdition();
         if (Product::find($productId)->getProductType() == 'dictionary'){
-            $atom->sort = 0;
+            $atom->sort = NULL;
         }
         $atom->save();
         $atom->is_current = true;

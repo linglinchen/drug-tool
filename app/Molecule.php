@@ -48,11 +48,12 @@ class Molecule extends AppModel {
     public static function addAtoms($molecule, $productId) {
         $productId = (int)$productId;       //protect against sql injection attacks
         $atoms = Atom::allForProduct($productId)
+        ->select('*', DB::raw('coalesce(sort, 0)'))
                 ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
+                    Atom::BuildLatestIDQuery(null, $q);
                 })
-                ->orderBy('sort', 'ASC')
+                ->orderBy('coalesce', 'ASC')
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
