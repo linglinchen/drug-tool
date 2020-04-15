@@ -700,7 +700,7 @@ class Molecule extends AppModel {
 			}
 
             $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
-            
+
 			foreach($imageExtensions as $imageExtension) {
                 error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
                 //not a filestub, no need to look by extension
