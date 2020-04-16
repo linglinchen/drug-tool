@@ -180,6 +180,24 @@ class MoleculeExportController extends Controller {
 						];
 
 						break;
+
+						case 13:
+							$productInfo = [
+								'isbn' => '9780323484886',
+								'isbn_legacy' => '9780323733052',
+								'author' => 'Silvestri',
+								'title' => 'Silvestri: Saunders Comprehensive Review for the NCLEX-PN Examination',
+								'edition' => 8,
+								'cds' => [
+									'firstname' => 'Melissa',
+									'lastname' => 'Rawe',
+									'phone' => '1 314 447 8566',
+									'email' => 'm.rawe@elsevier.com',
+								],
+								'doctype' => $doctype,
+							];
+
+							break;
 				}
 
 				$xml = $xmlDoctype . "\n";
