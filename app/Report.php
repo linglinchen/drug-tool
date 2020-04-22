@@ -58,7 +58,7 @@ class Report extends AppModel {
             'domainStats' => $categoryType ? $categoryType.' Stats' : ''
         ];
 
-        $dicProds = array(3,5);
+        $dicProds = array(3,5,8);
         if ($productId == 3){
             $reportTypes['reviewerStats'] = 'Reviewer Process Stats';
         }
