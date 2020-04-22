@@ -56,7 +56,7 @@ class MoveCompPNFrom2ndEditorToNext extends Command {
 
             if (!empty($current_assignment)){
                 $current_assignment->task_end = $timestamp;
-                $current_assignment->save();
+                ////$current_assignment->save();
                 //find out the domain of atom
                 $atoms = Atom::where('entity_id', '=', $entityId)
                             ->orderBy('id')->get();
@@ -139,7 +139,7 @@ class MoveCompPNFrom2ndEditorToNext extends Command {
                 ->last();
 
         if (is_null($existing_assignments)){
-             Assignment::query()->insert($assignment);
+             ////Assignment::query()->insert($assignment);
         }
     }
 
