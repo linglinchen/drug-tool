@@ -39,19 +39,23 @@ class LookupController extends Controller
             'imageStatuses' => array(
                 array(
                     'id' => 1,
-                    'title' => 'implemented'
+                    'code' => 'implemented',
+                    'title' => 'Implemented',
                 ),
                 array(
                     'id' => 2,
-                    'title' => 'accept'
+                    'code' => 'accept',
+                    'title' => 'Accepted'
                 ),
                 array(
                     'id' => 3,
-                    'title' => 'pending'
+                    'code' => 'pending',
+                    'title' => 'Pending'
                 ),
                 array(
                     'id' => 4,
-                    'title' => 'reject'
+                    'code' => 'reject',
+                    'title' => 'Rejected'
                 )
             )
         ]);
