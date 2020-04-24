@@ -299,7 +299,7 @@ class Report extends AppModel {
 
         foreach($atoms as $atom) {
             //look for xref elements in dictionaries, and see in drugs
-            if ($productId == 3 || $productId == 5){
+            if ($productId == 3 || $productId == 5 || $productId == 8){
                 $elements = $atom->xml->xpath('//xref|include');
             } else {
                 $elements = $atom->xml->xpath('//see|include');
