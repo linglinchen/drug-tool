@@ -301,7 +301,10 @@ class Report extends AppModel {
             //look for xref elements in dictionaries, and see in drugs
             if ($productId == 3 || $productId == 5 || $productId == 8){
                 $elements = $atom->xml->xpath('//xref|include');
-            } else {
+            } else if ($product_id == 10){ //QARN_Book
+                $elements = $atom->xml->xpath('//*[name()="ce:cross-ref"]');
+            }
+            else {
                 $elements = $atom->xml->xpath('//see|include');
             }
             $total += sizeof($elements);
@@ -327,6 +330,13 @@ class Report extends AppModel {
                     else if($type == 'm') {     //molecule
                         $valid = isset($molecules[$parsedRefid[1]]);
                     }
+                    else if($type == 'http' || $type == 'https'){
+                        $valid = filter_var($refid, FILTER_VALIDATE_URL) == $refid; print_r(filter_var($refid, FILTER_VALIDATE_URL));print_r($refid);exit;
+                    }
+                }
+                else{ //check if a node with id="sg12024" exist
+                    $nodes = $atom->xml->xpath('//*[@id="'.$refid.'"]');
+                    $valid = !empty($nodes);
                 }
 
                 if(!$valid) {
@@ -931,6 +941,8 @@ class Report extends AppModel {
                 ->whereIn('id', function ($q) {
                     Atom::buildLatestIDQuery(null, $q);
                 })
+                ->orderby('molecule_code')
+                ->orderby('sort')
                 ->get();
 
         $atoms = [];
