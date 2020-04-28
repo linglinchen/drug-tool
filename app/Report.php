@@ -331,7 +331,7 @@ class Report extends AppModel {
                         $valid = isset($molecules[$parsedRefid[1]]);
                     }
                     else if($type == 'http' || $type == 'https'){
-                        $valid = filter_var($refid, FILTER_VALIDATE_URL) == $refid; print_r(filter_var($refid, FILTER_VALIDATE_URL));print_r($refid);exit;
+                        $valid = filter_var($refid, FILTER_VALIDATE_URL) == $refid;
                     }
                 }
                 else{ //check if a node with id="sg12024" exist
