@@ -121,6 +121,23 @@ class MoleculeExportController extends Controller {
 						];
 
 						break;
+						case 8:
+							$productInfo = [
+								'isbn' => '9780323222051',
+								'isbn_legacy' => '9780323222051',
+								'author' => 'Mosby',
+								'title' => 'Mosby Dictionary - Nursing',
+								'edition' => 11,
+								'cds' => [
+									'firstname' => 'Sarah',
+									'lastname' => 'Vora',
+									'phone' => '1 314 447 8326',
+									'email' => 'sa.vora@elsevier.com',
+								],
+								'doctype' => $doctype,
+							];
+
+							break;
 					default:
 						//nothing special to do here
 						break;
