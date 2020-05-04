@@ -987,7 +987,8 @@ METAHEADER;
     protected function _getExportSortOrder($statusId = null) {
         $values = [
             'moleculeCode'  => $this->code,
-            'productId'     => (int)$this->product_id
+            'productId'     => (int)$this->product_id,
+            'statusId'      => $statusId
         ];
 
         //output all status for Sarah Vora
@@ -1000,7 +1001,7 @@ METAHEADER;
                         FROM atoms
                         WHERE product_id=:productId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
@@ -1009,7 +1010,7 @@ METAHEADER;
                         FROM atoms
                         WHERE product_id=:productId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
                 ) b ON a.entity_id=b.entity_id
                 WHERE a.product_id=:productId AND b.product_id=:productId;";
 
