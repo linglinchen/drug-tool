@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddActiveColumnToUsers' => $baseDir . '/database/migrations/2018_11_11_180400_add_active_column_to_users.php',
     'AddBelongToToUsersTable' => $baseDir . '/database/migrations/2017_05_01_224350_add_belongTo_to_users_table.php',
+    'AddCurrenteditionToProductsTable' => $baseDir . '/database/migrations/2020_03_07_002441_add_currentedition_to_products_table.php',
     'AddDatesToUserProductsTable' => $baseDir . '/database/migrations/2016_12_02_112800_add_dates_to_user_products_table.php',
     'AddDomainCodeToAtomsTable' => $baseDir . '/database/migrations/2017_05_01_223429_add_domainCode_to_Atoms_table.php',
     'AddEditionMetadataToProductsTable' => $baseDir . '/database/migrations/2017_08_23_194954_add_edition_metadata_to_products_table.php',
@@ -14,6 +16,7 @@ return array(
     'AddEditionToCommentsTable' => $baseDir . '/database/migrations/2017_08_23_194129_add_edition_to_comments_table.php',
     'AddEditionToMoleculesTable' => $baseDir . '/database/migrations/2017_08_23_195410_add_edition_to_molecules_table.php',
     'AddFlagToTasksTable' => $baseDir . '/database/migrations/2017_10_09_151818_add_flag_to_tasks_table.php',
+    'AddLevelToGroups' => $baseDir . '/database/migrations/2018_11_02_000000_add_level_to_groups.php',
     'AddMoreProductIdColumns' => $baseDir . '/database/migrations/2016_11_22_132400_add_more_product_id_columns.php',
     'AddProductIdColumns' => $baseDir . '/database/migrations/2016_10_10_134900_add_product_id_columns.php',
     'AddSortToTasksTable' => $baseDir . '/database/migrations/2017_06_13_145042_add_sort_to_tasks_table.php',
@@ -571,5 +574,6 @@ return array(
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UpdateColumnTypeContributorIdDomainsTable' => $baseDir . '/database/migrations/2017_10_09_160035_update_column_type_ContributorId_domains_table.php',
+    'UpdateColumnWidthTitleAlphaTitleAtomsTable' => $baseDir . '/database/migrations/2020_01_24_214007_update_column_width_title_alpha_title_atoms_table.php',
     'UserSeeder' => $baseDir . '/database/seeds/UserSeeder.php',
 );

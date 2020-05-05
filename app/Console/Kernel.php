@@ -59,6 +59,7 @@ class Kernel extends ConsoleKernel
         Commands\QuickFixCleanUpUsage::class,
         Commands\ExtractRarelyUsed::class,
         Commands\UpdateDomains::class,
+        Commands\MoveCompPNFrom2ndEditorToNext::class,
         Commands\AssignReviewerTasks::class,
         Commands\AssignReviewerTasksNursing::class,
         Commands\CreateAtomDomainsList::class,

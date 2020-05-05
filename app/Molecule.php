@@ -48,11 +48,13 @@ class Molecule extends AppModel {
     public static function addAtoms($molecule, $productId) {
         $productId = (int)$productId;       //protect against sql injection attacks
         $atoms = Atom::allForProduct($productId)
+        ->select('*', DB::raw('coalesce(sort, 0)'))
                 ->where('molecule_code', '=', $molecule['code'])
                 ->whereIn('id', function ($q) {
-                    Atom::buildLatestIDQuery(null, $q);
+                    Atom::BuildLatestIDQuery(null, $q);
                 })
-                ->orderBy('sort', 'ASC')
+                ->orderBy('coalesce', 'ASC')
+                ->orderBy('created_at', 'DESC')
                 ->get();
 
         //get assignments for each atom
@@ -698,7 +700,7 @@ class Molecule extends AppModel {
 			}
 
             $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
-            
+
 			foreach($imageExtensions as $imageExtension) {
                 error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
                 //not a filestub, no need to look by extension
@@ -985,7 +987,8 @@ METAHEADER;
     protected function _getExportSortOrder($statusId = null) {
         $values = [
             'moleculeCode'  => $this->code,
-            'productId'     => (int)$this->product_id
+            'productId'     => (int)$this->product_id,
+            'statusId'      => $statusId
         ];
 
         //output all status for Sarah Vora
@@ -998,7 +1001,7 @@ METAHEADER;
                         FROM atoms
                         WHERE product_id=:productId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
@@ -1007,7 +1010,7 @@ METAHEADER;
                         FROM atoms
                         WHERE product_id=:productId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
                 ) b ON a.entity_id=b.entity_id
                 WHERE a.product_id=:productId AND b.product_id=:productId;";
 

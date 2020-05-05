@@ -121,6 +121,23 @@ class MoleculeExportController extends Controller {
 						];
 
 						break;
+						case 8:
+							$productInfo = [
+								'isbn' => '9780323222051',
+								'isbn_legacy' => '9780323222051',
+								'author' => 'Mosby',
+								'title' => 'Mosby Dictionary - Nursing',
+								'edition' => 11,
+								'cds' => [
+									'firstname' => 'Sarah',
+									'lastname' => 'Vora',
+									'phone' => '1 314 447 8326',
+									'email' => 'sa.vora@elsevier.com',
+								],
+								'doctype' => $doctype,
+							];
+
+							break;
 					default:
 						//nothing special to do here
 						break;
@@ -162,6 +179,42 @@ class MoleculeExportController extends Controller {
 						];
 
 						break;
+
+					case 11:
+						$productInfo = [
+							'isbn' => '9780323448154',
+							'isbn_legacy' => '9780323709934',
+							'author' => 'Silvestri',
+							'title' => 'Silvestri NCLEX QA RN - Question',
+							'edition' => 8,
+							'cds' => [
+								'firstname' => 'Laura',
+								'lastname' => 'Goodrich',
+								'phone' => '1 314 447 8538',
+								'email' => 'l.goodrich@elsevier.com',
+							],
+							'doctype' => $doctype,
+						];
+
+						break;
+
+						case 13:
+							$productInfo = [
+								'isbn' => '9780323484886',
+								'isbn_legacy' => '9780323733052',
+								'author' => 'Silvestri',
+								'title' => 'Silvestri: Saunders Comprehensive Review for the NCLEX-PN Examination',
+								'edition' => 8,
+								'cds' => [
+									'firstname' => 'Melissa',
+									'lastname' => 'Rawe',
+									'phone' => '1 314 447 8566',
+									'email' => 'm.rawe@elsevier.com',
+								],
+								'doctype' => $doctype,
+							];
+
+							break;
 				}
 
 				$xml = $xmlDoctype . "\n";

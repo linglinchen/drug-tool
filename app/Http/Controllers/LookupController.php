@@ -35,7 +35,29 @@ class LookupController extends Controller
             'boilerplates' => Boilerplate::allForCurrentProduct()->get(),
             'tasks' => Task::allForCurrentProduct()->orderBy('sort')->orderBy('id')->get(),
             'statuses' => Status::allForCurrentProduct()->orderBy('id')->get(),
-            'domains' => Domain::allForCurrentProduct()->orderBy('title', 'ASC')->get() 
+            'domains' => Domain::allForCurrentProduct()->orderBy('title', 'ASC')->get(),
+            'imageStatuses' => array(
+                array(
+                    'id' => 1,
+                    'code' => 'implemented',
+                    'title' => 'Implemented',
+                ),
+                array(
+                    'id' => 2,
+                    'code' => 'accept',
+                    'title' => 'Accepted'
+                ),
+                array(
+                    'id' => 3,
+                    'code' => 'pending',
+                    'title' => 'Pending'
+                ),
+                array(
+                    'id' => 4,
+                    'code' => 'reject',
+                    'title' => 'Rejected'
+                )
+            )
         ]);
     }
 }

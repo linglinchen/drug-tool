@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Atom;
 use App\Molecule;
+use App\Product;
 
 use App\ApiError;
 use App\ApiPayload;
@@ -73,6 +74,10 @@ class AtomController extends Controller
             if(array_key_exists($allowed, $input)) {
                 $atom->$allowed = $input[$allowed];
             }
+        }
+        $atom->edition = Product::find($productId)->getEdition();
+        if (Product::find($productId)->getProductType() == 'dictionary'){
+            $atom->sort = NULL;
         }
         $atom->save();
         $atom->is_current = true;
