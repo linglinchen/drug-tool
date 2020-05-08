@@ -96,7 +96,7 @@ class QuickFixAddFullCreditLineNursing extends Command {
                     $newAtom = $atom->replicate();
                     $newAtom->xml = $newXml;
                     $newAtom->modified_by = null;
-                    //$newAtom->save();
+                    $newAtom->save();
                 }
                 else{
                     echo "failed to add fullcredit: title: $title, short: $short, long: $long\n";
