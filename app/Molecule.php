@@ -702,7 +702,7 @@ class Molecule extends AppModel {
             $imagePath = strpos($imageFile, 'https://') !== false ? $imageFile : $basepath['imageserver'] . $imageDir . $imageFile;
 
 			foreach($imageExtensions as $imageExtension) {
-                error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
+                ////error_log('imageExt:' . $imagePath . '{.' . $imageExtension . "}\n", 3, "/var/www/logs/drug-tool.log");
                 //not a filestub, no need to look by extension
                 if($imagePath == $imageFile
                     && $image = @file_get_contents($imagePath)) {
@@ -991,7 +991,7 @@ METAHEADER;
             'statusId'      => $statusId
         ];
 
-        //output all status for Sarah Vora
+        //output all that has status as 'ready for publication' (curently or historically), excluding deactivated (status_id !~ '300$')
         $sql = "SELECT a.id AS pubid, a.entity_id AS pubentityid, b.id AS currentid, b.entity_id AS currententityid,
                     b.sort AS currentsort
                 FROM (
@@ -999,9 +999,9 @@ METAHEADER;
                     WHERE id IN (
                         SELECT MAX(id)
                         FROM atoms
-                        WHERE product_id=:productId
+                        WHERE product_id=:productId AND status_id =:statusId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL ORDER BY sort ASC
                 ) a
                 INNER JOIN (
                     SELECT * FROM atoms
@@ -1010,7 +1010,7 @@ METAHEADER;
                         FROM atoms
                         WHERE product_id=:productId
                         GROUP BY entity_id
-                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND status_id =:statusId ORDER BY sort ASC
+                    ) AND molecule_code=:moleculeCode AND deleted_at IS NULL AND cast (status_id as text) !~ '300$' ORDER BY sort ASC
                 ) b ON a.entity_id=b.entity_id
                 WHERE a.product_id=:productId AND b.product_id=:productId;";
 
