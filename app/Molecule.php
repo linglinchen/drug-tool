@@ -1049,6 +1049,7 @@ METAHEADER;
     public function removeFullCredit($xml){
         $xmlNoFullcredit = preg_replace('/<fullcredit>[^<]*<\/fullcredit>/', '', $xml);
         $xmlNoFullcredit = preg_replace('/<fullcredit\/>/', '', $xmlNoFullcredit);
-        return $xmlNoFullcredit;
+        //return $xmlNoFullcredit;
+        return $xml;
     }
 }
