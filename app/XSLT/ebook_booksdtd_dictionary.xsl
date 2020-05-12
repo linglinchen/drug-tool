@@ -13,7 +13,7 @@
 	2017-07-27 JWS	removed normalize-space from text() rule eliminating &#x2002; because it deleted spaces around <xref> in particular; updated xref/@refid (intra-ref/cross-ref are combined, which is slow)
 	2017-08-17 JWS	component/@availability=electronic fixed; removed _REPLACE_LOCATION__ from file
 	2019-10-10 JWS	updates when processing DMAA; generates entity_ids; honors $category='NONE' param
-	2020-04-30 JWS	DMAA image characters; xrefs and entity_id for non-current nodes; hairspaces and other spaces; definition-contained etymologies/etymons; defgroup_type for DMAA
+	2020-05-11 JWS	DMAA image characters; xrefs and entity_id for non-current nodes; hairspaces and other spaces; definition-contained etymologies/etymons; defgroup_type for DMAA
 
 
 
@@ -75,7 +75,8 @@
 			<xsl:text>shared</xsl:text>
 		</xsl:otherwise>
 	</xsl:choose>
-  </xsl:param>  
+  </xsl:param>
+  <xsl:param name="punc_inline" select="';'"/>	<!-- punctuation separating inline definitions (abbreviations) -->
    <xsl:param name="form_start" select="'('"/>	<!-- string marker to determine whether the form element should be output for a definition -->
 	  <xsl:param name="form_end" select="')'"/>	<!-- end -->
   <xsl:param name="def_splitter" select="false()"/>	<!-- normally false; character on which to split definitions combined as in DMAA -->
@@ -242,6 +243,7 @@
 	</dictionary>
 </xsl:template>
 
+
 <!-- alternate for concatenated chapters so body isn't repeated -->
 <xsl:template match="chapter[parent::root]|bk:chapter[parent::bk:root]">
 	<xsl:apply-templates/>
@@ -370,7 +372,7 @@
 
 <xsl:template match="ce:def-description" mode="form"/>
 
-<!-- form includes etymology, plural and pronunciation -->
+<!-- form includes metadata format etymology (not inline), plural and pronunciation -->
 <xsl:template match="ce:def-description[descendant::ce:italic/ce:bold[contains(., $form_start) or contains(., $form_end)]]" mode="form">
 	<form>
 		<!-- usually @id is copied, this enforces required presence and uniqueness -->
@@ -470,19 +472,97 @@
 	</def>
 </xsl:template>
 
-<!-- inline etymologies from DMAA -->
+<!-- (pass_1 + pass_2) split DMAA definitions on semicolons -->
+<xsl:template match="ce:para[$defgroup_type='abbreviations'][contains(., $punc_inline)]" mode="entry">
+	<!-- two-pass processing used to replace semicolons with an element so they can be split -->
+	<xsl:variable name="pass_1">
+		<xsl:element name="pass_1">
+			<!-- used to preserve the id on the first inline def -->
+			<xsl:attribute name="id" select="@id"/>
+			<xsl:apply-templates mode="pass_1">
+				<xsl:with-param name="marker" select="concat($punc_inline, '\s+')"/>
+			</xsl:apply-templates>
+		</xsl:element>
+	</xsl:variable>
+
+	<!-- send the marked up version for additional processing -->
+	<xsl:apply-templates select="$pass_1" mode="pass_2"/>
+</xsl:template>
+
+<!-- (pass_2) turn each <stop/>-terminated group into a paragraph -->
+<xsl:template match="*[stop]" mode="pass_2">
+	<!--<xsl:copy>-->
+		<xsl:for-each-group select="node()" group-ending-with="stop">
+			<def>
+				<!-- usually @id is copied, this enforces required presence and uniqueness -->
+				<xsl:call-template name="id_generator">
+					<!-- preserve the id on the first inline def only -->
+					<xsl:with-param name="new">
+						<xsl:choose>
+							<xsl:when test="position() = 1">
+								<xsl:value-of select="parent::*/@id"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>false</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>					
+					</xsl:with-param>
+					
+					<!-- preserve the id on the first inline def only -->
+					<xsl:with-param name="nodename">
+						<xsl:choose>
+							<xsl:when test="position() = 1">
+								<xsl:text>para</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>def</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>					
+					</xsl:with-param>
+				</xsl:call-template>
+
+				<xsl:attribute name="n">
+					<xsl:choose>
+						<xsl:when test="ce:label"><xsl:value-of select="translate(ce:label, '.', '')"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="count(preceding-sibling::stop) + 1"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+
+				<!-- TODO: this is not found in DMAA and only included here for consistency; it will need to be modified if it ever applies -->
+				<xsl:apply-templates select="parent::ce:list/preceding-sibling::ce:italic[1]" mode="partofspeech"/>
+				<xsl:apply-templates select="parent::ce:list/preceding-sibling::ce:italic[1]/following-sibling::text()" mode="thesaurus"/>
+
+				<xsl:apply-templates select="current-group()" mode="entry"/>
+			</def>
+			<!-- remove separating punctuation outside def nodes -->
+			<xsl:if test="position() != last()">
+				<punc><xsl:value-of select="$punc_inline"/></punc>
+			</xsl:if>
+		</xsl:for-each-group>
+	<!--</xsl:copy>-->
+</xsl:template>
+
+<!-- identifies inline etymologies from DMAA, including preceding square bracket; runs after pass_1 -->
 <xsl:template match="text()[
 	contains(., '[Fr. ') or
 	contains(., '[Ger. ') or
 	contains(., '[L. ') or
-	contains(., '[Lat. ')][following-sibling::ce:italic[following-sibling::text()[contains(., ']')]]][ancestor::ce:def-description]" mode="entry">
+	contains(., '[Lat. ')][following-sibling::ce:italic[following-sibling::text()[contains(., ']')]]][ancestor::ce:def-description or ancestor::pass_1]" mode="entry">
 	
 	<xsl:value-of select="substring-before(., '[')"/>
-	<xsl:text>[</xsl:text>
+	<punc>[</punc>
 	<xsl:call-template name="etymology"/>
 </xsl:template>
 
-<!-- creates linline etymologies for DMAA -->
+<!-- inline etymology's trailing square bracket needs to be inside a punc node  -->
+<xsl:template match="text()[normalize-space(.)=']'][preceding-sibling::ce:italic[preceding-sibling::text()[contains(., '[Fr. ') or
+	contains(., '[Ger. ') or
+	contains(., '[L. ') or
+	contains(., '[Lat. ')]]][ancestor::ce:def-description or ancestor::pass_1]" mode="entry">
+	<punc>]</punc>
+</xsl:template>
+
+<!-- creates inline etymologies for DMAA -->
 <xsl:template name="etymology">
 	<xsl:variable name="lang" select="substring-before(substring-after(., '['), '. ')"/>
 	<etymology>
@@ -503,8 +583,8 @@
 
 </xsl:template>
 
-<!-- part of inline etymology for DMAA -->
-<xsl:template match="ce:italic[preceding-sibling::text()[1][contains(., '[')]]" mode="#all" priority="0"/>
+<!-- part of inline etymology for DMAA and not italicized text -->
+<xsl:template match="ce:italic[preceding-sibling::node()[1][contains(., '[')]]" mode="#all" priority="0"/>
 
 <!-- the source word for DMAA's inline etymologies -->
 <xsl:template match="ce:italic" mode="etymon">
@@ -938,6 +1018,34 @@
 
 
 
+
+<!-- BEGIN two-pass processing -->
+<!-- identity transform added with two-pass -->
+<xsl:template match="@*|node()" mode="pass_1" priority="0">
+	<xsl:copy copy-namespaces="no">
+		<xsl:apply-templates select="@*|node()" mode="#current"/>
+	</xsl:copy>
+</xsl:template>
+
+<!-- insert <stop/> "milestone markup" after each marker -->
+<xsl:template match="text()" mode="pass_1" priority="0">
+	<xsl:param name="marker" select="';\s+'"/>
+	
+	<xsl:analyze-string select="." regex="{$marker}">
+		<xsl:matching-substring>
+			<!-- This retains the marker, but we don't want it
+				<xsl:value-of select="regex-group(0)"/>-->
+			<stop/>
+		</xsl:matching-substring>
+		<xsl:non-matching-substring>
+			<xsl:value-of select="."/>
+		</xsl:non-matching-substring>
+	</xsl:analyze-string>
+</xsl:template>
+
+<!-- remove the <stop/> markers -->
+<xsl:template match="stop" mode="pass_2 entry"/>
+<!-- END two-pass processing -->
 
 
 
