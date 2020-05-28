@@ -183,7 +183,7 @@ class Molecule extends AppModel {
 	public function export($statusId = null, $doctype='drug', $withFigures=0) {
 		//Below diverts to the separate 'getExportSortOrder' so that only Ready to publish atoms are in sort. Plain
 		//'getSortOrder' always chooses current atoms, so this separate sort order is needed for the export.
-        ini_set('memory_limit', '1280M');
+        ini_set('memory_limit', '2560M');
         ini_set('max_execution_time', 300);
         $orderedIds = $this->_getExportSortOrder($statusId);
 
