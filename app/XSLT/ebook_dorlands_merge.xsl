@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dictionary SYSTEM "Y:/WWW1/METIS/Dictionary_4_8.dtd">
+<!DOCTYPE dictionary SYSTEM "Dictionary_4_8.dtd">
 <!-- https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd -->
 
 <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -18,6 +18,7 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 		a. add new named entities to DOCTYPE to be replaced with characters (eg &ndash; is en dash: –); decimal entities do not require this
 		b. fix well-formedness errors
 		c. fix other non-standard, unwanted characters (eg, line separator) and add any additional content needed (eg, tables). UUID stability is dependent on the number of characters
+	2b. Insert/update the location of the pocket xml file below under "the location of the Pocket XML to merge"
 	3. transform the source XML against this XSLT
 		a. note setting of $devmode param
 		b. note setting of $isbn param
@@ -30,14 +31,15 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 	5. ZIP batch directory and upload to converted_XML bucket in project's bucket on S3
 -->
 
-<xsl:output method="xml" encoding="utf-8" indent="yes"
+<!-- set indent to "no" for maximum speed/testing, final output should have indents/pretty which can be done post processing in XMLspy etc.-->
+<xsl:output method="xml" encoding="utf-8" indent="no"
  omit-xml-declaration="yes"
  doctype-public="-//ES//DTD dictionary DTD version 1.0//EN//XML" doctype-system="Y:\WWW1\METIS\Dictionary_4_8.dtd"
  media-type="text/html"/><!-- https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd -->
 
 <xsl:preserve-space elements="br category option"/>
 
-<xsl:param name="isbn" select="'0000000000000'"/> <!-- the source book's ISBN -->
+<xsl:param name="isbn" select="'9781455756438'"/> <!-- the source book's ISBN, 9781455756438 is the latest DMD print ISBN, (pocket has another ISBN)  -->
 <xsl:param name="devmode" select="'N'"/>	<!-- set to Y to: 1) skip counting characters for $entity_id_base 2) generate only 10 UUIDs 3) avoid the expense of calculating the def/@n -->
 <xsl:param name="output_tree" select="'false'"/> <!-- set to true to output the $uuid_tree fragment used for key generation when ALSO in devmode=Y -->
 <!-- used to calculate the UUIDs, use the same values for each transformation of a single title to ensure the same values are calculated each time; recommend changing this for new titles -->
@@ -50,8 +52,9 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 <xsl:variable name="entityids" select="document($existing_entityid_file)" as="document-node()"/>
 
 
-
-<xsl:param name="pocket_xml_file" select="'c:\temp\delete\Dorlands\pocket\full_book.xml'"/> <!-- the location of the Pocket XML to merge -->
+<!--<xsl:param name="pocket_xml_file" select="'c:\temp\delete\Dorlands\pocket\full_book.xml'"/>--> <!-- the location of the Pocket XML to merge -->
+<!--<xsl:param name="pocket_xml_file" select="'file:///c:/DorlandsXSLT/DorlandsDictionary_DPD_ALL.xml'"/>--> <!-- the location path, use file: sytax for Saxon compatibility -->
+<xsl:param name="pocket_xml_file" select="'DorlandsDictionary_DPD_ALL.xml'"/> <!-- the location of the Pocket XML to merge -->
 
 <xsl:variable name="pocket_entries" select="document($pocket_xml_file)" as="document-node()"/>
 
@@ -287,10 +290,10 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 
 <!-- @hword_id is now @refid with "a:" prefix; @id, @xref_id are omitted -->
 <xsl:template match="xref">
-	<xref refid="a:{@hword_id}">
-		<xsl:attribute name="refid" select="concat('a:', format-number($entity_id_base, '9999999'), translate($uuid_tree/key('uuid_uniquenode', current()/@hword_id)[position()=1]/@genid, 'ghijklmnopqrstuvwxyz', '0123456789abcdef0123'), $uuid_tree/key('uuid_uniquenode', current()/@hword_id)[position()=1]/@uuid)"/>
-		<xsl:apply-templates/>
-	</xref>
+    <xref refid="a:{@hword_id}">
+        <xsl:attribute name="refid" select="concat('a:', format-number($entity_id_base, '9999999'), translate($uuid_tree/key('uuid_uniquenode', //headw[@id = current()/@refid]/ancestor::entry[parent::alpha]/headw[1]/@id)[position()=1]/@genid, 'ghijklmnopqrstuvwxyz', '0123456789abcdef0123'), $uuid_tree/key('uuid_uniquenode', //headw[@id = current()/@refid]/ancestor::entry[parent::alpha]/headw[1]/@id)[position()=1]/@uuid)"/>
+        <xsl:apply-templates/>
+    </xref>
 </xsl:template>
 
 <!-- figure, audio, video are all component now; order of children is enforced -->
@@ -544,8 +547,8 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
                     <xsl:value-of select="$prefix"/>
                     <xsl:choose>
                         <!-- iterate current ID by 1 if not already used; this is preferred for cleanliness of XML -->
-                        <xsl:when test="($new = 'true' or $new = 'false') and @id and not(//*[@id = concat($prefix, number(substring-after(@id, $prefix) + 1))])">
-                            <xsl:value-of select="format-number(number(substring-after(@id, $prefix) + 1), '0000')"/>
+                        <xsl:when test="($new = 'true' or $new = 'false') and @id and not(//*[@id = concat($prefix, number(substring-after(@id, $prefix)) + 1)])">
+                            <xsl:value-of select="format-number(number(substring-after(@id, $prefix)) + 1, '0000')"/>
                         </xsl:when>
                         <!-- a unique ID was already generated, convert to numeric; this is used by para_splitter because the ID iterator would result in duplicates -->
                         <xsl:when test="$new != 'true' and $new != 'false'">
