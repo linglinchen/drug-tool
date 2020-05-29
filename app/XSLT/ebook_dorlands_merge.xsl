@@ -34,7 +34,7 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 <!-- set indent to "no" for maximum speed/testing, final output should have indents/pretty which can be done post processing in XMLspy etc.-->
 <xsl:output method="xml" encoding="utf-8" indent="no"
  omit-xml-declaration="yes"
- doctype-public="-//ES//DTD dictionary DTD version 1.0//EN//XML" doctype-system="Y:\WWW1\METIS\Dictionary_4_8.dtd"
+ doctype-public="-//ES//DTD dictionary DTD version 1.0//EN//XML" doctype-system="Dictionary_4_8.dtd"
  media-type="text/html"/><!-- https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd -->
 
 <xsl:preserve-space elements="br category option"/>
