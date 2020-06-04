@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dictionary SYSTEM "Dictionary_4_8.dtd">
+<!DOCTYPE dictionary SYSTEM "https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd">
 <!-- https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd -->
 
 <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -8,8 +8,9 @@
 	merges Dorland's Main and Pocket into single XML
 
 	2020-01-24 JWS	original
+	2020-06-02 PJ/JWS	updated to emit xref/@refid and to work with Saxon
 
-TODO: update these instructions; put DTD on S3 so the correct URL can be used; fix xref so it correctly calculates locations
+TODO: update these instructions; put DTD on S3 so the correct URL can be used
 
 	0. be sure your XSL transformation tool supports XSLT 3
 	1. replace the source XML's DOCTYPE with the DOCTYPE from this XSLT. This removes the unfollowable reference to the old DTD and adds support for known entities
@@ -31,32 +32,34 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 	5. ZIP batch directory and upload to converted_XML bucket in project's bucket on S3
 -->
 
-<!-- set indent to "no" for maximum speed/testing, final output should have indents/pretty which can be done post processing in XMLspy etc.-->
-<xsl:output method="xml" encoding="utf-8" indent="no"
+<!-- set indent to "no" for maximum speed/testing, final output should have indents/pretty which can be done post processing in XMLspy etc. -->
+<xsl:output method="xml" encoding="utf-8" indent="yes"
  omit-xml-declaration="yes"
  doctype-public="-//ES//DTD dictionary DTD version 1.0//EN//XML" doctype-system="Dictionary_4_8.dtd"
  media-type="text/html"/><!-- https://major-tool-development.s3.amazonaws.com/DTDs/Dictionary_4_8.dtd -->
 
 <xsl:preserve-space elements="br category option"/>
 
-<xsl:param name="isbn" select="'9781455756438'"/> <!-- the source book's ISBN, 9781455756438 is the latest DMD print ISBN, (pocket has another ISBN)  -->
+
+
+<!-- Do not change the values of params in this document. Set them when running the transformation -->
+
+<xsl:param name="isbn" select="'0000000000000'"/> <!-- the source book's ISBN, 9781455756438 is the latest DMD print ISBN, (pocket has another ISBN)  -->
 <xsl:param name="devmode" select="'N'"/>	<!-- set to Y to: 1) skip counting characters for $entity_id_base 2) generate only 10 UUIDs 3) avoid the expense of calculating the def/@n -->
 <xsl:param name="output_tree" select="'false'"/> <!-- set to true to output the $uuid_tree fragment used for key generation when ALSO in devmode=Y -->
-<!-- used to calculate the UUIDs, use the same values for each transformation of a single title to ensure the same values are calculated each time; recommend changing this for new titles -->
-	<xsl:param name="uuid_multiplier" select="61077"/>
-	<xsl:param name="uuid_increment" select="64341"/>
-	<xsl:param name="uuid_divisor" select="57774"/>
+<!-- Set new values for new titles!!  Used to calculate the UUIDs, use the same values for each transformation of a single title to ensure the same values are calculated each time. 1-100000 -->
+	<xsl:param name="uuid_multiplier" select="00000"/>
+	<xsl:param name="uuid_increment" select="00001"/>
+	<xsl:param name="uuid_divisor" select="00002"/>
 
 <xsl:param name="existing_entityid_file" select="'PRESERVE'"/> <!-- the location of the file containing the entity_ids already assigned in METIS; set to NONE if they have not been assigned externally; set to PRESERVE to use existing entity_id -->
 
-<xsl:variable name="entityids" select="document($existing_entityid_file)" as="document-node()"/>
+<xsl:variable name="entityids" select="document(concat('file:///', translate($existing_entityid_file, '\', '/')))" as="document-node()"/>
 
 
-<!--<xsl:param name="pocket_xml_file" select="'c:\temp\delete\Dorlands\pocket\full_book.xml'"/>--> <!-- the location of the Pocket XML to merge -->
-<!--<xsl:param name="pocket_xml_file" select="'file:///c:/DorlandsXSLT/DorlandsDictionary_DPD_ALL.xml'"/>--> <!-- the location path, use file: sytax for Saxon compatibility -->
-<xsl:param name="pocket_xml_file" select="'DorlandsDictionary_DPD_ALL.xml'"/> <!-- the location of the Pocket XML to merge -->
+<xsl:param name="pocket_xml_file" select="'c:\DorlandsDictionary_DPD_ALL.xml'"/> <!-- the location of the Pocket XML to merge -->
 
-<xsl:variable name="pocket_entries" select="document($pocket_xml_file)" as="document-node()"/>
+<xsl:variable name="pocket_entries" select="document(concat('file:///', translate($pocket_xml_file, '\', '/')))" as="document-node()"/>
 
 <xsl:key name="headw_id" match="//alpha/entry" use="headw/@id"/>
 
@@ -131,7 +134,7 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 	<xsl:element name="atom">
 		<xsl:attribute name="uuid" select="format-number($uuid, '999999')"/>
 		<xsl:attribute name="genid" select="generate-id($atoms[position()=1])"/>
-		<xsl:attribute name="uniquenode" select="$atoms[position()=1]/headw/@id"/>	<!-- a distinct per atom, omnipresent node to test pairing source atoms with generated IDs -->
+		<xsl:attribute name="uniquenode" select="concat($atoms/ancestor::alpha/@letter, '::', $atoms[position()=1]/headw/@id)"/>	<!-- a distinct per atom, omnipresent node to test pairing source atoms with generated IDs; here it is combined with letter to support potentially non-unique headw/@id and calling set_atom_id -->
 	</xsl:element>
 	<!-- recurses through all of the $atoms so the current seed can be used to calculate the next UUID -->
 	<!-- $counter combined with $devmode=Y will result in only calculating 10 UUIDs -->
@@ -290,8 +293,41 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 
 <!-- @hword_id is now @refid with "a:" prefix; @id, @xref_id are omitted -->
 <xsl:template match="xref">
+	<!-- node to find an entity_id for if not the current one; in practice xref always targets a headw -->
+	<xsl:param name="find_node" select="//headw[@id = current()/@refid]/ancestor::entry[parent::alpha]/@id"/>
+
+	<!-- returns an entity_id if one was already assigned, null otherwise -->
+	<xsl:variable name="entity_id">
+		<xsl:call-template name="get_entity_id">
+			<xsl:with-param name="find_node" select="$find_node"/>
+		</xsl:call-template>
+	</xsl:variable>
+	<!-- used as unique atom identifier for which a new entity_id was calculated -->
+	<xsl:variable name="find_id" select="concat($find_node/ancestor::alpha/@letter, '::', $find_node/parent::entry/headw[1]/@id)"/>
+
     <xref refid="a:{@hword_id}">
-        <xsl:attribute name="refid" select="concat('a:', format-number($entity_id_base, '9999999'), translate($uuid_tree/key('uuid_uniquenode', //headw[@id = current()/@refid]/ancestor::entry[parent::alpha]/headw[1]/@id)[position()=1]/@genid, 'ghijklmnopqrstuvwxyz', '0123456789abcdef0123'), $uuid_tree/key('uuid_uniquenode', //headw[@id = current()/@refid]/ancestor::entry[parent::alpha]/headw[1]/@id)[position()=1]/@uuid)"/>
+		<xsl:attribute name="refid">
+			<!-- XML node ID prefix for use in both outputs -->
+			<xsl:text>a:</xsl:text>
+	
+			<xsl:choose>
+				<!-- useful whenever you want to preserve entity IDs from previously ingested XML; pull from db and put into external XML file --> 
+				<xsl:when test="$entity_id != ''">
+					<xsl:value-of select="$entity_id"/>
+				</xsl:when>
+				<!-- typical ID generation: XML node ID prefix + unique ID base for document + generated-id for atom + output of UUID process on atom -->
+				<xsl:otherwise>
+					<xsl:value-of select="concat('', format-number($entity_id_base, '9999999'), translate($uuid_tree/key('uuid_uniquenode', $find_id)[position()=1]/@genid, 'ghijklmnopqrstuvwxyz', '0123456789abcdef0123'), $uuid_tree/key('uuid_uniquenode', $find_id)[position()=1]/@uuid)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<!-- append the targeted ID -->
+			<xsl:text>#</xsl:text>
+			<xsl:call-template name="id_generator">
+				<xsl:with-param name="new" select="@refid"/>
+				<xsl:with-param name="nodename" select="'headw'"/>
+			</xsl:call-template>
+		</xsl:attribute>
+
         <xsl:apply-templates/>
     </xref>
 </xsl:template>
@@ -489,14 +525,14 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 		</xsl:call-template>
 	</xsl:variable>
 	<!-- when called by name the context will be the html node rather than @id; this adapts for both situations -->
-	<xsl:variable name="find_id" select="concat($find_node/ancestor::alpha/@letter, '::', $find_node/@id)"/>
+	<xsl:variable name="find_id" select="concat($find_node/ancestor::alpha/@letter, '::', $find_node/parent::entry/headw[1]/@id)"/>
 
 	<xsl:attribute name="id">
 		<!-- XML node ID prefix for use in both outputs -->
 		<xsl:text>me</xsl:text>
 
 		<xsl:choose>
-			<!-- useful whenever you want to preseve entity IDs from previously ingested XML; pull from db and put into external XML file --> 
+			<!-- useful whenever you want to preserve entity IDs from previously ingested XML; pull from db and put into external XML file --> 
 			<xsl:when test="$entity_id != ''">
 				<xsl:value-of select="$entity_id"/>
 			</xsl:when>
@@ -512,7 +548,6 @@ TODO: update these instructions; put DTD on S3 so the correct URL can be used; f
 		</xsl:if>
 	</xsl:attribute>
 </xsl:template>
-
 
 <!-- generates id attributes and populates with distinct values for new nodes requiring them -->
 <xsl:template name="id_generator">
