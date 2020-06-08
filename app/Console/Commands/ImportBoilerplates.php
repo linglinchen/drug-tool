@@ -93,7 +93,7 @@ class ImportBoilerplates extends Command
 		$boilerplate = new Atom();
 		$doctype = Product::find($this->productId)->getDoctype();
 		$sort = 0;
-		foreach($boilerplates['boilerplates'] as $boilerplateString) {
+		foreach($boilerplates['boilerplate'] as $boilerplateString) {
 
 			$boilerplateData = [
 				'title' => $boilerTitle,
